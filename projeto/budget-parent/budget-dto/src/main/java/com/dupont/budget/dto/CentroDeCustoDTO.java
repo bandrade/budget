@@ -1,6 +1,7 @@
 package com.dupont.budget.dto;
 
 import java.io.Serializable;
+import java.util.List;
 
 
 public class CentroDeCustoDTO  implements Serializable{
@@ -9,6 +10,8 @@ public class CentroDeCustoDTO  implements Serializable{
 	private String nome;
 	private String numero;
 	private String area;
+	private List<PapelDTO> papeis;
+	
 	public CentroDeCustoDTO(){}
 	public CentroDeCustoDTO(String nome, String numero,String area) {
 		super();
@@ -29,7 +32,21 @@ public class CentroDeCustoDTO  implements Serializable{
 	public void setNumero(String numero) {
 		this.numero = numero;
 	}
+	public String getArea() {
+		return area;
+	}
+	public void setArea(String area) {
+		this.area = area;
+	}
+	public List<PapelDTO> getPapeis() {
+		return papeis;
+	}
+	public void setPapeis(List<PapelDTO> papeis) {
+		this.papeis = papeis;
+	}
 	
+	
+	/*
 	public String getPapelResponsavel()
 	{
 		return "RESPONSAVEL_"+numero;
@@ -41,7 +58,7 @@ public class CentroDeCustoDTO  implements Serializable{
 	public String getPapelLider()
 	{
 		return "LIDER_"+area;
-	}
+	}*/
 	
 
 }

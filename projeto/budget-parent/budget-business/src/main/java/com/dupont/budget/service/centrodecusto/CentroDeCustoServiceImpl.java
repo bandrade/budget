@@ -17,7 +17,9 @@ public class CentroDeCustoServiceImpl implements CentroDeCustoService{
 	@Produces(MediaType.APPLICATION_JSON)
 	public CentroDeCustoDTO[] obterCentrosDeCusto() {
 		List<CentroDeCustoDTO> centrosDeCusto = new ArrayList<CentroDeCustoDTO>();
-		CentroDeCustoDTO centroDeCustoDTO = new CentroDeCustoDTO("DCP Programa Colaboradores","WR31601027" ,"Distruicao");
+		CentroDeCustoDTO centroDeCustoDTO = new CentroDeCustoDTO("DCP Programa Colaboradores","WR31601027" ,"Distribuicao");
+		centrosDeCusto.add(centroDeCustoDTO);
+		centroDeCustoDTO = new CentroDeCustoDTO("DCP Marketing","WR31601025" ,"Distribuicao");
 		centrosDeCusto.add(centroDeCustoDTO);
 		return centrosDeCusto.toArray(new CentroDeCustoDTO[centrosDeCusto.size()]);
 	}

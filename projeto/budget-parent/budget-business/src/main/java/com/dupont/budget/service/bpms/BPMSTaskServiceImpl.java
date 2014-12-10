@@ -8,7 +8,6 @@ import javax.inject.Inject;
 
 import org.kie.api.task.model.TaskSummary;
 
-import com.dupont.budget.bpm.custom.ProcessBean;
 import com.dupont.budget.bpm.custom.TaskBean;
 import com.dupont.budget.dto.StatusTarefaEnum;
 import com.dupont.budget.dto.TarefaDTO;

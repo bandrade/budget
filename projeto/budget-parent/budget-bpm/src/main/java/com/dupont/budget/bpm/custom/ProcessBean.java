@@ -23,6 +23,7 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
+import org.jbpm.process.workitem.email.EmailWorkItemHandler;
 import org.jbpm.process.workitem.rest.RESTWorkItemHandler;
 import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.manager.RuntimeEngine;
@@ -47,6 +48,7 @@ public class ProcessBean {
         RuntimeEngine runtime = singletonManager.getRuntimeEngine(EmptyContext
                 .get());
        
+        runtime.getKieSession().getWorkItemManager().registerWorkItemHandler("Email", new EmailWorkItemHandler("mhub14.lvs.dupont.com", "25", null, null));
         runtime.getKieSession().getWorkItemManager().registerWorkItemHandler("Rest", new RESTWorkItemHandler());
     }
   
@@ -64,7 +66,7 @@ public class ProcessBean {
             // start a new process instance
             Map<String, Object> params = new HashMap<String, Object>();
             ProcessInstance processInstance = ksession.startProcess(
-                    "com.dupont.bpm.criarbudget", params);
+            		"budget.EnvioEmail"/*"com.dupont.bpm.criarbudget"*/, params);
                        processInstanceId = processInstance.getId();
         } catch (Exception e) {
             throw new RuntimeException(e);
