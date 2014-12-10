@@ -1,0 +1,13 @@
+<project name="budget" default="compile_and_deploy" basedir=".">
+	<target name="compile" description="Builds the individual project">
+		<exec dir="." executable="sh">
+		        <arg line="-c 'mvn clean install'" />
+		 </exec>
+	</target>
+	<target name="deploy" description="Efetua Deploy do pacote web">
+			<exec dir="./budget-web" executable="sh">
+			        <arg line="-c 'mvn jboss-as:deploy'" />
+			 </exec>
+    </target>
+	<target name="compile_and_deploy" depends="compile,deploy" description="Compila e Efetua o Deploy no JBoss"/>
+</project>

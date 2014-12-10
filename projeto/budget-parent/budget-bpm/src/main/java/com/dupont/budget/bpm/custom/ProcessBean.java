@@ -23,6 +23,7 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
+import org.jbpm.process.workitem.rest.RESTWorkItemHandler;
 import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.manager.RuntimeEngine;
 import org.kie.api.runtime.manager.RuntimeManager;
@@ -43,6 +44,10 @@ public class ProcessBean {
         // this makes sure that RuntimeManager is started asap,
         // otherwise after server restart complete task won't move process forward 
         singletonManager.toString();
+        RuntimeEngine runtime = singletonManager.getRuntimeEngine(EmptyContext
+                .get());
+       
+        runtime.getKieSession().getWorkItemManager().registerWorkItemHandler("Rest", new RESTWorkItemHandler());
     }
   
     
@@ -51,6 +56,7 @@ public class ProcessBean {
                 .get());
        
         KieSession ksession = runtime.getKieSession();
+       
 
         long processInstanceId = -1;
         

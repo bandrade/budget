@@ -63,6 +63,10 @@
 			<artifactId>jbpm-shared-services</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.jbpm</groupId>
+			<artifactId>jbpm-workitems</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.kie</groupId>
 			<artifactId>kie-api</artifactId>
 		</dependency>
