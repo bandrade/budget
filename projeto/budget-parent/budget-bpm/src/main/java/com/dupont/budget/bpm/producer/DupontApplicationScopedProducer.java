@@ -27,16 +27,21 @@ import javax.persistence.PersistenceUnit;
 import org.jbpm.kie.services.impl.audit.ServicesAwareAuditEventBuilder;
 import org.jbpm.process.audit.AbstractAuditLogger;
 import org.jbpm.process.audit.AuditLoggerFactory;
+import org.jbpm.process.workitem.rest.RESTWorkItemHandler;
 import org.jbpm.runtime.manager.impl.cdi.InjectableRegisterableItemsFactory;
 import org.jbpm.services.task.identity.DefaultUserInfo;
 import org.kie.api.KieServices;
 import org.kie.api.builder.ReleaseId;
+import org.kie.api.runtime.manager.RuntimeEngine;
 import org.kie.api.runtime.manager.RuntimeEnvironment;
 import org.kie.api.runtime.manager.RuntimeEnvironmentBuilder;
+import org.kie.api.runtime.manager.RuntimeManager;
+import org.kie.api.runtime.manager.RuntimeManagerFactory;
 import org.kie.api.task.UserGroupCallback;
 import org.kie.internal.runtime.manager.cdi.qualifier.PerProcessInstance;
 import org.kie.internal.runtime.manager.cdi.qualifier.PerRequest;
 import org.kie.internal.runtime.manager.cdi.qualifier.Singleton;
+import org.kie.internal.runtime.manager.context.EmptyContext;
 import org.kie.internal.task.api.UserInfo;
 
 @ApplicationScoped
@@ -75,6 +80,7 @@ public class DupontApplicationScopedProducer {
         RuntimeEnvironment environment = RuntimeEnvironmentBuilder.Factory.get()
                 .newDefaultBuilder(releaseId)
                 .entityManagerFactory(emf).registerableItemsFactory(InjectableRegisterableItemsFactory.getFactory(beanManager, auditLogger)).get();
+        
         return environment;
     }
 

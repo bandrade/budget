@@ -10,11 +10,11 @@ import java.util.List;
 public class DupontUserGroupCallback implements UserGroupCallback {
 
     public boolean existsUser(String userId) {
-        return userId.equals("veronica") ;
+        return userId.equals("veronica") || userId.equals("Administrator") ;
     }
 
     public boolean existsGroup(String groupId) {
-        return groupId.equals("PM") || groupId.equals("HR") || groupId.equals("RESPONSAVEL_WR31601027");
+        return groupId.equals("PM") || groupId.equals("HR") || groupId.equals("RESPONSAVEL_WR31601027") || groupId.equals("Administrators") ;
     }
 
     public List<String> getGroupsForUser(String userId,	
