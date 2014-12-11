@@ -1,13 +1,39 @@
-<project name="budget" default="compile_and_deploy" basedir=".">
+<project name="budget" default="compile_and_deploy_unpacked" basedir=".">
+	<property name="project.name" value="budget" />
+	<property name="projectweb.home.dir" value="${basedir}/budget-web/" />
+	<property name="compiled_war.dir" value="${projectweb.home.dir}/target/${project.name}.war" />
+	<property name="jboss.standalone.deployment.dir" value="/home/bandrade/redhat/Development/servers/jboss-eap-6.2/standalone/deployments" />
+	<property name="jboss.standalone.deployment.budget.dir" value="${jboss.standalone.deployment.dir}/${project.name}.war/" />
+
+	<!-- DEPLOY UTILIZANDO O PLUGIN DO MAVEN JBOSS:DEPLOY -->
+	
 	<target name="compile" description="Builds the individual project">
 		<exec dir="." executable="sh">
-		        <arg line="-c 'mvn clean install'" />
-		 </exec>
+			<arg line="-c 'mvn clean install'" />
+		</exec>
 	</target>
+	
 	<target name="deploy" description="Efetua Deploy do pacote web">
-			<exec dir="./budget-web" executable="sh">
-			        <arg line="-c 'mvn jboss-as:deploy'" />
-			 </exec>
-    </target>
-	<target name="compile_and_deploy" depends="compile,deploy" description="Compila e Efetua o Deploy no JBoss"/>
+		<exec dir="./budget-web" executable="sh">
+			<arg line="-c 'mvn jboss-as:deploy'" />
+		</exec>
+	</target>
+	<target name="compile_and_deploy" depends="compile,deploy" description="Compila e Efetua o Deploy no JBoss" />
+	
+	<!-- DEPLOY EFETUANDO MVN CLEAN E INSTALL COPIANDO O DIRETORIO TARGET PARA O DIRETORIO DEPLO -->
+	
+	<target name="clean_unpacked_dir" description="Efetua Deploy do pacote web">
+		<delete dir="${jboss.standalone.deployment.budget.dir}">
+		</delete>
+	</target>
+	
+	<target name="copy_unpacked_war" description="Efetua Deploy do pacote web">
+		<copy todir="${jboss.standalone.deployment.budget.dir}">
+			<fileset dir="${compiled_war.dir}" includes="**" />
+		</copy>
+		<touch file="${jboss.standalone.deployment.dir}/${project.name}.war.dodeploy" >
+		</touch>
+	</target>
+	
+	<target name="compile_and_deploy_unpacked" depends="clean_unpacked_dir,compile,copy_unpacked_war" description="Compila e Efetua o Deploy no JBoss" />
 </project>
