@@ -16,9 +16,24 @@ public class TarefaController {
 	
 	private List<TarefaDTO> tarefas;
 	
+	private TarefaDTO tarefaSelecionada;
+	
 	public void obterTarefasUsuario()
 	{
-		tarefas = bpms.obterTarefas(usuario);
+		try
+		{	
+			tarefas = bpms.obterTarefas(usuario);
+		}
+		catch(Exception e)
+		{
+			//TODO TRATAMENTO VIEW
+		}
+	}
+	
+	public void aprovarTarefa()
+	{
+		
+		System.out.println(tarefaSelecionada.getActualOwner());
 	}
 	
 	public String getUsuario() {
@@ -36,5 +51,15 @@ public class TarefaController {
 	public void setTarefas(List<TarefaDTO> tarefas) {
 		this.tarefas = tarefas;
 	}
+
+	public TarefaDTO getTarefaSelecionada() {
+		return tarefaSelecionada;
+	}
+
+	public void setTarefaSelecionada(TarefaDTO tarefaSelecionada) {
+		this.tarefaSelecionada = tarefaSelecionada;
+	}
+	
+	
 
 }
