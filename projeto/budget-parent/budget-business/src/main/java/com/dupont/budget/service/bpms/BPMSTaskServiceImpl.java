@@ -8,25 +8,26 @@ import javax.inject.Inject;
 
 import org.kie.api.task.model.TaskSummary;
 
-import com.dupont.budget.bpm.custom.TaskBean;
+import com.dupont.budget.bpm.custom.task.BPMTaskManagerApiImpl;
 import com.dupont.budget.dto.StatusTarefaEnum;
 import com.dupont.budget.dto.TarefaDTO;
 
 @Model
 public class BPMSTaskServiceImpl implements BPMSTaskService {
-	
+
 	@Inject
-	private TaskBean taskBean;
-	
-	public List<TarefaDTO> obterTarefas(String user){
-		List<TaskSummary> tasks = taskBean.retrieveTaskList(user);
+	private BPMTaskManagerApiImpl taskApi;
+
+	public List<TarefaDTO> obterTarefas(String user) throws Exception {
+		List<TaskSummary> tasks = taskApi.retrieveTaskList(user);
 		List<TarefaDTO> tarefas = new ArrayList<TarefaDTO>();
-		for(TaskSummary task: tasks)
-		{
+		for (TaskSummary task : tasks) {
 			TarefaDTO tarefaDTO = new TarefaDTO();
 			tarefaDTO.setActivationTime(task.getActivationTime());
-			tarefaDTO.setActualOwner(task.getActualOwner() !=null ? task.getActualOwner().getId(): null);
-			tarefaDTO.setCreatedBy(task.getCreatedBy() !=null ? task.getCreatedBy().getId() :null);
+			tarefaDTO.setActualOwner(task.getActualOwner() != null ? task
+					.getActualOwner().getId() : null);
+			tarefaDTO.setCreatedBy(task.getCreatedBy() != null ? task
+					.getCreatedBy().getId() : null);
 			tarefaDTO.setCreatedOn(task.getCreatedOn());
 			tarefaDTO.setDescription(task.getDescription());
 			tarefaDTO.setExpirationTime(task.getExpirationTime());
@@ -38,11 +39,17 @@ public class BPMSTaskServiceImpl implements BPMSTaskService {
 			tarefaDTO.setProcessId(task.getProcessId());
 			tarefaDTO.setProcessSessionId(task.getProcessSessionId());
 			tarefaDTO.setSkipable(task.isSkipable());
-			tarefaDTO.setStatus(StatusTarefaEnum.findByMeaning(task.getStatus().name()) );
+			tarefaDTO.setStatus(StatusTarefaEnum.findByMeaning(task.getStatus()
+					.name()));
 			tarefas.add(tarefaDTO);
 		}
 		return tarefas;
 	}
-	
-	
+
+	public boolean aprovarTarefa(String user) throws Exception {
+		taskApi.aproveTask(user, 0, null);
+
+		return true;
+	}
+
 }

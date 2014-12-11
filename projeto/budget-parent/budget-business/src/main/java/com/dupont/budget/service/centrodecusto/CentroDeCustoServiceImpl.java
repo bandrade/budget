@@ -9,6 +9,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import com.dupont.budget.dto.CentroDeCustoDTO;
+import com.dupont.budget.dto.ColaboradorDTO;
+import com.dupont.budget.dto.PapelDTO;
 @Path("CentroDeCusto")
 public class CentroDeCustoServiceImpl implements CentroDeCustoService{
 
@@ -17,11 +19,33 @@ public class CentroDeCustoServiceImpl implements CentroDeCustoService{
 	@Produces(MediaType.APPLICATION_JSON)
 	public CentroDeCustoDTO[] obterCentrosDeCusto() {
 		List<CentroDeCustoDTO> centrosDeCusto = new ArrayList<CentroDeCustoDTO>();
-		CentroDeCustoDTO centroDeCustoDTO = new CentroDeCustoDTO("DCP Programa Colaboradores","WR31601027" ,"Distribuicao");
-		centrosDeCusto.add(centroDeCustoDTO);
-		centroDeCustoDTO = new CentroDeCustoDTO("DCP Marketing","WR31601025" ,"Distribuicao");
-		centrosDeCusto.add(centroDeCustoDTO);
+		centrosDeCusto.add(getMock1());
 		return centrosDeCusto.toArray(new CentroDeCustoDTO[centrosDeCusto.size()]);
+	}
+	
+	private CentroDeCustoDTO getMock1()
+	{
+		String area="Distribuicao";
+		String nomeCentroDeCusto="DCP Programa Colaboradores";
+		String codigoCentroDeCusto="WR31601027";
+
+		List<PapelDTO> papeis = new ArrayList<PapelDTO>();
+		
+		ColaboradorDTO colaboradorResponsavelCC= new ColaboradorDTO("Veronica Gaviolle","veronicag","bruno.balint@gmail.com");
+		PapelDTO papelResponsavelCC = new PapelDTO("RESPONSAVEL_"+codigoCentroDeCusto, colaboradorResponsavelCC);
+
+		PapelDTO papelLiderCC = new PapelDTO("GERENTE_"+codigoCentroDeCusto, colaboradorResponsavelCC);
+		
+		ColaboradorDTO colaboradoLiderArea= new ColaboradorDTO("Guido Visitin","guidov","bandrade@redhat.com");
+		PapelDTO papelLiderArea = new PapelDTO("LIDER_"+area, colaboradoLiderArea);
+		
+		papeis.add(papelResponsavelCC);
+		papeis.add(papelLiderCC);
+		papeis.add(papelLiderArea);
+		
+		CentroDeCustoDTO centroDeCusto = new CentroDeCustoDTO(nomeCentroDeCusto,codigoCentroDeCusto,area,papeis);
+		
+		return centroDeCusto;
 	}
 
 }
