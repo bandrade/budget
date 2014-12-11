@@ -6,18 +6,22 @@ import java.util.List;
 
 public class CentroDeCustoDTO  implements Serializable{
 	
-	private static final long serialVersionUID = 2777657230661210967L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4288095550251406045L;
 	private String nome;
 	private String numero;
 	private String area;
 	private List<PapelDTO> papeis;
 	
 	public CentroDeCustoDTO(){}
-	public CentroDeCustoDTO(String nome, String numero,String area) {
+	public CentroDeCustoDTO(String nome, String numero,String area,List<PapelDTO> papeis) {
 		super();
 		this.nome = nome;
 		this.numero = numero;
 		this.area = area;
+		this.papeis = papeis;
 	}
 	
 	public String getNome() {
