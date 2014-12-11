@@ -60,6 +60,11 @@
 			<artifactId>budget-dto</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>com.dupont.budget</groupId>
+			<artifactId>budget-datamodel</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>

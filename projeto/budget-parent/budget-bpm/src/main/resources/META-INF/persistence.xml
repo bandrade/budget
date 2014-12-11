@@ -46,7 +46,7 @@
         <class>org.jbpm.services.task.impl.model.UserImpl</class>
     
         <!--BAM for task service -->
-        <class>org.jbpm.services.task.impl.model.BAMTaskSummaryImpl</class>
+        <class>org.jbpm.services.task.audit.impl.model.BAMTaskSummaryImpl</class>
     
         <!-- Event Classes -->
         <class>org.jbpm.services.task.audit.TaskEventImpl</class>
@@ -58,7 +58,7 @@
       <property name="hibernate.hbm2ddl.auto" value="update" />
       <property name="hibernate.show_sql" value="false" />	
       <property name="hibernate.transaction.manager_lookup_class" value="org.hibernate.transaction.JBossTransactionManagerLookup" />
-	  <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
+	  <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>
       <property name="hibernate.id.new_generator_mappings" value="false"/>
     </properties>        
   </persistence-unit>

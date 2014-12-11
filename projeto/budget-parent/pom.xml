@@ -10,7 +10,7 @@
 		<version.org.primefaces.primefaces>5.1</version.org.primefaces.primefaces>
 		<version.org.primefaces.themes.bootstrap>1.0.10</version.org.primefaces.themes.bootstrap>
 		<version.org.apache.maven.plugins>3.2</version.org.apache.maven.plugins>
-		<version.jboss.bom.brms>6.0.2.GA-redhat-5</version.jboss.bom.brms>
+		<version.jboss.bom.brms>6.0.3.GA-redhat-1</version.jboss.bom.brms>
 		<maven.compiler.target>1.7</maven.compiler.target>
 		<maven.compiler.source>1.7</maven.compiler.source>
 	</properties>
@@ -46,4 +46,14 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>org.hibernate.javax.persistence</groupId>
+			<artifactId>hibernate-jpa-2.0-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		
+	</dependencies>
 </project>
