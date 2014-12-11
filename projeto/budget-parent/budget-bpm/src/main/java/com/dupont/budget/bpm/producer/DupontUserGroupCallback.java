@@ -10,7 +10,7 @@ import java.util.List;
 public class DupontUserGroupCallback implements UserGroupCallback {
 
     public boolean existsUser(String userId) {
-        return userId.equals("veronica") || userId.equals("Administrator") ;
+        return userId.equals("veronicag") || userId.equals("Administrator") ;
     }
 
     public boolean existsGroup(String groupId) {
@@ -20,7 +20,7 @@ public class DupontUserGroupCallback implements UserGroupCallback {
     public List<String> getGroupsForUser(String userId,	
                                          List<String> groupIds, List<String> allExistingGroupIds) {
         List<String> groups = new ArrayList<String>();
-        if (userId.equals("veronica"))
+        if (userId.equals("veronicag"))
             groups.add("RESPONSAVEL_WR31601027");
         else if (userId.equals("mary"))
             groups.add("HR");
