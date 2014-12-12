@@ -1,4 +1,4 @@
-package com.dupont.budget.web;
+package com.dupont.budget.web.actions;
 
 import javax.enterprise.inject.Model;
 

@@ -1,12 +1,33 @@
 <?xml version="1.0"?>
 <faces-config version="2.0" xmlns="http://java.sun.com/xml/ns/javaee"
- xmlns:xi="http://www.w3.org/2001/XInclude"
- xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
- <navigation-rule>
-  <from-view-id>/pages/adm/cultura/edit.xhtml</from-view-id>
-  <navigation-case>
-   <from-outcome>list</from-outcome>
-   <to-view-id>/pages/adm/cultura/list.xhtml</to-view-id>
-  </navigation-case>
- </navigation-rule>
+	xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
+
+	<application>
+		<locale-config>
+			<default-locale>pt_BR</default-locale>
+			<message-bundle>com.dupont.budget.web.message.JSFMessages_pt_BR</message-bundle>
+		</locale-config>
+	</application>
+	<navigation-rule>
+		<from-view-id>/pages/adm/cultura/edit.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>list</from-outcome>
+			<to-view-id>/pages/adm/cultura/list.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<from-view-id>/pages/adm/cultura/list.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>edit</from-outcome>
+			<to-view-id>/pages/adm/cultura/edit.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<from-view-id>/pages/adm/cultura/create.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>list</from-outcome>
+			<to-view-id>/pages/adm/cultura/list.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
 </faces-config>

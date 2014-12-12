@@ -7,19 +7,31 @@
                 
 	<ui:define name="content">
 	
-		<h3>Criar Cultura</h3>
+		<p:panel id="content">
 		
-		<h:form>
-		
-			<h:panelGrid columns="3" border="0">
+			<h3> 
+				<h:outputText value="Atualizar Cultura" rendered="#{cultura.id != null}" />
+				<h:outputText value="Criar Cultura"     rendered="#{cultura.id == null}" /> 
+			</h3>
 			
-				<p:outputLabel value="Nome:" for="nomeInput"/>
-				<p:inputText id="nomeInput" value="#{cultura.nome}"/>
-				<p:message for="nomeInput"/>
+			<h:form id="form"> 
+			
+				<h:inputHidden value="#{cultura.id}" rendered="#{cultura.id != null}" />
+					
+				<h:panelGrid columns="3" border="0">
 				
-				<p:commandButton value="Salvar" icon="ui-icon-check" action="#{culturaAction.createCultura}"/>
-			</h:panelGrid>
-		</h:form>
+					<p:outputLabel value="Nome:" for="nomeInput" />
+					<p:inputText label="Nome" id="nomeInput" value="#{cultura.nome}" required="true"/>
+					<p:message for="nomeInput" />			
+	
+					
+				</h:panelGrid>
+				
+				<p:commandButton value="#{cultura.id != null? 'Atualizar' : 'Salvar'}"    icon="ui-icon-check" action="#{culturaAction.persistCultura}" styleClass="button" ajax="false" />
+				
+			</h:form>
+		
+		</p:panel>
 		
 	</ui:define>
 	

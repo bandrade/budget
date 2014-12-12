@@ -1,0 +1,19 @@
+## CSS Default do sistema de Budget
+
+.sidebar {	
+	float: left;
+	width: 20%;
+ 	padding: 0 20px 0 10px;
+}
+
+.button{
+	float: right;	
+}
+
+header {
+	height: 200px;
+}
+
+footer {
+  clear: both;	
+}

@@ -7,39 +7,52 @@
                 
 	<ui:define name="content">
 	
-		<h3>Pesquisa de Culturas</h3>
-		
-		<h:form>
-		
-			<h:panelGrid columns="3" border="0">
+		<p:panel id="content">
+	
+			<h3>Pesquisa de Culturas</h3>
 			
-				<p:outputLabel value="Nome:" for="nomeInput"/>
-				<p:inputText id="nomeInput" value="#{cultura.nome}"/>
-				<p:message for="nomeInput"/>
-				
-				<p:commandButton value="Pesquisar" icon="ui-icon-search" action="#{culturaAction.findCulturas}"/>
-			</h:panelGrid>
+			<h:form id="form" prependId="false">
 			
-			<p:dataTable var="item" value="#{culturaAction.culturas}">
+				<h:panelGrid columns="3" border="0">
 				
-				<p:column headerText="ID">
-					#{item.id}
-				</p:column>
-				
-				<p:column headerText="Nome">
-					#{item.nome}
-				</p:column>
-				
-				<p:column headerText="Ações">
+					<p:outputLabel value="Nome:" for="nomeInput"/>
+					<p:inputText id="nomeInput" value="#{cultura.nome}"/>
+					<p:message for="nomeInput"/>
 					
-					<p:commandButton icon="ui-icon-pencil" action="#{culturaAction.deleteCultura(item)}"/>
-					<p:commandButton icon="ui-icon-trash"  action="#{culturaAction.deleteCultura(item)}"/>
+					<p:commandButton value="Pesquisar" icon="ui-icon-search" action="#{culturaAction.findCulturas}" update="culturas"/>
+				</h:panelGrid>
+				
+				<p:separator />
+				
+				<p:dataTable id="culturas" var="item" value="#{culturaAction.culturas}" emptyMessage="Nenhum registro encontrado.">
 					
-				</p:column>
+					<p:column headerText="ID">
+						#{item.id}
+					</p:column>
+					
+					<p:column headerText="Nome" sortBy="#{item.nome}" >
+						#{item.nome}
+					</p:column>
+					
+					<p:column headerText="Ações">
+						
+						<p:commandButton icon="ui-icon-pencil" action="#{culturaAction.editCultura(item)}"   update="culturas" immediate="true"/>
+						<p:commandButton icon="ui-icon-trash"  action="#{culturaAction.deleteCultura(item)}" update="culturas" immediate="true">
+							<p:confirm header="Confirmação" message="Deseja realmente remover o dado?" icon="ui-icon-alert" />
+						</p:commandButton>
+						
+					</p:column>
+				
+				</p:dataTable>
+				
+				<p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+			        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+			        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no"  icon="ui-icon-close" />
+			    </p:confirmDialog>
+			</h:form>
 			
-			</p:dataTable>
-		</h:form>
-		
+		</p:panel>
+			
 	</ui:define>
 	
 </ui:composition>
