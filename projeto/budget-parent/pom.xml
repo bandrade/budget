@@ -48,12 +48,27 @@
 	</dependencyManagement>
 
 	<dependencies>
+	
+		 <dependency>
+        <groupId>org.jboss.spec</groupId>
+        <artifactId>jboss-javaee-all-6.0</artifactId>
+        <version>3.0.2.Final</version>
+        <type>pom</type>
+        <scope>provided</scope>
+    </dependency>
 
 		<dependency>
 			<groupId>org.hibernate.javax.persistence</groupId>
 			<artifactId>hibernate-jpa-2.0-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.3.2</version>
+		</dependency>
+		
 		
 	</dependencies>
 </project>

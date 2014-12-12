@@ -7,8 +7,9 @@ import javax.inject.Inject;
 
 import com.dupont.budget.dto.TarefaDTO;
 import com.dupont.budget.service.bpms.BPMSTaskService;
+
 @Model
-public class TarefaController {
+public class TarefaAction {
 	@Inject
     private BPMSTaskService bpms;
 	

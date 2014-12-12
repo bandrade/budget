@@ -1,0 +1,45 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/templates/default.xhtml">
+                
+	<ui:define name="content">
+	
+		<h3>Pesquisa de Culturas</h3>
+		
+		<h:form>
+		
+			<h:panelGrid columns="3" border="0">
+			
+				<p:outputLabel value="Nome:" for="nomeInput"/>
+				<p:inputText id="nomeInput" value="#{cultura.nome}"/>
+				<p:message for="nomeInput"/>
+				
+				<p:commandButton value="Pesquisar" icon="ui-icon-search" action="#{culturaAction.findCulturas}"/>
+			</h:panelGrid>
+			
+			<p:dataTable var="item" value="#{culturaAction.culturas}">
+				
+				<p:column headerText="ID">
+					#{item.id}
+				</p:column>
+				
+				<p:column headerText="Nome">
+					#{item.nome}
+				</p:column>
+				
+				<p:column headerText="Ações">
+					
+					<p:commandButton icon="ui-icon-pencil" action="#{culturaAction.deleteCultura(item)}"/>
+					<p:commandButton icon="ui-icon-trash"  action="#{culturaAction.deleteCultura(item)}"/>
+					
+				</p:column>
+			
+			</p:dataTable>
+		</h:form>
+		
+	</ui:define>
+	
+</ui:composition>

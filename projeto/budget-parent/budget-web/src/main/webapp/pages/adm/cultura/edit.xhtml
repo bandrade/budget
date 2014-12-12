@@ -1,0 +1,26 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/templates/default.xhtml">
+                
+	<ui:define name="content">
+	
+		<h3>Criar Cultura</h3>
+		
+		<h:form>
+		
+			<h:panelGrid columns="3" border="0">
+			
+				<p:outputLabel value="Nome:" for="nomeInput"/>
+				<p:inputText id="nomeInput" value="#{cultura.nome}"/>
+				<p:message for="nomeInput"/>
+				
+				<p:commandButton value="Salvar" icon="ui-icon-check" action="#{culturaAction.createCultura}"/>
+			</h:panelGrid>
+		</h:form>
+		
+	</ui:define>
+	
+</ui:composition>
