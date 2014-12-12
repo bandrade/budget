@@ -8,7 +8,7 @@
 	<properties>
 		<version.jboss.bom.eap>6.3.0.GA</version.jboss.bom.eap>
 		<version.org.primefaces.primefaces>5.1</version.org.primefaces.primefaces>
-		<version.org.primefaces.themes.bootstrap>1.0.10</version.org.primefaces.themes.bootstrap>
+		<version.org.primefaces.themes>1.0.10</version.org.primefaces.themes>
 		<version.org.apache.maven.plugins>3.2</version.org.apache.maven.plugins>
 		<version.jboss.bom.brms>6.0.3.GA-redhat-1</version.jboss.bom.brms>
 		<maven.compiler.target>1.7</maven.compiler.target>

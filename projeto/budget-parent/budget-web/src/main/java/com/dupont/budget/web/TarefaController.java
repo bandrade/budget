@@ -1,14 +1,22 @@
 package com.dupont.budget.web;
 
+import java.io.Serializable;
 import java.util.List;
 
-import javax.enterprise.inject.Model;
+import javax.annotation.PostConstruct;
+import javax.enterprise.context.Conversation;
+import javax.enterprise.context.ConversationScoped;
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import com.dupont.budget.dto.TarefaDTO;
 import com.dupont.budget.service.bpms.BPMSTaskService;
-@Model
-public class TarefaController {
+@Named
+@ConversationScoped
+public class TarefaController implements Serializable {
+
+	@Inject
+	private Conversation conversation;
 	@Inject
     private BPMSTaskService bpms;
 	
@@ -17,6 +25,10 @@ public class TarefaController {
 	private List<TarefaDTO> tarefas;
 	
 	private TarefaDTO tarefaSelecionada;
+	@PostConstruct
+	public void init(){
+		conversation.begin();
+	}
 	
 	public void obterTarefasUsuario()
 	{
@@ -32,8 +44,8 @@ public class TarefaController {
 	
 	public void aprovarTarefa()
 	{
-		
 		System.out.println(tarefaSelecionada.getActualOwner());
+		conversation.end();
 	}
 	
 	public String getUsuario() {

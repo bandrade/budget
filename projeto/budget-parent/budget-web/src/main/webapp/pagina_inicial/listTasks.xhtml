@@ -1,45 +1,54 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-                xmlns:ui="http://java.sun.com/jsf/facelets"
-                xmlns:f="http://java.sun.com/jsf/core"
-                xmlns:h="http://java.sun.com/jsf/html"
-                xmlns:p="http://primefaces.org/ui"
-                template="/WEB-INF/templates/default.xhtml">
-    <f:metadata>
-        <f:viewParam name="user" value="#{tarefaController.usuario}" />
-        <f:event type="preRenderView" listener="#{tarefaController.obterTarefasUsuario()}" />
-    </f:metadata>
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/templates/default.xhtml">
+	<f:metadata>
+		<f:viewParam name="user" value="#{tarefaController.usuario}" />
+		<f:event type="preRenderView"
+			listener="#{tarefaController.obterTarefasUsuario()}" />
+	</f:metadata>
 
-    <ui:param name="pageTitle" value="Human Tasks" />
+	<ui:param name="pageTitle" value="Human Tasks" />
 
-    <ui:define name="content">
-    	<h:form>
-	    	<h:panelGroup rendered="#{empty tarefaController.tarefas}">
-	            <i>User #{tarefaController.usuario} nao possui tarefas pendentes.</i>
-	        </h:panelGroup>
-	         <p:dataTable id="userTasksTable" border="1" rendered="#{not empty tarefaController.tarefas}"
-	                     value="#{tarefaController.tarefas}" var="_item"  selection="#{tarefaController.tarefaSelecionada}"
-	                     rowKey="#{_item.id}">
-	            <p:column>
-	                <f:facet name="header">
-	                    <h:outputText value="Name1" />
-	                </f:facet>
-	                <h:outputText id="taskName" value="#{_item.name}" />
-	            </p:column>
-	            <p:column>
-	                <f:facet name="header">
-	                    <h:outputText value="Process instance ID" />
-	                </f:facet>
-	                <h:outputText id="processInstanceId" value="#{_item.processInstanceId}" />
-	            </p:column>
-	            <p:column>
-	                <f:facet name="header">
-	                    <h:outputText value="Approval" />
-	                </f:facet>
-	                <p:commandLink action="#{tarefaController.aprovarTarefa()}" value="aprovar" ajax="false">
-	                	<f:setPropertyActionListener target="#{_item}" value="#{tarefaController.tarefaSelecionada}" />
-	                </p:commandLink>
-	            </p:column>
-	        </p:dataTable>
-       </h:form>
-    </ui:define>
+	<ui:define name="content">
+		<h:messages />
+		<h:form>
+			<h:panelGroup rendered="#{empty tarefaController.tarefas}">
+				<i>User #{tarefaController.usuario} nao possui tarefas
+					pendentes.</i>
+			</h:panelGroup>
+			<p:dataTable id="userTasksTable" border="1"
+				rendered="#{not empty tarefaController.tarefas}"
+				value="#{tarefaController.tarefas}" var="_item" rowKey="#{_item.id}">
+				<f:facet name="header">
+           				 Tarefas
+        		</f:facet>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Name1" />
+					</f:facet>
+					<h:outputText id="taskName" value="#{_item.name}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Process instance ID" />
+					</f:facet>
+					<h:outputText id="processInstanceId"
+						value="#{_item.processInstanceId}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Approval" />
+					</f:facet>
+					<p:commandButton action="#{tarefaController.aprovarTarefa()}"
+						value="s" ajax="false">
+						<f:setPropertyActionListener
+							target="#{tarefaController.tarefaSelecionada}" value="#{_item}" />
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+	</ui:define>
 </ui:composition>
