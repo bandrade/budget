@@ -10,11 +10,11 @@ import java.util.List;
 public class DupontUserGroupCallback implements UserGroupCallback {
 
     public boolean existsUser(String userId) {
-        return userId.equals("veronicag") || userId.equals("Administrator") ;
+        return userId.equals("veronicag") || userId.equals("Administrator") || userId.equals("guidov")  ;
     }
 
     public boolean existsGroup(String groupId) {
-        return groupId.equals("PM") || groupId.equals("HR") || groupId.equals("RESPONSAVEL_WR31601027") || groupId.equals("Administrators") ;
+        return groupId.equals("RESPONSAVEL_WR31601027") || groupId.equals("LIDER_Distribuicao") ;
     }
 
     public List<String> getGroupsForUser(String userId,	
@@ -22,8 +22,9 @@ public class DupontUserGroupCallback implements UserGroupCallback {
         List<String> groups = new ArrayList<String>();
         if (userId.equals("veronicag"))
             groups.add("RESPONSAVEL_WR31601027");
-        else if (userId.equals("mary"))
-            groups.add("HR");
+        else if (userId.equals("guidov"))
+            groups.add("LIDER_Distribuicao");
+      
         return groups;
     }
 }

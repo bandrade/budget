@@ -46,8 +46,8 @@ public class BPMSTaskServiceImpl implements BPMSTaskService {
 		return tarefas;
 	}
 
-	public boolean aprovarTarefa(String user) throws Exception {
-		taskApi.aproveTask(user, 0, null);
+	public boolean aprovarTarefa(String usuario, TarefaDTO tarefa) throws Exception {
+		taskApi.aproveTask(usuario, tarefa.getId(), null);
 
 		return true;
 	}

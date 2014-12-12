@@ -10,7 +10,7 @@ import com.dupont.budget.bpm.custom.exception.BPMException;
 
 public interface BPMTaskManagerApi {
 	List<TaskSummary> retrieveTaskList(String actorId) throws BPMException;
-	void aproveTask(String actorId, long taskId, Map<String,Object> content) throws BPMException ;
+	void aproveTask(String actorId, long taskId, Map<String,Object> content) throws Exception ;
 	Task getTask(long taskId)  throws BPMException;
 	Map<String,Object> getTaskContent(long taskId) throws BPMException;
 	

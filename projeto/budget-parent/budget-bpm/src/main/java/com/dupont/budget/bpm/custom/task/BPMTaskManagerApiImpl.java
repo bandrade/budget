@@ -19,8 +19,11 @@ package com.dupont.budget.bpm.custom.task;
 import java.util.List;
 import java.util.Map;
 
-import javax.enterprise.context.ApplicationScoped;
+import javax.annotation.Resource;
+import javax.enterprise.inject.Model;
 import javax.inject.Inject;
+import javax.transaction.Status;
+import javax.transaction.UserTransaction;
 
 import org.kie.api.task.TaskService;
 import org.kie.api.task.model.Task;
@@ -29,9 +32,10 @@ import org.kie.internal.task.api.InternalTaskService;
 
 import com.dupont.budget.bpm.custom.exception.BPMException;
 
-@ApplicationScoped
+@Model
 public class BPMTaskManagerApiImpl implements BPMTaskManagerApi {
-
+	@Resource
+	private UserTransaction ut;
 	@Inject
 	TaskService taskService;
 
@@ -47,11 +51,14 @@ public class BPMTaskManagerApiImpl implements BPMTaskManagerApi {
 	}
 
 	public void aproveTask(String actorId, long taskId,
-			Map<String, Object> content) throws BPMException {
+			Map<String, Object> content) throws Exception {
 		try {
 			taskService.start(taskId, actorId);
 			taskService.complete(taskId, actorId, content);
 		} catch (Exception e) {
+			if (ut.getStatus() == Status.STATUS_ACTIVE) {
+				ut.rollback();
+			}
 			throw new BPMException("Erro ao aprovar a tarefa", e);
 		}
 	}

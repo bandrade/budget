@@ -20,8 +20,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
+import javax.ejb.TransactionManagement;
+import javax.ejb.TransactionManagementType;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.transaction.Status;
+import javax.transaction.UserTransaction;
 
 import org.jbpm.process.workitem.rest.RESTWorkItemHandler;
 import org.kie.api.runtime.KieSession;
@@ -34,11 +39,15 @@ import org.kie.internal.runtime.manager.context.EmptyContext;
 import com.dupont.budget.bpm.custom.workitem.DupontEmailWorkItemHandler;
 
 @ApplicationScoped
+@TransactionManagement(TransactionManagementType.BEAN)
 public class BPMProcessManagerApiImpl  {
 
     @Inject
     @Singleton
     private RuntimeManager singletonManager;
+    
+    @Resource
+	private UserTransaction ut;
 
     @PostConstruct
     private void configure() {
@@ -64,12 +73,18 @@ public class BPMProcessManagerApiImpl  {
         long processInstanceId = -1;
         
         try {
+        	ut.begin();
             // start a new process instance
             Map<String, Object> params = new HashMap<String, Object>();
             ProcessInstance processInstance = ksession.startProcess(
             		/*"budget.EnvioEmail"*/"com.dupont.bpm.criarbudget", params);
                        processInstanceId = processInstance.getId();
+           ut.commit();
+           
         } catch (Exception e) {
+        	  if (ut.getStatus() == Status.STATUS_ACTIVE) {
+                  ut.rollback();
+              }
             throw new RuntimeException(e);
         }
         return processInstanceId;
