@@ -47,8 +47,8 @@
 		</dependency>
 		<dependency>
 			<groupId>org.primefaces.themes</groupId>
-			<artifactId>bootstrap</artifactId>
-			<version>${version.org.primefaces.themes.bootstrap}</version>
+			<artifactId>blitzer</artifactId>
+			<version>${version.org.primefaces.themes}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.dupont.budget</groupId>
