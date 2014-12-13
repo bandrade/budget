@@ -14,31 +14,57 @@
 	</h:head>
 	
 	<h:body>
-	    <div id="container">
-	    
-	    	<aside class="sidebar">
-	    		BLA
-	    	</aside>
-	    
-	    	<header>
-	    		BLA
-	    	</header>
-	    	
-
-	        <article class="main">
-	        
-	        	<p:messages id="messages" showDetail="true" showSummary="false" autoUpdate="true" closable="true" globalOnly="true"/>
-	        	
-				<ui:insert name="content">
-	                    [Template content will be inserted here]
-				</ui:insert>
+	
+		<p:layout styleClass="main" fullPage="true">
+		
+			<p:layoutUnit styleClass="layoutUnit sidebar" position="west" gutter="0" resizable="false" collapsible="false"  size="15%">
 				
-	        </article>
-	        
-	        <footer>
+				<ul class="menu">
+					<li> Minhas tarefas </li>
+					<li> Criar Budget </li>
+					<li> Lançar Despesa </li>
+					<li> Lançar Forecast </li>					
+					<li> 
+						Administração						
+						<ul>
+							<li> <p:link  outcome="/pages/adm/cultura/list.xhtml" value="Cultura"/> </li>
+						</ul>
+					
+					</li>
+				
+				</ul>
+			
+			</p:layoutUnit>
+			
+			<p:layoutUnit styleClass="layoutUnit" position="center" gutter="0" collapsible="false" closable="false" resizable="false" size="100%" >
+			
+			
+				<p:layout>
+				
+					<p:layoutUnit collapsible="false" resizable="false" gutter="0" styleClass="layoutUnit header"  position="north">
+					
+						<p> Bem-vindo Ângelo Galvão ao sistema de Budget da Dupont </p>
+						
+						
+						
+					</p:layoutUnit>
+					
+					<p:layoutUnit resizable="false" styleClass="layoutUnit main" gutter="0" position="center">
+					
+						<p:messages id="messages" showDetail="true" showSummary="false" autoUpdate="true" closable="true" globalOnly="true"/>
 	        	
-	        </footer>
-	    </div>
+						<ui:insert name="content">
+			                    [Template content will be inserted here]
+						</ui:insert>
+					
+					</p:layoutUnit>
+				
+				</p:layout>
+			
+			
+			</p:layoutUnit>
+		
+		</p:layout>
 	</h:body>
 	
 </html>

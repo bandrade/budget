@@ -1,19 +1,91 @@
-## CSS Default do sistema de Budget
+/* CSS Default do sistema de Budget */
 
-.sidebar {	
-	float: left;
-	width: 20%;
- 	padding: 0 20px 0 10px;
+
+body{
+	
+	background-color: #f4ebd4;
+	
+}
+.main {
+	border: none;
+	background-color: #dfe4e6;
 }
 
-.button{
-	float: right;	
+.layoutUnit {
+	border: none;	
+	padding: 0px;
+	margin: 0px;
 }
 
-header {
-	height: 200px;
+.header {
+
 }
 
-footer {
-  clear: both;	
+.header p {
+	text-align: right;
+	margin-right: 10px;
+	color: rgb(226, 202, 202);
+}
+
+/* Menu */
+
+.menu {
+	margin-top: 100px;
+	font-size: 1.25em;
+	font-weight: bold;
+	list-style-type: none;
+}
+
+.menu ul {
+	list-style-type: none;
+}
+
+.menu li {
+	padding-top: 2px;
+}
+	
+/* Sobescrevendo estilo do primefaces  */
+.ui-layout, .ui-layout-doc, .ui-layout-unit, .ui-layout-wrap, .ui-layout-bd, .ui-layout-hd{
+    border: none;
+    margin: 0px;
+}
+
+ .ui-layout-unit .ui-layout-unit-content {
+            padding: 0.2em 0em;
+            border: 0px none;
+            overflow: hidden !important;
+        }
+.ui-layout-resizer, .ui-layout-resizer-north, ui-layout-resizer-open, .ui-layout-resizer-north-open {
+    display: none !important;
+}
+.ui-layout-bd { 
+       border: 0;margin:0; 
+}
+.ui-layout-unit {
+	padding: 0px !important;	
+}
+.ui-layout-unit .ui-layout-unit-content {
+	padding: 0px !important;	
+}
+
+.ui-widget-content {
+	background: none; 
+	padding: 0;
+	margin: 0;
+}
+.ui-layout-unit-content {
+    overflow:hidden !important;
+}     
+
+.header .ui-widget-content {
+	background-color: #f47676;
+}
+
+.sidebar .ui-widget-content {
+	background-color: #dfe4e6;
+}
+
+.main .ui-widget-content {
+	background-color: white;
+	padding: 10px;
 }
