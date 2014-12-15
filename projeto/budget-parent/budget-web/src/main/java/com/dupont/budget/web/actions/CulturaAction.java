@@ -3,6 +3,7 @@ package com.dupont.budget.web.actions;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.annotation.security.RolesAllowed;
 import javax.enterprise.inject.Model;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
@@ -23,6 +24,7 @@ import com.dupont.budget.web.util.FacesUtils;
  *
  */
 @Model
+@RolesAllowed(value="ADMINISTRADOR")
 public class CulturaAction implements Serializable{
 
 	private static final long serialVersionUID = -6061667499898003022L;

@@ -19,7 +19,8 @@
 					<p:inputText id="nomeInput" value="#{cultura.nome}"/>
 					<p:message for="nomeInput"/>
 					
-					<p:commandButton value="Pesquisar" icon="ui-icon-search" action="#{culturaAction.findCulturas}" update="culturas"/>
+					<p:commandButton value="Pesquisar" icon="ui-icon-search"   styleClass="button" action="#{culturaAction.findCulturas}" update="culturas"/>
+					<p:commandButton value="Novo"      icon="ui-icon-document" styleClass="button" action="/pages/adm/cultura/edit.xml"   />
 				</h:panelGrid>
 				
 				<p:separator />

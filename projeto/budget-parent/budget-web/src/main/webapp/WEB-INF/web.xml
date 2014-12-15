@@ -28,4 +28,48 @@
 	<welcome-file-list>
 		<welcome-file>index.xhtml</welcome-file>
 	</welcome-file-list>
+	
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>administracao</web-resource-name>
+			<url-pattern>/pages/adm/*</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>ADMINISTRADOR</role-name>
+		</auth-constraint>		
+		<user-data-constraint>
+            <transport-guarantee>NONE</transport-guarantee>
+        </user-data-constraint>
+	</security-constraint>
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>comum</web-resource-name>
+			<url-pattern>/pages/process/*</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>USUARIO</role-name>
+		</auth-constraint>		
+		<user-data-constraint>
+            <transport-guarantee>NONE</transport-guarantee>
+        </user-data-constraint>
+	</security-constraint>
+	
+	<login-config>
+		<auth-method>BASIC</auth-method>
+	</login-config>
+		
+	<security-role>		
+		<description>Usurios comuns</description>
+		<role-name>USUARIO</role-name>
+	</security-role>
+	
+	<security-role>
+		<description>Usurios administradores</description>
+		<role-name>ADMINISTRADOR</role-name>		
+	</security-role>
+	
+	<error-page>
+		<error-code>403</error-code>
+		<location>/pages/erro/403.xhtml</location>
+	</error-page>
 </web-app>

@@ -27,7 +27,8 @@
 					
 				</h:panelGrid>
 				
-				<p:commandButton value="#{cultura.id != null? 'Atualizar' : 'Salvar'}"    icon="ui-icon-check" action="#{culturaAction.persistCultura}" styleClass="button" ajax="false" />
+				<p:commandButton value="#{cultura.id != null? 'Atualizar' : 'Salvar'}" icon="ui-icon-check" action="#{culturaAction.persistCultura}" styleClass="button" ajax="false" />
+				<p:commandButton value="Cancelar"    icon="ui-icon-closethick" action="/pages/adm/cultura/list.xhtml" styleClass="button" ajax="false" immediate="true" />
 				
 			</h:form>
 		

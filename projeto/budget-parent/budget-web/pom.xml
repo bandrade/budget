@@ -65,6 +65,11 @@
 			<artifactId>budget-datamodel</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.picketbox</groupId>
+			<artifactId>picketbox</artifactId>
+		</dependency>
+
 	</dependencies>
 	<build>
 		<finalName>budget.war</finalName>
