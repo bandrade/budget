@@ -5,7 +5,7 @@ import java.util.List;
 import javax.enterprise.inject.Model;
 import javax.inject.Inject;
 
-import com.dupont.budget.model.Distrito;
+import com.dupont.budget.model.Cliente;
 import com.dupont.budget.service.DomainService;
 /**
  * Controller das telas de manutenção da entidade distrito
@@ -15,19 +15,19 @@ import com.dupont.budget.service.DomainService;
  *
  */
 @Model
-public class DistritoAction {
+public class ClienteAction {
 
 	@Inject
 	private DomainService service;
 	
-	private List<Distrito> distritos;
+	private List<Cliente> clientes;
 
-	public List<Distrito> getDistritos() {
+	public List<Cliente> getClientes() {
 
-		// Pré popula a lista de distritos
-		if (distritos == null)
-			distritos = service.findAllDistritos();
+		// Pré popula a lista de clientes
+		if (clientes == null)
+			clientes = service.findAllClientes();
 
-		return distritos;
+		return clientes;
 	}
 }

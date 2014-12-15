@@ -24,7 +24,7 @@ public class VendedorAction {
 
 	public List<Vendedor> getVendedores() {
 
-		// Pré popula a lista de culturas
+		// Pré popula a lista de vendedores
 		if (vendedores == null)
 			vendedores = service.findAllVendedores();
 

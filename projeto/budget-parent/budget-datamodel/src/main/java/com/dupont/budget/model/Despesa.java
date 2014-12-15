@@ -6,6 +6,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
@@ -16,7 +18,10 @@ import javax.persistence.Table;
  *
  */
 @Entity
-@Table(name="centro_custo")
+@Table(name="despesa")
+@NamedQueries({
+	@NamedQuery(name="Despesa.agruparPorTipoDeDespesa", query="select c from Despesa c where c.budget.id = :id group by c.tipoDespesa")
+}) 
 public class Despesa {
 
 	@Id
@@ -50,6 +55,10 @@ public class Despesa {
 	@ManyToOne
 	@JoinColumn(name="distrito_id")
 	private Distrito distrito;
+	
+	@ManyToOne
+	@JoinColumn(name="budget_id")
+	private Budget budget;
 	
 	private Double valor;
 	
@@ -134,5 +143,15 @@ public class Despesa {
 	public void setComentario(String comentario) {
 		this.comentario = comentario;
 	}
+
+	public Budget getBudget() {
+		return budget;
+	}
+
+	public void setBudget(Budget budget) {
+		this.budget = budget;
+	}
+	
+	
 }
 

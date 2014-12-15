@@ -3,6 +3,7 @@ package com.dupont.budget.service;
 import java.util.List;
 
 import com.dupont.budget.exception.DuplicateEntityException;
+import com.dupont.budget.model.Cliente;
 import com.dupont.budget.model.Cultura;
 import com.dupont.budget.model.Distrito;
 import com.dupont.budget.model.Produto;
@@ -89,7 +90,12 @@ public interface DomainService {
 	 */
 	public List<TipoDespesa> findAllTiposDespesa();
 	
-    
+	/**
+	 * Retorna todas as entidades tipos de despesa do meio persistente
+	 * @return lista com todas as entidades criadas
+	 */
+	public List<Cliente> findAllClientes();
+	
 	
 	
 }

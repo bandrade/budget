@@ -24,7 +24,7 @@ public class ProdutoAction {
 
 	public List<Produto> getProdutos() {
 
-		// Pré popula a lista de culturas
+		// Pré popula a lista de produtos
 		if (produtos == null)
 			produtos = service.findAllProdutos();
 

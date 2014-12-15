@@ -3,12 +3,11 @@ package com.dupont.budget.service.impl;
 import java.util.List;
 
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
 import org.apache.commons.lang3.StringUtils;
 
 import com.dupont.budget.exception.DuplicateEntityException;
+import com.dupont.budget.model.Cliente;
 import com.dupont.budget.model.Cultura;
 import com.dupont.budget.model.Distrito;
 import com.dupont.budget.model.Produto;
@@ -16,6 +15,7 @@ import com.dupont.budget.model.TipoDespesa;
 import com.dupont.budget.model.Usuario;
 import com.dupont.budget.model.Vendedor;
 import com.dupont.budget.service.DomainService;
+import com.dupont.budget.service.GenericService;
 
 /**
  * Implementação do serviço de domínio. O serviço grava as entidades de domínio em um banco de dados relacional.
@@ -25,10 +25,7 @@ import com.dupont.budget.service.DomainService;
  *
  */
 @Stateless
-public class DomainServiceBean implements DomainService {
-	
-	@PersistenceContext(unitName="budget-pu")
-	private EntityManager em;
+public class DomainServiceBean extends GenericService implements DomainService {
 
 	@Override
 	public Cultura createCultura(Cultura cultura) throws DuplicateEntityException {
@@ -114,4 +111,8 @@ public class DomainServiceBean implements DomainService {
 		return em.createNamedQuery("TipoDespesa.findAll", TipoDespesa.class).getResultList();
 	}
 
+	@Override
+	public List<Cliente> findAllClientes() {
+		return em.createNamedQuery("Cliente.findAll", Cliente.class).getResultList();
+	}
 }
