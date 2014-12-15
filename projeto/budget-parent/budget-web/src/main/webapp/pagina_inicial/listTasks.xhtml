@@ -14,7 +14,7 @@
     <ui:define name="content">
     	<h:form>
 	    	<h:panelGroup rendered="#{empty tarefaAction.tarefas}">
-	            <i>User #{tarefaAction.usuario} nao possui tarefas pendentes.</i>
+	            <i>Voce nao possui tarefas pendentes.</i>
 	        </h:panelGroup>
 	         <p:dataTable id="userTasksTable" border="1" rendered="#{not empty tarefaAction.tarefas}"
 	                     value="#{tarefaAction.tarefas}" var="_item"  selection="#{tarefaAction.tarefaSelecionada}"
@@ -23,21 +23,15 @@
 	                <f:facet name="header">
 	                    <h:outputText value="Name1" />
 	                </f:facet>
-	                <h:outputText id="taskName" value="#{_item.name}" />
+	                <p:commandLink action="#{tarefaAction.aprovarTarefa()}" value="#{_item.name}" ajax="false">
+	                	<f:setPropertyActionListener target="#{tarefaAction.tarefaSelecionada}" value="#{_item}" />
+	                </p:commandLink>
 	            </p:column>
 	            <p:column>
 	                <f:facet name="header">
 	                    <h:outputText value="Process instance ID" />
 	                </f:facet>
-	                <h:outputText id="processInstanceId" value="#{_item.processInstanceId}" />
-	            </p:column>
-	            <p:column>
-	                <f:facet name="header">
-	                    <h:outputText value="Approval" />
-	                </f:facet>
-	                <p:commandLink action="#{tarefaAction.aprovarTarefa()}" value="aprovar" ajax="false">
-	                	<f:setPropertyActionListener target="#{_item}" value="#{tarefaAction.tarefaSelecionada}" />
-	                </p:commandLink>
+	                <h:outputText id="processInstanceId" value="#{_item.description}" />
 	            </p:column>
 	        </p:dataTable>
        </h:form>

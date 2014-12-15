@@ -1,15 +1,20 @@
 package com.dupont.budget.web.actions;
 
+import java.io.Serializable;
 import java.util.List;
 
-import javax.enterprise.inject.Model;
+import javax.annotation.PostConstruct;
+import javax.enterprise.context.Conversation;
+import javax.enterprise.context.ConversationScoped;
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import com.dupont.budget.dto.TarefaDTO;
 import com.dupont.budget.service.bpms.BPMSTaskService;
 
-@Model
-public class TarefaAction {
+@ConversationScoped
+@Named
+public class TarefaAction implements Serializable {
 	@Inject
     private BPMSTaskService bpms;
 	
@@ -18,6 +23,15 @@ public class TarefaAction {
 	private List<TarefaDTO> tarefas;
 	
 	private TarefaDTO tarefaSelecionada;
+	
+	@Inject
+	private Conversation conversation;
+	
+	@PostConstruct
+	public void init()
+	{
+		conversation.begin();
+	}
 	
 	public void obterTarefasUsuario()
 	{
@@ -31,10 +45,18 @@ public class TarefaAction {
 		}
 	}
 	
+	
 	public void aprovarTarefa()
 	{
 		
-		System.out.println(tarefaSelecionada.getActualOwner());
+		System.out.println(tarefaSelecionada.getName());	
+		try {
+			bpms.aprovarTarefa(usuario,tarefaSelecionada);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		conversation.end();
 	}
 	
 	public String getUsuario() {
@@ -62,5 +84,4 @@ public class TarefaAction {
 	}
 	
 	
-
 }
