@@ -3,10 +3,14 @@ package com.dupont.budget.model;
 import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -19,6 +23,9 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name="usuario")
+@NamedQueries({
+	@NamedQuery(name="Usuario.findByLogin", query="select u from Usuario u where u.login = :login")
+})
 public class Usuario {
 
 	@Id
@@ -33,6 +40,7 @@ public class Usuario {
 	
 	private String email;
 	
+	@Enumerated(EnumType.STRING)
 	private Perfil perfil;
 	
 	@OneToMany(targetEntity=PapelUsuario.class)

@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.dupont.budget.exception.DuplicateEntityException;
 import com.dupont.budget.model.Cultura;
+import com.dupont.budget.model.Usuario;
 import com.dupont.budget.service.DomainService;
 
 /**
@@ -71,6 +72,20 @@ public class DomainServiceBean implements DomainService {
 	public Cultura updateCultura(Cultura cultura) {
 
 		return em.merge(cultura);
+	}
+
+	@Override
+	public Usuario getUsuarioByLogin(String login) {
+		
+		if( StringUtils.isBlank(login) )
+			return null;
+		
+		
+		Usuario result = em.createNamedQuery("Usuario.findByLogin", Usuario.class)
+							.setParameter("login", login)
+							.getSingleResult();
+		
+		return result;
 	}
 
 }

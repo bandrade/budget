@@ -18,7 +18,8 @@ package com.dupont.budget.web.actions;
  *	  </authentication>
  * </security-domain>
  * 
- * @author asouza
+ * @author <a href="asouza@redhat.com">Ângelo Galvão</a>
+ * @since 2014
  *
  */
 public class UsuarioAction {

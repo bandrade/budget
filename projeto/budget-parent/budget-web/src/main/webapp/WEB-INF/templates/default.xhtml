@@ -24,13 +24,16 @@
 					<li> Criar Budget </li>
 					<li> Lançar Despesa </li>
 					<li> Lançar Forecast </li>					
+					
+					
+					<h:panelGroup rendered="#{request.isUserInRole('ADMINISTRADOR')}">				
 					<li> 
 						Administração						
 						<ul>
 							<li> <p:link  outcome="/pages/adm/cultura/list.xhtml" value="Cultura"/> </li>
-						</ul>
-					
+						</ul>					
 					</li>
+					</h:panelGroup>
 				
 				</ul>
 			
@@ -43,7 +46,8 @@
 				
 					<p:layoutUnit collapsible="false" resizable="false" gutter="0" styleClass="layoutUnit header"  position="north">
 					
-						<p> Bem-vindo Ângelo Galvão ao sistema de Budget da Dupont </p>
+						<!-- Propriedade criada no classeLoggedUserAction -->
+						<p> Bem-vindo #{loggedUsername} ao sistema de Budget da Dupont </p>
 						
 						
 						

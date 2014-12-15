@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.dupont.budget.exception.DuplicateEntityException;
 import com.dupont.budget.model.Cultura;
+import com.dupont.budget.model.Usuario;
 
 /**
  * Serviço que controla todas as classes de domínio.
@@ -47,4 +48,12 @@ public interface DomainService {
 	 * @return entidade atualizada
 	 */
 	public Cultura updateCultura(Cultura cultura);
+	
+	/**
+	 * Retorna um usuario pelo login.
+	 * @param login login do usuario
+	 * @return usuario encontrado ou null
+	 */
+	public Usuario getUsuarioByLogin(String login);
+	
 }
