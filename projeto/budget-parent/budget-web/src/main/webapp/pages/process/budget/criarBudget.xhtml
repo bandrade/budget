@@ -9,8 +9,7 @@
 
 	<ui:define name="content">
 		<p:messages></p:messages>
-		<f:loadBundle
-			basename="com.dupont.budget.web.message.JSFMessages_pt_BR" var="msgs" />
+		
 		<h:form>
 			<p:panelGrid columns="1" style="width:95%">
 				<p:fieldset value="Criar Budget" legend="Criar Budget">
@@ -19,9 +18,9 @@
 						<p:outputLabel styleClass="bold-label" value="adsas"></p:outputLabel>
 					</p:panelGrid>
 					<p:commandButton value="Incluir Despesa" type="button"
-						onclick="PF('dlg1').show();" />
+						onclick="PF('criarDespesa').show();" />
 
-					<p:dataTable emptyMessage="Não existem despesas cadastradas">
+					<p:dataTable emptyMessage="Não existem despesas cadastradas" value="#{criarBudgetAction.despesasAgrupadas}">
 						<f:facet name="header">
         				 Despesas
    						 </f:facet>
@@ -39,7 +38,8 @@
 
 						</p:column>
 					</p:dataTable>
-					<p:dataTable emptyMessage="Não existem despesas cadastradas">
+					<p:dataTable emptyMessage="Não existem despesas cadastradas" rendered="#{not empty criarBudgetAction.despesaSelecionada}" 
+						value="#{criarBudgetAction.budget.despesas}">
 						<f:facet name="header">
         				 Despesas - Detalhe
    						 </f:facet>
@@ -82,7 +82,7 @@
 
 				</p:fieldset>
 			</p:panelGrid>
-			<p:dialog header="Incluir Despesa" widgetVar="dlg1" height="200"
+			<p:dialog header="Incluir Despesa" widgetVar="criarDespesa" height="200"
 				width="300">
 				<p:panelGrid columns="2">
 					<p:outputLabel value="Tipo de Despesa:"></p:outputLabel>
@@ -123,6 +123,13 @@
 						<f:selectItem itemValue="" itemLabel="SELECIONE" />
 						<f:selectItems value="#{vendedorAction.vendedores}" var="vendedor"
 							itemLabel="#{vendedor.nome}" itemValue="#{vendedor}" />
+					</p:selectOneMenu>
+					<p:outputLabel value="Cliente:"></p:outputLabel>
+					<p:selectOneMenu value="#{criarBudgetAction.despesa.cliente}"
+						validator="com.dupont.budget.web.validators.ComboValidator">
+						<f:selectItem itemValue="" itemLabel="SELECIONE" />
+						<f:selectItems value="#{clienteAction.clientes}" var="cliente"
+							itemLabel="#{cliente.nome}" itemValue="#{cliente}" />
 					</p:selectOneMenu>
 
 				</p:panelGrid>
