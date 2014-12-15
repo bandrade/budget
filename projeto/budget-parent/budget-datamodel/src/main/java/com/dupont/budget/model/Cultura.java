@@ -9,7 +9,6 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 
 /**
  * Entidade cultura.
@@ -74,4 +73,11 @@ public class Cultura implements Serializable{
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return nome;
+	}
+	
+	
 }
