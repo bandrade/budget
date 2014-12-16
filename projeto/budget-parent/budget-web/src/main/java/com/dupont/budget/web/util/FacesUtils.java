@@ -1,5 +1,7 @@
 package com.dupont.budget.web.util;
 
+import java.io.Serializable;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
@@ -10,7 +12,7 @@ import javax.faces.context.FacesContext;
  * @since 2014
  *
  */
-public class FacesUtils {
+public class FacesUtils implements Serializable{
 
 	/**
 	 * Adiciona uma mensagem de erro no contexto JSF.
@@ -27,4 +29,16 @@ public class FacesUtils {
 	public void addInfoMessage(String message){
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Informação", message));
 	}
+	
+	
+	/**
+	 * Retorna o usuario logado
+	 * @return Usuario logado
+	 */
+	
+	public String getUserLogin()
+	{
+		return FacesContext.getCurrentInstance().getExternalContext().getRemoteUser();
+	}
+	
 }

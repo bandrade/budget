@@ -7,13 +7,18 @@
 	template="/WEB-INF/templates/default.xhtml">
 
 	<ui:param name="pageTitle" value="Human Tasks" />
+	<f:metadata>
+        <f:viewParam name="taskId" value="#{criarBudgetAction.idTarefa}" />
+        <f:viewParam name="processInstanceId" value="#{criarBudgetAction.idInstanciaProcesso}" />
+        <f:event type="preRenderView" listener="#{criarBudgetAction.obterDadosBudget()}" />
+    </f:metadata>
 
 	<ui:define name="content">
 		<p:messages></p:messages>
 		
 		<h:form id="form">
 			<p:messages></p:messages>
-			<p:panelGrid columns="1" style="width:95%">
+			<p:panelGrid columns="1" styleClass="body-content">
 				<p:fieldset value="Criar Budget" legend="Criar Budget">
 					<p:panelGrid columns="2">
 						<p:outputLabel value="Centro de Custo:"></p:outputLabel>

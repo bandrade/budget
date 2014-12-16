@@ -14,6 +14,4 @@ public interface BPMTaskManagerApi {
 	Task getTask(long taskId)  throws BPMException;
 	Map<String,Object> getTaskContent(long taskId) throws BPMException;
 	
-	
-	
 }

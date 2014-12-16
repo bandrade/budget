@@ -10,11 +10,15 @@ import javax.inject.Named;
 @Named
 public class NavegacaoAction {
 	private Map<String,String> navegationMap;
-	
 	@PostConstruct
 	public void init()
 	{
 		navegationMap = new HashMap<String, String>();
-		navegationMap.put("Criar Budget", "");
+		navegationMap.put("Criar Budget", "criarBudget");
+	}
+	
+	public String obterOutcome(String taskname)
+	{
+		return navegationMap.get(taskname);
 	}
 }

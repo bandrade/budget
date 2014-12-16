@@ -9,19 +9,17 @@ import javax.enterprise.context.ConversationScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.slf4j.Logger;
+
 import com.dupont.budget.dto.TarefaDTO;
 import com.dupont.budget.service.bpms.BPMSTaskService;
+import com.dupont.budget.web.util.FacesUtils;
 
 @ConversationScoped
 @Named
 public class TarefaAction implements Serializable {
-
-	private static final long serialVersionUID = -2686631786724652742L;
-
 	@Inject
 	private BPMSTaskService bpms;
-
-	private String usuario;
 
 	private List<TarefaDTO> tarefas;
 
@@ -30,6 +28,12 @@ public class TarefaAction implements Serializable {
 	@Inject
 	private Conversation conversation;
 
+	@Inject
+	private Logger logger;
+
+	@Inject
+	private FacesUtils facesUtils;
+
 	@PostConstruct
 	public void init() {
 		conversation.begin();
@@ -37,9 +41,10 @@ public class TarefaAction implements Serializable {
 
 	public void obterTarefasUsuario() {
 		try {
-			tarefas = bpms.obterTarefas(usuario);
+			tarefas = bpms.obterTarefas(facesUtils.getUserLogin());
 		} catch (Exception e) {
-			// TODO TRATAMENTO VIEW
+			facesUtils.addErrorMessage("Erro ao obter tarefas do usuario.");
+			logger.error("Erro ao obter tarefas do usuario.", e);
 		}
 	}
 
@@ -47,23 +52,19 @@ public class TarefaAction implements Serializable {
 
 		System.out.println(tarefaSelecionada.getName());
 		try {
-			bpms.aprovarTarefa(usuario, tarefaSelecionada);
+			bpms.aprovarTarefa(facesUtils.getUserLogin(),
+					tarefaSelecionada);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			facesUtils.addErrorMessage("Erro ao aprovar tarefa do usuario.");
+			logger.error("Erro ao obter tarefas do usuario.", e);
 		}
 		conversation.end();
 	}
 
-	public String getUsuario() {
-		return usuario;
-	}
-
-	public void setUsuario(String usuario) {
-		this.usuario = usuario;
-	}
-
 	public List<TarefaDTO> getTarefas() {
+		if (tarefas == null) {
+			obterTarefasUsuario();
+		}
 		return tarefas;
 	}
 

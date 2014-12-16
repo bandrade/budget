@@ -74,7 +74,8 @@ public class DupontApplicationScopedProducer {
     	auditLogger.setBuilder(auditEventBuilder);
         RuntimeEnvironment environment = RuntimeEnvironmentBuilder.Factory.get()
                 .newDefaultBuilder(releaseId)
-                .entityManagerFactory(emf).registerableItemsFactory(InjectableRegisterableItemsFactory.getFactory(beanManager, auditLogger)).get();
+                .entityManagerFactory(emf).
+                registerableItemsFactory(InjectableRegisterableItemsFactory.getFactory(beanManager, auditLogger)).get();
         
         return environment;
     }

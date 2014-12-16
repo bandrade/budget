@@ -10,6 +10,7 @@ import javax.enterprise.context.ConversationScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import com.dupont.budget.dto.CentroDeCustoDTO;
 import com.dupont.budget.dto.TarefaDTO;
 import com.dupont.budget.model.Acao;
 import com.dupont.budget.model.Budget;
@@ -22,7 +23,12 @@ import com.dupont.budget.model.TipoDespesa;
 import com.dupont.budget.model.Vendedor;
 import com.dupont.budget.service.BudgetService;
 import com.dupont.budget.service.DomainService;
+import com.dupont.budget.service.bpms.BPMSProcessService;
 
+/**
+ * @author bandrade
+ *
+ */
 @ConversationScoped
 @Named
 public class CriarBudgetAction implements Serializable {
@@ -33,6 +39,12 @@ public class CriarBudgetAction implements Serializable {
 	private Despesa despesa;
 	private List<Despesa> despesasAgrupadas;
 	private Despesa despesaSelecionada;
+	private Long idInstanciaProcesso;
+	private Long idTarefa;
+	
+	@Inject
+    private BPMSProcessService bpmsProcesso;
+	
 	@Inject
 	private BudgetService budgetService;
 	
@@ -55,11 +67,24 @@ public class CriarBudgetAction implements Serializable {
 		despesa.setDistrito(new Distrito());
 		despesa.setVendedor(new Vendedor());
 		despesa.setTipoDespesa(new TipoDespesa());
-		
+		tarefa = new TarefaDTO();
 		budget = new Budget();
 	
 		carregarDespesasBudget();
 	}
+	
+	public void obterDadosBudget()
+	{
+
+			try {
+				CentroDeCustoDTO centroDeCustoDTO = (CentroDeCustoDTO)bpmsProcesso.obterVariavelProcesso(idInstanciaProcesso, "centroDeCusto");
+				System.out.println(centroDeCustoDTO.getNome());
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	}
+	
 	
 	private void carregarDespesasBudget() {
 		if(budget !=null && budget.getId() !=null)
@@ -127,6 +152,24 @@ public class CriarBudgetAction implements Serializable {
 	public void setDespesasAgrupadas(List<Despesa> despesasAgrupadas) {
 		this.despesasAgrupadas = despesasAgrupadas;
 	}
+
+	public Long getIdInstanciaProcesso() {
+		return idInstanciaProcesso;
+	}
+
+	public void setIdInstanciaProcesso(Long idInstanciaProcesso) {
+		this.idInstanciaProcesso = idInstanciaProcesso;
+	}
+
+	public Long getIdTarefa() {
+		return idTarefa;
+	}
+
+	public void setIdTarefa(Long idTarefa) {
+		this.idTarefa = idTarefa;
+	}
+	
+	
 	
 	
 }

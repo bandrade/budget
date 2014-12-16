@@ -5,7 +5,7 @@ body {
 
 .main {
 	border: none;
-	background-color: #dfe4e6;
+	background-color: #EFEFEF;
 }
 
 .layoutUnit {
@@ -21,7 +21,7 @@ body {
 .header p {
 	text-align: right;
 	margin-right: 10px;
-	color: rgb(226, 202, 202);
+	color: #EFEFEF;
 }
 
 /* Menu */
@@ -82,11 +82,11 @@ body {
 }
 
 .header .ui-widget-content {
-	background-color: #f47676;
+	background-color: #CE0B0B;
 }
 
 .sidebar .ui-widget-content {
-	background-color: #dfe4e6;
+	background-color: #EFEFEF;
 }
 
 .main .ui-widget-content {
@@ -109,3 +109,13 @@ body {
 	padding: 20px 10px;
 	
 }
+
+.main .body-content {
+	width:95%
+}
+
+.main .painel-botoes {
+	width:100%;
+	text-align:right;
+}
+
