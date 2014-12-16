@@ -7,6 +7,7 @@ import javax.ejb.Stateless;
 import org.apache.commons.lang3.StringUtils;
 
 import com.dupont.budget.exception.DuplicateEntityException;
+import com.dupont.budget.model.Acao;
 import com.dupont.budget.model.Cliente;
 import com.dupont.budget.model.Cultura;
 import com.dupont.budget.model.Distrito;
@@ -115,4 +116,11 @@ public class DomainServiceBean extends GenericService implements DomainService {
 	public List<Cliente> findAllClientes() {
 		return em.createNamedQuery("Cliente.findAll", Cliente.class).getResultList();
 	}
+
+	@Override
+	public void insertAcao(Acao acao) {
+		em.persist(acao);
+	}
+	
+	
 }

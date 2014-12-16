@@ -3,6 +3,7 @@ package com.dupont.budget.service;
 import java.util.List;
 
 import com.dupont.budget.exception.DuplicateEntityException;
+import com.dupont.budget.model.Acao;
 import com.dupont.budget.model.Cliente;
 import com.dupont.budget.model.Cultura;
 import com.dupont.budget.model.Distrito;
@@ -95,7 +96,10 @@ public interface DomainService {
 	 * @return lista com todas as entidades criadas
 	 */
 	public List<Cliente> findAllClientes();
-	
-	
+	/**
+	 * Cria a entidade cultura no meio persistente
+	 * @param acao entidade a ser criada
+	 */
+	public void insertAcao(Acao acao);
 	
 }

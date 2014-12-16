@@ -1,6 +1,7 @@
 package com.dupont.budget.web.actions;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -10,10 +11,17 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import com.dupont.budget.dto.TarefaDTO;
+import com.dupont.budget.model.Acao;
 import com.dupont.budget.model.Budget;
+import com.dupont.budget.model.Cliente;
+import com.dupont.budget.model.Cultura;
 import com.dupont.budget.model.Despesa;
+import com.dupont.budget.model.Distrito;
 import com.dupont.budget.model.Produto;
+import com.dupont.budget.model.TipoDespesa;
+import com.dupont.budget.model.Vendedor;
 import com.dupont.budget.service.BudgetService;
+import com.dupont.budget.service.DomainService;
 
 @ConversationScoped
 @Named
@@ -26,6 +34,9 @@ public class CriarBudgetAction implements Serializable {
 	@Inject
 	private BudgetService budgetService;
 	
+	@Inject
+	private DomainService domainService;
+	
 	
 	@Inject
 	private Conversation conversation;
@@ -35,8 +46,16 @@ public class CriarBudgetAction implements Serializable {
 	private void init(){
 		conversation.begin();
 		despesa = new Despesa();
+		despesa.setAcao(new Acao());
 		despesa.setProduto(new Produto());
+		despesa.setCultura(new Cultura());
+		despesa.setCliente(new Cliente());
+		despesa.setDistrito(new Distrito());
+		despesa.setVendedor(new Vendedor());
+		despesa.setTipoDespesa(new TipoDespesa());
+		
 		budget = new Budget();
+	
 		carregarDespesasBudget();
 	}
 	
@@ -50,13 +69,21 @@ public class CriarBudgetAction implements Serializable {
 	public void adicionarDespesa()
 	{
 		
+		if(budget.getDespesas() ==null)
+		{
+			budget.setDespesas(new HashSet<Despesa>());
+		}
+		domainService.insertAcao(despesa.getAcao());
+		budgetService.insertItemDespesa(despesa);
+		budget.getDespesas().add(despesa);
+		if(budget.getId() ==null)
+		{
+			budgetService.insertBudget(budget);
+		}
+		despesasAgrupadas = budgetService.obterDespesaAgrupadas(budget.getId());
+			
 	}
 	
-	public String navegar()
-	{
-		
-		return "incluirBudget";
-	}
 	public String criarBudget()
 	{
 		
