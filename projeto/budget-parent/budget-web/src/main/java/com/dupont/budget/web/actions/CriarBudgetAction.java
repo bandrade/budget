@@ -1,3 +1,4 @@
+
 package com.dupont.budget.web.actions;
 
 import java.io.Serializable;
@@ -10,20 +11,15 @@ import javax.enterprise.context.ConversationScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.slf4j.Logger;
+
 import com.dupont.budget.dto.CentroDeCustoDTO;
-import com.dupont.budget.dto.TarefaDTO;
-import com.dupont.budget.model.Acao;
 import com.dupont.budget.model.Budget;
-import com.dupont.budget.model.Cliente;
-import com.dupont.budget.model.Cultura;
 import com.dupont.budget.model.Despesa;
-import com.dupont.budget.model.Distrito;
-import com.dupont.budget.model.Produto;
-import com.dupont.budget.model.TipoDespesa;
-import com.dupont.budget.model.Vendedor;
 import com.dupont.budget.service.BudgetService;
 import com.dupont.budget.service.DomainService;
 import com.dupont.budget.service.bpms.BPMSProcessService;
+import com.dupont.budget.web.util.FacesUtils;
 
 /**
  * @author bandrade
@@ -32,56 +28,51 @@ import com.dupont.budget.service.bpms.BPMSProcessService;
 @ConversationScoped
 @Named
 public class CriarBudgetAction implements Serializable {
-	
-	private static final long serialVersionUID = 7096537944620782785L;
-	private TarefaDTO tarefa;
 	private Budget budget;
 	private Despesa despesa;
 	private List<Despesa> despesasAgrupadas;
 	private Despesa despesaSelecionada;
 	private Long idInstanciaProcesso;
 	private Long idTarefa;
-	
 	@Inject
     private BPMSProcessService bpmsProcesso;
-	
 	@Inject
 	private BudgetService budgetService;
-	
 	@Inject
 	private DomainService domainService;
-	
-	
 	@Inject
 	private Conversation conversation;
+	@Inject
+	private Logger logger;
+	@Inject
+	private FacesUtils facesUtils;
+
+	private CentroDeCustoDTO centroDeCusto;
 	
+	private String ano;
 	
+		
 	@PostConstruct
 	private void init(){
 		conversation.begin();
 		despesa = new Despesa();
-		despesa.setAcao(new Acao());
-		despesa.setProduto(new Produto());
-		despesa.setCultura(new Cultura());
-		despesa.setCliente(new Cliente());
-		despesa.setDistrito(new Distrito());
-		despesa.setVendedor(new Vendedor());
-		despesa.setTipoDespesa(new TipoDespesa());
-		tarefa = new TarefaDTO();
+		despesa.init();
 		budget = new Budget();
 	
-		carregarDespesasBudget();
+		
 	}
 	
 	public void obterDadosBudget()
 	{
-
 			try {
-				CentroDeCustoDTO centroDeCustoDTO = (CentroDeCustoDTO)bpmsProcesso.obterVariavelProcesso(idInstanciaProcesso, "centroDeCusto");
-				System.out.println(centroDeCustoDTO.getNome());
+			   centroDeCusto = (CentroDeCustoDTO)bpmsProcesso.obterVariavelProcesso(idInstanciaProcesso, "centroDeCusto");
+			   ano = (String)bpmsProcesso.obterVariavelProcesso(idInstanciaProcesso, "ano");
+			   budget = budgetService.findByAnoAndCentroDeCusto(ano, centroDeCusto.getId());
+			   carregarDespesasBudget();
+			   
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				facesUtils.addErrorMessage("Erro ao obter tarefas do usuario.");
+				logger.error("Erro ao obter tarefas do usuario.", e);
 			}
 	}
 	
@@ -89,7 +80,7 @@ public class CriarBudgetAction implements Serializable {
 	private void carregarDespesasBudget() {
 		if(budget !=null && budget.getId() !=null)
 		{
-			budgetService.obterDespesaAgrupadas(budget.getId());
+			despesasAgrupadas = budgetService.obterDespesaAgrupadas(budget.getId());
 		}
 	}
 
@@ -123,12 +114,6 @@ public class CriarBudgetAction implements Serializable {
 	}
 	public void setBudget(Budget budget) {
 		this.budget = budget;
-	}
-	public TarefaDTO getTarefa() {
-		return tarefa;
-	}
-	public void setTarefa(TarefaDTO tarefa) {
-		this.tarefa = tarefa;
 	}
 	public Despesa getDespesa() {
 		return despesa;
@@ -168,8 +153,25 @@ public class CriarBudgetAction implements Serializable {
 	public void setIdTarefa(Long idTarefa) {
 		this.idTarefa = idTarefa;
 	}
+
+	public CentroDeCustoDTO getCentroDeCusto() {
+		return centroDeCusto;
+	}
+
+	public void setCentroDeCusto(CentroDeCustoDTO centroDeCusto) {
+		this.centroDeCusto = centroDeCusto;
+	}
+
+	public String getAno() {
+		return ano;
+	}
+
+	public void setAno(String ano) {
+		this.ano = ano;
+	}
 	
 	
 	
 	
 }
+

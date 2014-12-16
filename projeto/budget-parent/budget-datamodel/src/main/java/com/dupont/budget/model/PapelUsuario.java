@@ -6,6 +6,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
@@ -17,6 +19,9 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name="papel_usuario")
+@NamedQueries({
+@NamedQuery(name="PapelUsuario.findByCentroDeCusto"   , query="select p from PapelUsuario p where p.centroCusto.id=:idCentroDeCusto")
+})
 public class PapelUsuario {
 
 	@Id
@@ -31,6 +36,10 @@ public class PapelUsuario {
 	@JoinColumn(name="papel_id")
 	private Papel papel;
 	
+	@ManyToOne
+	@JoinColumn(name = "usuario_id")
+	private Usuario usuario;
+		
 	public PapelUsuario() {
 		this(null);
 	}
@@ -62,5 +71,15 @@ public class PapelUsuario {
 	public void setPapel(Papel papel) {
 		this.papel = papel;
 	}
+
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}
+	
+	
 	
 }

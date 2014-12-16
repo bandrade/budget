@@ -6,6 +6,7 @@ import com.dupont.budget.exception.DuplicateEntityException;
 import com.dupont.budget.model.AbstractEntity;
 import com.dupont.budget.model.Cultura;
 import com.dupont.budget.model.NamedAbstractEntity;
+import com.dupont.budget.model.PapelUsuario;
 import com.dupont.budget.model.Usuario;
 
 /**
@@ -94,6 +95,13 @@ public interface DomainService {
 	 * @return entidade atualizada
 	 */
 	<T extends AbstractEntity<?>> T update(T t);
+	
+	/**
+	 * Retorna todos os papeis relacionados a um Centro de Custo
+	 * @param idCentroDeCusto codigo do cc
+	 * @return papeis
+	 */
+    List<PapelUsuario> findPapeisByCentroDeCusto(Long idCentroDeCusto); 
 	
 	
 }

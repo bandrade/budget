@@ -7,7 +7,9 @@ import javax.ejb.Stateless;
 import org.apache.commons.lang3.StringUtils;
 
 import com.dupont.budget.exception.DuplicateEntityException;
+import com.dupont.budget.model.CentroCusto;
 import com.dupont.budget.model.Cultura;
+import com.dupont.budget.model.PapelUsuario;
 import com.dupont.budget.model.Usuario;
 import com.dupont.budget.service.DomainService;
 import com.dupont.budget.service.GenericService;
@@ -82,6 +84,15 @@ public class DomainServiceBean extends GenericService implements DomainService {
 							.getSingleResult();
 		
 		return result;
+	}
+
+	@Override
+	public List<PapelUsuario> findPapeisByCentroDeCusto(Long idCentroDeCusto) {
+		
+		return 
+				 em.createNamedQuery("PapelUsuario.findByCentroDeCusto", PapelUsuario.class)
+					.setParameter("idCentroDeCusto", idCentroDeCusto)
+					.getResultList();
 	}
 	
 }
