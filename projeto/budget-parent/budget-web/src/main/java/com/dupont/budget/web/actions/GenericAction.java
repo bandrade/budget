@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 
+import com.dupont.budget.exception.ExistingNameRuntimeException;
 import com.dupont.budget.model.AbstractEntity;
 import com.dupont.budget.service.DomainService;
 import com.dupont.budget.web.util.FacesUtils;
@@ -34,10 +35,14 @@ public abstract class GenericAction<T extends AbstractEntity<?>>  implements Ser
 	 */
 	public String persist() {
 		String action = null;
-		if (getEntidade().getId() == null) {
-			action = create();
-		} else {
-			action = update();
+		try {
+			if (getEntidade().getId() == null) {
+				action = create();
+			} else {
+				action = update();
+			}
+		} catch (ExistingNameRuntimeException e) {
+			getFacesUtils().addErrorMessage("Registro com mesmo nome já cadastrado!");
 		}
 		return action;
 	}

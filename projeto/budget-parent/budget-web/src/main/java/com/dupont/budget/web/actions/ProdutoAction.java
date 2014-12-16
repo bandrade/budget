@@ -1,12 +1,16 @@
 package com.dupont.budget.web.actions;
 
-import java.util.List;
-
+import javax.annotation.security.RolesAllowed;
 import javax.enterprise.inject.Model;
+import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
+import javax.inject.Named;
+
+import org.slf4j.Logger;
 
 import com.dupont.budget.model.Produto;
 import com.dupont.budget.service.DomainService;
+import com.dupont.budget.web.util.FacesUtils;
 /**
  * Controller das telas de manutenção da entidade produto
  * 
@@ -15,20 +19,46 @@ import com.dupont.budget.service.DomainService;
  *
  */
 @Model
-public class ProdutoAction {
+@RolesAllowed(value = "ADMINISTRADOR")
+public class ProdutoAction extends GenericAction<Produto> {
+
+	private static final long serialVersionUID = -9064126463852854590L;
 
 	@Inject
 	private DomainService service;
-	
-	private List<Produto> produtos;
 
-	public List<Produto> getProdutos() {
+	@Inject
+	private Logger logger;
 
-		// Pré popula a lista de produtos
-		if (produtos == null)
-			produtos = service.findAll(Produto.class);
+	@Inject
+	private FacesUtils facesUtils;
 
-		return produtos;
+	@Named
+	@Produces
+	public Produto getProduto() {
+		return getEntidade();
+	}
+
+	/**
+	 * Buscar as culturas a partir do filtro.
+	 */
+	public void find() {
+		list = service.findByName(entidade);
+	}
+
+	@Override
+	protected Logger getLogger() {
+		return logger;
+	}
+
+	@Override
+	protected DomainService getService() {
+		return service;
+	}
+
+	@Override
+	protected FacesUtils getFacesUtils() {
+		return facesUtils;
 	}
 }
 	

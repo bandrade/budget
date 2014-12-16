@@ -7,6 +7,7 @@ import javax.persistence.PersistenceContext;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.dupont.budget.exception.ExistingNameRuntimeException;
 import com.dupont.budget.model.AbstractEntity;
 import com.dupont.budget.model.NamedAbstractEntity;
 
@@ -30,6 +31,9 @@ public abstract class GenericService {
 	 * @see com.dupont.budget.service.DomainService#create(com.dupont.budget.model.AbstractEntity)
 	 */
 	public <T extends AbstractEntity<?>> T create(T t) {
+		if (t instanceof NamedAbstractEntity && !findByName((NamedAbstractEntity<?>)t).isEmpty()) {
+			throw new ExistingNameRuntimeException(t);
+		}
 		em.persist(t);
 		return t;
 	}
@@ -64,6 +68,9 @@ public abstract class GenericService {
 	 * @see com.dupont.budget.service.DomainService#findByName(java.lang.Class, java.lang.String)
 	 */
 	public <T extends AbstractEntity<?>> T update(T t) {
+		if (t instanceof NamedAbstractEntity && !findByName((NamedAbstractEntity<?>)t).isEmpty()) {
+			throw new ExistingNameRuntimeException(t);
+		}
 		return em.merge(t);
 	}
 
