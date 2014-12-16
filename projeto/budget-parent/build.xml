@@ -2,7 +2,7 @@
 	<property name="project.name" value="budget" />
 	<property name="projectweb.home.dir" value="${basedir}/budget-web/" />
 	<property name="compiled_war.dir" value="${projectweb.home.dir}/target/${project.name}.war" />
-	<property name="jboss.standalone.deployment.dir" value="/home/bandrade/redhat/Development/servers/jboss-eap-6.2/standalone/deployments" />
+	<property name="jboss.standalone.deployment.dir" value="/opt/jboss/eap/standalone/deployments" />
 	<property name="jboss.standalone.deployment.budget.dir" value="${jboss.standalone.deployment.dir}/${project.name}.war/" />
 
 	<!-- DEPLOY UTILIZANDO O PLUGIN DO MAVEN JBOSS:DEPLOY -->

@@ -3,8 +3,14 @@ package com.dupont.budget.service;
 import java.util.List;
 
 import com.dupont.budget.exception.DuplicateEntityException;
+import com.dupont.budget.model.Acao;
+import com.dupont.budget.model.Cliente;
 import com.dupont.budget.model.Cultura;
+import com.dupont.budget.model.Distrito;
+import com.dupont.budget.model.Produto;
+import com.dupont.budget.model.TipoDespesa;
 import com.dupont.budget.model.Usuario;
+import com.dupont.budget.model.Vendedor;
 
 /**
  * Serviço que controla todas as classes de domínio.
@@ -55,5 +61,45 @@ public interface DomainService {
 	 * @return usuario encontrado ou null
 	 */
 	public Usuario getUsuarioByLogin(String login);
+	
+    
+	/**
+	 * Retorna todas as entidades produtos do meio persistente
+	 * @return lista com todas as entidades criadas
+	 */
+	public List<Produto> findAllProdutos();
+	
+	
+	/**
+	 * Retorna todas as entidades vendedores do meio persistente
+	 * @return lista com todas as entidades criadas
+	 */
+	public List<Vendedor> findAllVendedores();	
+	
+	
+	/**
+	 * Retorna todas as entidades distritos do meio persistente
+	 * @return lista com todas as entidades criadas
+	 */
+	public List<Distrito> findAllDistritos();
+	
+	
+
+	/**
+	 * Retorna todas as entidades tipos de despesa do meio persistente
+	 * @return lista com todas as entidades criadas
+	 */
+	public List<TipoDespesa> findAllTiposDespesa();
+	
+	/**
+	 * Retorna todas as entidades tipos de despesa do meio persistente
+	 * @return lista com todas as entidades criadas
+	 */
+	public List<Cliente> findAllClientes();
+	/**
+	 * Cria a entidade cultura no meio persistente
+	 * @param acao entidade a ser criada
+	 */
+	public void insertAcao(Acao acao);
 	
 }

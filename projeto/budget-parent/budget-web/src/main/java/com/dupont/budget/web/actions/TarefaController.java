@@ -15,6 +15,7 @@ import com.dupont.budget.service.bpms.BPMSTaskService;
 @ConversationScoped
 public class TarefaController implements Serializable {
 
+	private static final long serialVersionUID = 4320697002989400101L;
 	@Inject
 	private Conversation conversation;
 	@Inject
