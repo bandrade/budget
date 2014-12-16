@@ -2,8 +2,10 @@ package com.dupont.budget.model;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
@@ -15,6 +17,10 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name="tipo_despesa")
+@NamedQueries({
+	@NamedQuery(name="TipoDespesa.findAll"   , query="select t from TipoDespesa t"),
+	@NamedQuery(name="TipoDespesa.findByName", query="select t from TipoDespesa t where t.nome like :nome")
+})
 public class TipoDespesa {
 
 	@Id

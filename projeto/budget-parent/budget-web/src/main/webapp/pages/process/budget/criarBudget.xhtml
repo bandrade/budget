@@ -1,0 +1,157 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="/WEB-INF/templates/default.xhtml">
+
+	<ui:param name="pageTitle" value="Human Tasks" />
+
+	<ui:define name="content">
+		<p:messages></p:messages>
+		
+		<h:form id="form">
+			<p:messages></p:messages>
+			<p:panelGrid columns="1" style="width:95%">
+				<p:fieldset value="Criar Budget" legend="Criar Budget">
+					<p:panelGrid columns="2">
+						<p:outputLabel value="Centro de Custo:"></p:outputLabel>
+						<p:outputLabel styleClass="bold-label" value="adsas"></p:outputLabel>
+					</p:panelGrid>
+					<p:commandButton value="Incluir Despesa" type="button"
+						onclick="PF('criarDespesa').show();" />
+
+					<p:dataTable emptyMessage="Não existem despesas cadastradas" value="#{criarBudgetAction.despesasAgrupadas}" id="gridDespesasAgrupadas">
+						<f:facet name="header">
+        				 Despesas
+   						 </f:facet>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Tipo" />
+							</f:facet>
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Valor" />
+							</f:facet>
+						</p:column>
+						<p:column>
+
+						</p:column>
+					</p:dataTable>
+					<p:dataTable emptyMessage="Não existem despesas cadastradas" rendered="#{not empty criarBudgetAction.despesaSelecionada}" 
+						value="#{criarBudgetAction.budget.despesas}">
+						<f:facet name="header">
+        				 Despesas - Detalhe
+   						 </f:facet>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Produto" />
+							</f:facet>
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Cultura" />
+							</f:facet>
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Distrito" />
+							</f:facet>
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="ERC" />
+							</f:facet>
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Ação" />
+							</f:facet>
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Comentário" />
+							</f:facet>
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Valor Proposto" />
+							</f:facet>
+						</p:column> 
+					</p:dataTable>
+
+				</p:fieldset>
+			</p:panelGrid>
+			</h:form>
+			<p:dialog header="Incluir Despesa" id="criarDespesaPanel" widgetVar="criarDespesa" height="300"
+				width="400">
+				<h:form id="form1">
+				<p:messages></p:messages>
+				<p:panelGrid columns="2">
+					<p:outputLabel value="Tipo de Despesa:"></p:outputLabel>
+					<p:selectOneMenu value="#{criarBudgetAction.despesa.tipoDespesa.id}"
+						id="tipoDespesa"
+						validator="com.dupont.budget.web.validators.ComboValidator">
+						<f:selectItem itemValue="" itemLabel="SELECIONE" />
+						<f:selectItems value="#{tipoDespesaAction.tiposDespesa}"
+							var="tipoDespesa" itemLabel="#{tipoDespesa.nome}"
+							itemValue="#{tipoDespesa.id}" />   
+					</p:selectOneMenu> 
+
+					<p:outputLabel value="Produto:"></p:outputLabel>
+					<p:selectOneMenu value="#{criarBudgetAction.despesa.produto.id}"
+						id="produto"
+						validator="com.dupont.budget.web.validators.ComboValidator">
+						<f:selectItem itemValue="" itemLabel="SELECIONE" />
+						<f:selectItems value="#{produtoAction.produtos}" var="produto"
+							itemValue="#{produto.id}" itemLabel="#{produto.nome}" />
+					</p:selectOneMenu>
+
+					<p:outputLabel value="Cultura:"></p:outputLabel>
+					<p:selectOneMenu value="#{criarBudgetAction.despesa.cultura.id}"
+					    id="cultura"
+						validator="com.dupont.budget.web.validators.ComboValidator">
+						<f:selectItem itemValue="" itemLabel="SELECIONE" />
+						<f:selectItems value="#{culturaAction.culturas}" var="culturaa"
+							itemLabel="#{culturaa.nome}" itemValue="#{culturaa.id}" />
+					</p:selectOneMenu>
+
+					<p:outputLabel value="Distrito:"></p:outputLabel>
+					<p:selectOneMenu value="#{criarBudgetAction.despesa.distrito.id}"
+						id="distrito"
+						validator="com.dupont.budget.web.validators.ComboValidator">
+						<f:selectItem itemValue="" itemLabel="SELECIONE" />
+						<f:selectItems value="#{distritoAction.distritos}" var="distrito"
+							itemLabel="#{distrito.nome}" itemValue="#{distrito.id}" />
+					</p:selectOneMenu>
+					<p:outputLabel value="ERC:"></p:outputLabel>
+					<p:selectOneMenu value="#{criarBudgetAction.despesa.vendedor.id}"
+						id="ERC"
+						validator="com.dupont.budget.web.validators.ComboValidator">
+						<f:selectItem itemValue="" itemLabel="SELECIONE" />
+						<f:selectItems value="#{vendedorAction.vendedores}" var="vendedor"
+							itemLabel="#{vendedor.nome}" itemValue="#{vendedor.id}" />
+					</p:selectOneMenu>
+					<p:outputLabel value="Cliente:"></p:outputLabel>
+					<p:selectOneMenu value="#{criarBudgetAction.despesa.cliente.id}"
+						id="cliente"
+						validator="com.dupont.budget.web.validators.ComboValidator">
+						<f:selectItem itemValue="" itemLabel="SELECIONE" />
+						<f:selectItems value="#{clienteAction.clientes}" var="cliente"
+							itemLabel="#{cliente.nome}" itemValue="#{cliente.id}" />
+					</p:selectOneMenu>
+					<p:outputLabel value="Ação:"></p:outputLabel>
+					<p:inputTextarea value="#{criarBudgetAction.despesa.acao.nome}" />
+					
+					<p:outputLabel value="Valor:"></p:outputLabel>
+					<pe:inputNumber  value="#{criarBudgetAction.despesa.valor}" converter="javax.faces.Double"></pe:inputNumber>
+					
+					
+				</p:panelGrid>
+				<p:commandButton value="Incluir Despesa" action="#{criarBudgetAction.adicionarDespesa()}" oncomplete="PF('criarDespesa').close();"  update=":form1"/>
+				</h:form>
+			</p:dialog>
+	</ui:define>
+</ui:composition>

@@ -51,6 +51,11 @@
 			<version>${version.org.primefaces.themes}</version>
 		</dependency>
 		<dependency>
+			<groupId>org.primefaces.extensions</groupId>
+			<artifactId>primefaces-extensions</artifactId>
+			<version>${version.org.primefaces.extensions}</version>
+		</dependency>
+		<dependency>
 			<groupId>com.dupont.budget</groupId>
 			<artifactId>budget-business</artifactId>
 			<version>${project.version}</version>
@@ -69,7 +74,16 @@
 			<groupId>org.picketbox</groupId>
 			<artifactId>picketbox</artifactId>
 		</dependency>
-
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>${version.org.apache.poi}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>${version.org.apache.poi}</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>budget.war</finalName>

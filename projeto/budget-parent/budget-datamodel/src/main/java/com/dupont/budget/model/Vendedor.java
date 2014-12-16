@@ -4,6 +4,8 @@ import javax.persistence.Entity;
 import javax.persistence.GenerationType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
@@ -15,6 +17,10 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name="vendedor")
+@NamedQueries({
+	@NamedQuery(name="Vendedor.findAll"   , query="select v from Vendedor v"),
+	@NamedQuery(name="Vendedor.findByName", query="select v from Vendedor v where v.nome like :nome")
+}) 
 public class Vendedor {
 
 	@Id
