@@ -1,12 +1,17 @@
 package com.dupont.budget.web.actions;
 
-import java.util.List;
-
+import javax.annotation.security.RolesAllowed;
 import javax.enterprise.inject.Model;
+import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
+import javax.inject.Named;
+
+import org.slf4j.Logger;
 
 import com.dupont.budget.model.TipoDespesa;
 import com.dupont.budget.service.DomainService;
+import com.dupont.budget.web.util.FacesUtils;
+
 /**
  * Controller das telas de manutenção da entidade tipo despesa
  * 
@@ -15,20 +20,43 @@ import com.dupont.budget.service.DomainService;
  *
  */
 @Model
-public class TipoDespesaAction {
+@RolesAllowed(value = "ADMINISTRADOR")
+public class TipoDespesaAction extends GenericAction<TipoDespesa> {
+
+	private static final long serialVersionUID = 2346840808937801813L;
 
 	@Inject
 	private DomainService service;
-	
-	private List<TipoDespesa> tiposDespesa;
 
-	public List<TipoDespesa> getTiposDespesa() {
+	@Inject
+	private Logger logger;
 
-		// Pré popula a lista de tipos de despesa
-		if (tiposDespesa == null)
-			tiposDespesa = service.findAll(TipoDespesa.class);
+	@Inject
+	private FacesUtils facesUtils;
 
-		return tiposDespesa;
+	@Named
+	@Produces
+	public TipoDespesa getTipoDespesa() {
+		return getEntidade();
 	}
+
+	public void find() {
+		list = service.findByName(entidade);
+	}
+
+	@Override
+	protected Logger getLogger() {
+		return logger;
+	}
+
+	@Override
+	protected DomainService getService() {
+		return service;
+	}
+
+	@Override
+	protected FacesUtils getFacesUtils() {
+		return facesUtils;
+	}
+
 }
-	

@@ -1,9 +1,6 @@
 package com.dupont.budget.model;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
@@ -22,12 +19,10 @@ import javax.persistence.Table;
 @NamedQueries({
 	@NamedQuery(name="Despesa.agruparPorTipoDeDespesa", query="select c from Despesa c where c.budget.id = :id group by c.tipoDespesa")
 }) 
-public class Despesa {
-
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	private Long id;
+public class Despesa extends AbstractEntity<Long> {
 	
+	private static final long serialVersionUID = -4344680928557842077L;
+
 	@ManyToOne
 	@JoinColumn(name="tipo_despesa_id")
 	private TipoDespesa tipoDespesa;
@@ -63,14 +58,6 @@ public class Despesa {
 	private Double valor;
 	
 	private String comentario;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
 
 	public TipoDespesa getTipoDespesa() {
 		return tipoDespesa;
