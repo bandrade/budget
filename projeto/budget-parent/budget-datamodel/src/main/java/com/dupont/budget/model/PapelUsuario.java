@@ -30,6 +30,14 @@ public class PapelUsuario {
 	@ManyToOne
 	@JoinColumn(name="papel_id")
 	private Papel papel;
+	
+	public PapelUsuario() {
+		this(null);
+	}
+	
+	public PapelUsuario(Papel papel) {
+		this.papel = papel;
+	}
 
 	public Long getId() {
 		return id;

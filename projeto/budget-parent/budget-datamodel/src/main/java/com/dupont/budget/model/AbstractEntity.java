@@ -17,12 +17,12 @@ import javax.persistence.MappedSuperclass;
  *            tipo do id da entidade concreta
  */
 @MappedSuperclass
-public abstract class AbstractEntity<IDType> implements Serializable {
+public abstract class AbstractEntity<IDType extends Serializable> implements Serializable {
 
 	private static final long serialVersionUID = 9184534024870183158L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	protected IDType id;
 
 	public IDType getId() {

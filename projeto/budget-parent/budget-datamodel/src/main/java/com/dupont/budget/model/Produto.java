@@ -1,9 +1,6 @@
 package com.dupont.budget.model;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -16,32 +13,12 @@ import javax.persistence.Table;
  *
  */
 @Entity
-@Table(name="produto")
+@Table(name = "produto")
 @NamedQueries({
-	@NamedQuery(name="Produto.findAll"   , query="select p from Produto p"),
-	@NamedQuery(name="Produto.findByName", query="select p from Produto p where p.nome like :nome")
-})
-public class Produto {
+		@NamedQuery(name = "Produto.findAll", query = "select p from Produto p"),
+		@NamedQuery(name = "Produto.findByName", query = "select p from Produto p where p.nome like :nome") })
+public class Produto extends NamedAbstractEntity<Long> {
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	private Long id;
-	
-	private String nome;
+	private static final long serialVersionUID = 4661083022487742998L;
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getNome() {
-		return nome;
-	}
-
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
 }

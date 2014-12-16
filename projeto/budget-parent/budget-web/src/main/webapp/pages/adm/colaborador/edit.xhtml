@@ -1,0 +1,66 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/templates/default.xhtml">
+                
+	<ui:define name="content">
+	
+		<p:panel id="content">
+		
+			<h3> 
+				<h:outputText value="Atualizar Colaborador" rendered="#{not empty colaborador.id}" />
+				<h:outputText value="Criar Colaborador"     rendered="#{empty colaborador.id}" /> 
+			</h3>
+			
+			<h:form id="form"> 
+			
+				<h:inputHidden value="#{colaborador.id}" />
+				<h:inputHidden value="#{colaborador.password}" />
+					
+				<h:panelGrid columns="3" border="0">
+				
+					<p:outputLabel value="Nome:" for="nomeInput" />
+					<p:inputText label="Nome" id="nomeInput" value="#{colaborador.nome}" required="true"/>
+					<p:message for="nomeInput" />
+					
+                    <p:outputLabel value="Login:" for="loginInput" />
+                    <p:inputText label="Login" id="loginInput" value="#{colaborador.login}" required="true"/>
+                    <p:message for="loginInput" />			
+					
+					<p:outputLabel value="Email:" for="emailInput" />
+                    <p:inputText label="Email" id="emailInput" value="#{colaborador.email}" required="true" validatorMessage="Email inválido.">
+                        <f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+                    </p:inputText>
+                    <p:message for="emailInput" />
+                    
+                    <p:outputLabel for="senha1" value="Senha:" />
+                    <p:password id="senha1" value="#{usuarioAction.senha}" validatorMessage="#{msg['message.senha.diferente']}" match="senha2" label="Senha" />
+                    <p:message for="senha1" />
+                    
+                    <h:outputLabel for="senha2" value="Confirmar:" />
+                    <p:password id="senha2" value="#{usuarioAction.confirmacaoSenha}" label="Confirmação da senha" />
+                    <p:message for="senha2" />
+                    
+                    <h:outputLabel for="perfilList" value="Perfil:" />
+                    <p:selectOneMenu id="perfilList" value="#{usuarioAction.entidade.perfil}" required="true">
+                        <f:selectItems value="#{perfilList}" itemValue="#{i}" itemLabel="#{i.toString()}" var="i" />
+                    </p:selectOneMenu>
+                    <p:message for="perfilList" />
+                    
+                    <h:outputLabel for="papelList" value="Papéis" />
+                    <p:pickList id="papelList" value="#{usuarioAction.papelList}" var="p" itemLabel="#{p.nome}" itemValue="#{p}" converter="com.dupont.EntityConverter" />
+                    <p:message for="papelList" />
+				</h:panelGrid>
+				
+				<p:commandButton value="#{colaborador.id != null? 'Atualizar' : 'Salvar'}" process="@this" icon="ui-icon-check" action="#{usuarioAction.persist}" styleClass="button" ajax="false" />
+				<p:commandButton value="Cancelar"    icon="ui-icon-closethick" action="/pages/adm/colaborador/list.xhtml" styleClass="button" ajax="false" immediate="true" />
+				
+			</h:form>
+		
+		</p:panel>
+		
+	</ui:define>
+	
+</ui:composition>

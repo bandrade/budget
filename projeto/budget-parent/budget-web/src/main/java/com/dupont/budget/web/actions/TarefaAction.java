@@ -15,50 +15,46 @@ import com.dupont.budget.service.bpms.BPMSTaskService;
 @ConversationScoped
 @Named
 public class TarefaAction implements Serializable {
+
+	private static final long serialVersionUID = -2686631786724652742L;
+
 	@Inject
-    private BPMSTaskService bpms;
-	
+	private BPMSTaskService bpms;
+
 	private String usuario;
-	
+
 	private List<TarefaDTO> tarefas;
-	
+
 	private TarefaDTO tarefaSelecionada;
-	
+
 	@Inject
 	private Conversation conversation;
-	
+
 	@PostConstruct
-	public void init()
-	{
+	public void init() {
 		conversation.begin();
 	}
-	
-	public void obterTarefasUsuario()
-	{
-		try
-		{	
+
+	public void obterTarefasUsuario() {
+		try {
 			tarefas = bpms.obterTarefas(usuario);
-		}
-		catch(Exception e)
-		{
-			//TODO TRATAMENTO VIEW
+		} catch (Exception e) {
+			// TODO TRATAMENTO VIEW
 		}
 	}
-	
-	
-	public void aprovarTarefa()
-	{
-		
-		System.out.println(tarefaSelecionada.getName());	
+
+	public void aprovarTarefa() {
+
+		System.out.println(tarefaSelecionada.getName());
 		try {
-			bpms.aprovarTarefa(usuario,tarefaSelecionada);
+			bpms.aprovarTarefa(usuario, tarefaSelecionada);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		conversation.end();
 	}
-	
+
 	public String getUsuario() {
 		return usuario;
 	}
@@ -82,6 +78,5 @@ public class TarefaAction implements Serializable {
 	public void setTarefaSelecionada(TarefaDTO tarefaSelecionada) {
 		this.tarefaSelecionada = tarefaSelecionada;
 	}
-	
-	
+
 }

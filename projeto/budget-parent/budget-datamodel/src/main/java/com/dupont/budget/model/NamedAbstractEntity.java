@@ -1,9 +1,11 @@
 package com.dupont.budget.model;
 
+import java.io.Serializable;
+
 import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
-public class NamedAbstractEntity<IDType> extends AbstractEntity<IDType> {
+public class NamedAbstractEntity<IDType extends Serializable> extends AbstractEntity<IDType> {
 
 	private static final long serialVersionUID = -8462445997793419824L;
 	

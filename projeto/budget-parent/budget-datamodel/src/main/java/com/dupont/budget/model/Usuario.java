@@ -1,10 +1,13 @@
 package com.dupont.budget.model;
 
+import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -36,8 +39,8 @@ public class Usuario extends NamedAbstractEntity<Long> {
 	@Enumerated(EnumType.STRING)
 	private Perfil perfil;
 	
-	@OneToMany(targetEntity=PapelUsuario.class)
-	@JoinColumn(name="usuario_id")
+	@OneToMany(targetEntity = PapelUsuario.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinColumn(name = "usuario_id")
 	private Set<PapelUsuario> papeis;
 
 	public String getLogin() {
@@ -73,6 +76,9 @@ public class Usuario extends NamedAbstractEntity<Long> {
 	}
 
 	public Set<PapelUsuario> getPapeis() {
+		if (papeis == null) {
+			papeis = new HashSet<>();
+		}
 		return papeis;
 	}
 

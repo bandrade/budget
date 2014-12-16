@@ -26,6 +26,8 @@ import com.dupont.budget.service.DomainService;
 @ConversationScoped
 @Named
 public class CriarBudgetAction implements Serializable {
+	
+	private static final long serialVersionUID = 7096537944620782785L;
 	private TarefaDTO tarefa;
 	private Budget budget;
 	private Despesa despesa;
@@ -73,7 +75,7 @@ public class CriarBudgetAction implements Serializable {
 		{
 			budget.setDespesas(new HashSet<Despesa>());
 		}
-		domainService.insertAcao(despesa.getAcao());
+		domainService.create(despesa.getAcao());
 		budgetService.insertItemDespesa(despesa);
 		budget.getDespesas().add(despesa);
 		if(budget.getId() ==null)

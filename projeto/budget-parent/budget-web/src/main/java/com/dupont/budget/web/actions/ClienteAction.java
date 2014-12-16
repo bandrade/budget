@@ -26,7 +26,7 @@ public class ClienteAction {
 
 		// Pré popula a lista de clientes
 		if (clientes == null)
-			clientes = service.findAllClientes();
+			clientes = service.findAll(Cliente.class);
 
 		return clientes;
 	}

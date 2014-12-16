@@ -10,24 +10,23 @@
 		<p:panel id="content">
 		
 			<h3> 
-				<h:outputText value="Atualizar Cultura" rendered="#{cultura.id != null}" />
-				<h:outputText value="Criar Cultura"     rendered="#{cultura.id == null}" /> 
+				<h:outputText value="Atualizar Cultura" rendered="#{not empty cultura.id}" />
+				<h:outputText value="Criar Cultura"     rendered="#{empty cultura.id}" /> 
 			</h3>
 			
 			<h:form id="form"> 
 			
-				<h:inputHidden value="#{cultura.id}" rendered="#{cultura.id != null}" />
+				<h:inputHidden value="#{cultura.id}" />
 					
 				<h:panelGrid columns="3" border="0">
 				
 					<p:outputLabel value="Nome:" for="nomeInput" />
 					<p:inputText label="Nome" id="nomeInput" value="#{cultura.nome}" required="true"/>
 					<p:message for="nomeInput" />			
-	
 					
 				</h:panelGrid>
 				
-				<p:commandButton value="#{cultura.id != null? 'Atualizar' : 'Salvar'}" icon="ui-icon-check" action="#{culturaAction.persistCultura}" styleClass="button" ajax="false" />
+				<p:commandButton value="#{cultura.id != null? 'Atualizar' : 'Salvar'}" process="@this" icon="ui-icon-check" action="#{culturaAction.persist}" styleClass="button" ajax="false" />
 				<p:commandButton value="Cancelar"    icon="ui-icon-closethick" action="/pages/adm/cultura/list.xhtml" styleClass="button" ajax="false" immediate="true" />
 				
 			</h:form>

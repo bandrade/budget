@@ -3,14 +3,10 @@ package com.dupont.budget.service;
 import java.util.List;
 
 import com.dupont.budget.exception.DuplicateEntityException;
-import com.dupont.budget.model.Acao;
-import com.dupont.budget.model.Cliente;
+import com.dupont.budget.model.AbstractEntity;
 import com.dupont.budget.model.Cultura;
-import com.dupont.budget.model.Distrito;
-import com.dupont.budget.model.Produto;
-import com.dupont.budget.model.TipoDespesa;
+import com.dupont.budget.model.NamedAbstractEntity;
 import com.dupont.budget.model.Usuario;
-import com.dupont.budget.model.Vendedor;
 
 /**
  * Serviço que controla todas as classes de domínio.
@@ -62,44 +58,42 @@ public interface DomainService {
 	 */
 	public Usuario getUsuarioByLogin(String login);
 	
-    
 	/**
-	 * Retorna todas as entidades produtos do meio persistente
-	 * @return lista com todas as entidades criadas
+	 * Retorna todas as entidades do tipo da classe epecificado do meio 
+	 * persistente.
+	 * 
+	 * @param t o tipo da classe
+	 * @return lista com as todas as entidade criadas.
 	 */
-	public List<Produto> findAllProdutos();
-	
-	
-	/**
-	 * Retorna todas as entidades vendedores do meio persistente
-	 * @return lista com todas as entidades criadas
-	 */
-	public List<Vendedor> findAllVendedores();	
-	
-	
-	/**
-	 * Retorna todas as entidades distritos do meio persistente
-	 * @return lista com todas as entidades criadas
-	 */
-	public List<Distrito> findAllDistritos();
-	
-	
+	<T extends AbstractEntity<?>> List<T> findAll(Class<T> t);
 
 	/**
-	 * Retorna todas as entidades tipos de despesa do meio persistente
-	 * @return lista com todas as entidades criadas
+	 * Cria a entidade especificada no meio persistente
+	 * 
+	 * @param t entidade a ser criada
+	 * @return entidade criada
 	 */
-	public List<TipoDespesa> findAllTiposDespesa();
+	<T extends AbstractEntity<?>> T create(T t);
+
+	/**
+	 * Retorna todas as entidades que atendam ao filtro
+	 * @param nome String inicial do nome da cultura.
+	 * @return lista com as entidades encontradas.
+	 */
+	<T extends NamedAbstractEntity<?>>List<T> findByName(T t);
 	
 	/**
-	 * Retorna todas as entidades tipos de despesa do meio persistente
-	 * @return lista com todas as entidades criadas
+	 * Remove a entidade do meio persistente.
+	 * @param t entidade a ser removida.
 	 */
-	public List<Cliente> findAllClientes();
+	<T extends AbstractEntity<?>> void delete(T t);
+
 	/**
-	 * Cria a entidade cultura no meio persistente
-	 * @param acao entidade a ser criada
+	 * Atualiza a entidade passada.
+	 * @param t entidade a ser atualizada.
+	 * @return entidade atualizada
 	 */
-	public void insertAcao(Acao acao);
+	<T extends AbstractEntity<?>> T update(T t);
+	
 	
 }
