@@ -4,36 +4,42 @@
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:p="http://primefaces.org/ui"
                 template="/WEB-INF/templates/default.xhtml">
-    <f:metadata>
-        <f:viewParam name="user" value="#{tarefaAction.usuario}" />
-        <f:event type="preRenderView" listener="#{tarefaAction.obterTarefasUsuario()}" />
-    </f:metadata>
-
 	<ui:param name="pageTitle" value="Human Tasks" />
 
     <ui:define name="content">
     	<h:form>
-	    	<h:panelGroup rendered="#{empty tarefaAction.tarefas}">
-	            <i>Voce nao possui tarefas pendentes.</i>
-	        </h:panelGroup>
-	         <p:dataTable id="userTasksTable" border="1" rendered="#{not empty tarefaAction.tarefas}"
+    	<p:panelGrid styleClass="body-content" columns="1">
+    		<p:fieldset legend="Minhas Tarefas">
+	         <p:dataTable id="userTasksTable" border="1" 
 	                     value="#{tarefaAction.tarefas}" var="_item"  selection="#{tarefaAction.tarefaSelecionada}"
-	                     rowKey="#{_item.id}">
-	            <p:column>
+	                     rowKey="#{_item.id}]"
+	                     emptyMessage="Você não possui tarefas pendentes">
+	          <f:facet name="header">
+        				 Tarefas Pendentes
+   				</f:facet>
+	            <p:column >
 	                <f:facet name="header">
-	                    <h:outputText value="Name1" />
+	                    <h:outputText value="Tarefa" />
 	                </f:facet>
 	                <p:commandLink action="#{tarefaAction.aprovarTarefa()}" value="#{_item.name}" ajax="false">
 	                	<f:setPropertyActionListener target="#{tarefaAction.tarefaSelecionada}" value="#{_item}" />
 	                </p:commandLink>
 	            </p:column>
+	            <p:column >
+	                <f:facet name="header">
+	                    <h:outputText value="Descrição" />
+	                </f:facet>
+	                 <h:outputText id="description" value="#{_item.description}"/>
+	            </p:column>
 	            <p:column>
 	                <f:facet name="header">
-	                    <h:outputText value="Process instance ID" />
+	                    <h:outputText value="Data de Criação" />
 	                </f:facet>
-	                <h:outputText id="processInstanceId" value="#{_item.description}" />
+	                <h:outputText id="processInstanceId" value="#{_item.createdOn}" converter="javax.faces.DateTime"/>
 	            </p:column>
 	        </p:dataTable>
+	        </p:fieldset>
+       </p:panelGrid>
        </h:form>
     </ui:define>
 </ui:composition>

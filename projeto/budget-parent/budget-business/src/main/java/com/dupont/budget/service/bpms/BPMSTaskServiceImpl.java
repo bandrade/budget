@@ -29,7 +29,7 @@ public class BPMSTaskServiceImpl implements BPMSTaskService {
 			tarefaDTO.setCreatedBy(task.getCreatedBy() != null ? task
 					.getCreatedBy().getId() : null);
 			tarefaDTO.setCreatedOn(task.getCreatedOn());
-			tarefaDTO.setDescription(task.getDescription());
+			tarefaDTO.setDescription(taskApi.getTaskContent(task.getId()).get("Subject").toString());
 			tarefaDTO.setExpirationTime(task.getExpirationTime());
 			tarefaDTO.setId(task.getId());
 			tarefaDTO.setName(task.getName());

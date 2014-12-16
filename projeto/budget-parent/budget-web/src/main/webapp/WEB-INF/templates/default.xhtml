@@ -20,10 +20,8 @@
 			<p:layoutUnit styleClass="layoutUnit sidebar" position="west" gutter="0" resizable="false" collapsible="false"  size="15%">
 				
 				<ul class="menu">
-					<li> Minhas tarefas </li>
-					<li> Criar Budget </li>
+					<li><p:link  outcome="/pages/process/minhasTarefas.xhtml" value="Minhas tarefas"/>  </li>
 					<li> Lançar Despesa </li>
-					<li> Lançar Forecast </li>					
 					
 					
 					<h:panelGroup rendered="#{request.isUserInRole('ADMINISTRADOR')}">				
@@ -31,6 +29,12 @@
 						Administração						
 						<ul>
 							<li> <p:link  outcome="/pages/adm/cultura/list.xhtml" value="Cultura"/> </li>
+						</ul>					
+					</li>
+					<li> 
+						Planning						
+						<ul>
+							<li> <p:link  outcome="/pages/adm/planning/iniciarProcessoBudget.xhtml" value="Iniciar Processo Budget"/> </li>
 						</ul>					
 					</li>
 					</h:panelGroup>
