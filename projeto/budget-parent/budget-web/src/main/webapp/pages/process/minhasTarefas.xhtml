@@ -21,9 +21,10 @@
 	                <f:facet name="header">
 	                    <h:outputText value="Tarefa" />
 	                </f:facet>
-	                <p:commandLink action="#{tarefaAction.aprovarTarefa()}" value="#{_item.name}" ajax="false">
-	                	<f:setPropertyActionListener target="#{tarefaAction.tarefaSelecionada}" value="#{_item}" />
-	                </p:commandLink>
+	                <p:link value="#{_item.name}" outcome="#{navegacaoAction.obterOutcome(_item.name)}">
+	                	<f:param name="taskId" value="#{_item.id}" />
+	                	<f:param name="processInstanceId" value="#{_item.processInstanceId}" />
+	                </p:link>
 	            </p:column>
 	            <p:column >
 	                <f:facet name="header">

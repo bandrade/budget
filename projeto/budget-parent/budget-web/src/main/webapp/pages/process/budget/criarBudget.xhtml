@@ -7,6 +7,11 @@
 	template="/WEB-INF/templates/default.xhtml">
 
 	<ui:param name="pageTitle" value="Human Tasks" />
+	<f:metadata>
+        <f:viewParam name="taskId" value="#{criarBudgetAction.idTarefa}" />
+        <f:viewParam name="processInstanceId" value="#{criarBudgetAction.idInstanciaProcesso}" />
+        <f:event type="preRenderView" listener="#{criarBudgetAction.obterDadosBudget()}" />
+    </f:metadata>
 
 	<ui:define name="content">
 		<p:messages></p:messages>
