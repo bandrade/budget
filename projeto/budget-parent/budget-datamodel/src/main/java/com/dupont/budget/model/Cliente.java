@@ -20,9 +20,6 @@ import javax.persistence.Table;
 }) 
 public class Cliente extends NamedAbstractEntity<Long> {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 6748809974787032862L;
 
 

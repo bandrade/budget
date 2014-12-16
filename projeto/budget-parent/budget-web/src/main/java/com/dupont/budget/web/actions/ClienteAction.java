@@ -1,12 +1,16 @@
 package com.dupont.budget.web.actions;
 
-import java.util.List;
-
 import javax.enterprise.inject.Model;
+import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
+import javax.inject.Named;
+
+import org.slf4j.Logger;
 
 import com.dupont.budget.model.Cliente;
 import com.dupont.budget.service.DomainService;
+import com.dupont.budget.web.util.FacesUtils;
+
 /**
  * Controller das telas de manutenção da entidade distrito
  * 
@@ -15,19 +19,44 @@ import com.dupont.budget.service.DomainService;
  *
  */
 @Model
-public class ClienteAction {
+public class ClienteAction extends GenericAction<Cliente> {
+
+	private static final long serialVersionUID = -6158334629049467790L;
 
 	@Inject
 	private DomainService service;
-	
-	private List<Cliente> clientes;
 
-	public List<Cliente> getClientes() {
+	@Inject
+	private Logger logger;
 
-		// Pré popula a lista de clientes
-		if (clientes == null)
-			clientes = service.findAll(Cliente.class);
+	@Inject
+	private FacesUtils facesUtils;
 
-		return clientes;
+	@Named
+	@Produces
+	public Cliente getCliente() {
+		return getEntidade();
+	}
+
+	/**
+	 * Buscar as culturas a partir do filtro.
+	 */
+	public void find() {
+		list = service.findByName(entidade);
+	}
+
+	@Override
+	protected Logger getLogger() {
+		return logger;
+	}
+
+	@Override
+	protected DomainService getService() {
+		return service;
+	}
+
+	@Override
+	protected FacesUtils getFacesUtils() {
+		return facesUtils;
 	}
 }
