@@ -19,13 +19,13 @@
 					<p:inputText id="nomeInput" value="#{cultura.nome}"/>
 					<p:message for="nomeInput"/>
 					
-					<p:commandButton value="Pesquisar" icon="ui-icon-search"   styleClass="button" action="#{culturaAction.findCulturas}" update="culturas"/>
+					<p:commandButton value="Pesquisar" icon="ui-icon-search"   styleClass="button" action="#{culturaAction.find}" update="culturas"/>
 					<p:commandButton value="Novo"      icon="ui-icon-document" styleClass="button" action="/pages/adm/cultura/edit.xml"   />
 				</h:panelGrid>
 				
 				<p:separator />
 				
-				<p:dataTable id="culturas" var="item" value="#{culturaAction.culturas}" emptyMessage="Nenhum registro encontrado.">
+				<p:dataTable id="culturas" var="item" value="#{culturaAction.list}" emptyMessage="Nenhum registro encontrado.">
 					
 					<p:column headerText="ID">
 						#{item.id}
@@ -37,8 +37,8 @@
 					
 					<p:column headerText="Ações">
 						
-						<p:commandButton icon="ui-icon-pencil" action="#{culturaAction.editCultura(item)}"   update="culturas" immediate="true"/>
-						<p:commandButton icon="ui-icon-trash"  action="#{culturaAction.deleteCultura(item)}" update="culturas" immediate="true">
+						<p:commandButton icon="ui-icon-pencil" action="#{culturaAction.edit(item)}"   update="culturas" immediate="true"/>
+						<p:commandButton icon="ui-icon-trash"  action="#{culturaAction.delete(item)}" update="culturas" immediate="true">
 							<p:confirm header="Confirmação" message="Deseja realmente remover o dado?" icon="ui-icon-alert" />
 						</p:commandButton>
 						

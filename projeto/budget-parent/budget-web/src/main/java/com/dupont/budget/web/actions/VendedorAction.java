@@ -26,7 +26,7 @@ public class VendedorAction {
 
 		// Pré popula a lista de vendedores
 		if (vendedores == null)
-			vendedores = service.findAllVendedores();
+			vendedores = service.findAll(Vendedor.class);
 
 		return vendedores;
 	}

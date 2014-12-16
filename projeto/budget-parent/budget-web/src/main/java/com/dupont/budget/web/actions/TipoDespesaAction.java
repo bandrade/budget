@@ -26,7 +26,7 @@ public class TipoDespesaAction {
 
 		// Pré popula a lista de tipos de despesa
 		if (tiposDespesa == null)
-			tiposDespesa = service.findAllTiposDespesa();
+			tiposDespesa = service.findAll(TipoDespesa.class);
 
 		return tiposDespesa;
 	}

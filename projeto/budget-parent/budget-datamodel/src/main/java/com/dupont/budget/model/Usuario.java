@@ -1,13 +1,13 @@
 package com.dupont.budget.model;
 
+import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -26,14 +26,10 @@ import javax.persistence.Table;
 @NamedQueries({
 	@NamedQuery(name="Usuario.findByLogin", query="select u from Usuario u where u.login = :login")
 })
-public class Usuario {
+public class Usuario extends NamedAbstractEntity<Long> {
+	
+	private static final long serialVersionUID = 5218210368120783415L;
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	private Long id;
-	
-	private String nome;
-	
 	private String login;
 	
 	private String password;
@@ -43,25 +39,9 @@ public class Usuario {
 	@Enumerated(EnumType.STRING)
 	private Perfil perfil;
 	
-	@OneToMany(targetEntity=PapelUsuario.class)
-	@JoinColumn(name="usuario_id")
+	@OneToMany(targetEntity = PapelUsuario.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinColumn(name = "usuario_id")
 	private Set<PapelUsuario> papeis;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getNome() {
-		return nome;
-	}
-
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
 
 	public String getLogin() {
 		return login;
@@ -96,6 +76,9 @@ public class Usuario {
 	}
 
 	public Set<PapelUsuario> getPapeis() {
+		if (papeis == null) {
+			papeis = new HashSet<>();
+		}
 		return papeis;
 	}
 

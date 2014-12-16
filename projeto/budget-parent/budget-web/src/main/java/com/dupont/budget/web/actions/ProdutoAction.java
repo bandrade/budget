@@ -26,7 +26,7 @@ public class ProdutoAction {
 
 		// Pré popula a lista de produtos
 		if (produtos == null)
-			produtos = service.findAllProdutos();
+			produtos = service.findAll(Produto.class);
 
 		return produtos;
 	}

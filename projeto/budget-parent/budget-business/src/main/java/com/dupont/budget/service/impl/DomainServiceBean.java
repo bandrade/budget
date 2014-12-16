@@ -7,14 +7,8 @@ import javax.ejb.Stateless;
 import org.apache.commons.lang3.StringUtils;
 
 import com.dupont.budget.exception.DuplicateEntityException;
-import com.dupont.budget.model.Acao;
-import com.dupont.budget.model.Cliente;
 import com.dupont.budget.model.Cultura;
-import com.dupont.budget.model.Distrito;
-import com.dupont.budget.model.Produto;
-import com.dupont.budget.model.TipoDespesa;
 import com.dupont.budget.model.Usuario;
-import com.dupont.budget.model.Vendedor;
 import com.dupont.budget.service.DomainService;
 import com.dupont.budget.service.GenericService;
 
@@ -89,38 +83,5 @@ public class DomainServiceBean extends GenericService implements DomainService {
 		
 		return result;
 	}
-	
-	 
-    @Override
-	public List<Produto> findAllProdutos() {
-		
-		return em.createNamedQuery("Produto.findAll", Produto.class).getResultList();
-	}
-
-	@Override
-	public List<Vendedor> findAllVendedores() {
-		return em.createNamedQuery("Vendedor.findAll", Vendedor.class).getResultList();
-	}
-
-	@Override
-	public List<Distrito> findAllDistritos() {
-		return em.createNamedQuery("Distrito.findAll", Distrito.class).getResultList();
-	}
-
-	@Override
-	public List<TipoDespesa> findAllTiposDespesa() {
-		return em.createNamedQuery("TipoDespesa.findAll", TipoDespesa.class).getResultList();
-	}
-
-	@Override
-	public List<Cliente> findAllClientes() {
-		return em.createNamedQuery("Cliente.findAll", Cliente.class).getResultList();
-	}
-
-	@Override
-	public void insertAcao(Acao acao) {
-		em.persist(acao);
-	}
-	
 	
 }

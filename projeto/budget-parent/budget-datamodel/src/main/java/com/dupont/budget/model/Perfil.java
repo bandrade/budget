@@ -8,5 +8,16 @@ package com.dupont.budget.model;
  *
  */
 public enum Perfil {
-	USUARIO, ADMINISTRADOR
+	USUARIO("Usuário"), ADMINISTRADOR("Administrador");
+	
+	private String string;
+
+	private Perfil(String string) {
+		this.string = string;
+	}
+	
+	@Override
+	public String toString() {
+		return this.string;
+	}
 }

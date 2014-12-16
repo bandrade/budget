@@ -26,7 +26,7 @@ public class DistritoAction {
 
 		// Pré popula a lista de distritos
 		if (distritos == null)
-			distritos = service.findAllDistritos();
+			distritos = service.findAll(Distrito.class);
 
 		return distritos;
 	}

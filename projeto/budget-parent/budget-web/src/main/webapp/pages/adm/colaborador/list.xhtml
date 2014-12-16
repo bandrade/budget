@@ -1,0 +1,73 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/templates/default.xhtml">
+                
+	<ui:define name="content">
+	
+		<p:panel id="content">
+	
+			<h3>Pesquisa de Colaboradores</h3>
+			
+			<h:form id="form" prependId="false">
+			
+				<h:panelGrid columns="3" border="0">
+				
+					<p:outputLabel value="Nome:" for="nomeInput"/>
+					<p:inputText id="nomeInput" value="#{colaborador.nome}"/>
+					<p:message for="nomeInput"/>
+					
+					<p:commandButton value="Pesquisar" icon="ui-icon-search"   styleClass="button" action="#{usuarioAction.find}" update="colaboradores"/>
+					<p:commandButton value="Novo"      icon="ui-icon-document" styleClass="button" action="/pages/adm/colaborador/edit.xml"   />
+				</h:panelGrid>
+				
+				<p:separator />
+				
+				<p:dataTable id="colaboradores" var="item" value="#{usuarioAction.list}" emptyMessage="Nenhum registro encontrado.">
+					
+					<p:column headerText="Nome" sortBy="#{item.nome}" >
+						#{item.nome}
+					</p:column>
+					
+					<p:column headerText="Login" sortBy="#{item.login}" >
+                        #{item.login}
+                    </p:column>
+                    
+                    <p:column headerText="Nome" sortBy="#{item.email}" >
+                        #{item.email}
+                    </p:column>
+                    
+                    <p:column headerText="Papéis">
+						<p:commandButton icon="ui-icon-newwin" update=":rolesDialog" action="#{usuarioAction.showRoles(item)}" oncomplete="PF('roles').show();" />
+                    </p:column>
+					
+					<p:column headerText="Ações">
+						
+						<p:commandButton icon="ui-icon-pencil" action="#{usuarioAction.edit(item)}"   update="colaboradores" immediate="true"/>
+						<p:commandButton icon="ui-icon-trash"  action="#{usuarioAction.delete(item)}" update="colaboradores" immediate="true">
+							<p:confirm header="Confirmação" message="Deseja realmente remover o dado?" icon="ui-icon-alert" />
+						</p:commandButton>
+						
+					</p:column>
+				
+				</p:dataTable>
+				
+				<p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+			        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+			        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no"  icon="ui-icon-close" />
+			    </p:confirmDialog>
+			    
+			</h:form>
+		    <p:dialog widgetVar="roles" showEffect="fade" hideEffect="explode" header="Papéis">
+                <p:dataList id="rolesDialog" emptyMessage="Sem papéis atribuídos." value="#{usuarioAction.papeis}" var="i">
+	                #{i.papel.nome}
+                </p:dataList>
+            </p:dialog>
+            			
+		</p:panel>
+			
+	</ui:define>
+	
+</ui:composition>
