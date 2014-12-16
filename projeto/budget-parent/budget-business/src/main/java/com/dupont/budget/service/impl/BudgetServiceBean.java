@@ -30,4 +30,11 @@ public class BudgetServiceBean extends GenericService implements BudgetService {
 		em.persist(despesa);
 	}
 
+	@Override
+	public Budget findByAnoAndCentroDeCusto(String ano, Long centroDeCustoId) {
+		
+		return  em.createNamedQuery("Budget.findByAnoAndCentroDeCusto", Budget.class)
+				.setParameter("centroDeCustoId", centroDeCustoId).setParameter("ano", ano).getSingleResult();
+	}
+
 }
