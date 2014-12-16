@@ -152,6 +152,14 @@ public class Despesa {
 		this.budget = budget;
 	}
 	
-	
+	public void init(){
+		setAcao(new Acao());
+		setProduto(new Produto());
+		setCultura(new Cultura());
+		setCliente(new Cliente());
+		setDistrito(new Distrito());
+		setVendedor(new Vendedor());
+		setTipoDespesa(new TipoDespesa());
+	}
 }
 

@@ -11,13 +11,28 @@ import javax.ws.rs.core.MediaType;
 import com.dupont.budget.dto.CentroDeCustoDTO;
 import com.dupont.budget.dto.ColaboradorDTO;
 import com.dupont.budget.dto.PapelDTO;
+import com.dupont.budget.model.CentroCusto;
+import com.dupont.budget.model.Papel;
+import com.dupont.budget.service.GenericService;
 @Path("CentroDeCusto")
-public class CentroDeCustoServiceImpl implements CentroDeCustoService{
+public class CentroDeCustoServiceImpl extends GenericService implements CentroDeCustoService{
 
 	@Override
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public CentroDeCustoDTO[] obterCentrosDeCusto() {
+		List<CentroCusto> result = em.createNamedQuery("CentroCusto.findAll", CentroCusto.class).getResultList();
+		for(CentroCusto cc : result)
+		{
+			CentroDeCustoDTO ccDto = new CentroDeCustoDTO();
+			ccDto.setNome(cc.getNome());
+			ccDto.setId(cc.getId());
+			ccDto.setNumero(cc.getCodigo());
+			ccDto.setArea(cc.getArea().getNome());
+			//for(Papel papel : cc.get)
+			
+		}
+		
 		List<CentroDeCustoDTO> centrosDeCusto = new ArrayList<CentroDeCustoDTO>();
 		centrosDeCusto.add(getMock1());
 		return centrosDeCusto.toArray(new CentroDeCustoDTO[centrosDeCusto.size()]);
@@ -43,7 +58,7 @@ public class CentroDeCustoServiceImpl implements CentroDeCustoService{
 		papeis.add(papelLiderCC);
 		papeis.add(papelLiderArea);
 		
-		CentroDeCustoDTO centroDeCusto = new CentroDeCustoDTO(nomeCentroDeCusto,codigoCentroDeCusto,area,papeis);
+		CentroDeCustoDTO centroDeCusto = new CentroDeCustoDTO(1L,nomeCentroDeCusto,codigoCentroDeCusto,area,papeis);
 		
 		return centroDeCusto;
 	}

@@ -10,6 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -24,39 +26,42 @@ import javax.persistence.TemporalType;
  *
  */
 @Entity
-@Table(name="budget")
+@Table(name = "budget")
+@NamedQueries({
+		@NamedQuery(name = "Budget.findByAnoAndCentroDeCusto", query = "select b from Budget b where b.centroCusto.id=:centroDeCustoId and b.ano like :ano")
+		})
 public class Budget {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	
+
 	@ManyToOne
-	@JoinColumn(name="centro_custo_id")
+	@JoinColumn(name = "centro_custo_id")
 	private CentroCusto centroCusto;
-	
+
 	@ManyToOne
-	@JoinColumn(name="usuario_id")
+	@JoinColumn(name = "usuario_id")
 	private Usuario usuarioCriador;
-	
+
 	private Long processInstanceId;
-	
+
 	private String ano;
-	
-	@Column(name="data_criacao")
+
+	@Column(name = "data_criacao")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date cricao;
-	
-	@Column(name="data_ultima_atualizacao")
+
+	@Column(name = "data_ultima_atualizacao")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date ultimaAtualizacao;
-	
+
 	@OneToMany
-	@JoinColumn(name="budget_id")
+	@JoinColumn(name = "budget_id")
 	private Set<Despesa> despesas;
-	
+
 	@OneToOne
-	@JoinColumn(name="id")
+	@JoinColumn(name = "id")
 	private BudgetMes budgetMes;
 
 	public Long getId() {

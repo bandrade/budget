@@ -8,5 +8,6 @@ import com.dupont.budget.model.Despesa;
 public interface BudgetService {
 	public List<Despesa> obterDespesaAgrupadas(Long budgetId);
 	public Budget insertBudget(Budget budget);
+	public Budget findByAnoAndCentroDeCusto(String ano,Long centroDeCustoId);
 	public void insertItemDespesa(Despesa despesa);
 }
