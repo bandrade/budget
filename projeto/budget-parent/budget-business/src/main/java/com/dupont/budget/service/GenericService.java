@@ -45,11 +45,13 @@ public abstract class GenericService {
 	@SuppressWarnings("unchecked")
 	public <T extends NamedAbstractEntity<?>> List<T> findByName(T t) {
 		String name = t.getNome();
-		if (StringUtils.isBlank(name))
+		if (StringUtils.isBlank(name)) {
 			return (List<T>) findAll(t.getClass());
-		String queryName = String.format("%s.findByName", t.getClass().getSimpleName());
+		}
 
-		List<T> result = (List<T>) em.createNamedQuery(queryName, t.getClass()).setParameter("nome", name.trim() + "%").getResultList();
+		List<T> result = (List<T>) em.createQuery(
+					String.format("select o from %s o where o.nome like :nome", t.getClass().getSimpleName())
+				).setParameter("nome", name.trim() + "%").getResultList();
 
 		return result;
 	}
