@@ -14,6 +14,7 @@ import org.jboss.crypto.CryptoUtil;
 import org.primefaces.model.DualListModel;
 import org.slf4j.Logger;
 
+import com.dupont.budget.bpm.custom.user.UserGroupCallbackCacheManager;
 import com.dupont.budget.model.Papel;
 import com.dupont.budget.model.PapelUsuario;
 import com.dupont.budget.model.Perfil;
@@ -75,6 +76,8 @@ public class UsuarioAction extends GenericAction<Usuario> {
 	private Set<PapelUsuario> papeis;
 	
 	private DualListModel<Papel> papelList;
+	
+	private UserGroupCallbackCacheManager userCallBackCache;
 
 	@Named
 	@Produces
@@ -121,6 +124,7 @@ public class UsuarioAction extends GenericAction<Usuario> {
 		for (Papel p: papelList.getTarget()) {
 			entidade.getPapeis().add(new PapelUsuario(p));
 		}
+		userCallBackCache.removeGroupsFromCache(entidade.getLogin());
 		return super.persist();
 	}
 	
