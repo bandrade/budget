@@ -21,11 +21,19 @@ public class TipoDespesa extends NamedAbstractEntity<Long> {
 
 	private static final long serialVersionUID = -1150860018776728153L;
 	private String conta_contabil;
+	private String descricao;
+	
 	public String getConta_contabil() {
 		return conta_contabil;
 	}
 	public void setConta_contabil(String conta_contabil) {
 		this.conta_contabil = conta_contabil;
+	}
+	public String getDescricao() {
+		return descricao;
+	}
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
 	}
 	
 	

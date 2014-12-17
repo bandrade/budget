@@ -21,6 +21,8 @@ public class Fornecedor {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 	
+	private Boolean status;
+	
 	private String nome;
 
 	public Long getId() {
@@ -38,6 +40,14 @@ public class Fornecedor {
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
+
+	public Boolean getStatus() {
+		return status;
+	}
+
+	public void setStatus(Boolean status) {
+		this.status = status;
+	}
 	
-	
+
 }
