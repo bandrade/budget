@@ -57,20 +57,4 @@ public class CentroDeCustoDTO  implements Serializable{
 		this.id = id;
 	}
 	
-	
-	/*
-	public String getPapelResponsavel()
-	{
-		return "RESPONSAVEL_"+numero;
-	}
-	public String getPapelGerente()
-	{
-		return "GERENTE_"+numero;
-	}
-	public String getPapelLider()
-	{
-		return "LIDER_"+area;
-	}*/
-	
-
 }

@@ -39,6 +39,12 @@ public class PapelUsuario {
 	@ManyToOne
 	@JoinColumn(name = "usuario_id")
 	private Usuario usuario;
+	
+	@ManyToOne
+	@JoinColumn(name="area_id")
+	private Area area;
+	
+	private Integer nivel;
 		
 	public PapelUsuario() {
 		this(null);
@@ -78,6 +84,22 @@ public class PapelUsuario {
 
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
+	}
+
+	public Area getArea() {
+		return area;
+	}
+
+	public void setArea(Area area) {
+		this.area = area;
+	}
+
+	public Integer getNivel() {
+		return nivel;
+	}
+
+	public void setNivel(Integer nivel) {
+		this.nivel = nivel;
 	}
 	
 	

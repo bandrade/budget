@@ -16,6 +16,7 @@ import javax.inject.Singleton;
 public class UserGroupCallbackCacheManager {
 
 	private HashMap<String,  List<String>> userGroupCache = new HashMap<String,  List<String>>();
+	private HashMap<String,  String> groupCache = new HashMap<String,  String>();
 	    
 	/**
 	 * @param userId
@@ -45,7 +46,11 @@ public class UserGroupCallbackCacheManager {
 				
 		return groups;
 	}
-	
+	public void removeGroupsFromCache(String userId)
+	{				
+		userId = userId.toLowerCase();
+		userGroupCache.remove(userId);
+	}
 	
 	private HashMap<String,  String> userCache = new HashMap<String,  String>();
     
@@ -77,5 +82,17 @@ public class UserGroupCallbackCacheManager {
 		return user;
 	}
 	
-	
+	/**
+	 * @param userId
+	 * Inclui usuário no cache.
+	 */
+	public void setGroupOnCache(String groupId)
+	{
+		groupId = groupId.toLowerCase();
+				
+		if (groupCache.containsKey(groupId))
+			groupCache.remove(groupId);
+		
+		groupCache.put(groupId, groupId);
+	}
 }

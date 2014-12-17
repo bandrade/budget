@@ -1,6 +1,8 @@
 package com.dupont.budget.model;
 
 import javax.persistence.Entity;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
@@ -12,6 +14,9 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "papel")
+@NamedQueries({
+	@NamedQuery(name="Papel.findByName", query="select p from Papel p where p.nome like :nome")
+})
 public class Papel extends NamedAbstractEntity<Long> {
 
 	private static final long serialVersionUID = -8321943677400253472L;

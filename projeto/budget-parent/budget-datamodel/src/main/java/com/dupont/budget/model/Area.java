@@ -15,5 +15,5 @@ import javax.persistence.Table;
 public class Area extends NamedAbstractEntity<Long>{
 
 	private static final long serialVersionUID = 8630905655777582547L;
-
+	
 }
