@@ -8,5 +8,16 @@ package com.dupont.budget.model;
  *
  */
 public enum TipoCentroCusto {
-	LOCAL, GLOBAL
+	LOCAL("Local"), GLOBAL("Global");
+	
+	private String string;
+	
+	private TipoCentroCusto(String string) {
+		this.string = string;
+	}
+	
+	@Override
+	public String toString() {
+		return this.string;
+	}
 }

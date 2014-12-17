@@ -73,16 +73,23 @@ public class UsuarioAction extends GenericAction<Usuario> {
 	@Inject
 	private FacesUtils facesUtils;
 	
+	@Inject
+	private UserGroupCallbackCacheManager userCallBackCache;
+
 	private Set<PapelUsuario> papeis;
 	
 	private DualListModel<Papel> papelList;
-	
-	private UserGroupCallbackCacheManager userCallBackCache;
 
 	@Named
 	@Produces
 	public Usuario getColaborador() {
 		return getEntidade();
+	}
+	
+	@Named
+	@Produces
+	public List<Usuario> getUsuarioList() {
+		return service.findAll(Usuario.class);
 	}
 	
 	@Named

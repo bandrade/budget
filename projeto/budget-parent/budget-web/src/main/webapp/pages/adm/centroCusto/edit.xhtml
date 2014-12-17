@@ -1,0 +1,77 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/templates/default.xhtml">
+                
+	<ui:define name="content">
+	
+		<p:panel id="content">
+		
+			<h3> 
+				<h:outputText value="Atualizar Centro de Custo" rendered="#{not empty centroCusto.id}" />
+				<h:outputText value="Criar Centro de Custo"     rendered="#{empty centroCusto.id}" /> 
+			</h3>
+			
+			<h:form id="form"> 
+			
+				<h:inputHidden value="#{centroCusto.id}" />
+					
+				<h:panelGrid columns="3" border="0">
+				
+					<p:outputLabel value="Número CC:" for="codigoInput" />
+                    <p:inputText label="Número CC" id="codigoInput" value="#{centroCusto.codigo}" required="true"/>
+                    <p:message for="codigoInput" />	
+                    
+					<p:outputLabel value="Nome CC:" for="nomeInput" />
+					<p:inputText label="Nome CC" id="nomeInput" value="#{centroCusto.nome}" required="true"/>
+					<p:message for="nomeInput" />
+                    
+                    <h:outputLabel for="tipoCentroCustoList" value="Tipo:" />
+                    <p:selectOneMenu label="Tipo" id="tipoCentroCustoList" value="#{centroCusto.tipo}" required="true">
+                        <f:selectItem itemLabel="Selecione..." itemValue="" />
+                        <f:selectItems value="#{tipoCentroCustoList}" itemValue="#{i}" itemLabel="#{i.toString()}" var="i" />
+                    </p:selectOneMenu>
+                    <p:message for="tipoCentroCustoList" />
+					
+                    <h:outputLabel for="areaList" value="Área:" />
+                    <p:selectOneMenu label="Área" id="areaList" value="#{centroCusto.area}" required="true" converter="com.dupont.EntityConverter">
+                        <f:selectItem itemLabel="Selecione..." itemValue="" />
+                        <f:selectItems value="#{areaList}" itemValue="#{i}" itemLabel="#{i.nome}" var="i" />
+                    </p:selectOneMenu>
+                    <p:message for="areaList" />
+					
+					<h:outputLabel for="responsavelList" value="Responsável:" />
+                    <p:selectOneMenu label="Responsável" id="responsavelList" value="#{centroCustoAction.responsavel}" required="true" converter="com.dupont.EntityConverter">
+                        <f:selectItem itemLabel="Selecione..." itemValue="" />
+                        <f:selectItems value="#{usuarioList}" itemValue="#{i}" itemLabel="#{i.nome}" var="i" />
+                    </p:selectOneMenu>
+                    <p:message for="responsavelList" />
+					
+					<h:outputLabel for="gestorList" value="Gestor:" />
+                    <p:selectOneMenu label="Gestor" id="gestorList" value="#{centroCustoActionAction.gestor}" converter="com.dupont.EntityConverter">
+                        <f:selectItem itemLabel="Selecione..." itemValue="" />
+                        <f:selectItems value="#{usuarioList}" itemValue="#{i}" itemLabel="#{i.nome}" var="i" />
+                    </p:selectOneMenu>
+                    <p:message for="gestorList" />
+					
+					<h:outputLabel for="gerenteList" value="Gerente:" />
+                    <p:selectOneMenu label="Gerente" id="gerenteList" value="#{centroCustoAction.gerente}" converter="com.dupont.EntityConverter" >
+                        <f:selectItem itemLabel="Selecione..." itemValue="" />
+                        <f:selectItems value="#{usuarioList}" itemValue="#{i}" itemLabel="#{i.nome}" var="i" />
+                    </p:selectOneMenu>
+                    <p:message for="gerenteList" />
+					
+				</h:panelGrid>
+				
+				<p:commandButton value="#{centroCusto.id != null? 'Atualizar' : 'Salvar'}" process="@this" icon="ui-icon-check" action="#{centroCustoAction.persist}" styleClass="button" ajax="false" />
+				<p:commandButton value="Cancelar"    icon="ui-icon-closethick" action="/pages/adm/centroCusto/list.xhtml" styleClass="button" ajax="false" immediate="true" />
+				
+			</h:form>
+		
+		</p:panel>
+		
+	</ui:define>
+	
+</ui:composition>

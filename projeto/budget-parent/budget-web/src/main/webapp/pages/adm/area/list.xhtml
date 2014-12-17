@@ -1,0 +1,59 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/templates/default.xhtml">
+                
+	<ui:define name="content">
+	
+		<p:panel id="content">
+	
+			<h3>Pesquisa de Áreas</h3>
+			
+			<h:form id="form" prependId="false">
+			
+				<h:panelGrid columns="3" border="0">
+				
+					<p:outputLabel value="Nome:" for="nomeInput"/>
+					<p:inputText id="nomeInput" value="#{area.nome}"/>
+					<p:message for="nomeInput"/>
+					
+					<p:commandButton value="Pesquisar" icon="ui-icon-search"   styleClass="button" action="#{areaAction.find}" update="areas"/>
+					<p:commandButton value="Novo"      icon="ui-icon-document" styleClass="button" action="/pages/adm/area/edit.xml"   />
+				</h:panelGrid>
+				
+				<p:separator />
+				
+				<p:dataTable id="areas" var="item" value="#{areaAction.list}" emptyMessage="Nenhum registro encontrado.">
+					
+					<p:column headerText="ID">
+						#{item.id}
+					</p:column>
+					
+					<p:column headerText="Nome" sortBy="#{item.nome}" >
+						#{item.nome}
+					</p:column>
+					
+					<p:column headerText="Ações">
+						
+						<p:commandButton icon="ui-icon-pencil" action="#{areaAction.edit(item)}"   update="areas" immediate="true"/>
+						<p:commandButton icon="ui-icon-trash"  action="#{areaAction.delete(item)}" update="areas" immediate="true">
+							<p:confirm header="Confirmação" message="Deseja realmente remover o dado?" icon="ui-icon-alert" />
+						</p:commandButton>
+						
+					</p:column>
+				
+				</p:dataTable>
+				
+				<p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+			        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+			        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no"  icon="ui-icon-close" />
+			    </p:confirmDialog>
+			</h:form>
+			
+		</p:panel>
+			
+	</ui:define>
+	
+</ui:composition>
