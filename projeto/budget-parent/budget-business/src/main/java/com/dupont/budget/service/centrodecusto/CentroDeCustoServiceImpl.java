@@ -47,6 +47,7 @@ public class CentroDeCustoServiceImpl extends GenericService implements CentroDe
 				p.setColaborador(colaborador);
 				papeisDTO.add(p);			
 			}
+			ccDto.setPapeis(papeisDTO);
 			centrosDeCusto.add(ccDto);
 		}
 		

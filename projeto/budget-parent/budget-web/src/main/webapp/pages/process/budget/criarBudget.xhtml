@@ -119,7 +119,7 @@
 					    id="cultura"
 						validator="com.dupont.budget.web.validators.ComboValidator">
 						<f:selectItem itemValue="" itemLabel="SELECIONE" />
-						<f:selectItems value="#{culturaAction.culturas}" var="culturaa"
+						<f:selectItems value="#{culturaAction.list}" var="culturaa"
 							itemLabel="#{culturaa.nome}" itemValue="#{culturaa.id}" />
 					</p:selectOneMenu>
 

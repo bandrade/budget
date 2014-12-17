@@ -3,6 +3,10 @@ package com.dupont.budget.service.impl;
 import java.util.List;
 
 import javax.ejb.Stateless;
+import javax.inject.Inject;
+import javax.persistence.NoResultException;
+
+import org.slf4j.Logger;
 
 import com.dupont.budget.model.Budget;
 import com.dupont.budget.model.Despesa;
@@ -11,7 +15,9 @@ import com.dupont.budget.service.GenericService;
 
 @Stateless
 public class BudgetServiceBean extends GenericService implements BudgetService {
-
+	
+	@Inject
+	private Logger logger;
 	@Override
 	public List<Despesa> obterDespesaAgrupadas(Long budgetId) {
 
@@ -32,9 +38,18 @@ public class BudgetServiceBean extends GenericService implements BudgetService {
 
 	@Override
 	public Budget findByAnoAndCentroDeCusto(String ano, Long centroDeCustoId) {
-		
-		return  em.createNamedQuery("Budget.findByAnoAndCentroDeCusto", Budget.class)
+		Budget budget = null;
+		try
+		{
+			budget =em.createNamedQuery("Budget.findByAnoAndCentroDeCusto", Budget.class)
 				.setParameter("centroDeCustoId", centroDeCustoId).setParameter("ano", ano).getSingleResult();
+		}
+		catch(NoResultException e)
+		{
+			logger.info("Nenhum resultado encontrado");
+		}
+		
+		return  budget;
 	}
 
 }

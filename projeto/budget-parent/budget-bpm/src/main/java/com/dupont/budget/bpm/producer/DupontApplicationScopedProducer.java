@@ -86,9 +86,5 @@ public class DupontApplicationScopedProducer {
         return new DefaultUserInfo(true);
     }
 
-    @Produces
-    public UserGroupCallback produceUserGroupCallback() {
-        return new DupontUserGroupCallback();
-    }
 
 }
