@@ -7,7 +7,10 @@
                 
 	<ui:define name="content">
 	
-		<p:panel id="content">
+		
+			<p:panelGrid columns="1" styleClass="body-content">
+			<p:fieldset value="Pesquisa de Produtos" legend="Pesquisa de Tipos de Despesa">
+			
 	
 			<h3>Pesquisa de Centros de Custo</h3>
 			
@@ -25,8 +28,13 @@
 				
 				<p:separator />
 				
-				<p:dataTable id="centroCustos" var="item" value="#{centroCustoAction.list}" emptyMessage="Nenhum registro encontrado.">
-					
+				<p:dataTable id="centroCustos" var="item" value="#{centroCustoAction.list}" emptyMessage="Nenhum registro encontrado."
+						paginator="true"
+						paginatorPosition="bottom"
+						rows="10">
+					<f:facet name="header">
+							Centros de Custo
+					</f:facet>
 					<p:column headerText="Nome" sortBy="#{item.nome}" >
 						#{item.nome}
 					</p:column>
@@ -51,8 +59,8 @@
 			        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no"  icon="ui-icon-close" />
 			    </p:confirmDialog>
 			</h:form>
-			
-		</p:panel>
+			</p:fieldset>
+			</p:panelGrid>
 			
 	</ui:define>
 	

@@ -6,10 +6,9 @@
                 template="/WEB-INF/templates/default.xhtml">
                 
 	<ui:define name="content">
-	
-		<p:panel id="content">
-	
-			<h3>Pesquisa de Áreas</h3>
+		<p:panelGrid columns="1" styleClass="body-content">
+		<p:fieldset value="Criar Pesquisa de Áreas" legend="Pesquisa de Áreas">
+			
 			
 			<h:form id="form" prependId="false">
 			
@@ -25,17 +24,19 @@
 				
 				<p:separator />
 				
-				<p:dataTable id="areas" var="item" value="#{areaAction.list}" emptyMessage="Nenhum registro encontrado.">
-					
-					<p:column headerText="ID">
-						#{item.id}
-					</p:column>
-					
+				<p:dataTable id="areas" var="item" value="#{areaAction.list}" emptyMessage="Nenhum registro encontrado."
+						paginator="true"
+						paginatorPosition="bottom"
+						rows="10">
+				
+					<f:facet name="header">
+						Área
+					</f:facet>
 					<p:column headerText="Nome" sortBy="#{item.nome}" >
 						#{item.nome}
 					</p:column>
 					
-					<p:column headerText="Ações">
+					<p:column headerText="Ações" style="width:15%">
 						
 						<p:commandButton icon="ui-icon-pencil" action="#{areaAction.edit(item)}"   update="areas" immediate="true"/>
 						<p:commandButton icon="ui-icon-trash"  action="#{areaAction.delete(item)}" update="areas" immediate="true">
@@ -52,8 +53,9 @@
 			    </p:confirmDialog>
 			</h:form>
 			
-		</p:panel>
-			
+		
+		</p:fieldset>
+		</p:panelGrid>
 	</ui:define>
 	
 </ui:composition>

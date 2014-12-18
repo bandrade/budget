@@ -7,12 +7,13 @@
                 
 	<ui:define name="content">
 	
-		<p:panel id="content">
-	
-			<h3>Pesquisa de Tipos de Despesa</h3>
+			<p:panelGrid columns="1" styleClass="body-content">
+			<p:fieldset value="Pesquisa de Produtos" legend="Pesquisa de Tipos de Despesa">
 			
 			<h:form id="form" prependId="false">
-			
+				<f:facet name="header">
+				Tipo de Despesa
+				</f:facet>
 				<h:panelGrid columns="3" border="0">
 				
 					<p:outputLabel value="Nome:" for="nomeInput"/>
@@ -25,8 +26,13 @@
 				
 				<p:separator />
 				
-				<p:dataTable id="tipoDespesas" var="item" value="#{tipoDespesaAction.list}" emptyMessage="Nenhum registro encontrado.">
-					
+				<p:dataTable id="tipoDespesas" var="item" value="#{tipoDespesaAction.list}" emptyMessage="Nenhum registro encontrado."
+						paginator="true"
+						paginatorPosition="bottom"
+						rows="10">
+					<f:facet name="header">
+						Tipos de despesa
+					</f:facet>
 					<p:column headerText="Nome" sortBy="#{item.nome}" >
 						#{item.nome}
 					</p:column>
@@ -35,7 +41,7 @@
                         #{item.contaContabil}
                     </p:column>
 					
-					<p:column headerText="Ações">
+					<p:column headerText="Ações" width="10%">
 						
 						<p:commandButton icon="ui-icon-pencil" action="#{tipoDespesaAction.edit(item)}"   update="tipoDespesas" immediate="true"/>
 						<p:commandButton icon="ui-icon-trash"  action="#{tipoDespesaAction.delete(item)}" update="tipoDespesas" immediate="true">
@@ -52,8 +58,8 @@
 			    </p:confirmDialog>
 			</h:form>
 			
-		</p:panel>
-			
+			</p:fieldset>
+			</p:panelGrid>			
 	</ui:define>
 	
 </ui:composition>
