@@ -9,7 +9,7 @@ import javax.persistence.Table;
 
 /**
  * Itens de despesa do Budget
- * 
+ *
  * @author <a href="asouza@redhat.com">Ângelo Galvão</a>
  * @since 2014
  *
@@ -17,24 +17,25 @@ import javax.persistence.Table;
 @Entity
 @Table(name="despesa")
 @NamedQueries({
-	@NamedQuery(name="Despesa.agruparPorTipoDeDespesa", query="select c from Despesa c where c.budget.id = :id group by c.tipoDespesa")
-}) 
+	@NamedQuery(name="Despesa.agruparPorTipoDeDespesa", query="select c.tipoDespesa, sum(c.valor) from Despesa c where c.budget.id = :id group by c.tipoDespesa"),
+	@NamedQuery(name="Despesa.obterDespesaNoDetalhe", query="select c from Despesa c where c.budget.id = :budgetId and c.tipoDespesa.id=:id")
+})
 public class Despesa extends AbstractEntity<Long> {
-	
+
 	private static final long serialVersionUID = -4344680928557842077L;
 
 	@ManyToOne
 	@JoinColumn(name="tipo_despesa_id")
 	private TipoDespesa tipoDespesa;
-	
+
 	@ManyToOne
 	@JoinColumn(name="cliente_id")
 	private Cliente cliente;
-	
+
 	@ManyToOne
 	@JoinColumn(name="acao_id")
 	private Acao acao;
-	
+
 	@ManyToOne
 	@JoinColumn(name="vendedor_id")
 	private Vendedor vendedor;
@@ -42,21 +43,21 @@ public class Despesa extends AbstractEntity<Long> {
 	@ManyToOne
 	@JoinColumn(name="produto_id")
 	private Produto produto;
-	
+
 	@ManyToOne
 	@JoinColumn(name="cultura_id")
 	private Cultura cultura;
-	
+
 	@ManyToOne
 	@JoinColumn(name="distrito_id")
 	private Distrito distrito;
-	
+
 	@ManyToOne
 	@JoinColumn(name="budget_id")
 	private Budget budget;
-	
+
 	private Double valor;
-	
+
 	private String comentario;
 
 	public TipoDespesa getTipoDespesa() {
@@ -138,7 +139,7 @@ public class Despesa extends AbstractEntity<Long> {
 	public void setBudget(Budget budget) {
 		this.budget = budget;
 	}
-	
+
 	public void init(){
 		setAcao(new Acao());
 		setProduto(new Produto());
@@ -147,6 +148,7 @@ public class Despesa extends AbstractEntity<Long> {
 		setDistrito(new Distrito());
 		setVendedor(new Vendedor());
 		setTipoDespesa(new TipoDespesa());
+		setValor(null);
 	}
 }
 
