@@ -19,11 +19,14 @@ import javax.persistence.Table;
 @Entity
 @Table(name="papel_usuario")
 @NamedQueries({
-@NamedQuery(name="PapelUsuario.findByCentroDeCusto"   , query="select p from PapelUsuario p where p.centroCusto.id=:idCentroDeCusto")
+	@NamedQuery(name = "PapelUsuario.findByCentroDeCusto", query = "select p from PapelUsuario p where p.centroCusto.id=:idCentroDeCusto"),
+	@NamedQuery(name = PapelUsuario.LIST_REFERENCES_BY_PAPEIS, query = "select p from PapelUsuario p where p.papel.nome in :papeis and (p.area is not null or p.centroCusto is not null)")
 })
 public class PapelUsuario extends AbstractEntity<Long> {
 	
 	private static final long serialVersionUID = 7181266797888273789L;
+	
+	public static final String LIST_REFERENCES_BY_PAPEIS = "PapelUsuario.listReferencesbyPapeis";
 
 	@ManyToOne
 	@JoinColumn(name="centro_custo_id")

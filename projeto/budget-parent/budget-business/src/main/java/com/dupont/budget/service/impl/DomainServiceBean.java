@@ -1,11 +1,13 @@
 package com.dupont.budget.service.impl;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.ejb.Stateless;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.dupont.budget.model.Papel;
 import com.dupont.budget.model.PapelUsuario;
 import com.dupont.budget.model.Usuario;
 import com.dupont.budget.service.DomainService;
@@ -52,4 +54,23 @@ public class DomainServiceBean extends GenericService implements DomainService {
 				.getResultList();
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see com.dupont.budget.service.DomainService#listPapelReferences(java.util.List)
+	 */
+	@Override
+	public List<PapelUsuario> listPapelReferences(List<Papel> papeis) {
+		List<String> list = new LinkedList<>();
+		for (Papel p : papeis) {
+			list.add(p.getNome());
+		}
+		if (!list.isEmpty()) {
+			return em.createNamedQuery(PapelUsuario.LIST_REFERENCES_BY_PAPEIS, PapelUsuario.class)
+					.setParameter("papeis", list)
+					.getResultList();
+		} else {
+			return new LinkedList<>();
+		}
+		
+	}
 }

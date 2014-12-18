@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.dupont.budget.model.AbstractEntity;
 import com.dupont.budget.model.NamedAbstractEntity;
+import com.dupont.budget.model.Papel;
 import com.dupont.budget.model.PapelUsuario;
 import com.dupont.budget.model.Usuario;
 
@@ -82,5 +83,14 @@ public interface DomainService {
 	 * @return entidade
 	 */
     <T extends AbstractEntity<?>> T findById(T t);
+
+    /**
+     * Retorna todas as referencias de uma lista de papeis específicos.
+     * 
+     * @param papeis a lista de papéis
+     * 
+     * @return todas as referências
+     */
+	List<PapelUsuario> listPapelReferences(List<Papel> papeis);
 	
 }
