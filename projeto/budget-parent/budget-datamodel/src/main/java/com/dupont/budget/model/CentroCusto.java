@@ -1,12 +1,18 @@
 package com.dupont.budget.model;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -33,7 +39,10 @@ public class CentroCusto extends NamedAbstractEntity<Long> {
 	@ManyToOne
 	@JoinColumn(name="area_id")
 	private Area area;
-
+	
+	@OneToMany(mappedBy = "centroCusto", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private List<PapelUsuario> responsaveis;
+	
 	public String getCodigo() {
 		return codigo;
 	}
@@ -56,6 +65,17 @@ public class CentroCusto extends NamedAbstractEntity<Long> {
 
 	public void setArea(Area area) {
 		this.area = area;
+	}
+
+	public List<PapelUsuario> getResponsaveis() {
+		if (responsaveis == null) {
+			responsaveis = new LinkedList<>();
+		}
+		return responsaveis;
+	}
+
+	public void setResponsaveis(List<PapelUsuario> responsaveis) {
+		this.responsaveis = responsaveis;
 	}
 
 }

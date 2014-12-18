@@ -53,11 +53,10 @@ public class AreaAction extends GenericAction<Area> {
 	@Override
 	public String persist() {
 		
-		String nomePapel = createNomePapel(entidade);
 		String result = null;
 
 		if (mustCreate()) {
-			entidade.setLider(new PapelUsuario(new Papel(nomePapel.toString()), lider, entidade));
+			entidade.setLider(new PapelUsuario(new Papel(createNomePapel(entidade)), lider, entidade));
 			result = create();
 		} else {
 			Area tmp = service.findById(entidade);

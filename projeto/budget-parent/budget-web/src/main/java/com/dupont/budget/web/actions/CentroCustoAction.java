@@ -1,5 +1,6 @@
 package com.dupont.budget.web.actions;
 
+import java.util.Iterator;
 import java.util.List;
 
 import javax.annotation.security.RolesAllowed;
@@ -49,20 +50,41 @@ public class CentroCustoAction extends GenericAction<CentroCusto> {
 	@Override
 	public String persist() {
 		String result = null;
+		
 		if (mustCreate()) {
+			entidade.getResponsaveis().add(new PapelUsuario(new Papel(createNomePapel(entidade, 1)), responsavel, entidade, 1));
+			entidade.getResponsaveis().add(new PapelUsuario(new Papel(createNomePapel(entidade, 2)), gestor, entidade, 2));
+			entidade.getResponsaveis().add(new PapelUsuario(new Papel(createNomePapel(entidade, 3)), gerente, entidade, 3));
+			
 			result = create();
 		} else {
+			CentroCusto tmp = service.findById(entidade);
+			List<PapelUsuario> list = tmp.getResponsaveis();
+			for (Iterator<PapelUsuario> i = list.iterator(); i.hasNext();) {
+				PapelUsuario o = i.next();
+				switch (o.getNivel()) {
+				case 1:
+					o.setUsuario(responsavel);
+					break;
+				case 2:
+					if (gestor != null) {
+						o.setUsuario(gestor);
+					} else {
+						i.remove();
+					}
+					break;
+				case 3:
+					if (gerente != null) {
+						o.setUsuario(gerente);
+					} else {
+						i.remove();
+					}
+					break;
+				}
+			}
+			entidade.setResponsaveis(list);
+			
 			result = update();
-		}
-		
-		criarPapel(responsavel);
-		
-		if (gestor != null) {
-			criarPapel(gestor);
-		}
-		
-		if (gerente != null) {
-			criarPapel(gerente);
 		}
 		
 		clearInstance();
@@ -70,34 +92,32 @@ public class CentroCustoAction extends GenericAction<CentroCusto> {
 		return result;
 	}
 	
-	private void criarPapel(Usuario usuario) {
-		String nomePapel = createNomePapel(entidade);
-		Papel papel = new Papel(nomePapel.toString());
-		List<Papel> papeis = service.findByName(papel);
-		PapelUsuario pu = new PapelUsuario();
-		boolean ignore = false;
+	public String edit(CentroCusto t) {
+		this.setEntidade(t);
 		
-		if (papeis.isEmpty()) {
-			pu.setPapel(papel);
-		} else {
-			Usuario usr = service.getUsuarioByLogin(usuario.getLogin());
-			for (PapelUsuario p: usr.getPapeis()) {
-				if (p.getPapel().equals(papel)) {
-					ignore = true;
-					break;
-				}
+		CentroCusto cc = service.findById(t);
+		
+		for (PapelUsuario pu: cc.getResponsaveis()) {
+			switch (pu.getNivel()) {
+			case 1:
+				responsavel = pu.getUsuario();
+				break;
+			case 2:
+				gestor = pu.getUsuario();
+				break;
+			case 3:
+				gerente = pu.getUsuario();
+				break;
 			}
-			pu.setPapel(papeis.get(0));
 		}
 		
-		if (!ignore) {
-			service.create(pu);
-		}
+		return "edit";
 	}
 	
-	private String createNomePapel(CentroCusto cc) {
-		StringBuilder nomePapel = new StringBuilder("LIDER_");
-		String nomeArea = cc.getNome();
+	private String createNomePapel(CentroCusto cc, int nivel) {
+		final String[] papel = {"RESPONSAVEL_", "GESTOR_","GERENTE_"}; 
+		StringBuilder nomePapel = new StringBuilder(papel[nivel - 1]);
+		String nomeArea = cc.getCodigo();
 		nomeArea = nomeArea.trim().replaceAll(" ", "_");
 		nomePapel.append(nomeArea.toUpperCase());
 		return nomePapel.toString();
@@ -117,7 +137,7 @@ public class CentroCustoAction extends GenericAction<CentroCusto> {
 	
 	@Named
 	@Produces
-	public TipoCentroCusto[] getTpoCentroCustoList() {
+	public TipoCentroCusto[] getTipoCentroCustoList() {
 		return TipoCentroCusto.values();
 	}
 

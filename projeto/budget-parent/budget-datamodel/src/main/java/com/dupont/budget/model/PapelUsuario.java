@@ -32,11 +32,11 @@ public class PapelUsuario extends AbstractEntity<Long> {
 	@JoinColumn(name="centro_custo_id")
 	private CentroCusto centroCusto;
 	
-	@ManyToOne(cascade = CascadeType.PERSIST)
+	@OneToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name="papel_id")
 	private Papel papel;
 	
-	@ManyToOne
+	@OneToOne
 	@JoinColumn(name = "usuario_id")
 	private Usuario usuario;
 	
@@ -70,10 +70,11 @@ public class PapelUsuario extends AbstractEntity<Long> {
 		this.usuario = usuario;
 	}
 	
-	public PapelUsuario(Papel papel, Usuario usuario, CentroCusto centroCusto) {
+	public PapelUsuario(Papel papel, Usuario usuario, CentroCusto centroCusto, int nivel) {
 		this.papel = papel;
 		this.centroCusto = centroCusto;
 		this.usuario = usuario;
+		this.nivel = nivel;
 	}
 
 	public CentroCusto getCentroCusto() {

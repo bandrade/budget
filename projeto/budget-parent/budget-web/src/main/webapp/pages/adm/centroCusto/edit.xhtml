@@ -50,7 +50,7 @@
                     <p:message for="responsavelList" />
 					
 					<h:outputLabel for="gestorList" value="Gestor:" />
-                    <p:selectOneMenu label="Gestor" id="gestorList" value="#{centroCustoActionAction.gestor}" converter="com.dupont.EntityConverter">
+                    <p:selectOneMenu label="Gestor" id="gestorList" value="#{centroCustoAction.gestor}" converter="com.dupont.EntityConverter">
                         <f:selectItem itemLabel="Selecione..." itemValue="" />
                         <f:selectItems value="#{usuarioList}" itemValue="#{i}" itemLabel="#{i.nome}" var="i" />
                     </p:selectOneMenu>
