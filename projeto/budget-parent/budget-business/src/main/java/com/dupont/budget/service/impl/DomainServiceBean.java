@@ -41,4 +41,15 @@ public class DomainServiceBean extends GenericService implements DomainService {
 					.getResultList();
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see com.dupont.budget.service.DomainService#findUsuarioByNomePapel(java.lang.String)
+	 */
+	@Override
+	public List<Usuario> listUsuarioByNomePapel(String nomePapel) {
+		return em.createNamedQuery(Usuario.FIND_BY_NOME_PAPEL, Usuario.class)
+				.setParameter("nome", nomePapel)
+				.getResultList();
+	}
+	
 }

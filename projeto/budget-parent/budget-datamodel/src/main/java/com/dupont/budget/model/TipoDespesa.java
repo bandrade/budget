@@ -1,5 +1,6 @@
 package com.dupont.budget.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -20,14 +21,17 @@ import javax.persistence.Table;
 public class TipoDespesa extends NamedAbstractEntity<Long> {
 
 	private static final long serialVersionUID = -1150860018776728153L;
-	private String conta_contabil;
+	
+	@Column(name = "conta_contabil")
+	private String contaContabil;
+	
 	private String descricao;
 	
-	public String getConta_contabil() {
-		return conta_contabil;
+	public String getContaContabil() {
+		return contaContabil;
 	}
-	public void setConta_contabil(String conta_contabil) {
-		this.conta_contabil = conta_contabil;
+	public void setContaContabil(String conta_contabil) {
+		this.contaContabil = conta_contabil;
 	}
 	public String getDescricao() {
 		return descricao;
@@ -36,6 +40,4 @@ public class TipoDespesa extends NamedAbstractEntity<Long> {
 		this.descricao = descricao;
 	}
 	
-	
-
 }

@@ -22,6 +22,14 @@ public class Papel extends NamedAbstractEntity<Long> {
 	private static final long serialVersionUID = -8321943677400253472L;
 	
 	private String descricao;
+	
+	public Papel() {
+		this(null);
+	}
+	
+	public Papel(String nome) {
+		this.nome = nome;
+	}
 
 	public String getDescricao() {
 		return descricao;

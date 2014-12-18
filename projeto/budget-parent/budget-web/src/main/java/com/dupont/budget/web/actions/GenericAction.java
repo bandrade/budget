@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.slf4j.Logger;
 
+import com.dupont.budget.exception.ApplicationException;
+import com.dupont.budget.exception.ApplicationRuntimeException;
 import com.dupont.budget.exception.ExistingNameRuntimeException;
 import com.dupont.budget.model.AbstractEntity;
 import com.dupont.budget.service.DomainService;
@@ -28,6 +30,8 @@ public abstract class GenericAction<T extends AbstractEntity<?>>  implements Ser
 	
 	protected Class<T> clazz;
 	
+	private static final int ITERATION_LIMIT = 1000;
+	
 	/**
 	 * Atualiza ou persite a entidade no meio persistente.
 	 * 
@@ -41,6 +45,7 @@ public abstract class GenericAction<T extends AbstractEntity<?>>  implements Ser
 			} else {
 				action = update();
 			}
+			clearInstance();
 		} catch (ExistingNameRuntimeException e) {
 			getFacesUtils().addErrorMessage("Registro com mesmo nome já cadastrado!");
 		}
@@ -53,12 +58,14 @@ public abstract class GenericAction<T extends AbstractEntity<?>>  implements Ser
 	public String create() {
 		String tipo = getEntidade().getClass().getSimpleName();
 		getLogger().debug(String.format("Criando uma nova entidade do tipo: %s", tipo));
-
-		setEntidade(getService().create(getEntidade()));
-
-		getFacesUtils().addInfoMessage(String.format("%s criado(a) com sucesso.", tipo));
 		
-		clearInstance();
+		try {
+			setEntidade(getService().create(getEntidade()));
+			
+			getFacesUtils().addInfoMessage(String.format("%s criado(a) com sucesso.", tipo));
+		} catch (Exception e) {
+			handleException(e);
+		}
 
 		return "list";
 	}
@@ -73,13 +80,17 @@ public abstract class GenericAction<T extends AbstractEntity<?>>  implements Ser
 		String tipo = getEntidade().getClass().getSimpleName();
 		getLogger().debug(String.format("Removendo entidade do tipo %s, com o id: ", tipo, t.getId()));
 
-		// Remove a entidade do meio persistente
-		getService().delete(t);
-
-		// Remove a entidade da tabela
-		list.remove(t);
-
-		getFacesUtils().addInfoMessage(String.format("%s removido(a) com sucesso.", tipo));
+		try {
+			// Remove a entidade do meio persistente
+			getService().delete(t);
+			
+			// Remove a entidade da tabela
+			list.remove(t);
+			
+			getFacesUtils().addInfoMessage(String.format("%s removido(a) com sucesso.", tipo));
+		} catch (Exception e) {
+			handleException(e);
+		}
 	}
 
 	/**
@@ -89,12 +100,14 @@ public abstract class GenericAction<T extends AbstractEntity<?>>  implements Ser
 		String tipo = getEntidade().getClass().getSimpleName();
 		getLogger().debug("Atualizando a entidade cultura com o id: "
 				+ getEntidade().getId());
+		try {
+			setEntidade(getService().update(getEntidade()));
+			
+			getFacesUtils().addInfoMessage(String.format("%s atualizado(a) com sucesso.", tipo));
+		} catch (Exception e) {
+			handleException(e);
+		}
 
-		setEntidade(getService().update(getEntidade()));
-
-		getFacesUtils().addInfoMessage(String.format("%s atualizado(a) com sucesso.", tipo));
-
-		clearInstance();
 
 		return "list";
 	}
@@ -109,6 +122,24 @@ public abstract class GenericAction<T extends AbstractEntity<?>>  implements Ser
 		this.setEntidade(t);
 
 		return "edit";
+	}
+	
+	/**
+	 * Trata as exceções lançadas durante os processos.
+	 * 
+	 * @param e exceção
+	 */
+	private void handleException(Throwable e) {
+		if (e instanceof ApplicationException || e instanceof ApplicationRuntimeException) {
+			getFacesUtils().addErrorMessage(e.getLocalizedMessage());
+		} else {
+			Throwable t = e.getCause();
+			int counter = 0;
+			while (t.getCause() != null && counter++ < ITERATION_LIMIT) {
+				t = t.getCause();
+			}
+			getFacesUtils().addErrorMessage(String.format("Erro inesperado: %s", t.getLocalizedMessage()));
+		}
 	}
 	
 	/**

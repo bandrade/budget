@@ -24,11 +24,14 @@ import javax.persistence.Table;
 @Entity
 @Table(name="usuario")
 @NamedQueries({
-	@NamedQuery(name="Usuario.findByLogin", query="select u from Usuario u where u.login = :login")
+	@NamedQuery(name="Usuario.findByLogin", query = "select u from Usuario u where u.login = :login"),
+	@NamedQuery(name = Usuario.FIND_BY_NOME_PAPEL, query = "select u from Usuario u join u.papeis p where p.papel.nome = :nome")
 })
 public class Usuario extends NamedAbstractEntity<Long> {
 	
 	private static final long serialVersionUID = 5218210368120783415L;
+	
+	public static final String FIND_BY_NOME_PAPEL = "Usuario.findByNomePapel";
 
 	private String login;
 	
@@ -39,7 +42,7 @@ public class Usuario extends NamedAbstractEntity<Long> {
 	@Enumerated(EnumType.STRING)
 	private Perfil perfil;
 	
-	@OneToMany(targetEntity = PapelUsuario.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OneToMany(targetEntity = PapelUsuario.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "usuario_id")
 	private Set<PapelUsuario> papeis;
 

@@ -22,7 +22,15 @@
 				
 					<p:outputLabel value="Nome:" for="nomeInput" />
 					<p:inputText label="Nome" id="nomeInput" value="#{tipoDespesa.nome}" required="true"/>
-					<p:message for="nomeInput" />			
+					<p:message for="nomeInput" />
+                    
+                    <p:outputLabel value="Descrição:" for="descricaoInput" />
+                    <p:inputText label="Descrição" id="descricaoInput" value="#{tipoDespesa.descricao}" />
+                    <p:message for="descricaoInput" />   			
+					
+					<p:outputLabel value="Conta Contábil:" for="contaInput" />
+                    <p:inputText label="Conta Contábil" id="contaInput" value="#{tipoDespesa.contaContabil}" required="true"/>
+                    <p:message for="contaInput" />
 					
 				</h:panelGrid>
 				

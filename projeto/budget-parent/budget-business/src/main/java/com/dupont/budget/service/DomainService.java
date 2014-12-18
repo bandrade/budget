@@ -21,7 +21,7 @@ public interface DomainService {
 	 * @param login login do usuario
 	 * @return usuario encontrado ou null
 	 */
-	public Usuario getUsuarioByLogin(String login);
+	Usuario getUsuarioByLogin(String login);
 	
 	/**
 	 * Retorna todas as entidades do tipo da classe epecificado do meio 
@@ -65,7 +65,14 @@ public interface DomainService {
 	 * @param idCentroDeCusto codigo do cc
 	 * @return papeis
 	 */
-    List<PapelUsuario> findPapeisByCentroDeCusto(Long idCentroDeCusto); 
+    List<PapelUsuario> findPapeisByCentroDeCusto(Long idCentroDeCusto);
+
+    /**
+     * Retorna uma lista de usuarios que possuem o papel especificado
+     * @param nomePapel nome do papel
+     * @return a lista de usuários que atenda ao critério
+     */
+	List<Usuario> listUsuarioByNomePapel(String nomePapel); 
 	
 	
 }

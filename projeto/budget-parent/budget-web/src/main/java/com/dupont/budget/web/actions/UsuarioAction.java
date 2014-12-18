@@ -127,9 +127,9 @@ public class UsuarioAction extends GenericAction<Usuario> {
 				return null;
 			}
 		}
-		entidade.getPapeis().clear();
+		
 		for (Papel p: papelList.getTarget()) {
-			entidade.getPapeis().add(new PapelUsuario(p));
+			entidade.getPapeis().add(new PapelUsuario(p, entidade));
 		}
 		userCallBackCache.removeGroupsFromCache(entidade.getLogin());
 		return super.persist();

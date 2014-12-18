@@ -1,9 +1,7 @@
 package com.dupont.budget.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
@@ -22,17 +20,15 @@ import javax.persistence.Table;
 @NamedQueries({
 @NamedQuery(name="PapelUsuario.findByCentroDeCusto"   , query="select p from PapelUsuario p where p.centroCusto.id=:idCentroDeCusto")
 })
-public class PapelUsuario {
-
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	private Long id; 
+public class PapelUsuario extends AbstractEntity<Long> {
 	
+	private static final long serialVersionUID = 7181266797888273789L;
+
 	@ManyToOne
 	@JoinColumn(name="centro_custo_id")
 	private CentroCusto centroCusto;
 	
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name="papel_id")
 	private Papel papel;
 	
@@ -53,13 +49,27 @@ public class PapelUsuario {
 	public PapelUsuario(Papel papel) {
 		this.papel = papel;
 	}
-
-	public Long getId() {
-		return id;
+	
+	public PapelUsuario(Papel papel, Usuario usuario) {
+		this.papel = papel;
+		this.usuario = usuario;
 	}
-
-	public void setId(Long id) {
-		this.id = id;
+	
+	public PapelUsuario(Usuario usuario, Area area) {
+		this.area = area;
+		this.usuario = usuario;
+	}
+	
+	public PapelUsuario(Papel papel, Usuario usuario, Area area) {
+		this.papel = papel;
+		this.area = area;
+		this.usuario = usuario;
+	}
+	
+	public PapelUsuario(Papel papel, Usuario usuario, CentroCusto centroCusto) {
+		this.papel = papel;
+		this.centroCusto = centroCusto;
+		this.usuario = usuario;
 	}
 
 	public CentroCusto getCentroCusto() {
@@ -100,6 +110,56 @@ public class PapelUsuario {
 
 	public void setNivel(Integer nivel) {
 		this.nivel = nivel;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((area == null) ? 0 : area.hashCode());
+		result = prime * result
+				+ ((centroCusto == null) ? 0 : centroCusto.hashCode());
+		result = prime * result + ((nivel == null) ? 0 : nivel.hashCode());
+		result = prime * result + ((papel == null) ? 0 : papel.hashCode());
+		result = prime * result + ((usuario == null) ? 0 : usuario.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		PapelUsuario other = (PapelUsuario) obj;
+		if (area == null) {
+			if (other.area != null)
+				return false;
+		} else if (!area.equals(other.area))
+			return false;
+		if (centroCusto == null) {
+			if (other.centroCusto != null)
+				return false;
+		} else if (!centroCusto.equals(other.centroCusto))
+			return false;
+		if (nivel == null) {
+			if (other.nivel != null)
+				return false;
+		} else if (!nivel.equals(other.nivel))
+			return false;
+		if (papel == null) {
+			if (other.papel != null)
+				return false;
+		} else if (!papel.equals(other.papel))
+			return false;
+		if (usuario == null) {
+			if (other.usuario != null)
+				return false;
+		} else if (!usuario.equals(other.usuario))
+			return false;
+		return true;
 	}
 	
 	

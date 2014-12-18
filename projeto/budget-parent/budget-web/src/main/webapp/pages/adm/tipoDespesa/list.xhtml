@@ -35,6 +35,10 @@
 						#{item.nome}
 					</p:column>
 					
+					<p:column headerText="Conta Contábil" sortBy="#{item.contaContabil}" >
+                        #{item.contaContabil}
+                    </p:column>
+					
 					<p:column headerText="Ações">
 						
 						<p:commandButton icon="ui-icon-pencil" action="#{tipoDespesaAction.edit(item)}"   update="tipoDespesas" immediate="true"/>

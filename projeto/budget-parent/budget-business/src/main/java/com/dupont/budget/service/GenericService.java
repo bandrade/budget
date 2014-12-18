@@ -69,11 +69,17 @@ public abstract class GenericService {
 	 * (non-Javadoc)
 	 * @see com.dupont.budget.service.DomainService#findByName(java.lang.Class, java.lang.String)
 	 */
+	@SuppressWarnings("unchecked")
 	public <T extends AbstractEntity<?>> T update(T t) {
-		if (t instanceof NamedAbstractEntity && !findByName((NamedAbstractEntity<?>)t).isEmpty()) {
-			throw new ExistingNameRuntimeException(t);
+		if (t instanceof NamedAbstractEntity) {
+			List<T> list = (List<T>) findByName((NamedAbstractEntity<?>) t);
+			list.remove(t);
+			if (!list.isEmpty()) {
+				throw new ExistingNameRuntimeException(t);
+			}
 		}
-		return em.merge(t);
+		t = em.merge(t);
+		return t;
 	}
 
 }
