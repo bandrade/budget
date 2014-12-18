@@ -81,6 +81,6 @@ public interface DomainService {
 	 * @param id
 	 * @return entidade
 	 */
-    <T extends NamedAbstractEntity<?>> T findById(T t);
+    <T extends AbstractEntity<?>> T findById(T t);
 	
 }

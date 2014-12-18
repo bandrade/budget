@@ -60,7 +60,7 @@ public abstract class GenericService {
 	 * (non-Javadoc)
 	 */
 	@SuppressWarnings("unchecked")
-	public <T extends NamedAbstractEntity<?>> T findById(T t) {
+	public <T extends AbstractEntity<?>> T findById(T t) {
 		Object id = t.getId();
 		T result = (T) em.createQuery(
 					String.format("select o from %s o where o.id = :id", t.getClass().getSimpleName())
