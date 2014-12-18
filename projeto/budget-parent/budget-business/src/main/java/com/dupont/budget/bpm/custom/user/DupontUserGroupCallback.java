@@ -3,6 +3,8 @@ package com.dupont.budget.bpm.custom.user;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.ejb.TransactionManagement;
+import javax.ejb.TransactionManagementType;
 import javax.enterprise.inject.Default;
 import javax.inject.Inject;
 
@@ -22,17 +24,15 @@ public class DupontUserGroupCallback implements UserGroupCallback {
 	
 	@Inject
 	private Logger logger;
-	
+
     public boolean existsUser(String userId) {
-    	
     	String user= userGroupCallbackCacheManager.getUserFromCache(userId);
     	if(user==null)
     	{
     		Usuario usuario = domainService.getUsuarioByLogin(userId);
     		user = usuario.getLogin();
     		List<String> groups = new ArrayList<String>();
-    		Usuario u = domainService.getUsuarioByLogin(userId);
-    		for(PapelUsuario papel : u.getPapeis())
+    		for(PapelUsuario papel : usuario.getPapeis())
     		{
     			String grupo = papel.getPapel().getNome();
     			groups.add(grupo);
@@ -41,7 +41,7 @@ public class DupontUserGroupCallback implements UserGroupCallback {
     		userGroupCallbackCacheManager.setUserOnCache(userId);
     		userGroupCallbackCacheManager.setGroupsOnCache(userId, groups);
     	}
-    	
+    				
         return user!=null || userId.equals("Administrator") ;
     }
 

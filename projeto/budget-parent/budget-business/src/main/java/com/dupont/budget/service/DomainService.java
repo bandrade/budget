@@ -47,6 +47,7 @@ public interface DomainService {
 	 */
 	<T extends NamedAbstractEntity<?>>List<T> findByName(T t);
 	
+	
 	/**
 	 * Remove a entidade do meio persistente.
 	 * @param t entidade a ser removida.
@@ -67,5 +68,12 @@ public interface DomainService {
 	 */
     List<PapelUsuario> findPapeisByCentroDeCusto(Long idCentroDeCusto); 
 	
+
+	/**
+	 * Retorna todas as entidades filtrando por id
+	 * @param id
+	 * @return entidade
+	 */
+    <T extends NamedAbstractEntity<?>> T findById(T t);
 	
 }
