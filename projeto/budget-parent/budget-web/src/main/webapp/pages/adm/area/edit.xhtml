@@ -21,7 +21,7 @@
 				<h:panelGrid columns="3" border="0">
 				
 					<p:outputLabel value="Nome:" for="nomeInput" />
-					<p:inputText label="Nome" id="nomeInput" value="#{area.nome}" required="true"/>
+					<p:inputText label="Nome" id="nomeInput" value="#{area.nome}" required="true" disabled="#{not empty area.id}" />
 					<p:message for="nomeInput" />
 					
 					<h:outputLabel for="liderList" value="Lider" />

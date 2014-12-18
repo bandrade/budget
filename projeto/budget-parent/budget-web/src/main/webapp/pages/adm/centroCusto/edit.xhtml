@@ -21,7 +21,7 @@
 				<h:panelGrid columns="3" border="0">
 				
 					<p:outputLabel value="Número CC:" for="codigoInput" />
-                    <p:inputText label="Número CC" id="codigoInput" value="#{centroCusto.codigo}" required="true"/>
+                    <p:inputText label="Número CC" id="codigoInput" value="#{centroCusto.codigo}" required="true" disabled="#{not empty centroCusto.id}" />
                     <p:message for="codigoInput" />	
                     
 					<p:outputLabel value="Nome CC:" for="nomeInput" />
