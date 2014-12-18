@@ -45,6 +45,12 @@ public class AreaAction extends GenericAction<Area> {
 	}
 	
 	@Override
+	protected void clearInstance() {
+		// TODO Auto-generated method stub
+		super.clearInstance();
+	}
+	
+	@Override
 	public String persist() {
 		
 		String nomePapel = createNomePapel(entidade);
@@ -54,6 +60,8 @@ public class AreaAction extends GenericAction<Area> {
 			entidade.setLider(new PapelUsuario(new Papel(nomePapel.toString()), lider, entidade));
 			result = create();
 		} else {
+			Area tmp = service.findById(entidade);
+			entidade.setLider(tmp.getLider());
 			entidade.getLider().setUsuario(lider);
 			result = update();
 		}
