@@ -22,7 +22,7 @@ public class BudgetServiceBean extends GenericService implements BudgetService {
 	public List<Despesa> obterDespesaAgrupadas(Long budgetId) {
 
 		return em.createNamedQuery("Despesa.agruparPorTipoDeDespesa", Despesa.class)
-				.setParameter("budgetId", budgetId).getResultList();
+				.setParameter("id", budgetId).getResultList();
 	}
 
 	@Override

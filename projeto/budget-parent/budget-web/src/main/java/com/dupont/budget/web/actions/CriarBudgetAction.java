@@ -2,6 +2,7 @@
 package com.dupont.budget.web.actions;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
@@ -15,6 +16,7 @@ import org.slf4j.Logger;
 
 import com.dupont.budget.dto.CentroDeCustoDTO;
 import com.dupont.budget.model.Budget;
+import com.dupont.budget.model.CentroCusto;
 import com.dupont.budget.model.Despesa;
 import com.dupont.budget.service.BudgetService;
 import com.dupont.budget.service.DomainService;
@@ -51,13 +53,15 @@ public class CriarBudgetAction implements Serializable {
 	
 	private String ano;
 	
+	private boolean possuiBudgetSalvo;
+	
 		
 	@PostConstruct
 	private void init(){
 		conversation.begin();
 		despesa = new Despesa();
 		despesa.init();
-		budget = new Budget();
+		
 	
 		
 	}
@@ -68,7 +72,15 @@ public class CriarBudgetAction implements Serializable {
 			   centroDeCusto = (CentroDeCustoDTO)bpmsProcesso.obterVariavelProcesso(idInstanciaProcesso, "centroDeCusto");
 			   ano = (String)bpmsProcesso.obterVariavelProcesso(idInstanciaProcesso, "ano");
 			   budget = budgetService.findByAnoAndCentroDeCusto(ano, centroDeCusto.getId());
-			   carregarDespesasBudget();
+			   possuiBudgetSalvo = budget !=null;
+			   if(possuiBudgetSalvo)
+			   {
+				   despesasAgrupadas = budgetService.obterDespesaAgrupadas(budget.getId());
+			   }
+			   else
+			   {
+				   budget = new Budget();
+			   }
 			   
 			} catch (Exception e) {
 				facesUtils.addErrorMessage("Erro ao obter tarefas do usuario.");
@@ -77,35 +89,42 @@ public class CriarBudgetAction implements Serializable {
 	}
 	
 	
-	private void carregarDespesasBudget() {
-		if(budget !=null && budget.getId() !=null)
-		{
-			despesasAgrupadas = budgetService.obterDespesaAgrupadas(budget.getId());
-		}
-	}
 
 	public void adicionarDespesa()
 	{
 		
+		if(!possuiBudgetSalvo)
+		{
+			criarBudget();
+		}
 		if(budget.getDespesas() ==null)
 		{
 			budget.setDespesas(new HashSet<Despesa>());
 		}
+		
+		despesa.setBudget(budget);
+		despesa.setTipoDespesa(domainService.findById(despesa.getTipoDespesa()));
 		domainService.create(despesa.getAcao());
 		budgetService.insertItemDespesa(despesa);
 		budget.getDespesas().add(despesa);
-		if(budget.getId() ==null)
-		{
-			budgetService.insertBudget(budget);
-		}
+		
 		despesasAgrupadas = budgetService.obterDespesaAgrupadas(budget.getId());
 			
 	}
 	
-	public String criarBudget()
+	public void criarBudget()
 	{
-		
-		return null;
+		budget.setAno(ano);
+		CentroCusto centroCusto = new CentroCusto();
+		centroCusto.setId(centroDeCusto.getId());
+		centroCusto= domainService.findById(centroCusto);
+		//centroDeCusto= domainService.fi(centroDeCusto);
+		budget.setCentroCusto(centroCusto);
+		budget.setUsuarioCriador(domainService.getUsuarioByLogin(facesUtils.getUserLogin()));
+		budget.setUltimaAtualizacao(new Date());
+		budget.setCricao(new Date());
+		budget.setProcessInstanceId(idInstanciaProcesso);
+		budget = budgetService.insertBudget(budget);
 	}
 	
 	
