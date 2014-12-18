@@ -40,7 +40,7 @@ public abstract class GenericAction<T extends AbstractEntity<?>>  implements Ser
 	public String persist() {
 		String action = null;
 		try {
-			if (getEntidade().getId() == null) {
+			if (mustCreate()) {
 				action = create();
 			} else {
 				action = update();
@@ -50,6 +50,29 @@ public abstract class GenericAction<T extends AbstractEntity<?>>  implements Ser
 			getFacesUtils().addErrorMessage("Registro com mesmo nome já cadastrado!");
 		}
 		return action;
+	}
+	
+	/**
+	 * Verifica se uma entidade deve ser persistida ou atualizada.
+	 * 
+	 * @return true caso a entidade deva ser persistida
+	 */
+	protected boolean mustCreate() {
+		boolean yes = false;
+		if (getEntidade().getId() == null) {
+			yes = true;
+		} else {
+			if (getEntidade().getId() instanceof Long) {
+				yes = ((Long) getEntidade().getId()).equals(0L);
+			} else if (getEntidade().getId() instanceof String) {
+				yes = ((String) getEntidade().getId()).isEmpty();
+			}
+		}
+		
+		if (yes) {
+			getEntidade().setId(null);
+		}
+		return yes;
 	}
 	
 	/**
@@ -145,7 +168,7 @@ public abstract class GenericAction<T extends AbstractEntity<?>>  implements Ser
 	/**
 	 * Reinicia a entidade criando uma nova instância.
 	 */
-	private void clearInstance() {
+	protected void clearInstance() {
 		try {
 			
 			setEntidade((T) getClazz().newInstance());

@@ -49,7 +49,7 @@ public class AreaAction extends GenericAction<Area> {
 	@Override
 	public String persist() {
 		String result = null;
-		if (getEntidade().getId() == null) {
+		if (mustCreate()) {
 			result = create();
 		} else {
 			result = update();
@@ -77,6 +77,8 @@ public class AreaAction extends GenericAction<Area> {
 		if (!ignore) {
 			service.create(pu);
 		}
+		
+		clearInstance();
 		
 		return result;
 	}
