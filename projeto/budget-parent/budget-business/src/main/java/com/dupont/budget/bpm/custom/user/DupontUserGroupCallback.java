@@ -3,8 +3,6 @@ package com.dupont.budget.bpm.custom.user;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.ejb.TransactionManagement;
-import javax.ejb.TransactionManagementType;
 import javax.enterprise.inject.Default;
 import javax.inject.Inject;
 

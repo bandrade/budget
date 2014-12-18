@@ -16,21 +16,26 @@
 	<ui:define name="content">
 		<p:messages></p:messages>
 		
-		<h:form id="form">
+		<h:form id="form"> 
 			<p:messages></p:messages>
 			<p:panelGrid columns="1" styleClass="body-content">
 				<p:fieldset value="Criar Budget" legend="Criar Budget">
+				<p:panel>
 					<p:panelGrid columns="2">
 						<p:outputLabel value="Centro de Custo:"></p:outputLabel>
 						<p:outputLabel styleClass="bold-label" value="#{criarBudgetAction.centroDeCusto.nome}"></p:outputLabel>
 						<p:outputLabel value="Ano:"></p:outputLabel>
 						<p:outputLabel styleClass="bold-label" value="#{criarBudgetAction.ano}"></p:outputLabel>
 					</p:panelGrid>
-					<p:commandButton value="Incluir Despesa" type="button"
-						onclick="PF('criarDespesa').show();" />
-
-					<p:dataTable emptyMessage="Não existem despesas cadastradas" value="#{criarBudgetAction.despesasAgrupadas}" id="gridDespesasAgrupadas" var="itemDespesa"
-					 rowKey="#{itemDespesa.id}">
+					<p:panelGrid columns="1" styleClass="painel-botoes">
+						<p:commandButton value="Incluir Despesa" type="button"
+							onclick="PF('criarDespesa').show();" />
+					</p:panelGrid>
+					<p:dataTable emptyMessage="Não existem despesas cadastradas" value="#{criarBudgetAction.despesasAgrupadas}" 
+					  id="gridDespesasAgrupadas" var="itemDespesa"
+					 rowKey="#{itemDespesa.tipoDespesaId}"
+					 selection="#{criarBudgetAction.despesaSelecionada}"
+					 style="width:50%;">
 						<f:facet name="header">
         				 Despesas
    						 </f:facet>
@@ -38,63 +43,101 @@
 							<f:facet name="header">
 								<h:outputText value="Tipo" />
 							</f:facet>
-							<h:outputText value="#{itemDespesa.tipoDespesa.nome}" />
+							<h:outputText value="#{itemDespesa.nomeDespesa}" />
 						</p:column>
-						<p:column>
-							<f:facet name="header">
+						<p:column  footerText="Total:  #{criarBudgetAction.valorTotalAgrupado}">
+							<f:facet name="header" >
 								<h:outputText value="Valor" />
 							</f:facet>
-							<h:outputText value="#{itemDespesa.valor}" />
+							<h:outputText value="#{itemDespesa.valorAgrupado}" /> 
+						</p:column>
+						<p:column style="width:10%">
+							<p:commandButton icon="ui-icon-plus" action="#{criarBudgetAction.obterDespesaDetalhe()}" update=":form:panelDetalhe">
+								<f:setPropertyActionListener target="#{criarBudgetAction.despesaSelecionada}" value="#{itemDespesa}"/>
+							</p:commandButton>
 						</p:column>
 					</p:dataTable>
-					<p:dataTable emptyMessage="Não existem despesas cadastradas" rendered="#{not empty criarBudgetAction.despesaSelecionada}" 
-						value="#{criarBudgetAction.budget.despesas}">
+					
+					<p:panelGrid id="panelDetalhe" columns="1">
+					<p:dataTable 
+						emptyMessage="Não existem despesas cadastradas" rendered="#{not empty criarBudgetAction.despesaSelecionada}" 
+						value="#{criarBudgetAction.despesasNoDetalhe}"
+						selection="#{criarBudgetAction.despesaDetalheSelecionada}"
+						var="detalheDespesa"
+						paginator="true"
+						paginatorPosition="bottom"
+						rows="10" style="margin-left:-10px">
 						<f:facet name="header">
-        				 Despesas - Detalhe
+        				 #{criarBudgetAction.despesaSelecionada.nomeDespesa}
    						 </f:facet>
 						<p:column>
 							<f:facet name="header">
 								<h:outputText value="Produto" />
 							</f:facet>
+							<h:outputText value="#{detalheDespesa.produto.nome}" />
 						</p:column>
 						<p:column>
 							<f:facet name="header">
 								<h:outputText value="Cultura" />
 							</f:facet>
+							<h:outputText value="#{detalheDespesa.cultura.nome}" />
 						</p:column>
 						<p:column>
 							<f:facet name="header">
 								<h:outputText value="Distrito" />
 							</f:facet>
+							<h:outputText value="#{detalheDespesa.distrito.nome}" />
 						</p:column>
 						<p:column>
 							<f:facet name="header">
 								<h:outputText value="ERC" />
 							</f:facet>
+							<h:outputText value="#{detalheDespesa.vendedor.nome}" />
 						</p:column>
 						<p:column>
 							<f:facet name="header">
 								<h:outputText value="Ação" />
 							</f:facet>
+							<h:outputText value="#{detalheDespesa.acao.nome}" />
 						</p:column>
 						<p:column>
 							<f:facet name="header">
 								<h:outputText value="Comentário" />
 							</f:facet>
+							<h:outputText value="#{detalheDespesa.comentario}" />
 						</p:column>
-						<p:column>
+						<p:column footerText="Total: #{criarBudgetAction.valorTotalDetalhe}">
 							<f:facet name="header">
 								<h:outputText value="Valor Proposto" />
 							</f:facet>
+							<h:outputText value="#{detalheDespesa.valor}" />
 						</p:column> 
+						<p:column>
+								<p:commandButton icon="ui-icon-pencil" type="button"/>
+						</p:column>
+						<p:column>
+								<p:commandButton icon="ui-icon-trash" action="#{criarBudgetAction.removerDespesa()}" update=":form,:formDespesa">
+										<p:confirm header="Confirmação" message="Deseja realmente remover a despesa?" icon="ui-icon-alert"/>
+										<f:setPropertyActionListener target="#{criarBudgetAction.despesaDetalheSelecionada}" value="#{detalheDespesa}"/>
+								</p:commandButton>
+						</p:column>
+						
 					</p:dataTable>
-
+					
+					</p:panelGrid>
+						<p:panelGrid columns="1" styleClass="painel-botoes">
+						<p:commandButton value="Concluir" type="button"
+							onclick="PF('criarDespesa').show();" />
+					</p:panelGrid>
+					</p:panel>
 				</p:fieldset>
+			
 			</p:panelGrid>
+			
 			</h:form>
 			<p:dialog header="Incluir Despesa" id="criarDespesaPanel" widgetVar="criarDespesa" height="400"
 				width="500">
-				<h:form id="form1">
+				<h:form id="formDespesa">
 				<p:messages></p:messages>
 				<p:panelGrid columns="2">
 					<p:outputLabel value="Tipo de Despesa:"></p:outputLabel>
@@ -109,8 +152,7 @@
 
 					<p:outputLabel value="Produto:"></p:outputLabel>
 					<p:selectOneMenu value="#{criarBudgetAction.despesa.produto.id}"
-						id="produto"
-						validator="com.dupont.budget.web.validators.ComboValidator">
+						id="produto">
 						<f:selectItem itemValue="" itemLabel="SELECIONE" />
 						<f:selectItems value="#{produtoAction.list}" var="_produto"
 							itemValue="#{_produto.id}" itemLabel="#{_produto.nome}" />
@@ -118,8 +160,7 @@
 
 					<p:outputLabel value="Cultura:"></p:outputLabel>
 					<p:selectOneMenu value="#{criarBudgetAction.despesa.cultura.id}"
-					    id="cultura"
-						validator="com.dupont.budget.web.validators.ComboValidator">
+					    id="cultura">
 						<f:selectItem itemValue="" itemLabel="SELECIONE" />
 						<f:selectItems value="#{culturaAction.list}" var="_cultura"
 							itemLabel="#{_cultura.nome}" itemValue="#{_cultura.id}" />
@@ -127,24 +168,21 @@
 
 					<p:outputLabel value="Distrito:"></p:outputLabel>
 					<p:selectOneMenu value="#{criarBudgetAction.despesa.distrito.id}"
-						id="distrito"
-						validator="com.dupont.budget.web.validators.ComboValidator">
+						id="distrito">
 						<f:selectItem itemValue="" itemLabel="SELECIONE" />
 						<f:selectItems value="#{distritoAction.distritos}" var="_distrito"
 							itemLabel="#{_distrito.nome}" itemValue="#{_distrito.id}" />
 					</p:selectOneMenu>
 					<p:outputLabel value="ERC:"></p:outputLabel>
 					<p:selectOneMenu value="#{criarBudgetAction.despesa.vendedor.id}"
-						id="ERC"
-						validator="com.dupont.budget.web.validators.ComboValidator">
+						id="ERC">
 						<f:selectItem itemValue="" itemLabel="SELECIONE" />
 						<f:selectItems value="#{vendedorAction.vendedores}" var="_vendedor"
 							itemLabel="#{_vendedor.nome}" itemValue="#{_vendedor.id}" />
 					</p:selectOneMenu>
 					<p:outputLabel value="Cliente:"></p:outputLabel>
 					<p:selectOneMenu value="#{criarBudgetAction.despesa.cliente.id}"
-						id="cliente"
-						validator="com.dupont.budget.web.validators.ComboValidator">
+						id="cliente">
 						<f:selectItem itemValue="" itemLabel="SELECIONE" />
 						<f:selectItems value="#{clienteAction.list}" var="_cliente"
 							itemLabel="#{_cliente.nome}" itemValue="#{_cliente.id}" />
@@ -156,12 +194,13 @@
 					<p:inputTextarea value="#{criarBudgetAction.despesa.comentario}" />
 					
 					<p:outputLabel value="Valor:"></p:outputLabel>
-					<pe:inputNumber  value="#{criarBudgetAction.despesa.valor}" converter="javax.faces.Double"></pe:inputNumber>
-					
+					<pe:inputNumber  id="valor" value="#{criarBudgetAction.despesa.valor}" converter="javax.faces.Double" required="true"/>
 					
 				</p:panelGrid>
-				<p:commandButton value="Incluir Despesa" action="#{criarBudgetAction.adicionarDespesa()}" oncomplete="PF('criarDespesa').close();"  update=":form1"/>
+				<p:commandButton value="Incluir Despesa" action="#{criarBudgetAction.adicionarDespesa()}" oncomplete="PF('criarDespesa').hide();" 
+						 update=":form"/>
 				</h:form>
 			</p:dialog>
+			
 	</ui:define>
 </ui:composition>

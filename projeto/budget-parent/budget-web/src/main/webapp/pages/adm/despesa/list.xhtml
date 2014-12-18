@@ -7,9 +7,8 @@
                 
 	<ui:define name="content">
 	
-		<p:panel id="content">
-	
-			<h3>Pesquisa de Produtos</h3>
+		<p:panelGrid columns="1" styleClass="body-content">
+		<p:fieldset value="Pesquisa de Produtos" legend="Pesquisa de Produtos">
 			
 			<h:form id="form" prependId="false">
 			
@@ -25,8 +24,12 @@
 				
 				<p:separator />
 				
-				<p:dataTable id="produtos" var="item" value="#{produtoAction.list}" emptyMessage="Nenhum registro encontrado.">
+				<p:dataTable id="produtos" var="item" value="#{produtoAction.list}" emptyMessage="Nenhum registro encontrado."
+						paginator="true"
+						paginatorPosition="bottom"
+						rows="10">
 					
+					<f:facet name="header">Tipos de Despesa</f:facet>
 					<p:column headerText="Nome" sortBy="#{item.nome}" >
 						#{item.nome}
 					</p:column>
@@ -47,8 +50,8 @@
 			        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no"  icon="ui-icon-close" />
 			    </p:confirmDialog>
 			</h:form>
-			
-		</p:panel>
+		</p:fieldset>
+		</p:panelGrid>
 			
 	</ui:define>
 	
