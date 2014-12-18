@@ -12,6 +12,8 @@ import org.slf4j.Logger;
 
 import com.dupont.budget.model.Area;
 import com.dupont.budget.model.CentroCusto;
+import com.dupont.budget.model.Papel;
+import com.dupont.budget.model.PapelUsuario;
 import com.dupont.budget.model.TipoCentroCusto;
 import com.dupont.budget.model.Usuario;
 import com.dupont.budget.service.DomainService;
@@ -43,6 +45,63 @@ public class CentroCustoAction extends GenericAction<CentroCusto> {
 	private Usuario gestor;
 	
 	private Usuario gerente;
+	
+	@Override
+	public String persist() {
+		String result = null;
+		if (mustCreate()) {
+			result = create();
+		} else {
+			result = update();
+		}
+		
+		criarPapel(responsavel);
+		
+		if (gestor != null) {
+			criarPapel(gestor);
+		}
+		
+		if (gerente != null) {
+			criarPapel(gerente);
+		}
+		
+		clearInstance();
+		
+		return result;
+	}
+	
+	private void criarPapel(Usuario usuario) {
+		String nomePapel = createNomePapel(entidade);
+		Papel papel = new Papel(nomePapel.toString());
+		List<Papel> papeis = service.findByName(papel);
+		PapelUsuario pu = new PapelUsuario();
+		boolean ignore = false;
+		
+		if (papeis.isEmpty()) {
+			pu.setPapel(papel);
+		} else {
+			Usuario usr = service.getUsuarioByLogin(usuario.getLogin());
+			for (PapelUsuario p: usr.getPapeis()) {
+				if (p.getPapel().equals(papel)) {
+					ignore = true;
+					break;
+				}
+			}
+			pu.setPapel(papeis.get(0));
+		}
+		
+		if (!ignore) {
+			service.create(pu);
+		}
+	}
+	
+	private String createNomePapel(CentroCusto cc) {
+		StringBuilder nomePapel = new StringBuilder("LIDER_");
+		String nomeArea = cc.getNome();
+		nomeArea = nomeArea.trim().replaceAll(" ", "_");
+		nomePapel.append(nomeArea.toUpperCase());
+		return nomePapel.toString();
+	}
 
 	@Named
 	@Produces

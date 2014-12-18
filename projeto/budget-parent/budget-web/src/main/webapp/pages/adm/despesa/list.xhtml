@@ -27,10 +27,6 @@
 				
 				<p:dataTable id="produtos" var="item" value="#{produtoAction.list}" emptyMessage="Nenhum registro encontrado.">
 					
-					<p:column headerText="ID">
-						#{item.id}
-					</p:column>
-					
 					<p:column headerText="Nome" sortBy="#{item.nome}" >
 						#{item.nome}
 					</p:column>

@@ -1,7 +1,5 @@
 package com.dupont.budget.web.actions;
 
-import java.util.List;
-
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.inject.Model;
 import javax.enterprise.inject.Produces;
@@ -48,36 +46,18 @@ public class AreaAction extends GenericAction<Area> {
 	
 	@Override
 	public String persist() {
-		String result = null;
-		if (mustCreate()) {
-			result = create();
-		} else {
-			result = update();
-		}
 		
 		String nomePapel = createNomePapel(entidade);
-		Papel papel = new Papel(nomePapel.toString());
-		List<Papel> papeis = service.findByName(papel);
-		PapelUsuario pu = new PapelUsuario(lider, entidade);
-		boolean ignore = false;
-		
-		if (papeis.isEmpty()) {
-			pu.setPapel(papel);
+		String result = null;
+
+		if (mustCreate()) {
+			entidade.setLider(new PapelUsuario(new Papel(nomePapel.toString()), lider, entidade));
+			result = create();
 		} else {
-			Usuario usuario = service.getUsuarioByLogin(lider.getLogin());
-			for (PapelUsuario p: usuario.getPapeis()) {
-				if (p.getPapel().equals(papel)) {
-					ignore = true;
-					break;
-				}
-			}
-			pu.setPapel(papeis.get(0));
+			entidade.getLider().setUsuario(lider);
+			result = update();
 		}
-		
-		if (!ignore) {
-			service.create(pu);
-		}
-		
+
 		clearInstance();
 		
 		return result;
@@ -94,9 +74,8 @@ public class AreaAction extends GenericAction<Area> {
 	public String edit(Area t) {
 		this.setEntidade(t);
 		
-		List<Usuario> list = service.listUsuarioByNomePapel(createNomePapel(t));
-		if (!list.isEmpty()) {
-			lider = list.get(0);
+		if (t.getLider() != null) {
+			lider = t.getLider().getUsuario();
 		}
 
 		return "edit";

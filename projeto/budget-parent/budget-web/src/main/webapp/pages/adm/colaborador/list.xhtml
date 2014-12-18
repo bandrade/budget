@@ -27,10 +27,6 @@
 				
 				<p:dataTable id="colaboradores" var="item" value="#{usuarioAction.list}" emptyMessage="Nenhum registro encontrado.">
 					
-					<p:column headerText="Nome" sortBy="#{item.nome}" >
-						#{item.nome}
-					</p:column>
-					
 					<p:column headerText="Login" sortBy="#{item.login}" >
                         #{item.login}
                     </p:column>

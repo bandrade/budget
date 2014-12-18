@@ -6,6 +6,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
@@ -36,7 +37,7 @@ public class PapelUsuario extends AbstractEntity<Long> {
 	@JoinColumn(name = "usuario_id")
 	private Usuario usuario;
 	
-	@ManyToOne
+	@OneToOne
 	@JoinColumn(name="area_id")
 	private Area area;
 	

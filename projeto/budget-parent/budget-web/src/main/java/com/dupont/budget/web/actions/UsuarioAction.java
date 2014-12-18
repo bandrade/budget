@@ -128,9 +128,24 @@ public class UsuarioAction extends GenericAction<Usuario> {
 			}
 		}
 		
+		if (!mustCreate()) {
+			for (PapelUsuario p : service.findById(entidade).getPapeis()) {
+				if (p.getCentroCusto() != null) {
+					facesUtils.addErrorMessage(String.format("Usuário associado a um centro de custo, não é possível fazer a remoção do perfil %s.", p.getPapel().getNome()));
+					return null;
+				}
+				
+				if (p.getArea() != null) {
+					facesUtils.addErrorMessage(String.format("Usuário é lider de uma área, não é possível fazer a remoção do perfil %s.", p.getPapel().getNome()));
+					return null;
+				}
+			}
+		}
+		
 		for (Papel p: papelList.getTarget()) {
 			entidade.getPapeis().add(new PapelUsuario(p, entidade));
 		}
+		
 		userCallBackCache.removeGroupsFromCache(entidade.getLogin());
 		return super.persist();
 	}
