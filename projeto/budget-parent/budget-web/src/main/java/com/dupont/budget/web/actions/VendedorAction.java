@@ -1,12 +1,15 @@
 package com.dupont.budget.web.actions;
 
-import java.util.List;
-
 import javax.enterprise.inject.Model;
+import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
+import javax.inject.Named;
+
+import org.slf4j.Logger;
 
 import com.dupont.budget.model.Vendedor;
 import com.dupont.budget.service.DomainService;
+import com.dupont.budget.web.util.FacesUtils;
 /**
  * Controller das telas de manutenção da entidade vendedor
  * 
@@ -15,19 +18,44 @@ import com.dupont.budget.service.DomainService;
  *
  */
 @Model
-public class VendedorAction {
+public class VendedorAction extends GenericAction<Vendedor> {
+
+	private static final long serialVersionUID = -9064126463852854590L;
 
 	@Inject
 	private DomainService service;
-	
-	private List<Vendedor> vendedores;
 
-	public List<Vendedor> getVendedores() {
+	@Inject
+	private Logger logger;
 
-		// Pré popula a lista de vendedores
-		if (vendedores == null)
-			vendedores = service.findAll(Vendedor.class);
+	@Inject
+	private FacesUtils facesUtils;
 
-		return vendedores;
+	@Named
+	@Produces
+	public Vendedor getVendedor() {
+		return getEntidade();
+	}
+
+	/**
+	 * Buscar as culturas a partir do filtro.
+	 */
+	public void find() {
+		list = service.findByName(entidade);
+	}
+
+	@Override
+	protected Logger getLogger() {
+		return logger;
+	}
+
+	@Override
+	protected DomainService getService() {
+		return service;
+	}
+
+	@Override
+	protected FacesUtils getFacesUtils() {
+		return facesUtils;
 	}
 }  

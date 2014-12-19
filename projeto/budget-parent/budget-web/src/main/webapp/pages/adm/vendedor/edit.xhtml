@@ -1,0 +1,38 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/templates/default.xhtml">
+                
+	<ui:define name="content">
+	
+		<p:panel id="content">
+		
+			<h3> 
+				<h:outputText value="Atualizar Vendedor" rendered="#{not empty vendedor.id}" />
+				<h:outputText value="Criar Vendedor"     rendered="#{empty vendedor.id}" /> 
+			</h3>
+			
+			<h:form id="form"> 
+			
+				<h:inputHidden value="#{vendedor.id}" />
+					
+				<h:panelGrid columns="3" border="0">
+				
+					<p:outputLabel value="Nome:" for="nomeInput" />
+					<p:inputText label="Nome" id="nomeInput" value="#{vendedor.nome}" required="true"/>
+					<p:message for="nomeInput" />			
+					
+				</h:panelGrid>
+				
+				<p:commandButton value="#{vendedor.id != null? 'Atualizar' : 'Salvar'}" process="@this" icon="ui-icon-check" action="#{vendedorAction.persist}" styleClass="button" ajax="false" />
+				<p:commandButton value="Cancelar"    icon="ui-icon-closethick" action="/pages/adm/vendedor/list.xhtml" styleClass="button" ajax="false" immediate="true" />
+				
+			</h:form>
+		
+		</p:panel>
+		
+	</ui:define>
+	
+</ui:composition>
