@@ -1,5 +1,6 @@
 package com.dupont.budget.model;
 
+
 /**
  * Perfil de segurança do usuário na aplicação.
  * 
@@ -8,16 +9,6 @@ package com.dupont.budget.model;
  *
  */
 public enum Perfil {
-	USUARIO("Usuário"), ADMINISTRADOR("Administrador");
+	USUARIO, ADMINISTRADOR;
 	
-	private String string;
-
-	private Perfil(String string) {
-		this.string = string;
-	}
-	
-	@Override
-	public String toString() {
-		return this.string;
-	}
 }

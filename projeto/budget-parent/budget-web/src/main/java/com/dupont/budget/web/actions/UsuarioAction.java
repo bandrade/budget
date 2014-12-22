@@ -61,10 +61,6 @@ public class UsuarioAction extends GenericAction<Usuario> {
 	
 	private static final long serialVersionUID = -6061667499898003022L;
 	
-	private String senha;
-	
-	private String confirmacaoSenha;
-
 	@Inject
 	private DomainService service;
 
@@ -76,6 +72,10 @@ public class UsuarioAction extends GenericAction<Usuario> {
 	
 	@Inject
 	private UserGroupCallbackCacheManager userCallBackCache;
+	
+	private String senha;
+	
+	private String confirmacaoSenha;
 
 	private Set<PapelUsuario> papeis;
 	
@@ -99,10 +99,10 @@ public class UsuarioAction extends GenericAction<Usuario> {
 	@Produces
 	public DualListModel<Perfil> getPerfilList() {
 		if (perfilList == null) {
-			List<Perfil> source = Arrays.asList(Perfil.values());
+			List<Perfil> source = new LinkedList<>(Arrays.asList(Perfil.values()));
 			List<Perfil> target = new LinkedList<Perfil>();
 			if (getEntidade().getId() != null) {
-				List<Perfil> list = service.findById(getEntidade()).getPerfis();
+				Set<Perfil> list = service.findById(getEntidade()).getPerfis();
 				if (!list.isEmpty()) {
 					for (Perfil o: list) {
 						target.add(o);
@@ -188,6 +188,12 @@ public class UsuarioAction extends GenericAction<Usuario> {
 			}
 		}
 		
+		entidade.getPerfis().clear();
+		
+		for (Object s : perfilList.getTarget()) {
+			entidade.getPerfis().add(Perfil.valueOf(s.toString()));
+		}
+		
 		userCallBackCache.removeGroupsFromCache(entidade.getLogin());
 		return super.persist();
 	}
@@ -245,5 +251,9 @@ public class UsuarioAction extends GenericAction<Usuario> {
 
 	public void setPapelList(DualListModel<Papel> papelList) {
 		this.papelList = papelList;
+	}
+	
+	public void setPerfilList(DualListModel<Perfil> perfilList) {
+		this.perfilList = perfilList;
 	}
 }

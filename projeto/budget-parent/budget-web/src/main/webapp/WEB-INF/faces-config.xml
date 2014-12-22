@@ -9,6 +9,10 @@
 			<message-bundle>com.dupont.budget.web.message.JSFMessages_pt_BR</message-bundle>
 		</locale-config>
 	</application>
+	<converter>
+        <converter-for-class>java.lang.Enum</converter-for-class>
+        <converter-class>javax.faces.convert.EnumConverter</converter-class>
+    </converter>
 	<navigation-rule>
 		<from-view-id>*</from-view-id>
 		<navigation-case>
