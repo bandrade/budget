@@ -2,12 +2,12 @@ package com.dupont.budget.service.bpms;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-import javax.enterprise.inject.Model;
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.NotImplementedException;
-import org.kie.api.task.model.Task;
 import org.kie.api.task.model.TaskSummary;
 
 import com.dupont.budget.bpm.custom.exception.BPMException;
@@ -15,7 +15,7 @@ import com.dupont.budget.bpm.custom.task.BPMTaskManagerApiImpl;
 import com.dupont.budget.dto.StatusTarefaEnum;
 import com.dupont.budget.dto.TarefaDTO;
 
-@Model
+@Stateless
 public class BPMSTaskServiceImpl implements BPMSTaskService {
 
 	@Inject
@@ -31,10 +31,9 @@ public class BPMSTaskServiceImpl implements BPMSTaskService {
 		return tarefas;
 	}
 
-	public boolean aprovarTarefa(String usuario, TarefaDTO tarefa) throws Exception {
-		taskApi.aproveTask(usuario, tarefa.getId(), null);
+	public void aprovarTarefa(String usuario, Long taskId, Map<String, Object> params ) throws Exception {
 
-		return true;
+		taskApi.aproveTask(usuario, taskId, params);
 	}
 
 	@Override
@@ -42,8 +41,8 @@ public class BPMSTaskServiceImpl implements BPMSTaskService {
 		//TODO IMPLEMENTAR
 		throw new NotImplementedException("Metodo nao implementado");
 	}
-		
-		
+
+
 	private TarefaDTO parseTaskToTarefa(TaskSummary task) throws BPMException
 	{
 		TarefaDTO tarefaDTO = new TarefaDTO();
@@ -53,7 +52,8 @@ public class BPMSTaskServiceImpl implements BPMSTaskService {
 		tarefaDTO.setCreatedBy(task.getCreatedBy() != null ? task
 				.getCreatedBy().getId() : null);
 		tarefaDTO.setCreatedOn(task.getCreatedOn());
-		tarefaDTO.setDescription(taskApi.getTaskContent(task.getId()).get("Subject").toString());
+		String subject = String.valueOf(taskApi.getTaskContent(task.getId()).get("Subject"));
+		tarefaDTO.setDescription(subject ==null? "":subject);
 		tarefaDTO.setExpirationTime(task.getExpirationTime());
 		tarefaDTO.setId(task.getId());
 		tarefaDTO.setName(task.getName());
@@ -65,8 +65,8 @@ public class BPMSTaskServiceImpl implements BPMSTaskService {
 		tarefaDTO.setSkipable(task.isSkipable());
 		tarefaDTO.setStatus(StatusTarefaEnum.findByMeaning(task.getStatus()
 				.name()));
-		
+
 		return tarefaDTO;
-		
+
 	}
 }

@@ -15,26 +15,26 @@ import com.dupont.budget.web.util.FacesUtils;
 public class ProcessoAction {
 	@Inject
     private BPMSProcessService bpms;
-	
+
 	private String ano;
-	
+
 	@Inject
 	private Logger logger;
-	
+
 	@Inject
 	private FacesUtils facesUtils;
-	
-	
+
+
 	@PostConstruct
 	public void init()
 	{
 		ano = Calendar.getInstance().get(Calendar.YEAR)+"";
 	}
-	
+
 	public void iniciarProcessoBudget()
 	{
 		try {
-			bpms.iniciarProcessoBudget();
+			bpms.iniciarProcessoBudget(ano);
 		} catch (Exception e) {
 			facesUtils.addErrorMessage("Erro ao iniciar processo de Budget.");
 			logger.error("Erro ao iniciar processo de Budget", e);
@@ -48,7 +48,7 @@ public class ProcessoAction {
 	public void setAno(String ano) {
 		this.ano = ano;
 	}
-	
-	
+
+
 
 }

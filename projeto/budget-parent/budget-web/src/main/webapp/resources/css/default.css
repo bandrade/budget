@@ -15,7 +15,7 @@ body {
 }
 
 .header {
-	
+
 }
 
 .header p {
@@ -107,7 +107,7 @@ body {
 }
 .ui-datatable{
 	padding: 20px 10px;
-	
+
 }
 
 .main .body-content {
@@ -118,10 +118,20 @@ body {
 	width:100%;
 	text-align:right;
 }
+.ui-autocomplete-emptyMessage {
+    padding: 3px 5px;
+     background-color: white
+}
+.input .ui-autocomplete-emptyMessage {
+ background-color: white;
+  }
 
 
+.ui-autocomplete-list{
+	background-color: white;
+}
 .ui-selectonemenu-items-wrapper
 {
 	background-color: white;
-	
+
 }

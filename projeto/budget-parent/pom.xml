@@ -50,7 +50,7 @@
 	</dependencyManagement>
 
 	<dependencies>
-	
+
 		 <dependency>
         <groupId>org.jboss.spec</groupId>
         <artifactId>jboss-javaee-all-6.0</artifactId>
@@ -64,22 +64,22 @@
 			<artifactId>hibernate-jpa-2.0-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 			<version>3.3.2</version>
 		</dependency>
-		
+
         <dependency>
             <groupId>commons-fileupload</groupId>
             <artifactId>commons-fileupload</artifactId>
         </dependency>
-        
+
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
         </dependency>
-        
+
 	</dependencies>
 </project>

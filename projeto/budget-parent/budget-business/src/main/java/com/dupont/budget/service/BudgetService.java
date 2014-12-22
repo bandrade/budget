@@ -12,4 +12,7 @@ public interface BudgetService {
 	public Budget insertBudget(Budget budget);
 	public Budget findByAnoAndCentroDeCusto(String ano,Long centroDeCustoId);
 	public void insertItemDespesa(Despesa despesa);
+	public void updateItemDespesa(Despesa despesa);
+	public List<Despesa> obterDespesaNoDetalheBudget(Long budgetId) ;
+	public void atualizarDespesas(List<Despesa> despesasNoDetalhe);
 }

@@ -12,6 +12,27 @@
 	<navigation-rule>
 		<from-view-id>*</from-view-id>
 		<navigation-case>
+			<from-outcome>auditarBudget</from-outcome>
+			<to-view-id>/pages/process/budget/auditarBudget.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<from-view-id>*</from-view-id>
+		<navigation-case>
+			<from-outcome>minhasTarefas</from-outcome>
+			<to-view-id>/pages/process/minhasTarefas.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<from-view-id>*</from-view-id>
+		<navigation-case>
+			<from-outcome>aprovarBudget</from-outcome>
+			<to-view-id>/pages/process/budget/aprovarBudget.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<from-view-id>*</from-view-id>
+		<navigation-case>
 			<from-outcome>criarBudget</from-outcome>
 			<to-view-id>/pages/process/budget/criarBudget.xhtml</to-view-id>
 		</navigation-case>
