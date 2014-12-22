@@ -117,5 +117,11 @@
 			<groupId>org.jbpm</groupId>
 			<artifactId>jbpm-executor</artifactId>
 		</dependency>
+		
+        <dependency>
+            <groupId>com.dupont.budget</groupId>
+            <artifactId>budget-dto</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 	</dependencies>
 </project>

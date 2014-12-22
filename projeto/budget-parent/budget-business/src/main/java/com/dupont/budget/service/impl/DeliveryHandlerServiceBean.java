@@ -73,7 +73,7 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
     				String value = cell.getStringCellValue();
     				if (value != null && !value.isEmpty()) {
     					Fornecedor fornecedor = new Fornecedor(value, true);
-    					if (service.findByName(fornecedor) != null) {
+    					if (!service.findByName(fornecedor).isEmpty()) {
     						persistent.remove(fornecedor);
     					} else {
     						service.create(fornecedor);
