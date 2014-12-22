@@ -58,16 +58,34 @@ public class CriarBudgetAction extends BudgetAction implements Serializable {
 
 	public void adicionarDespesa()
 	{
+
 		super.adicionarDespesa();
-		despesasAgrupadas = budgetService.obterDespesaAgrupadas(budget.getId());
 		budget.getDespesas().add(despesa);
+		try
+		{
+			despesasAgrupadas = budgetService.obterDespesaAgrupadas(budget.getId());
+		}
+		catch(Exception e)
+		{
+			facesUtils.addErrorMessage("Erro ao obter despesas.");
+			logger.error("Erro ao obter despesas", e);
+		}
 	}
 
 
 	public void alterarDespesa(){
 
 		super.alterarDespesa();
-		despesasAgrupadas = budgetService.obterDespesaAgrupadas(budget.getId());
+		try
+		{
+			despesasAgrupadas = budgetService.obterDespesaAgrupadas(budget.getId());
+
+		}
+		catch(Exception e)
+		{
+			facesUtils.addErrorMessage("Erro ao obter tarefas do usuario.");
+			logger.error("Erro ao obter tarefas do usuario.", e);
+		}
 
 	}
 

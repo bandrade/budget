@@ -40,14 +40,14 @@
 							</f:facet>
 							<h:outputText value="#{budgetArea.nomeArea}" />
 						</p:column>
-						<p:column>
-							<f:facet name="header" style="text-align:center">
-								<h:outputText value="Valor" />
+						<p:column style="text-align:center" footerText="#{facesUtils.formatarDinheiro(auditarBudgetAction.valorTotalBudget)}">
+							<f:facet name="header" >
+								<h:outputText value="Valor Submetido" />
 							</f:facet>
 							<h:outputText value="#{facesUtils.formatarDinheiro(budgetArea.valorTotalBudget)}" />
 						</p:column>
 						
-						<p:column>
+						<p:column width="10%" style="text-align:center">
 							<f:facet name="header">
 								<h:outputText value="Status" />
 							</f:facet>
@@ -57,7 +57,7 @@
 					
 					</p:panelGrid>
 						<p:panelGrid columns="1" styleClass="painel-botoes">
-						<p:commandButton value="Concluir" ajax="false" action="#{aprovarBudgetAction.concluir()}"/>
+						<p:commandButton value="Concluir" ajax="false" action="#{auditarBudgetAction.concluir()}"/>
 					</p:panelGrid>
 					</p:panel>
 				</p:fieldset>
