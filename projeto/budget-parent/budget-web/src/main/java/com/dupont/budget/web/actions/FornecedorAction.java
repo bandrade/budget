@@ -1,6 +1,8 @@
 package com.dupont.budget.web.actions;
 
-import java.util.Iterator;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.inject.Model;
@@ -8,17 +10,13 @@ import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 import org.slf4j.Logger;
 
 import com.dupont.budget.model.Fornecedor;
 import com.dupont.budget.service.DomainService;
+import com.dupont.budget.service.EventDispatcherService;
+import com.dupont.budget.service.event.FornecedorEvent;
 import com.dupont.budget.web.util.FacesUtils;
 
 /**
@@ -43,6 +41,9 @@ public class FornecedorAction extends GenericAction<Fornecedor> {
 	@Inject
 	private FacesUtils facesUtils;
 	
+	@Inject
+    private EventDispatcherService eventDispatcher;
+	
 	private UploadedFile file;
 
 	@Named
@@ -55,95 +56,24 @@ public class FornecedorAction extends GenericAction<Fornecedor> {
 	public String persist() {
 		logger.debug("Arquivo recebido, iniciando processamento!");
 
-		Sheet sheet = null;
-		
-		try {
-			if (file.getFileName().endsWith("xlsx")) {
-				XSSFWorkbook workbook = new XSSFWorkbook(file.getInputstream());
-				sheet = workbook.getSheetAt(0);
-			} else {
-				HSSFWorkbook workbook = new HSSFWorkbook(file.getInputstream());
-				sheet = workbook.getSheetAt(0);
-			}
-		} catch (Exception e) {
-			facesUtils.addErrorMessage(String.format("Não foi possível ler o arquivo: %s", e.getLocalizedMessage()));
-			return null;
-		}
+		facesUtils.addInfoMessage("Arquivo recebido, e enviado para o processamento.");
 
-		Iterator<Row> rowIterator = sheet.iterator();
-			
-		int counter = 0;
-		
+		FornecedorEvent event = new FornecedorEvent();
 		try {
-			int blank = 0;
-			while (rowIterator.hasNext()) {
-				Row row = rowIterator.next();
-				Cell cell = row.getCell(0);
-				String value = cell.getStringCellValue();
-				if (value != null && !value.isEmpty()) {
-					service.create(new Fornecedor(value, false));
-					counter++;
-				} else {
-					blank++;
-				}
-				
-				if (blank >= 3) {
-					break;
-				}
-			}
-		} catch (Exception e) {
-			facesUtils.addErrorMessage(String.format("Erro durante o processamento do arquivo: %s", e.getLocalizedMessage()));
-			return null;
+			String name = file.getFileName();
+			File tmp = File.createTempFile("dupont_", name.substring(name.lastIndexOf(".")));
+			FileOutputStream fos = new FileOutputStream(tmp);
+			fos.write(file.getContents());
+			fos.close();
+			event.setFilePath(tmp.getAbsolutePath());
+		} catch (IOException e) {
+			facesUtils.addErrorMessage("Não foi possível gravar o arquivo.");
 		}
-		
-		facesUtils.addInfoMessage(String.format("%d entradas do arquivos processadas com sucesso!", counter));
+		eventDispatcher.publish(event);
 		
 		return "list";
 	}
-
-	public void handleFileUpload(FileUploadEvent event) {
-		try {
-			logger.debug("Arquivo recebido, iniciando processamento!");
-
-			Sheet sheet = null;
-
-			if (event.getFile().getFileName().endsWith("xlsx")) {
-				XSSFWorkbook workbook = new XSSFWorkbook(event.getFile().getInputstream());
-				sheet = workbook.getSheetAt(0);
-			} else {
-				HSSFWorkbook workbook = new HSSFWorkbook(event.getFile().getInputstream());
-				sheet = workbook.getSheetAt(0);
-			}
-
-			Iterator<Row> rowIterator = sheet.iterator();
-			while (rowIterator.hasNext()) {
-				Row row = rowIterator.next();
-
-				// For each row, iterate through each columns
-				Iterator<Cell> cellIterator = row.cellIterator();
-				while (cellIterator.hasNext()) {
-
-					Cell cell = cellIterator.next();
-
-					switch (cell.getCellType()) {
-					case Cell.CELL_TYPE_BOOLEAN:
-						System.out.print(cell.getBooleanCellValue() + "\t\t");
-						break;
-					case Cell.CELL_TYPE_NUMERIC:
-						System.out.print(cell.getNumericCellValue() + "\t\t");
-						break;
-					case Cell.CELL_TYPE_STRING:
-						System.out.print(cell.getStringCellValue() + "\t\t");
-						break;
-					}
-				}
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
+	
 	/**
 	 * Buscar as culturas a partir do filtro.
 	 */

@@ -26,17 +26,17 @@ public class Fornecedor extends NamedAbstractEntity<Long>{
 	
 	public Fornecedor(String nome, Boolean status) {
 		this.nome = nome;
-		this.status = status;
+		this.ativo = status;
 	}
 	
-	private Boolean status;
+	private Boolean ativo;
 	
-	public Boolean getStatus() {
-		return status;
+	public Boolean getAtivo() {
+		return ativo;
 	}
 
-	public void setStatus(Boolean status) {
-		this.status = status;
+	public void setAtivo(Boolean status) {
+		this.ativo = status;
 	}
 	
 

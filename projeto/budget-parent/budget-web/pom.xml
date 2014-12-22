@@ -74,16 +74,6 @@
 			<groupId>org.picketbox</groupId>
 			<artifactId>picketbox</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi</artifactId>
-			<version>${version.org.apache.poi}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi-ooxml</artifactId>
-			<version>${version.org.apache.poi}</version>
-		</dependency>
 	</dependencies>
 	<build>
 		<finalName>budget.war</finalName>

@@ -44,9 +44,7 @@
                     <p:message for="senha2" />
                     
                     <h:outputLabel for="perfilList" value="Perfil:" />
-                    <p:selectOneMenu id="perfilList" value="#{usuarioAction.entidade.perfil}" required="true">
-                        <f:selectItems value="#{perfilList}" itemValue="#{i}" itemLabel="#{i.toString()}" var="i" />
-                    </p:selectOneMenu>
+                    <p:pickList id="perfilList" value="#{usuarioAction.perfilList}" var="p" itemLabel="#{p.toString()}" itemValue="#{p}" converter="com.dupont.EntityConverter" />
                     <p:message for="perfilList" />
                     
                     <h:outputLabel for="papelList" value="Papéis" />

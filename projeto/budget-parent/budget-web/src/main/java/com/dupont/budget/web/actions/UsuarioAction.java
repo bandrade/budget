@@ -1,5 +1,6 @@
 package com.dupont.budget.web.actions;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -79,6 +80,8 @@ public class UsuarioAction extends GenericAction<Usuario> {
 	private Set<PapelUsuario> papeis;
 	
 	private DualListModel<Papel> papelList;
+	
+	private DualListModel<Perfil> perfilList;
 
 	@Named
 	@Produces
@@ -94,8 +97,22 @@ public class UsuarioAction extends GenericAction<Usuario> {
 	
 	@Named
 	@Produces
-	public Perfil[] getPerfilList() {
-		return Perfil.values();
+	public DualListModel<Perfil> getPerfilList() {
+		if (perfilList == null) {
+			List<Perfil> source = Arrays.asList(Perfil.values());
+			List<Perfil> target = new LinkedList<Perfil>();
+			if (getEntidade().getId() != null) {
+				List<Perfil> list = service.findById(getEntidade()).getPerfis();
+				if (!list.isEmpty()) {
+					for (Perfil o: list) {
+						target.add(o);
+						source.remove(o);
+					}
+				}
+			}
+			perfilList = new DualListModel<>(source, target);
+		}
+		return perfilList;
 	}
 	
 	@Named
