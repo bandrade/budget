@@ -1,6 +1,7 @@
 package com.dupont.budget.web.actions;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Conversation;
@@ -10,6 +11,7 @@ import javax.inject.Named;
 
 import org.slf4j.Logger;
 
+import com.dupont.budget.dto.BudgetAreaDTO;
 import com.dupont.budget.service.BudgetService;
 import com.dupont.budget.service.bpms.BPMSProcessService;
 import com.dupont.budget.web.util.FacesUtils;
@@ -34,10 +36,13 @@ public class AuditarBudgetAction implements Serializable {
 	private String ano;
 
 	@Inject
-    protected BPMSProcessService bpmsProcesso;
+    private BPMSProcessService bpmsProcesso;
 
 	@Inject
-	protected BudgetService budgetService;
+	private BudgetService budgetService;
+
+	private List<BudgetAreaDTO> budgetsArea ;
+
 
 	@PostConstruct
 	private void init()
@@ -50,7 +55,8 @@ public class AuditarBudgetAction implements Serializable {
 	public void obterDadosBudget()
 	{
 		try {
-			ano = (String)bpmsProcesso.obterVariavelProcesso(idInstanciaProcesso, "ano");
+			ano = (String)bpmsProcesso.obterVariavelProcesso(idInstanciaProcesso, "anoBudget");
+			budgetsArea = budgetService.listarBudgetsAprovadosPorArea(ano);
 		} catch (Exception e) {
 			facesUtils.addErrorMessage("Erro ao obter os dados da tarefa");
 			logger.error("erro ao obter as variaveis de processo",e);
@@ -83,6 +89,12 @@ public class AuditarBudgetAction implements Serializable {
 		this.idInstanciaProcesso = idInstanciaProcesso;
 	}
 
+	public List<BudgetAreaDTO> getBudgetsArea() {
+		return budgetsArea;
+	}
 
+	public void setBudgetsArea(List<BudgetAreaDTO> budgetsArea) {
+		this.budgetsArea = budgetsArea;
+	}
 
 }

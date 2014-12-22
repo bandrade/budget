@@ -19,83 +19,39 @@
 				<p:fieldset value="Aprovar Budget" legend="Aprovar Budget">
 				<p:panel>
 					<p:panelGrid columns="2">
-						<p:outputLabel value="Centro de Custo:"></p:outputLabel>
-						<p:outputLabel styleClass="bold-label" value="#{aprovarBudgetAction.centroDeCusto.nome}"></p:outputLabel>
 						<p:outputLabel value="Ano:"></p:outputLabel>
-						<p:outputLabel styleClass="bold-label" value="#{aprovarBudgetAction.ano}"></p:outputLabel>
+						<p:outputLabel styleClass="bold-label" value="#{auditarBudgetAction.ano}"></p:outputLabel>
 					</p:panelGrid>
 					<p:panelGrid id="panelDetalhe" columns="1">
 					<p:dataTable 
-						id="tblDespesa"
+						id="tblBudget"
 						emptyMessage="Não existem despesas cadastradas" 
-						value="#{aprovarBudgetAction.despesasNoDetalhe}"
-						selection="#{aprovarBudgetAction.despesaDetalheSelecionada}"
-						var="detalheDespesa"
+						value="#{auditarBudgetAction.budgetsArea}"
+						var="budgetArea"
 						paginator="true"
 						paginatorPosition="bottom"
 						rows="20" style="margin-left:-10px">
 						<f:facet name="header">
-        				 Despesa
+        				Budgets Agrupados por Área
    						 </f:facet>
    						 <p:column>
 							<f:facet name="header">
-								<h:outputText value="Tipo Despesa" />
+								<h:outputText value="Nome" />
 							</f:facet>
-							<h:outputText value="#{detalheDespesa.tipoDespesa.nome}" />
+							<h:outputText value="#{budgetArea.nomeArea}" />
 						</p:column>
 						<p:column>
-							<f:facet name="header">
-								<h:outputText value="Ação" />
+							<f:facet name="header" style="text-align:center">
+								<h:outputText value="Valor" />
 							</f:facet>
-							<h:outputText value="#{detalheDespesa.acao.nome}" />
+							<h:outputText value="#{facesUtils.formatarDinheiro(budgetArea.valorTotalBudget)}" />
 						</p:column>
 						
 						<p:column>
 							<f:facet name="header">
-								<h:outputText value="Produto" />
+								<h:outputText value="Status" />
 							</f:facet>
-							<h:outputText value="#{detalheDespesa.produto.nome}" />
-						</p:column>
-						<p:column>
-							<f:facet name="header">
-								<h:outputText value="Cultura" />
-							</f:facet>
-							<h:outputText value="#{detalheDespesa.cultura.nome}" />
-						</p:column>
-						<p:column width="8%">
-							<f:facet name="header">
-								<h:outputText value="Distrito" />
-							</f:facet>
-							<h:outputText value="#{detalheDespesa.distrito.nome}" />
-						</p:column>
-						<p:column>
-							<f:facet name="header">
-								<h:outputText value="ERC" />
-							</f:facet>
-							<h:outputText value="#{detalheDespesa.vendedor.nome}" />
-						</p:column>
-						
-						<p:column>
-							<f:facet name="header">
-								<h:outputText value="Comentário" />
-							</f:facet>
-							<h:outputText value="#{detalheDespesa.comentario}" />
-						</p:column>
-						<p:column footerText="Total:#{facesUtils.formatarDinheiro(aprovarBudgetAction.valorTotalDetalhe)}" style="text-align:center" >
-							<f:facet name="header">
-								<h:outputText value="Valor Proposto" />
-							</f:facet>
-							<h:outputText value="#{detalheDespesa.valor}" >
-								<f:convertNumber type="currency"/>
-							</h:outputText>
-						</p:column> 
-						<p:column width="8%">
-								<p:commandButton icon="ui-icon-pencil" update=":formDespesa,:criarDespesaPanel" oncomplete="PF('criarDespesa').show();" action="#{aprovarBudgetAction.tratarDadosAlteracao()}">
-										<f:setPropertyActionListener target="#{aprovarBudgetAction.despesa}" value="#{detalheDespesa}"/>
-								</p:commandButton>
-						</p:column>
-						<p:column width="8%">
-							<p:selectBooleanCheckbox value="#{detalheDespesa.aprovado}" disabled="#{aprovarBudgetAction.tipoAprovacao eq 'S'}"></p:selectBooleanCheckbox>
+							<h:outputText value="#{budgetArea.status}" />
 						</p:column>
 					</p:dataTable>
 					

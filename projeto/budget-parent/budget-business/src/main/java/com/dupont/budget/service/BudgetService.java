@@ -2,6 +2,7 @@ package com.dupont.budget.service;
 
 import java.util.List;
 
+import com.dupont.budget.dto.BudgetAreaDTO;
 import com.dupont.budget.dto.DespesasAgrupadasDTO;
 import com.dupont.budget.model.Budget;
 import com.dupont.budget.model.Despesa;
@@ -15,4 +16,6 @@ public interface BudgetService {
 	public void updateItemDespesa(Despesa despesa);
 	public List<Despesa> obterDespesaNoDetalheBudget(Long budgetId) ;
 	public void atualizarDespesas(List<Despesa> despesasNoDetalhe);
+	public void submeterBudget(Long budgetId);
+	public List<BudgetAreaDTO> listarBudgetsAprovadosPorArea(String ano);
 }

@@ -6,13 +6,12 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.NoResultException;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 
 import org.slf4j.Logger;
 
+import com.dupont.budget.dto.BudgetAreaDTO;
 import com.dupont.budget.dto.DespesasAgrupadasDTO;
 import com.dupont.budget.model.Budget;
 import com.dupont.budget.model.Despesa;
@@ -89,6 +88,7 @@ public class BudgetServiceBean extends GenericService implements BudgetService {
 		catch(NoResultException e)
 		{
 			logger.info("Nenhum resultado encontrado");
+			throw e;
 		}
 
 		return  budget;
@@ -104,12 +104,38 @@ public class BudgetServiceBean extends GenericService implements BudgetService {
 		}
 	}
 
-
 	@POST
 	public void submeterBudget(Long budgetId){
  			Budget budget = em.find(Budget.class, budgetId);
 			budget.setStatus(StatusBudget.SUBMETIDO);
 			em.merge(budget);
+	}
+
+
+	@Override
+	public List<BudgetAreaDTO> listarBudgetsAprovadosPorArea(String ano) {
+		List<Object[]> result = em.createNativeQuery(
+				" select area.id, area.nome, sum(despesa.valor),'OK' from budget"+
+				" inner join despesa on despesa.budget_id = budget.id"+
+				" inner join centro_custo on centro_custo.id = budget.centro_custo_id"+
+				" inner join area on centro_custo.area_id = area.id"+
+				" where budget.ano=:ano and despesa.aprovacao=1"+
+				" group by area.id")
+				.setParameter("ano", ano).getResultList();
+
+		List<BudgetAreaDTO> lista = new ArrayList<>();
+		for(Object[] object : result)
+		{
+			BudgetAreaDTO budget = new BudgetAreaDTO();
+			budget.setIdArea(Long.valueOf(String.valueOf(object[0])));
+			budget.setNomeArea(String.valueOf(object[1]));
+			budget.setValorTotalBudget(Double.valueOf(String.valueOf(object[2])));
+			budget.setStatus(String.valueOf(object[3]));
+			lista.add(budget);
+
+		}
+
+		return lista;
 	}
 
 
