@@ -3,9 +3,10 @@ package com.dupont.budget.model;
 import java.util.Date;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -22,7 +23,7 @@ import javax.persistence.TemporalType;
 
 /**
  * Entidade que representa o dudget do ano.
- * 
+ *
  * @author <a href="asouza@redhat.com">Ângelo Galvão</a>
  * @since 2014
  *
@@ -45,7 +46,7 @@ public class Budget {
 	@ManyToOne
 	@JoinColumn(name = "usuario_id")
 	private Usuario usuarioCriador;
-	
+
 	@Column(name = "process_instance_id")
 	private Long processInstanceId;
 
@@ -66,6 +67,10 @@ public class Budget {
 	@OneToOne
 	@JoinColumn(name = "id")
 	private BudgetMes budgetMes;
+
+	@Enumerated(EnumType.STRING)
+	private StatusBudget status;
+
 
 	public Long getId() {
 		return id;
@@ -130,4 +135,14 @@ public class Budget {
 	public void setDespesas(Set<Despesa> despesas) {
 		this.despesas = despesas;
 	}
+
+	public StatusBudget getStatus() {
+		return status;
+	}
+
+	public void setStatus(StatusBudget status) {
+		this.status = status;
+	}
+
+
 }

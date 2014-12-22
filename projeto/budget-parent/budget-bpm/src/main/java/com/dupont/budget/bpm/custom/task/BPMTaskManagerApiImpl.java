@@ -19,23 +19,21 @@ package com.dupont.budget.bpm.custom.task;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
-import javax.enterprise.inject.Model;
 import javax.inject.Inject;
-import javax.transaction.Status;
-import javax.transaction.UserTransaction;
+import javax.inject.Named;
+import javax.inject.Singleton;
 
 import org.kie.api.task.TaskService;
+import org.kie.api.task.model.Status;
 import org.kie.api.task.model.Task;
 import org.kie.api.task.model.TaskSummary;
 import org.kie.internal.task.api.InternalTaskService;
 
 import com.dupont.budget.bpm.custom.exception.BPMException;
 
-@Model
+@Singleton
+@Named
 public class BPMTaskManagerApiImpl implements BPMTaskManagerApi {
-	@Resource
-	private UserTransaction ut;
 	@Inject
 	TaskService taskService;
 
@@ -53,12 +51,12 @@ public class BPMTaskManagerApiImpl implements BPMTaskManagerApi {
 	public void aproveTask(String actorId, long taskId,
 			Map<String, Object> content) throws Exception {
 		try {
-			taskService.start(taskId, actorId);
+			Task task = getTask(taskId);
+			if(task.getTaskData().getStatus().equals(Status.Ready))
+				taskService.start(taskId, actorId);
 			taskService.complete(taskId, actorId, content);
 		} catch (Exception e) {
-			if (ut.getStatus() == Status.STATUS_ACTIVE) {
-				ut.rollback();
-			}
+			e.printStackTrace();
 			throw new BPMException("Erro ao aprovar a tarefa", e);
 		}
 	}

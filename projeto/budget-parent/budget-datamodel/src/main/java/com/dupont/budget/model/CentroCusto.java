@@ -17,7 +17,7 @@ import javax.persistence.Table;
 
 /**
  * Entidade de Centro de Custo.
- * 
+ *
  * @author <a href="asouza@redhat.com">Ângelo Galvão</a>
  * @since 2014
  *
@@ -25,24 +25,24 @@ import javax.persistence.Table;
 @Entity
 @Table(name="centro_custo")
 @NamedQueries({
-	@NamedQuery(name="CentroCusto.findAll"   , query="select c from CentroCusto c")	
+	@NamedQuery(name="CentroCusto.findAll"   , query="select c from CentroCusto c")
 })
 public class CentroCusto extends NamedAbstractEntity<Long> {
-	
+
 	private static final long serialVersionUID = 763183827982065682L;
 
 	private String codigo;
-	
+
 	@Enumerated(EnumType.STRING)
 	private TipoCentroCusto tipo;
-	
+
 	@ManyToOne
 	@JoinColumn(name="area_id")
 	private Area area;
-	
+
 	@OneToMany(mappedBy = "centroCusto", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<PapelUsuario> responsaveis;
-	
+
 	public String getCodigo() {
 		return codigo;
 	}
@@ -69,7 +69,7 @@ public class CentroCusto extends NamedAbstractEntity<Long> {
 
 	public List<PapelUsuario> getResponsaveis() {
 		if (responsaveis == null) {
-			responsaveis = new LinkedList<>();
+			responsaveis = new LinkedList<PapelUsuario>();
 		}
 		return responsaveis;
 	}

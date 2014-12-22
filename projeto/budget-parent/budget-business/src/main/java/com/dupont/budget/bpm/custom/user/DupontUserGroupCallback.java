@@ -19,11 +19,13 @@ public class DupontUserGroupCallback implements UserGroupCallback {
 	private DomainService domainService;
 	@Inject
 	private UserGroupCallbackCacheManager userGroupCallbackCacheManager;
-	
+
 	@Inject
 	private Logger logger;
 
     public boolean existsUser(String userId) {
+    	if(userId.equals("Administrator") )
+    		return true;
     	String user= userGroupCallbackCacheManager.getUserFromCache(userId);
     	if(user==null)
     	{
@@ -39,12 +41,13 @@ public class DupontUserGroupCallback implements UserGroupCallback {
     		userGroupCallbackCacheManager.setUserOnCache(userId);
     		userGroupCallbackCacheManager.setGroupsOnCache(userId, groups);
     	}
-    				
-        return user!=null || userId.equals("Administrator") ;
+
+        return user!=null;
     }
 
     public boolean existsGroup(String groupId) {
-    	
+    	if(groupId.equals("Administrators") )
+    		return true;
     	String group= userGroupCallbackCacheManager.getUserFromCache(groupId);
     	if(group == null)
     	{
@@ -61,23 +64,23 @@ public class DupontUserGroupCallback implements UserGroupCallback {
     			logger.error("GRUPO "+groupId + " NAO ENCONTRADO");
     		}
     	}
-    	
+
         return group!=null;
     }
 
-    public List<String> getGroupsForUser(String userId,	
+    public List<String> getGroupsForUser(String userId,
                                          List<String> groupIds, List<String> allExistingGroupIds) {
-    	List<String> userGroups = userGroupCallbackCacheManager.getGroupsFromCache(userId); 
+    	List<String> userGroups = userGroupCallbackCacheManager.getGroupsFromCache(userId);
     	if(userGroups == null)
     	{
-    	
+
     		List<String> groups = new ArrayList<String>();
     		Usuario u = domainService.getUsuarioByLogin(userId);
     		for(PapelUsuario papel : u.getPapeis())
     		{
     			groups.add(papel.getPapel().getNome());
     		}
-    		
+
     		userGroupCallbackCacheManager.setGroupsOnCache(userId, groups);
     	}
         return userGroups;

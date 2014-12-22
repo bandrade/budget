@@ -15,8 +15,10 @@ public class NavegacaoAction {
 	{
 		navegationMap = new HashMap<String, String>();
 		navegationMap.put("Criar Budget", "criarBudget");
+		navegationMap.put("Aprovar Budget", "aprovarBudget");
+		navegationMap.put("Auditar Budget", "auditarBudget");
 	}
-	
+
 	public String obterOutcome(String taskname)
 	{
 		return navegationMap.get(taskname);

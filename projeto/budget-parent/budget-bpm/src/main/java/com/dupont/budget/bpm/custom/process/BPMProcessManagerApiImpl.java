@@ -20,13 +20,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
-import javax.ejb.TransactionManagement;
-import javax.ejb.TransactionManagementType;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.transaction.Status;
-import javax.transaction.UserTransaction;
 
 import org.jbpm.process.workitem.rest.RESTWorkItemHandler;
 import org.kie.api.runtime.KieSession;
@@ -39,17 +34,18 @@ import org.kie.internal.runtime.manager.context.EmptyContext;
 
 import com.dupont.budget.bpm.custom.exception.BPMException;
 import com.dupont.budget.bpm.custom.workitem.DupontEmailWorkItemHandler;
+import com.dupont.budget.dto.CentroDeCustoDTO;
 
 @ApplicationScoped
-@TransactionManagement(TransactionManagementType.BEAN)
-public class BPMProcessManagerApiImpl {
+//@TransactionManagement(TransactionManagementType.BEAN)
+public class BPMProcessManagerApiImpl implements BPMProcessManagerApi {
 
 	@Inject
 	@Singleton
 	private RuntimeManager singletonManager;
 
-	@Resource
-	private UserTransaction ut;
+	//@Resource
+	//private UserTransaction ut;
 
 	@PostConstruct
 	private void configure() {
@@ -69,7 +65,7 @@ public class BPMProcessManagerApiImpl {
 				.registerWorkItemHandler("Rest", new RESTWorkItemHandler());
 	}
 
-	public long startBudgetProcess() throws Exception {
+	public long startBudgetProcess(CentroDeCustoDTO[] ceDtos, String ano) throws Exception {
 		RuntimeEngine runtime = singletonManager.getRuntimeEngine(EmptyContext
 				.get());
 
@@ -78,18 +74,20 @@ public class BPMProcessManagerApiImpl {
 		long processInstanceId = -1;
 
 		try {
-			ut.begin();
+			//ut.begin();
 			// start a new process instance
 			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("centrosDeCustoArray", ceDtos);
+			params.put("anoBudget", ano);
 			ProcessInstance processInstance = ksession.startProcess(
 			/* "budget.EnvioEmail" */"com.dupont.bpm.criarbudget", params);
 			processInstanceId = processInstance.getId();
-			ut.commit();
+			//ut.commit();
 
 		} catch (Exception e) {
-			if (ut.getStatus() == Status.STATUS_ACTIVE) {
+			/*if (ut.getStatus() == Status.STATUS_ACTIVE) {
 				ut.rollback();
-			}
+			}*/
 			throw new RuntimeException(e);
 		}
 		return processInstanceId;

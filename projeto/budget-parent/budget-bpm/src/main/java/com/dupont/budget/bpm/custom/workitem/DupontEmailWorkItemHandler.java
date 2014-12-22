@@ -1,9 +1,11 @@
 package com.dupont.budget.bpm.custom.workitem;
 
 import org.jbpm.process.workitem.email.EmailWorkItemHandler;
+import org.kie.api.runtime.process.WorkItem;
+import org.kie.api.runtime.process.WorkItemManager;
 
 public class DupontEmailWorkItemHandler extends EmailWorkItemHandler {
-	
+
 	/*
 	 *TODO IMPLEMENTAR COM SMTP DA DUPONT
 	 * mail.smtp.host=smtp.gmail.com
@@ -21,9 +23,17 @@ public class DupontEmailWorkItemHandler extends EmailWorkItemHandler {
 		String smtpPort =  "587";
 		String user =  "dupontbpm@gmail.com";
 		String password =  "admin123@";
-		
+
 		setConnection(smtpHost,smtpPort,user,password);
 		getConnection().setStartTls(true);
 	}
-	
+
+	@Override
+	public void executeWorkItem(WorkItem workitem, WorkItemManager workItemManager) {
+
+
+		// TODO Auto-generated method stub
+		super.executeWorkItem(workitem, workItemManager);
+	}
+
 }

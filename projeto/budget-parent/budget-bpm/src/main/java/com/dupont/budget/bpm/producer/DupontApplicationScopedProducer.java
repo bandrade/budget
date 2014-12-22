@@ -33,7 +33,6 @@ import org.kie.api.KieServices;
 import org.kie.api.builder.ReleaseId;
 import org.kie.api.runtime.manager.RuntimeEnvironment;
 import org.kie.api.runtime.manager.RuntimeEnvironmentBuilder;
-import org.kie.api.task.UserGroupCallback;
 import org.kie.internal.runtime.manager.cdi.qualifier.PerProcessInstance;
 import org.kie.internal.runtime.manager.cdi.qualifier.PerRequest;
 import org.kie.internal.runtime.manager.cdi.qualifier.Singleton;
@@ -45,11 +44,11 @@ public class DupontApplicationScopedProducer {
     @PersistenceUnit(unitName = "org.jbpm.domain")
     private EntityManagerFactory emf;
 
-    
+
     @Inject
     private BeanManager beanManager;
-    
-    
+
+
     @Produces
     public EntityManagerFactory produceEntityManagerFactory() {
         if (this.emf == null) {
@@ -65,18 +64,18 @@ public class DupontApplicationScopedProducer {
     @PerRequest
     public RuntimeEnvironment produceEnvironment(EntityManagerFactory emf) {
     	KieServices kieServices = KieServices.Factory.get();
-    	ReleaseId releaseId = kieServices.newReleaseId( "com.dupont.budget", "budget-bpm-repo", "1.0.1" );
+    	ReleaseId releaseId = kieServices.newReleaseId( "com.dupont.budget", "budget-bpm-repo", "1.0.6" );
     	String deploymentId = releaseId.toString();
     	AbstractAuditLogger auditLogger =AuditLoggerFactory.newJPAInstance();
     	ServicesAwareAuditEventBuilder auditEventBuilder = new ServicesAwareAuditEventBuilder();
     	auditEventBuilder.setDeploymentUnitId(deploymentId);
-    	auditEventBuilder.setIdentityProvider(new CustomIdentityProvider()); 
+    	auditEventBuilder.setIdentityProvider(new CustomIdentityProvider());
     	auditLogger.setBuilder(auditEventBuilder);
         RuntimeEnvironment environment = RuntimeEnvironmentBuilder.Factory.get()
                 .newDefaultBuilder(releaseId)
                 .entityManagerFactory(emf).
                 registerableItemsFactory(InjectableRegisterableItemsFactory.getFactory(beanManager, auditLogger)).get();
-        
+
         return environment;
     }
 

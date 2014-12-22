@@ -1,5 +1,6 @@
 package com.dupont.budget.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -18,7 +19,8 @@ import javax.persistence.Table;
 @Table(name="despesa")
 @NamedQueries({
 	@NamedQuery(name="Despesa.agruparPorTipoDeDespesa", query="select c.tipoDespesa, sum(c.valor) from Despesa c where c.budget.id = :id group by c.tipoDespesa"),
-	@NamedQuery(name="Despesa.obterDespesaNoDetalhe", query="select c from Despesa c where c.budget.id = :budgetId and c.tipoDespesa.id=:id")
+	@NamedQuery(name="Despesa.obterDespesaNoDetalhe", query="select c from Despesa c where c.budget.id = :budgetId and c.tipoDespesa.id=:id"),
+	@NamedQuery(name="Despesa.obterDespesaNoDetalheBudget", query="select c from Despesa c where c.budget.id = :budgetId order by c.tipoDespesa.id")
 })
 public class Despesa extends AbstractEntity<Long> {
 
@@ -55,6 +57,9 @@ public class Despesa extends AbstractEntity<Long> {
 	@ManyToOne
 	@JoinColumn(name="budget_id")
 	private Budget budget;
+
+	@Column(name="aprovacao")
+	private Boolean aprovado;
 
 	private Double valor;
 
@@ -140,15 +145,37 @@ public class Despesa extends AbstractEntity<Long> {
 		this.budget = budget;
 	}
 
-	public void init(){
-		setAcao(new Acao());
-		setProduto(new Produto());
-		setCultura(new Cultura());
-		setCliente(new Cliente());
-		setDistrito(new Distrito());
-		setVendedor(new Vendedor());
-		setTipoDespesa(new TipoDespesa());
-		setValor(null);
+
+	public void initLists(){
+		if(acao==null)
+			setAcao(new Acao());
+		if(produto==null)
+			setProduto(new Produto());
+		if(cultura==null)
+			setCultura(new Cultura());
+		if(cliente==null)
+			setCliente(new Cliente());
+		if(distrito==null)
+			setDistrito(new Distrito());
+		if(vendedor==null)
+			setVendedor(new Vendedor());
+		if(tipoDespesa==null)
+			setTipoDespesa(new TipoDespesa());
+
 	}
+	public void init(){
+			initLists();
+			setValor(null);
+	}
+
+	public Boolean getAprovado() {
+		return aprovado;
+	}
+
+	public void setAprovado(Boolean aprovado) {
+		this.aprovado = aprovado;
+	}
+
+
 }
 

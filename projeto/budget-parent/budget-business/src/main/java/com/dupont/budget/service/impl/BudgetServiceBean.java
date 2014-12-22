@@ -6,17 +6,23 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.NoResultException;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
 
 import org.slf4j.Logger;
 
 import com.dupont.budget.dto.DespesasAgrupadasDTO;
 import com.dupont.budget.model.Budget;
 import com.dupont.budget.model.Despesa;
+import com.dupont.budget.model.StatusBudget;
 import com.dupont.budget.model.TipoDespesa;
 import com.dupont.budget.service.BudgetService;
 import com.dupont.budget.service.GenericService;
 
 @Stateless
+@Path("budget")
 public class BudgetServiceBean extends GenericService implements BudgetService {
 
 	@Inject
@@ -24,7 +30,7 @@ public class BudgetServiceBean extends GenericService implements BudgetService {
 	@Override
 	public List<DespesasAgrupadasDTO> obterDespesaAgrupadas(Long budgetId) {
 
-		List<Object[]> result = em.createNamedQuery("Despesa.agruparPorTipoDeDespesa")
+		List<Object[]> result = em.createNamedQuery("Despesa.agruparPorTipoDeDespesa",Object[].class)
 		.setParameter("id", budgetId).getResultList();
 		List<DespesasAgrupadasDTO> despesas = new ArrayList<DespesasAgrupadasDTO>();
 		for(Object[] object : result)
@@ -42,12 +48,17 @@ public class BudgetServiceBean extends GenericService implements BudgetService {
 
 
 	@Override
-	public List<Despesa> obterDespesaNoDetalhe(Long tipoDespesaId,Long budgetId) {
+	public List<Despesa> obterDespesaNoDetalheBudget(Long budgetId) {
 
-		return em.createNamedQuery("Despesa.obterDespesaNoDetalhe",Despesa.class).setParameter("budgetId", budgetId).
-				setParameter("id", tipoDespesaId).getResultList();
+		return em.createNamedQuery("Despesa.obterDespesaNoDetalheBudget",Despesa.class).setParameter("budgetId", budgetId)
+				.getResultList();
 	}
 
+	@Override
+	public List<Despesa> obterDespesaNoDetalhe(Long tipoDespesaId,Long budgetId) {
+
+		return em.createNamedQuery("Despesa.obterDespesaNoDetalhe",Despesa.class).setParameter("budgetId", budgetId).getResultList();
+	}
 
 	@Override
 	public Budget insertBudget(Budget budget) {
@@ -58,6 +69,13 @@ public class BudgetServiceBean extends GenericService implements BudgetService {
 	@Override
 	public void insertItemDespesa(Despesa despesa) {
 		em.persist(despesa);
+	}
+
+
+	@Override
+	public void updateItemDespesa(Despesa despesa) {
+		em.merge(despesa);
+
 	}
 
 	@Override
@@ -75,5 +93,24 @@ public class BudgetServiceBean extends GenericService implements BudgetService {
 
 		return  budget;
 	}
+
+
+	@Override
+	public void atualizarDespesas(List<Despesa> despesasNoDetalhe) {
+
+		for(Despesa despesa : despesasNoDetalhe)
+		{
+			em.merge(despesa);
+		}
+	}
+
+
+	@POST
+	public void submeterBudget(Long budgetId){
+ 			Budget budget = em.find(Budget.class, budgetId);
+			budget.setStatus(StatusBudget.SUBMETIDO);
+			em.merge(budget);
+	}
+
 
 }
