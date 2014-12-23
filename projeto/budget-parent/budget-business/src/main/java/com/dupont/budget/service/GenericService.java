@@ -50,8 +50,8 @@ public abstract class GenericService {
 		}
 
 		List<T> result = (List<T>) em.createQuery(
-					String.format("select o from %s o where o.nome like :nome", t.getClass().getSimpleName())
-				).setParameter("nome", name.trim() + "%").getResultList();
+					String.format("select o from %s o where lower(o.nome) like :nome", t.getClass().getSimpleName())
+				).setParameter("nome", name.trim().toLowerCase() + "%").getResultList();
 
 		return result;
 	}

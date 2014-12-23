@@ -8,7 +8,8 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 
 import com.dupont.budget.service.EventDispatcherService;
-import com.dupont.budget.service.event.FornecedorEvent;
+import com.dupont.budget.service.event.FileUploadEvent;
+import com.dupont.budget.service.event.Uploaded;
 
 /**
  * Bean responsável pelo tratamento de eventos assíncronos da aplicação
@@ -23,7 +24,8 @@ public class EventDispatcherServiceBean implements EventDispatcherService {
 	private Logger logger;
 	
 	@Inject
-    private Event<FornecedorEvent> eventManager;
+	@Uploaded
+    private Event<FileUploadEvent> eventManager;
  
 	/*
 	 * (non-Javadoc)
@@ -31,8 +33,8 @@ public class EventDispatcherServiceBean implements EventDispatcherService {
 	 */
 	@Override
     @Asynchronous
-    public void publish(FornecedorEvent event) {
+    public void publish(FileUploadEvent event) {
         logger.debug("Enviando evento de cadastro de fornecedores");
-        eventManager.fire(event);
+        eventManager.select(event).fire(event);
     }
 }

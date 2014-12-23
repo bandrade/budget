@@ -1,6 +1,7 @@
 package com.dupont.budget.service;
 
-import com.dupont.budget.service.event.FornecedorEvent;
+import com.dupont.budget.service.event.FileUploadEvent;
+
 
 /**
  * Serviço de disparo de eventos assíncronos do sistema.
@@ -11,10 +12,10 @@ import com.dupont.budget.service.event.FornecedorEvent;
 public interface EventDispatcherService {
 
 	/**
-	 * Dispara um evento de cadastro de fornecedores.
+	 * Dispara um evento de tratamento de arquivos.
 	 * 
 	 * @param event
 	 */
-	void publish(FornecedorEvent event);
+	void publish(FileUploadEvent event);
 
 }

@@ -1,0 +1,78 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/templates/default.xhtml">
+                
+	<ui:define name="content">
+	<p:panelGrid columns="1" styleClass="body-content">
+		<p:fieldset value="Pesquisa de Valores Comprometidos" legend="Pesquisa de Valores Comprometidos">
+	
+			<h3></h3>
+			
+			<h:form id="form" prependId="false">
+			
+				<h:panelGrid columns="3" border="0">
+				
+					<p:outputLabel value="Centro de Custo:" for="centroCustoInput"/>
+					<p:inputText id="centroCustoInput" value="#{valorComprometido.centroCusto.nome}"/>
+					<p:message for="centroCustoInput"/>
+					
+					<p:outputLabel value="Tipo de Despesa:" for="tipoDespesaInput"/>
+                    <p:inputText id="tipoDespesaInput" value="#{valorComprometido.tipoDespesa.nome}"/>
+                    <p:message for="tipoDespesaInput"/>
+                    
+                    <p:outputLabel value="Ação:" for="acaoInput"/>
+                    <p:inputText id="acaoInput" value="#{valorComprometido.acao.nome}"/>
+                    <p:message for="acaoInput"/>
+					
+					<p:commandButton value="Pesquisar" icon="ui-icon-search"   styleClass="button" action="#{valorComprometidoAction.find}" update="valorComprometidos"/>
+					<p:commandButton value="Novo"      icon="ui-icon-document" styleClass="button" action="/pages/adm/valorComprometido/edit.xml"   />
+					<p:commandButton value="Carregar arquivo"  icon="ui-icon-arrowthickstop-1-n" styleClass="button" action="/pages/adm/valorComprometido/load.xml"   />
+				</h:panelGrid>
+				
+				<p:separator />
+				
+				<p:dataTable id="valorComprometidos" var="item" value="#{valorComprometidoAction.list}" emptyMessage="Nenhum registro encontrado."
+						paginator="true"
+						paginatorPosition="bottom"
+						rows="10">
+					<f:facet name="header">
+						Valores Comprometidos
+					</f:facet>
+					<p:column headerText="Centro de Custo" sortBy="#{item.centroCusto.nome}" >
+						#{item.centroCusto.nome}
+					</p:column>
+					<p:column headerText="Tipo de Despesa" sortBy="#{item.tipoDespesa.nome}" >
+                        #{item.tipoDespesa.nome}
+                    </p:column>
+                    <p:column headerText="Ação" sortBy="#{item.acao.nome}" >
+                        #{item.acao.nome}
+                    </p:column>
+                    <p:column headerText="Mês" sortBy="#{item.mes}" >
+                        #{item.mes}
+                    </p:column>
+					
+					<p:column headerText="Ações" width="10%">
+						
+						<p:commandButton icon="ui-icon-pencil" action="#{valorComprometidoAction.edit(item)}"   update="valorComprometidos" immediate="true"/>
+						<p:commandButton icon="ui-icon-trash"  action="#{valorComprometidoAction.delete(item)}" update="valorComprometidos" immediate="true">
+							<p:confirm header="Confirmação" message="Deseja realmente remover o dado?" icon="ui-icon-alert" />
+						</p:commandButton>
+						
+					</p:column>
+				
+				</p:dataTable>
+				
+				<p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+			        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+			        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no"  icon="ui-icon-close" />
+			    </p:confirmDialog>
+			</h:form>
+			
+		</p:fieldset>
+		</p:panelGrid>		
+	</ui:define>
+	
+</ui:composition>

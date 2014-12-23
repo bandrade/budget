@@ -1,6 +1,6 @@
 package com.dupont.budget.service;
 
-import com.dupont.budget.service.event.FornecedorEvent;
+import com.dupont.budget.service.event.FileUploadEvent;
 
 /**
  * Serviço de recebimento e execução de evento assíncronos da aplicação.
@@ -11,9 +11,16 @@ import com.dupont.budget.service.event.FornecedorEvent;
 public interface DeliveryHandlerService {
 
 	/**
-	 * Recebe eventos de cadastro de fornecedor.
-	 * @param event
+	 * Trata eventos de upload da planilha de fornecedores do sistema.
+	 * @param event evento
 	 */
-	void onNewCadastroFornecedor(FornecedorEvent event);
+	void onFornecedorUpload(FileUploadEvent event);
+
+	/**
+	 * Trata eventos de upload da planilha de valores comprometidos do sistema.
+	 * 
+	 * @param event evento
+	 */
+	void onValorComprometidoUpload(FileUploadEvent event);
 
 }

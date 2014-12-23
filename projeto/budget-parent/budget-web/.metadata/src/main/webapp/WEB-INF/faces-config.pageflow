@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pageflow:Pageflow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pageflow="http://www.sybase.com/suade/pageflow" id="pf14192582562940" configfile="/budget-web/src/main/webapp/WEB-INF/faces-config.xml">
+  <nodes xsi:type="pageflow:PFPage" name="*" x="122" y="754" id="pf14192582800471" referenceLink="//@navigationRule.3/@fromViewId|" outlinks="pf14192582800492 pf14192582800493 pf14192582800494 pf14192582800495" path="*"/>
+  <nodes xsi:type="pageflow:PFPage" name="pages/process/budget/auditarBudget.xhtml" x="338" y="178" id="pf14192582800496" referenceLink="//@navigationRule.0/@navigationCase.0/@toViewId|" inlinks="pf14192582800492" path="/pages/process/budget/auditarBudget.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="pages/process/minhasTarefas.xhtml" x="338" y="562" id="pf14192582800497" referenceLink="//@navigationRule.1/@navigationCase.0/@toViewId|" inlinks="pf14192582800493" path="/pages/process/minhasTarefas.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="pages/process/budget/aprovarBudget.xhtml" x="338" y="946" id="pf14192582800498" referenceLink="//@navigationRule.2/@navigationCase.0/@toViewId|" inlinks="pf14192582800494" path="/pages/process/budget/aprovarBudget.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="pages/process/budget/criarBudget.xhtml" x="338" y="1330" id="pf14192582800509" referenceLink="//@navigationRule.3/@navigationCase.0/@toViewId|" inlinks="pf14192582800495" path="/pages/process/budget/criarBudget.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="pages/adm/cultura/edit.xhtml" x="554" y="1714" id="pf141925828005010" referenceLink="//@navigationRule.5/@navigationCase.0/@toViewId|" outlinks="pf141925828005011" inlinks="pf141925828005012" path="/pages/adm/cultura/edit.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="pages/adm/cultura/list.xhtml" x="338" y="1714" id="pf141925828005013" referenceLink="//@navigationRule.6/@navigationCase.0/@toViewId|" outlinks="pf141925828005012" inlinks="pf141925828005011 pf141925828005014" path="/pages/adm/cultura/list.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="pages/adm/cultura/create.xhtml" x="122" y="1714" id="pf141925828005015" referenceLink="//@navigationRule.6/@fromViewId|" outlinks="pf141925828005014" path="/pages/adm/cultura/create.xhtml"/>
+  <links id="pf14192582800492" target="pf14192582800496" source="pf14192582800471" outcome="auditarBudget"/>
+  <links id="pf14192582800493" target="pf14192582800497" source="pf14192582800471" outcome="minhasTarefas"/>
+  <links id="pf14192582800494" target="pf14192582800498" source="pf14192582800471" outcome="aprovarBudget"/>
+  <links id="pf14192582800495" target="pf14192582800509" source="pf14192582800471" outcome="criarBudget"/>
+  <links id="pf141925828005011" target="pf141925828005013" source="pf141925828005010" outcome="list"/>
+  <links id="pf141925828005012" target="pf141925828005010" source="pf141925828005013" outcome="edit"/>
+  <links id="pf141925828005014" target="pf141925828005013" source="pf141925828005015" outcome="list"/>
+</pageflow:Pageflow>

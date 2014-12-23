@@ -1,49 +1,35 @@
 package com.dupont.budget.model;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name="valor_comprometido")
-public class ValorComprometido {
+@Table(name = "valor_comprometido", uniqueConstraints = { @UniqueConstraint(columnNames = {
+		"centro_custo_id", "tipo_despesa_id", "acao_id", "mes" }) })
+public class ValorComprometido extends AbstractEntity<Long> {
 
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
+	private static final long serialVersionUID = -8857965323037059577L;
 
 	@ManyToOne
 	@JoinColumn(name = "centro_custo_id")
 	private CentroCusto centroCusto;
 
-	private int mes;
-
-
 	@ManyToOne
-	@JoinColumn(name="tipo_despesa_id")
+	@JoinColumn(name = "tipo_despesa_id")
 	private TipoDespesa tipoDespesa;
 
 	@ManyToOne
 	@JoinColumn(name = "acao_id")
 	private Acao acao;
 
+	private int mes;
+
 	private Double valor;
 
 	private boolean ativo;
-
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
 
 	public CentroCusto getCentroCusto() {
 		return centroCusto;

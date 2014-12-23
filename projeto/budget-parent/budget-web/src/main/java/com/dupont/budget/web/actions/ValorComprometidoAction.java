@@ -8,13 +8,16 @@ import javax.inject.Named;
 
 import org.slf4j.Logger;
 
-import com.dupont.budget.model.Fornecedor;
+import com.dupont.budget.model.Acao;
+import com.dupont.budget.model.CentroCusto;
+import com.dupont.budget.model.TipoDespesa;
+import com.dupont.budget.model.ValorComprometido;
 import com.dupont.budget.service.DomainService;
 import com.dupont.budget.service.EventDispatcherService;
 import com.dupont.budget.web.util.FacesUtils;
 
 /**
- * Controller das telas de manutenção da entidade {@link Fornecedor}
+ * Controller das telas de manutenção da entidade produto
  * 
  * @author <a href="bandrade@redhat.com">Bruno Andrade</a>
  * @since 2014
@@ -22,7 +25,7 @@ import com.dupont.budget.web.util.FacesUtils;
  */
 @Model
 @RolesAllowed(value = "ADMINISTRADOR")
-public class FornecedorAction extends AsyncFileUploadAction<Fornecedor> {
+public class ValorComprometidoAction extends AsyncFileUploadAction<ValorComprometido> {
 
 	private static final long serialVersionUID = -9064126463852854590L;
 
@@ -34,21 +37,29 @@ public class FornecedorAction extends AsyncFileUploadAction<Fornecedor> {
 
 	@Inject
 	private FacesUtils facesUtils;
-	
+
 	@Inject
-    private EventDispatcherService eventDispatcher;
-	
+	private EventDispatcherService eventDispatcher;
+
 	@Named
 	@Produces
-	public Fornecedor getFornecedor() {
+	public ValorComprometido getValorComprometido() {
 		return getEntidade();
 	}
-		
+	
+	@Override
+	protected void clearInstance() {
+		super.clearInstance();
+		entidade.setCentroCusto(new CentroCusto());
+		entidade.setAcao(new Acao());
+		entidade.setTipoDespesa(new TipoDespesa());
+	}
+
 	/**
 	 * Buscar as culturas a partir do filtro.
 	 */
 	public void find() {
-		list = service.findByName(entidade);
+		list = service.findAll(ValorComprometido.class);
 	}
 
 	@Override
@@ -65,9 +76,12 @@ public class FornecedorAction extends AsyncFileUploadAction<Fornecedor> {
 	protected FacesUtils getFacesUtils() {
 		return facesUtils;
 	}
-	
-	@Override
-	protected EventDispatcherService getEventDispatcher() {
+
+	public EventDispatcherService getEventDispatcher() {
 		return eventDispatcher;
+	}
+
+	public void setEventDispatcher(EventDispatcherService eventDispatcher) {
+		this.eventDispatcher = eventDispatcher;
 	}
 }
