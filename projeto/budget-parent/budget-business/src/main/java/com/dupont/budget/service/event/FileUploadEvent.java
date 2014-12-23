@@ -1,10 +1,6 @@
 package com.dupont.budget.service.event;
 
-import java.lang.reflect.ParameterizedType;
-
 import javax.enterprise.util.AnnotationLiteral;
-
-import com.dupont.budget.model.AbstractEntity;
 
 /**
  * Evento de envio de arquivos para o tratamento da aplicação.
