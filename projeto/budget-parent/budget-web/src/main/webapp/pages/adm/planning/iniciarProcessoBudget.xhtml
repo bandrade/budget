@@ -8,7 +8,7 @@
 	<ui:param name="pageTitle" value="Human Tasks" />
 
 	<ui:define name="content">
-		<h:form>
+		<h:form id="form">
 			<p:panelGrid columns="1" styleClass="body-content">
 				<p:fieldset legend="Iniciar processo de Budget">
 					<p:panelGrid columns="2">
@@ -20,7 +20,7 @@
 					<p:panelGrid columns="1" styleClass="painel-botoes" >
 						<p:commandButton
 							action="#{processoAction.iniciarProcessoBudget()}"
-							value="Iniciar Processo" />
+							value="Iniciar Processo" update=":form"/>
 					</p:panelGrid>
 				</p:fieldset>
 			</p:panelGrid>

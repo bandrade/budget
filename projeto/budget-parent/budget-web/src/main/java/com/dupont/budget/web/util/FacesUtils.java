@@ -3,7 +3,6 @@ package com.dupont.budget.web.util;
 import java.io.Serializable;
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Currency;
 import java.util.List;
 import java.util.Locale;
 
@@ -57,7 +56,7 @@ public class FacesUtils implements Serializable{
 		List<T> result =  new ArrayList<T>();
 		for(T t : lista)
 		{
-			if(t.getNome().contains(input))
+			if(t.getNome().toUpperCase().contains(input.toUpperCase()))
 			{
 				result.add(t);
 			}

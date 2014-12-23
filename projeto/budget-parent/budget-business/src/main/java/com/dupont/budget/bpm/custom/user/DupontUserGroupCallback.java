@@ -41,8 +41,12 @@ public class DupontUserGroupCallback implements UserGroupCallback {
     		userGroupCallbackCacheManager.setUserOnCache(userId);
     		userGroupCallbackCacheManager.setGroupsOnCache(userId, groups);
     	}
-
-        return user!=null;
+    	if(user==null)
+    	{
+    		logger.error("Usuario "+user + " NAO ENCONTRADO");
+    		return false;
+    	}
+        return true;
     }
 
     public boolean existsGroup(String groupId) {

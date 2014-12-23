@@ -8,4 +8,5 @@ public interface BPMProcessManagerApi {
 	void abortProcess(long processInstanceId);
 	public Object getProcessVariable(long processInstanceId, String variable)
 			throws BPMException;
+	public boolean isProcessAlreadyStarted(String ano) throws BPMException;;
 }

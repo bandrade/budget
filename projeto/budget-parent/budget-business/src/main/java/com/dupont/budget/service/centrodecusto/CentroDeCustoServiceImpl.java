@@ -13,14 +13,16 @@ import com.dupont.budget.dto.CentroDeCustoDTO;
 import com.dupont.budget.dto.ColaboradorDTO;
 import com.dupont.budget.dto.PapelDTO;
 import com.dupont.budget.model.CentroCusto;
+import com.dupont.budget.model.Papel;
 import com.dupont.budget.model.PapelUsuario;
+import com.dupont.budget.model.Usuario;
 import com.dupont.budget.service.DomainService;
 import com.dupont.budget.service.GenericService;
 @Path("CentroDeCusto")
 public class CentroDeCustoServiceImpl extends GenericService implements CentroDeCustoService{
 	@Inject
 	private DomainService domainService;
-	
+
 	@Override
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -36,48 +38,31 @@ public class CentroDeCustoServiceImpl extends GenericService implements CentroDe
 			ccDto.setArea(cc.getArea().getNome());
 			List<PapelUsuario> papeis = domainService.findPapeisByCentroDeCusto(cc.getId());
 			List<PapelDTO> papeisDTO = new ArrayList<PapelDTO>();
-			
+
 			for(PapelUsuario papel : papeis)
 			{
 				PapelDTO p = new PapelDTO();
 				p.setNomePapel(papel.getPapel().getNome());
 				ColaboradorDTO colaborador = new ColaboradorDTO(papel.getUsuario().getNome(),
 								papel.getUsuario().getLogin(),papel.getUsuario().getEmail());
-				
+
 				p.setColaborador(colaborador);
-				papeisDTO.add(p);			
+				papeisDTO.add(p);
 			}
+			Papel papelLider = cc.getArea().getLider().getPapel();
+			Usuario usuario = cc.getArea().getLider().getUsuario();
+			PapelDTO pDto = new PapelDTO();
+			pDto.setNomePapel(papelLider.getNome());
+			ColaboradorDTO colaborador = new ColaboradorDTO(usuario.getNome(),
+					usuario.getLogin(),usuario.getEmail());
+
+			pDto.setColaborador(colaborador);
+			ccDto.getPapeis().add(pDto);
 			ccDto.setPapeis(papeisDTO);
 			centrosDeCusto.add(ccDto);
 		}
-		
-		
+
 		return centrosDeCusto.toArray(new CentroDeCustoDTO[centrosDeCusto.size()]);
-	}
-	
-	private CentroDeCustoDTO getMock1()
-	{
-		String area="Distribuicao";
-		String nomeCentroDeCusto="DCP Programa Colaboradores";
-		String codigoCentroDeCusto="WR31601027";
-
-		List<PapelDTO> papeis = new ArrayList<PapelDTO>();
-		
-		ColaboradorDTO colaboradorResponsavelCC= new ColaboradorDTO("Veronica Gaviolle","veronicag","bruno.balint@gmail.com");
-		PapelDTO papelResponsavelCC = new PapelDTO("RESPONSAVEL_"+codigoCentroDeCusto, colaboradorResponsavelCC);
-
-		PapelDTO papelLiderCC = new PapelDTO("GERENTE_"+codigoCentroDeCusto, colaboradorResponsavelCC);
-		
-		ColaboradorDTO colaboradoLiderArea= new ColaboradorDTO("Guido Visitin","guidov","bandrade@redhat.com");
-		PapelDTO papelLiderArea = new PapelDTO("LIDER_"+area, colaboradoLiderArea);
-		
-		papeis.add(papelResponsavelCC);
-		papeis.add(papelLiderCC);
-		papeis.add(papelLiderArea);
-		
-		CentroDeCustoDTO centroDeCusto = new CentroDeCustoDTO(1L,nomeCentroDeCusto,codigoCentroDeCusto,area,papeis);
-		
-		return centroDeCusto;
 	}
 
 }

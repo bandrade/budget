@@ -162,6 +162,7 @@ public class BudgetServiceBean extends GenericService implements BudgetService {
 			{
 
 				budgetAno.setValorSubmetido(budget.getValorSubmetido());
+				budgetAno.setValorAprovado(budget.getValorAprovado());
 				em.merge(budgetAno);
 			}
 			else
