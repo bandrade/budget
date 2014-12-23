@@ -49,6 +49,8 @@ public class CentroDeCustoServiceImpl extends GenericService implements CentroDe
 				p.setColaborador(colaborador);
 				papeisDTO.add(p);
 			}
+			ccDto.setPapeis(papeisDTO);
+
 			Papel papelLider = cc.getArea().getLider().getPapel();
 			Usuario usuario = cc.getArea().getLider().getUsuario();
 			PapelDTO pDto = new PapelDTO();
@@ -58,7 +60,6 @@ public class CentroDeCustoServiceImpl extends GenericService implements CentroDe
 
 			pDto.setColaborador(colaborador);
 			ccDto.getPapeis().add(pDto);
-			ccDto.setPapeis(papeisDTO);
 			centrosDeCusto.add(ccDto);
 		}
 

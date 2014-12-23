@@ -97,7 +97,7 @@ public class AreaAction extends GenericAction<Area> {
 	@Override
 	public void delete(Area t) {
 
-		if(bpms.existeProcessoAtivo(Calendar.YEAR+""))
+		if(bpms.existeProcessoAtivo(Calendar.getInstance().get(Calendar.YEAR)+""))
 		{
 			facesUtils.addErrorMessage("Não é possível remover uma Área enquanto haja um processo de budget ativo");
 

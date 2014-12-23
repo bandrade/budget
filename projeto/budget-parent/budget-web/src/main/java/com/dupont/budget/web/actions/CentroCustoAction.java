@@ -121,7 +121,7 @@ public class CentroCustoAction extends GenericAction<CentroCusto> {
 	@Override
 	public void delete(CentroCusto t) {
 
-		if(bpms.existeProcessoAtivo(Calendar.YEAR+""))
+		if(bpms.existeProcessoAtivo(Calendar.getInstance().get(Calendar.YEAR)+""))
 		{
 			facesUtils.addErrorMessage("Não é possível remover um Centro de Custo enquanto haja um processo de budget ativo");
 

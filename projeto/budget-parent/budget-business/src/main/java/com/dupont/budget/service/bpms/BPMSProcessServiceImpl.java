@@ -1,7 +1,6 @@
 package com.dupont.budget.service.bpms;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import javax.enterprise.inject.Model;
@@ -10,9 +9,7 @@ import javax.inject.Inject;
 import com.dupont.budget.bpm.custom.process.BPMProcessManagerApiImpl;
 import com.dupont.budget.dto.AreaDTO;
 import com.dupont.budget.dto.CentroDeCustoDTO;
-import com.dupont.budget.dto.ColaboradorDTO;
 import com.dupont.budget.model.Area;
-import com.dupont.budget.model.Usuario;
 import com.dupont.budget.service.DomainService;
 import com.dupont.budget.service.centrodecusto.CentroDeCustoService;
 @Model
@@ -35,8 +32,6 @@ public class BPMSProcessServiceImpl implements BPMSProcessService{
 			AreaDTO areaDto =  new AreaDTO();
 			areaDto.setId(area.getId());
 			areaDto.setNome(area.getNome());
-			Usuario usuario = area.getLider().getUsuario();
-			areaDto.setLider(new ColaboradorDTO( usuario.getNome(),usuario.getLogin(),usuario.getEmail()));
 			areasListDto.add(areaDto);
 		}
 		AreaDTO [] areaArray = areasListDto.toArray(new AreaDTO[areasListDto.size()]);
