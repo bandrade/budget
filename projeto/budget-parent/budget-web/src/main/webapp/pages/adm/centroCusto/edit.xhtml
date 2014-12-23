@@ -56,13 +56,6 @@
                     </p:selectOneMenu>
                     <p:message for="gestorList" />
 					
-					<h:outputLabel for="gerenteList" value="Gerente:" />
-                    <p:selectOneMenu label="Gerente" id="gerenteList" value="#{centroCustoAction.gerente}" converter="com.dupont.EntityConverter" >
-                        <f:selectItem itemLabel="Selecione..." itemValue="" />
-                        <f:selectItems value="#{usuarioList}" itemValue="#{i}" itemLabel="#{i.nome}" var="i" />
-                    </p:selectOneMenu>
-                    <p:message for="gerenteList" />
-					
 				</h:panelGrid>
 				
 				<p:commandButton value="#{centroCusto.id != null? 'Atualizar' : 'Salvar'}" process="@this" icon="ui-icon-check" action="#{centroCustoAction.persist}" styleClass="button" ajax="false" />

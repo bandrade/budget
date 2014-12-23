@@ -1,9 +1,21 @@
 package com.dupont.budget.service;
 
+import java.lang.reflect.Method;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import javax.persistence.metamodel.Attribute;
+import javax.persistence.metamodel.EntityType;
+import javax.persistence.metamodel.Metamodel;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -58,6 +70,7 @@ public abstract class GenericService {
 	
 	/*
 	 * (non-Javadoc)
+	 * @see com.dupont.budget.service.DomainService#findByExample(com.dupont.budget.model.AbstractEntity)
 	 */
 	@SuppressWarnings("unchecked")
 	public <T extends AbstractEntity<?>> T findById(T t) {
@@ -68,7 +81,47 @@ public abstract class GenericService {
 
 		return result;
 	}
-
+	
+	/*
+	 * (non-Javadoc)
+	 * @see com.dupont.budget.service.DomainService#findByExample(com.dupont.budget.model.AbstractEntity)
+	 */
+	@SuppressWarnings({"unchecked", "rawtypes"})
+	public <T extends AbstractEntity<?>> List<T> findByExample(T t) {
+		List<T> list = null;
+		try {
+			Class<T> clazz = (Class<T>) t.getClass();
+	        CriteriaBuilder cb = em.getCriteriaBuilder();
+	        CriteriaQuery<T> cq = cb.createQuery(clazz);
+	        Root<T> r = cq.from(clazz);
+	        Predicate p = cb.conjunction();
+	        Metamodel mm = em.getMetamodel();
+	        EntityType<T> et = mm.entity(clazz);
+	        Set<Attribute<? super T, ?>> attrs = et.getAttributes();
+	        Object val = null;
+	        for (Attribute<? super T, ?> a: attrs) {
+	            String name = a.getName();
+	            String javaName = a.getJavaMember().getName();
+	            String getter = "get" + javaName.substring(0,1).toUpperCase() + javaName.substring(1);
+	            Method m = clazz.getMethod(getter, (Class<?>[]) null);
+	            if ((val = m.invoke(t, (Object[]) null)) !=  null) {
+	            	if (val instanceof String) {
+	            		p = cb.and(p, cb.like((Expression) r.get(name), val.toString()));
+	            	} else {
+	            		p = cb.and(p, cb.equal(r.get(name), val));
+	            	}
+	            }
+	        }
+	        cq.select(r).where(p);
+	        TypedQuery<T> query = em.createQuery(cq);
+	        list = query.getResultList();
+		} catch (Exception e) {
+			list = new LinkedList<>();
+		}
+        return list;
+	}
+	
+	
 
 	/*
 	 * (non-Javadoc)

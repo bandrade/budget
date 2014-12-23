@@ -52,7 +52,7 @@ public abstract class AsyncFileUploadAction<T extends AbstractEntity<?>> extends
 	
 	@SuppressWarnings("unchecked")
 	protected Class<T> getType() {
-	return ((Class<T>) ((ParameterizedType) getClass()
+		return ((Class<T>) ((ParameterizedType) getClass()
 				.getGenericSuperclass()).getActualTypeArguments()[0]);
 	}
 	

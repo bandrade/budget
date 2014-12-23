@@ -83,6 +83,14 @@ public interface DomainService {
 	 * @return entidade
 	 */
     <T extends AbstractEntity<?>> T findById(T t);
+    
+    /**
+     * Retorna todas as entidades conforme a entidade passada como exemplo.
+     * 
+     * @param t a entidade preenchida com os campos especificados
+     * @return uma lista com os objetos que atendem as restrições
+     */
+    <T extends AbstractEntity<?>> List<T> findByExample(T t);
 
     /**
      * Retorna todas as referencias de uma lista de papeis específicos.

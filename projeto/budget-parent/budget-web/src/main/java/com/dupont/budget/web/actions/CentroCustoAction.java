@@ -45,8 +45,6 @@ public class CentroCustoAction extends GenericAction<CentroCusto> {
 	
 	private Usuario gestor;
 	
-	private Usuario gerente;
-	
 	@Override
 	public String persist() {
 		String result = null;
@@ -54,7 +52,6 @@ public class CentroCustoAction extends GenericAction<CentroCusto> {
 		if (mustCreate()) {
 			entidade.getResponsaveis().add(new PapelUsuario(new Papel(createNomePapel(entidade, 1)), responsavel, entidade, 1));
 			entidade.getResponsaveis().add(new PapelUsuario(new Papel(createNomePapel(entidade, 2)), gestor, entidade, 2));
-			entidade.getResponsaveis().add(new PapelUsuario(new Papel(createNomePapel(entidade, 3)), gerente, entidade, 3));
 			
 			result = create();
 		} else {
@@ -69,13 +66,6 @@ public class CentroCustoAction extends GenericAction<CentroCusto> {
 				case 2:
 					if (gestor != null) {
 						o.setUsuario(gestor);
-					} else {
-						i.remove();
-					}
-					break;
-				case 3:
-					if (gerente != null) {
-						o.setUsuario(gerente);
 					} else {
 						i.remove();
 					}
@@ -104,9 +94,6 @@ public class CentroCustoAction extends GenericAction<CentroCusto> {
 				break;
 			case 2:
 				gestor = pu.getUsuario();
-				break;
-			case 3:
-				gerente = pu.getUsuario();
 				break;
 			}
 		}
@@ -177,14 +164,6 @@ public class CentroCustoAction extends GenericAction<CentroCusto> {
 
 	public void setGestor(Usuario gestor) {
 		this.gestor = gestor;
-	}
-
-	public Usuario getGerente() {
-		return gerente;
-	}
-
-	public void setGerente(Usuario gerente) {
-		this.gerente = gerente;
 	}
 }
 	

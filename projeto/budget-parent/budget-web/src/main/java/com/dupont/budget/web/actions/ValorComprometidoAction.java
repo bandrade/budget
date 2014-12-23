@@ -1,5 +1,7 @@
 package com.dupont.budget.web.actions;
 
+import java.util.List;
+
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.inject.Model;
 import javax.enterprise.inject.Produces;
@@ -47,6 +49,24 @@ public class ValorComprometidoAction extends AsyncFileUploadAction<ValorComprome
 		return getEntidade();
 	}
 	
+	@Named
+	@Produces
+	public List<CentroCusto> getCentroCustoList() {
+		return service.findAll(CentroCusto.class);
+	}
+	
+	@Named
+	@Produces
+	public List<Acao> getAcaoList() {
+		return service.findAll(Acao.class);
+	}
+	
+	@Named
+	@Produces
+	public List<TipoDespesa> getTipoDespesaList() {
+		return service.findAll(TipoDespesa.class);
+	}
+	
 	@Override
 	protected void clearInstance() {
 		super.clearInstance();
@@ -59,7 +79,7 @@ public class ValorComprometidoAction extends AsyncFileUploadAction<ValorComprome
 	 * Buscar as culturas a partir do filtro.
 	 */
 	public void find() {
-		list = service.findAll(ValorComprometido.class);
+		list = service.findByExample(entidade);
 	}
 
 	@Override

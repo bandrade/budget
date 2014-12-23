@@ -3,10 +3,15 @@ package com.dupont.budget.model;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.NamedQueries;
@@ -40,7 +45,9 @@ public class Usuario extends NamedAbstractEntity<Long> {
 	private String email;
 
 	@ElementCollection(fetch = FetchType.EAGER)
-	@CollectionTable(name = "perfil_usuario", joinColumns = @JoinColumn(name = "usuario_id"))
+	@CollectionTable(name = "perfil_usuario",  joinColumns = @JoinColumn(name = "usuario_id"))
+	@Column(name = "perfil")
+	@Enumerated(EnumType.STRING)
 	private Set<Perfil> perfis;
 	
 	@OneToMany(targetEntity = PapelUsuario.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)

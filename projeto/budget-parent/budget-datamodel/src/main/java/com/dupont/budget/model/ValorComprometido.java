@@ -25,11 +25,11 @@ public class ValorComprometido extends AbstractEntity<Long> {
 	@JoinColumn(name = "acao_id")
 	private Acao acao;
 
-	private int mes;
+	private Integer mes;
 
 	private Double valor;
 
-	private boolean ativo;
+	private Boolean ativo;
 
 	public CentroCusto getCentroCusto() {
 		return centroCusto;
@@ -39,11 +39,11 @@ public class ValorComprometido extends AbstractEntity<Long> {
 		this.centroCusto = centroCusto;
 	}
 
-	public int getMes() {
+	public Integer getMes() {
 		return mes;
 	}
 
-	public void setMes(int mes) {
+	public void setMes(Integer mes) {
 		this.mes = mes;
 	}
 
@@ -71,11 +71,11 @@ public class ValorComprometido extends AbstractEntity<Long> {
 		this.valor = valor;
 	}
 
-	public boolean isAtivo() {
+	public Boolean getAtivo() {
 		return ativo;
 	}
 
-	public void setAtivo(boolean ativo) {
+	public void setAtivo(Boolean ativo) {
 		this.ativo = ativo;
 	}
 
