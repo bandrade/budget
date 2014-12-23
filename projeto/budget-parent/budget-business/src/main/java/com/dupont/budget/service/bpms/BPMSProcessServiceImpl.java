@@ -1,6 +1,7 @@
 package com.dupont.budget.service.bpms;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.enterprise.inject.Model;
@@ -38,8 +39,8 @@ public class BPMSProcessServiceImpl implements BPMSProcessService{
 			areaDto.setLider(new ColaboradorDTO( usuario.getNome(),usuario.getLogin(),usuario.getEmail()));
 			areasListDto.add(areaDto);
 		}
-
-		return processApi.startBudgetProcess(ceDtos,ano);
+		AreaDTO [] areaArray = areasListDto.toArray(new AreaDTO[areasListDto.size()]);
+		return processApi.startBudgetProcess(ceDtos,areaArray,ano);
 	}
 
 	@Override

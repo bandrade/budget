@@ -1,5 +1,6 @@
 package com.dupont.budget.web.actions;
 
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 
@@ -18,10 +19,11 @@ import com.dupont.budget.model.PapelUsuario;
 import com.dupont.budget.model.TipoCentroCusto;
 import com.dupont.budget.model.Usuario;
 import com.dupont.budget.service.DomainService;
+import com.dupont.budget.service.bpms.BPMSProcessService;
 import com.dupont.budget.web.util.FacesUtils;
 /**
  * Controller das telas de manutenção da entidade produto
- * 
+ *
  * @author <a href="bandrade@redhat.com">Bruno Andrade</a>
  * @since 2014
  *
@@ -40,19 +42,25 @@ public class CentroCustoAction extends GenericAction<CentroCusto> {
 
 	@Inject
 	private FacesUtils facesUtils;
-	
+
+	@Inject
+    private BPMSProcessService bpms;
+
+
 	private Usuario responsavel;
-	
+
 	private Usuario gestor;
-	
+
+
+
 	@Override
 	public String persist() {
 		String result = null;
-		
+
 		if (mustCreate()) {
 			entidade.getResponsaveis().add(new PapelUsuario(new Papel(createNomePapel(entidade, 1)), responsavel, entidade, 1));
 			entidade.getResponsaveis().add(new PapelUsuario(new Papel(createNomePapel(entidade, 2)), gestor, entidade, 2));
-			
+
 			result = create();
 		} else {
 			CentroCusto tmp = service.findById(entidade);
@@ -73,20 +81,20 @@ public class CentroCustoAction extends GenericAction<CentroCusto> {
 				}
 			}
 			entidade.setResponsaveis(list);
-			
+
 			result = update();
 		}
-		
+
 		clearInstance();
-		
+
 		return result;
 	}
-	
+
 	public String edit(CentroCusto t) {
 		this.setEntidade(t);
-		
+
 		CentroCusto cc = service.findById(t);
-		
+
 		for (PapelUsuario pu: cc.getResponsaveis()) {
 			switch (pu.getNivel()) {
 			case 1:
@@ -97,12 +105,12 @@ public class CentroCustoAction extends GenericAction<CentroCusto> {
 				break;
 			}
 		}
-		
+
 		return "edit";
 	}
-	
+
 	private String createNomePapel(CentroCusto cc, int nivel) {
-		final String[] papel = {"RESPONSAVEL_", "GESTOR_","GERENTE_"}; 
+		final String[] papel = {"RESPONSAVEL_", "GESTOR_","GERENTE_"};
 		StringBuilder nomePapel = new StringBuilder(papel[nivel - 1]);
 		String nomeArea = cc.getCodigo();
 		nomeArea = nomeArea.trim().replaceAll(" ", "_");
@@ -110,18 +118,33 @@ public class CentroCustoAction extends GenericAction<CentroCusto> {
 		return nomePapel.toString();
 	}
 
+	@Override
+	public void delete(CentroCusto t) {
+
+		if(bpms.existeProcessoAtivo(Calendar.YEAR+""))
+		{
+			facesUtils.addErrorMessage("Não é possível remover um Centro de Custo enquanto haja um processo de budget ativo");
+
+		}
+		else
+		{
+
+			super.delete(t);
+		}
+	}
+
 	@Named
 	@Produces
 	public CentroCusto getCentroCusto() {
 		return getEntidade();
 	}
-	
+
 	@Named
 	@Produces
 	public List<Area> getAreaList() {
 		return service.findAll(Area.class);
 	}
-	
+
 	@Named
 	@Produces
 	public TipoCentroCusto[] getTipoCentroCustoList() {
@@ -166,4 +189,3 @@ public class CentroCustoAction extends GenericAction<CentroCusto> {
 		this.gestor = gestor;
 	}
 }
-	

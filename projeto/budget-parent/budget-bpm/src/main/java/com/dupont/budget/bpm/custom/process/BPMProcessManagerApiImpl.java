@@ -25,7 +25,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManagerFactory;
 
-import org.jbpm.persistence.processinstance.ProcessInstanceInfo;
 import org.jbpm.process.workitem.rest.RESTWorkItemHandler;
 import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.manager.RuntimeEngine;
@@ -37,6 +36,7 @@ import org.kie.internal.runtime.manager.context.EmptyContext;
 
 import com.dupont.budget.bpm.custom.exception.BPMException;
 import com.dupont.budget.bpm.custom.workitem.DupontEmailWorkItemHandler;
+import com.dupont.budget.dto.AreaDTO;
 import com.dupont.budget.dto.CentroDeCustoDTO;
 
 @ApplicationScoped
@@ -68,7 +68,7 @@ public class BPMProcessManagerApiImpl implements BPMProcessManagerApi {
 				.registerWorkItemHandler("Rest", new RESTWorkItemHandler());
 	}
 
-	public long startBudgetProcess(CentroDeCustoDTO[] ceDtos, String ano) throws Exception {
+	public long startBudgetProcess(CentroDeCustoDTO[] ceDtos, AreaDTO[] areas, String ano) throws Exception {
 		RuntimeEngine runtime = singletonManager.getRuntimeEngine(EmptyContext
 				.get());
 
@@ -79,6 +79,7 @@ public class BPMProcessManagerApiImpl implements BPMProcessManagerApi {
 		try {
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("centrosDeCustoArray", ceDtos);
+			params.put("areasArray", areas);
 			params.put("anoBudget", ano);
 			ProcessInstance processInstance = ksession.startProcess(
 			"com.dupont.bpm.criarbudget", params);
