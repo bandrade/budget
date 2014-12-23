@@ -101,16 +101,26 @@ public class BudgetAction implements Serializable{
 
 	public void criarBudget()
 	{
-		budget.setAno(ano);
-		CentroCusto centroCusto = new CentroCusto();
-		centroCusto.setId(centroDeCusto.getId());
-		centroCusto= domainService.findById(centroCusto);
-		budget.setCentroCusto(centroCusto);
-		budget.setUsuarioCriador(domainService.getUsuarioByLogin(facesUtils.getUserLogin()));
-		budget.setUltimaAtualizacao(new Date());
-		budget.setCricao(new Date());
-		budget.setProcessInstanceId(idInstanciaProcesso);
-		budget = budgetService.insertBudget(budget);
+		try
+		{
+
+			budget.setAno(ano);
+			CentroCusto centroCusto = new CentroCusto();
+			centroCusto.setId(centroDeCusto.getId());
+			centroCusto= domainService.findById(centroCusto);
+			budget.setCentroCusto(centroCusto);
+			budget.setUsuarioCriador(domainService.getUsuarioByLogin(facesUtils.getUserLogin()));
+			budget.setUltimaAtualizacao(new Date());
+			budget.setCricao(new Date());
+			budget.setProcessInstanceId(idInstanciaProcesso);
+			budget = budgetService.insertBudget(budget);
+		}
+		catch(Exception e)
+		{
+			facesUtils.addErrorMessage("Erro ao efetuar a criação do budget");
+			logger.error("Erro ao efetuar a criação do budget", e);
+		}
+
 	}
 
 
@@ -130,19 +140,26 @@ public class BudgetAction implements Serializable{
 
 	public void adicionarDespesa()
 	{
-
-		if(!possuiBudgetSalvo)
+		try
 		{
-			criarBudget();
+			if(!possuiBudgetSalvo)
+			{
+				criarBudget();
+			}
+			if(budget.getDespesas() ==null)
+			{
+				budget.setDespesas(new HashSet<Despesa>());
+			}
+			validarDadosDespesa();
+			budgetService.insertItemDespesa(despesa);
+			incAltComSucesso=true;
+			inicializarDespesa();
 		}
-		if(budget.getDespesas() ==null)
+		catch(Exception e)
 		{
-			budget.setDespesas(new HashSet<Despesa>());
+			facesUtils.addErrorMessage("Erro ao adicionar a despesa");
+			logger.error("Erro ao adicionar a despesa", e);
 		}
-		validarDadosDespesa();
-		budgetService.insertItemDespesa(despesa);
-		incAltComSucesso=true;
-		inicializarDespesa();
 	}
 
 
@@ -157,10 +174,11 @@ public class BudgetAction implements Serializable{
 		try {
 
 			bpmsTask.aprovarTarefa(facesUtils.getUserLogin(), idTarefa,params);
+			facesUtils.addInfoMessage("Tarefa concluida com sucesso");
 			return "minhasTarefas";
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			facesUtils.addErrorMessage("Erro ao adicionar a despesa");
+			logger.error("Erro ao adicionar a despesa", e);
 			return null;
 		}
 
@@ -179,14 +197,31 @@ public class BudgetAction implements Serializable{
 	}
 	public void obterDespesaNoDetalhe(Long tipoDeDespesaId,Long budgetId)
 	{
-		setDespesasNoDetalhe(budgetService.obterDespesaNoDetalhe(tipoDeDespesaId, budgetId));
-		calcularTotalBudget();
+		try
+		{
+			setDespesasNoDetalhe(budgetService.obterDespesaNoDetalhe(tipoDeDespesaId, budgetId));
+			calcularTotalBudget();
+		}
+		catch(Exception e)
+		{
+			facesUtils.addErrorMessage("Erro ao obter despesa no detalhe");
+			logger.error("Erro ao obter despesa no detalhe", e);
+		}
+
 	}
 
 	public void obterDespesaNoDetalhe(Long budgetId)
 	{
-		setDespesasNoDetalhe(budgetService.obterDespesaNoDetalheBudget(budgetId));
-		calcularTotalBudget();
+		try
+		{
+			setDespesasNoDetalhe(budgetService.obterDespesaNoDetalheBudget(budgetId));
+			calcularTotalBudget();
+		}
+		catch(Exception e)
+		{
+			facesUtils.addErrorMessage("Erro ao obter despesa no detalhe");
+			logger.error("Erro ao obter despesa no detalhe", e);
+		}
 
 	}
 
@@ -214,10 +249,18 @@ public class BudgetAction implements Serializable{
 
 	protected void alterarDespesa()
 	{
-		validarDadosDespesa();
-		budgetService.updateItemDespesa(despesa);
-		incAltComSucesso= true;
-		inicializarDespesa();
+		try
+		{
+			validarDadosDespesa();
+			budgetService.updateItemDespesa(despesa);
+			incAltComSucesso= true;
+			inicializarDespesa();
+		}
+		catch(Exception e)
+		{
+			facesUtils.addErrorMessage("Erro ao alterar despesa");
+			logger.error("Erro ao alterar despesa", e);
+		}
 	}
 
 	protected <T extends NamedAbstractEntity<Long>> T validarCamposDespesa(T entidade)

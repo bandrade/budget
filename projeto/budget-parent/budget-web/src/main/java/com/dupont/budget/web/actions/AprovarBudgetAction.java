@@ -48,7 +48,18 @@ public class AprovarBudgetAction extends BudgetAction  implements Serializable{
 		{
 			aprovarReprovarLista(false);
 		}
+		calcularTotalBudget();
 
+	}
+	@Override
+	public void calcularTotalBudget() {
+		valorTotalDetalhe = 0d;
+		for(Despesa despesa : despesasNoDetalhe)
+		{
+			if(despesa.getAprovado())
+				valorTotalDetalhe+=despesa.getValor();
+
+		}
 	}
 
 
@@ -76,10 +87,16 @@ public class AprovarBudgetAction extends BudgetAction  implements Serializable{
 	}
 	public String concluir()
 	{
-		budgetService.atualizarDespesas(despesasNoDetalhe);
-		params = new HashMap<String,Object>();
-		params.put("contemRejeicao", possuiRessalva());
-		return super.concluir();
+		try {
+			budgetService.atualizarDespesas(despesasNoDetalhe);
+			params = new HashMap<String,Object>();
+			params.put("contemRejeicao", possuiRessalva());
+			return super.concluir();
+		} catch (Exception e) {
+			logger.error("Erro ao concluir a tarefa de Aprovacao de Budget",e);
+			facesUtils.addErrorMessage("Erro ao concluir a tarefa de Aprovacao de Budget");
+			return null;
+		}
 	}
 
 	public String getTipoAprovacao() {

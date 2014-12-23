@@ -106,7 +106,9 @@
 								</p:commandButton>
 						</p:column>
 						<p:column width="8%">
-							<p:selectBooleanCheckbox value="#{detalheDespesa.aprovado}" disabled="#{aprovarBudgetAction.tipoAprovacao eq 'S'}"></p:selectBooleanCheckbox>
+							<p:selectBooleanCheckbox value="#{detalheDespesa.aprovado}" disabled="#{aprovarBudgetAction.tipoAprovacao eq 'S'}">
+								<p:ajax listener="#{aprovarBudgetAction.calcularTotalBudget()}" process="@this" update=":form"></p:ajax>
+							</p:selectBooleanCheckbox>
 						</p:column>
 					</p:dataTable>
 					
