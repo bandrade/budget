@@ -34,7 +34,15 @@ public class ProcessoAction {
 	public void iniciarProcessoBudget()
 	{
 		try {
-			bpms.iniciarProcessoBudget(ano);
+			if(bpms.existeProcessoAtivo(ano))
+			{
+				facesUtils.addErrorMessage("Ja existe um processo de budget para o ano vigente");
+			}
+			else
+			{
+				bpms.iniciarProcessoBudget(ano);
+				facesUtils.addInfoMessage("Processo de budget iniciado com sucesso");
+			}
 		} catch (Exception e) {
 			facesUtils.addErrorMessage("Erro ao iniciar processo de Budget.");
 			logger.error("Erro ao iniciar processo de Budget", e);

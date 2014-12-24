@@ -8,25 +8,25 @@
 
 	<ui:param name="pageTitle" value="Human Tasks" />
 	<f:metadata>
-        <f:viewParam name="taskId" value="#{auditarBudgetAction.idTarefa}" />
-        <f:viewParam name="processInstanceId" value="#{auditarBudgetAction.idInstanciaProcesso}" />
-        <f:event type="preRenderView" listener="#{auditarBudgetAction.obterDadosBudget()}" />
+        <f:viewParam name="taskId" value="#{inserirBudgetAprovadoAction.idTarefa}" />
+        <f:viewParam name="processInstanceId" value="#{inserirBudgetAprovadoAction.idInstanciaProcesso}" />
+        <f:event type="preRenderView" listener="#{inserirBudgetAprovadoAction.obterDadosBudget()}" />
     </f:metadata>
 
 	<ui:define name="content">
 		<h:form id="form"> 
 			<p:panelGrid columns="1" styleClass="body-content">
-				<p:fieldset value="Auditar Budget" legend="Auditar Budget">
+				<p:fieldset value="Aprovar Budget" legend="Inserir Valores Aprovados do Budget">
 				<p:panel>
 					<p:panelGrid columns="2">
 						<p:outputLabel value="Ano:"></p:outputLabel>
-						<p:outputLabel styleClass="bold-label" value="#{auditarBudgetAction.ano}"></p:outputLabel>
+						<p:outputLabel styleClass="bold-label" value="#{inserirBudgetAprovadoAction.ano}"></p:outputLabel>
 					</p:panelGrid>
 					<p:panelGrid id="panelDetalhe" columns="1">
 					<p:dataTable 
 						id="tblBudget"
 						emptyMessage="Não existem despesas cadastradas" 
-						value="#{auditarBudgetAction.budgetsArea}"
+						value="#{inserirBudgetAprovadoAction.budgetsArea}"
 						var="budgetArea"
 						paginator="true"
 						paginatorPosition="bottom"
@@ -40,25 +40,30 @@
 							</f:facet>
 							<h:outputText value="#{budgetArea.nomeArea}" />
 						</p:column>
-						<p:column style="text-align:center" footerText="#{facesUtils.formatarDinheiro(auditarBudgetAction.valorTotalBudget)}">
+						<p:column style="text-align:center" footerText="#{facesUtils.formatarDinheiro(inserirBudgetAprovadoAction.valorTotalBudget)}">
 							<f:facet name="header" >
 								<h:outputText value="Valor Submetido" />
 							</f:facet>
 							<h:outputText value="#{facesUtils.formatarDinheiro(budgetArea.valorTotalBudget)}" />
 						</p:column>
-						
-						<p:column width="10%" style="text-align:center">
-							<f:facet name="header">
-								<h:outputText value="Status" />
+						<p:column style="text-align:center">
+							<f:facet name="header" >
+								<h:outputText value="Valor Aprovado" />
 							</f:facet>
-							<h:outputText value="#{budgetArea.status}" />
+							<pe:inputNumber value="#{budgetArea.valorTotalAprovadoBudget}">
+								<p:ajax  listener="#{inserirBudgetAprovadoAction.calcularValorTotalBudgetAprovado()}" update=":form:panelValorTotal"></p:ajax>
+							</pe:inputNumber>
 						</p:column>
 					</p:dataTable>
 					
 					</p:panelGrid>
+					<p:panelGrid columns="2" id="panelValorTotal">
+						<h:outputText value="Valor Total:" />
+						<h:outputText id="valorTotal" value="#{facesUtils.formatarDinheiro(inserirBudgetAprovadoAction.valorTotalAprovadoBudget)}" styleClass="bold-label" />
+					</p:panelGrid>
 						<p:panelGrid columns="1" styleClass="painel-botoes">
-						<p:commandButton value="Concluir" action="#{auditarBudgetAction.concluir()}">
-							<p:confirm header="Confirmação" message="Confirma a conclusão da Auditoria do Budget?" icon="ui-icon-alert"/>
+						<p:commandButton value="Concluir" action="#{inserirBudgetAprovadoAction.concluir()}">
+							<p:confirm header="Confirmação" message="Confirma a conclusão da Inserir Valores Aprovados do Budget?" icon="ui-icon-alert"/>
 						</p:commandButton>
 					</p:panelGrid>
 					</p:panel>

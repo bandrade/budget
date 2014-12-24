@@ -114,7 +114,9 @@
 					
 					</p:panelGrid>
 						<p:panelGrid columns="1" styleClass="painel-botoes">
-						<p:commandButton value="Concluir" ajax="false" action="#{aprovarBudgetAction.concluir()}"/>
+						<p:commandButton value="Concluir"  action="#{aprovarBudgetAction.concluir()}">
+							<p:confirm header="Confirmação" message="Confirma a conclusão da Aprovação do Budget?" icon="ui-icon-alert"/>
+						</p:commandButton>
 					</p:panelGrid>
 					</p:panel>
 				</p:fieldset>

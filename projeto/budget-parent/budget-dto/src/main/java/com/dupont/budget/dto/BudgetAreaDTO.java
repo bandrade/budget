@@ -9,6 +9,7 @@ public class BudgetAreaDTO {
 	private Long idArea;
 	private String nomeArea;
 	private Double valorTotalBudget;
+	private Double valorTotalAprovadoBudget;
 	private String status;
 
 	public Long getIdArea() {
@@ -35,6 +36,13 @@ public class BudgetAreaDTO {
 	public void setStatus(String status) {
 		this.status = status;
 	}
+	public Double getValorTotalAprovadoBudget() {
+		return valorTotalAprovadoBudget;
+	}
+	public void setValorTotalAprovadoBudget(Double valorTotalAprovadoBudget) {
+		this.valorTotalAprovadoBudget = valorTotalAprovadoBudget;
+	}
+
 
 
 

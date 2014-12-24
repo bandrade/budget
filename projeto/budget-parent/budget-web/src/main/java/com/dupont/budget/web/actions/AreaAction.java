@@ -1,5 +1,7 @@
 package com.dupont.budget.web.actions;
 
+import java.util.Calendar;
+
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.inject.Model;
 import javax.enterprise.inject.Produces;
@@ -13,10 +15,11 @@ import com.dupont.budget.model.Papel;
 import com.dupont.budget.model.PapelUsuario;
 import com.dupont.budget.model.Usuario;
 import com.dupont.budget.service.DomainService;
+import com.dupont.budget.service.bpms.BPMSProcessService;
 import com.dupont.budget.web.util.FacesUtils;
 /**
  * Controller das telas de manutenção da entidade produto
- * 
+ *
  * @author <a href="bandrade@redhat.com">Bruno Andrade</a>
  * @since 2014
  *
@@ -35,24 +38,27 @@ public class AreaAction extends GenericAction<Area> {
 
 	@Inject
 	private FacesUtils facesUtils;
-	
+
 	private Usuario lider;
+
+	@Inject
+    private BPMSProcessService bpms;
 
 	@Named
 	@Produces
 	public Area getArea() {
 		return getEntidade();
 	}
-	
+
 	@Override
 	protected void clearInstance() {
 		// TODO Auto-generated method stub
 		super.clearInstance();
 	}
-	
+
 	@Override
 	public String persist() {
-		
+
 		String result = null;
 
 		if (mustCreate()) {
@@ -66,7 +72,7 @@ public class AreaAction extends GenericAction<Area> {
 		}
 
 		clearInstance();
-		
+
 		return result;
 	}
 
@@ -77,15 +83,31 @@ public class AreaAction extends GenericAction<Area> {
 		nomePapel.append(nomeArea.toUpperCase());
 		return nomePapel.toString();
 	}
-	
+
 	public String edit(Area t) {
 		this.setEntidade(t);
-		
+
 		if (t.getLider() != null) {
 			lider = t.getLider().getUsuario();
 		}
 
 		return "edit";
+	}
+
+	@Override
+	public void delete(Area t) {
+
+		if(bpms.existeProcessoAtivo(Calendar.getInstance().get(Calendar.YEAR)+""))
+		{
+			facesUtils.addErrorMessage("Não é possível remover uma Área enquanto haja um processo de budget ativo");
+
+		}
+		else
+		{
+
+			super.delete(t);
+		}
+
 	}
 
 	/**
@@ -118,4 +140,3 @@ public class AreaAction extends GenericAction<Area> {
 		this.lider = lider;
 	}
 }
-	

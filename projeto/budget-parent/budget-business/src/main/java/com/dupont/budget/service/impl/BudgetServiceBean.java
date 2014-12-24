@@ -89,7 +89,6 @@ public class BudgetServiceBean extends GenericService implements BudgetService {
 		catch(NoResultException e)
 		{
 			logger.info("Nenhum resultado encontrado");
-			throw e;
 		}
 
 		return  budget;
@@ -162,6 +161,7 @@ public class BudgetServiceBean extends GenericService implements BudgetService {
 			{
 
 				budgetAno.setValorSubmetido(budget.getValorSubmetido());
+				budgetAno.setValorAprovado(budget.getValorAprovado());
 				em.merge(budgetAno);
 			}
 			else

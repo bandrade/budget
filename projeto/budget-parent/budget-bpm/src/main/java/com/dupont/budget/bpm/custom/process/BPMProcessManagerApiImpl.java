@@ -17,11 +17,13 @@
 package com.dupont.budget.bpm.custom.process;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.persistence.EntityManagerFactory;
 
 import org.jbpm.process.workitem.rest.RESTWorkItemHandler;
 import org.kie.api.runtime.KieSession;
@@ -34,6 +36,7 @@ import org.kie.internal.runtime.manager.context.EmptyContext;
 
 import com.dupont.budget.bpm.custom.exception.BPMException;
 import com.dupont.budget.bpm.custom.workitem.DupontEmailWorkItemHandler;
+import com.dupont.budget.dto.AreaDTO;
 import com.dupont.budget.dto.CentroDeCustoDTO;
 
 @ApplicationScoped
@@ -44,8 +47,8 @@ public class BPMProcessManagerApiImpl implements BPMProcessManagerApi {
 	@Singleton
 	private RuntimeManager singletonManager;
 
-	//@Resource
-	//private UserTransaction ut;
+	@Inject
+	private EntityManagerFactory emf;
 
 	@PostConstruct
 	private void configure() {
@@ -65,7 +68,7 @@ public class BPMProcessManagerApiImpl implements BPMProcessManagerApi {
 				.registerWorkItemHandler("Rest", new RESTWorkItemHandler());
 	}
 
-	public long startBudgetProcess(CentroDeCustoDTO[] ceDtos, String ano) throws Exception {
+	public long startBudgetProcess(CentroDeCustoDTO[] ceDtos, AreaDTO[] areas, String ano) throws Exception {
 		RuntimeEngine runtime = singletonManager.getRuntimeEngine(EmptyContext
 				.get());
 
@@ -74,23 +77,38 @@ public class BPMProcessManagerApiImpl implements BPMProcessManagerApi {
 		long processInstanceId = -1;
 
 		try {
-			//ut.begin();
-			// start a new process instance
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("centrosDeCustoArray", ceDtos);
+			params.put("areasArray", areas);
 			params.put("anoBudget", ano);
 			ProcessInstance processInstance = ksession.startProcess(
-			/* "budget.EnvioEmail" */"com.dupont.bpm.criarbudget", params);
+			"com.dupont.bpm.criarbudget", params);
 			processInstanceId = processInstance.getId();
-			//ut.commit();
 
 		} catch (Exception e) {
-			/*if (ut.getStatus() == Status.STATUS_ACTIVE) {
-				ut.rollback();
-			}*/
 			throw new RuntimeException(e);
 		}
 		return processInstanceId;
+	}
+
+
+	public boolean isProcessAlreadyStarted(String ano) {
+		RuntimeEngine runtime = singletonManager.getRuntimeEngine(EmptyContext
+				.get());
+		KieSession ksession = runtime.getKieSession();
+		List<Long> lista =
+				emf.createEntityManager().createQuery("SELECT procInfo.id from ProcessInstanceInfo procInfo where procInfo.state=1 and procInfo.processId='com.dupont.bpm.criarbudget'"
+						,Long.class).getResultList();
+		for(Long id :lista)
+		{
+
+				WorkflowProcessInstance work = (WorkflowProcessInstance) ksession.getProcessInstance(id);
+			    String anoProcesso =  (String)work.getVariable("anoBudget");
+			    if(ano.equals(anoProcesso))
+			    	return true;
+		}
+		return false;
+
 	}
 
 	public void abortProcess(long processInstanceId) {

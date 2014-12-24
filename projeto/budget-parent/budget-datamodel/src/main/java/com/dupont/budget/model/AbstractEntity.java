@@ -10,7 +10,7 @@ import javax.persistence.MappedSuperclass;
 /**
  * Entidade abstrata para facilitar o desenvolvimento dos CRUD`s e customizações
  * do código.
- * 
+ *
  * @author joel
  *
  * @param <IDType>
@@ -22,7 +22,7 @@ public abstract class AbstractEntity<IDType extends Serializable> implements Ser
 	private static final long serialVersionUID = 9184534024870183158L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	protected IDType id;
 
 	public IDType getId() {

@@ -25,21 +25,22 @@ import com.dupont.budget.web.util.FacesUtils;
 
 /**
  * Bean de criação o usuário.
- * 
+ *
  * A autenticação do usuário é feita atraves do Login Module do EAP. A configuração segue descrita abaixo: <br/>
- * 
+ *
  * <security-domain name="dupont-security-domain">
  *    <authentication>
  *        <login-module code="Database" flag="required">
  *            <module-option name="dsJndiName" value="java:/jboss/datasources/BudgetDS"/>
  *            <module-option name="principalsQuery" value="select password from usuario where login = ?"/>
- *            <module-option name="rolesQuery" value="select perfil, 'Roles' from usuario where login = ?"/>
+ *            <module-option name="rolesQuery" value="select perfil, 'Roles' from usuario INNER JOIN perfil_usuario
+ *            	on usuario.id = perfil_usuario.usuario_id where login = ?"/>
  *            <module-option name="hashAlgorithm" value="SHA-256"/>
  *            <module-option name="hashEncoding" value="base64"/>
  *        </login-module>
  *	  </authentication>
  * </security-domain>
- * 
+ *
  * @author <a href="asouza@redhat.com">Ângelo Galvão</a>
  * @since 2014
  *
@@ -47,20 +48,20 @@ import com.dupont.budget.web.util.FacesUtils;
 @Model
 @RolesAllowed(value = "ADMINISTRADOR")
 public class UsuarioAction extends GenericAction<Usuario> {
-	 
+
 	/*   Para criar a senha HASH do password, utilizar o seguinte código.
-	 * 
-	 *   Criar o hash no JAVA:	 
-	 * 
+	 *
+	 *   Criar o hash no JAVA:
+	 *
 	 *   String pass = Util.createPasswordHash("SHA-256", "BASE64", null, null, "123");
-     *   
+     *
      *   Criar o encoding no MySQL:
-     *   
+     *
      *   TO_BASE64( sha2('PASSWORD', 256) )
 	 */
-	
+
 	private static final long serialVersionUID = -6061667499898003022L;
-	
+
 	@Inject
 	private DomainService service;
 
@@ -69,18 +70,18 @@ public class UsuarioAction extends GenericAction<Usuario> {
 
 	@Inject
 	private FacesUtils facesUtils;
-	
+
 	@Inject
 	private UserGroupCallbackCacheManager userCallBackCache;
-	
+
 	private String senha;
-	
+
 	private String confirmacaoSenha;
 
 	private Set<PapelUsuario> papeis;
-	
+
 	private DualListModel<Papel> papelList;
-	
+
 	private DualListModel<Perfil> perfilList;
 
 	@Named
@@ -88,13 +89,13 @@ public class UsuarioAction extends GenericAction<Usuario> {
 	public Usuario getColaborador() {
 		return getEntidade();
 	}
-	
+
 	@Named
 	@Produces
 	public List<Usuario> getUsuarioList() {
 		return service.findAll(Usuario.class);
 	}
-	
+
 	@Named
 	@Produces
 	public DualListModel<Perfil> getPerfilList() {
@@ -114,7 +115,7 @@ public class UsuarioAction extends GenericAction<Usuario> {
 		}
 		return perfilList;
 	}
-	
+
 	@Named
 	@Produces
 	public DualListModel<Papel> getPapelList() {
@@ -132,7 +133,7 @@ public class UsuarioAction extends GenericAction<Usuario> {
 		}
 		return papelList;
 	}
-	
+
 	@Override
 	public String persist() {
 		if (senha != null && !senha.isEmpty()) {
@@ -144,7 +145,7 @@ public class UsuarioAction extends GenericAction<Usuario> {
 				return null;
 			}
 		}
-		
+
 		if (!mustCreate()) {
 			for (PapelUsuario p : service.findById(entidade).getPapeis()) {
 				if (!papelList.getTarget().contains(p.getPapel())) {
@@ -152,7 +153,7 @@ public class UsuarioAction extends GenericAction<Usuario> {
 						facesUtils.addErrorMessage(String.format("Usuário associado a um centro de custo, não é possível fazer a remoção do perfil %s.", p.getPapel().getNome()));
 						return null;
 					}
-					
+
 					if (p.getArea() != null) {
 						facesUtils.addErrorMessage(String.format("Usuário é lider de uma área, não é possível fazer a remoção do perfil %s.", p.getPapel().getNome()));
 						return null;
@@ -160,7 +161,7 @@ public class UsuarioAction extends GenericAction<Usuario> {
 				}
 			}
 		}
-		
+
 		List<PapelUsuario> references = service.listPapelReferences(papelList.getTarget());
 		if (!references.isEmpty()) {
 			for (PapelUsuario p: references) {
@@ -170,7 +171,7 @@ public class UsuarioAction extends GenericAction<Usuario> {
 					papelList.getSource().add(p.getPapel());
 					return null;
 				}
-				
+
 				if (p.getArea() != null) {
 					facesUtils.addErrorMessage(String.format("Papel %s só pode ser associado no cadastro da Área.", p.getPapel().getNome()));
 					papelList.getTarget().remove(p.getPapel());
@@ -179,7 +180,7 @@ public class UsuarioAction extends GenericAction<Usuario> {
 				}
 			}
 		}
-		
+
 		if (papelList.getTarget().isEmpty()) {
 			entidade.getPapeis().clear();
 		} else {
@@ -187,17 +188,17 @@ public class UsuarioAction extends GenericAction<Usuario> {
 				entidade.getPapeis().add(new PapelUsuario(p, entidade));
 			}
 		}
-		
+
 		entidade.getPerfis().clear();
-		
+
 		for (Object s : perfilList.getTarget()) {
 			entidade.getPerfis().add(Perfil.valueOf(s.toString()));
 		}
-		
+
 		userCallBackCache.removeGroupsFromCache(entidade.getLogin());
 		return super.persist();
 	}
-	
+
 	public void showRoles(Usuario usuario) {
 		Usuario u = service.getUsuarioByLogin(usuario.getLogin());
 		papeis = u.getPapeis();
@@ -252,7 +253,7 @@ public class UsuarioAction extends GenericAction<Usuario> {
 	public void setPapelList(DualListModel<Papel> papelList) {
 		this.papelList = papelList;
 	}
-	
+
 	public void setPerfilList(DualListModel<Perfil> perfilList) {
 		this.perfilList = perfilList;
 	}
