@@ -27,6 +27,14 @@ public class TipoDespesa extends NamedAbstractEntity<Long> {
 	
 	private String descricao;
 	
+	public TipoDespesa() {
+		this(null);
+	}
+	
+	public TipoDespesa(String nome) {
+		this.nome = nome;
+	}
+	
 	public String getContaContabil() {
 		return contaContabil;
 	}

@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.dupont.budget.model.Papel;
 import com.dupont.budget.model.PapelUsuario;
 import com.dupont.budget.model.Usuario;
+import com.dupont.budget.model.ValorComprometido;
 import com.dupont.budget.service.DomainService;
 import com.dupont.budget.service.GenericService;
 
@@ -72,5 +73,19 @@ public class DomainServiceBean extends GenericService implements DomainService {
 			return new LinkedList<>();
 		}
 		
+	}
+	
+	@Override
+	public ValorComprometido findValorComprometidoByFiltro(String centroCusto, String tipoDespesa, String acao, Integer mes) {
+		if (centroCusto == null || tipoDespesa == null || acao == null || mes == null) {
+			return null;
+		}
+		
+		return em.createNamedQuery(ValorComprometido.FIND_BY_FILTRO, ValorComprometido.class)
+					.setParameter("centroCusto", centroCusto)
+					.setParameter("tipoDespesa", tipoDespesa)
+					.setParameter("acao", acao)
+					.setParameter("mes", mes)
+					.getSingleResult();
 	}
 }

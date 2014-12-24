@@ -1,6 +1,7 @@
 package com.dupont.budget.service;
 
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -10,7 +11,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.Attribute;
@@ -86,14 +86,14 @@ public abstract class GenericService {
 	 * (non-Javadoc)
 	 * @see com.dupont.budget.service.DomainService#findByExample(com.dupont.budget.model.AbstractEntity)
 	 */
-	@SuppressWarnings({"unchecked", "rawtypes"})
 	public <T extends AbstractEntity<?>> List<T> findByExample(T t) {
 		List<T> list = null;
 		try {
+			@SuppressWarnings("unchecked")
 			Class<T> clazz = (Class<T>) t.getClass();
 	        CriteriaBuilder cb = em.getCriteriaBuilder();
 	        CriteriaQuery<T> cq = cb.createQuery(clazz);
-	        Root<T> r = cq.from(clazz);
+	        Root<T> e = cq.from(clazz);
 	        Predicate p = cb.conjunction();
 	        Metamodel mm = em.getMetamodel();
 	        EntityType<T> et = mm.entity(clazz);
@@ -101,18 +101,27 @@ public abstract class GenericService {
 	        Object val = null;
 	        for (Attribute<? super T, ?> a: attrs) {
 	            String name = a.getName();
-	            String javaName = a.getJavaMember().getName();
-	            String getter = "get" + javaName.substring(0,1).toUpperCase() + javaName.substring(1);
-	            Method m = clazz.getMethod(getter, (Class<?>[]) null);
-	            if ((val = m.invoke(t, (Object[]) null)) !=  null) {
+	            if ((val = getValue(a, clazz, t)) !=  null) {
 	            	if (val instanceof String) {
-	            		p = cb.and(p, cb.like((Expression) r.get(name), val.toString()));
-	            	} else {
-	            		p = cb.and(p, cb.equal(r.get(name), val));
+	            		p = cb.and(p, cb.like(e.<String>get(name), "%".concat(val.toString()).concat("%")));
+	            	} else if (val instanceof AbstractEntity) {
+	            		EntityType<?> st = mm.entity(val.getClass());
+	            		Object tmp = null;
+	            		for (Attribute<?, ?> at: st.getAttributes()) {
+	            			if ((tmp = getValue(at, val.getClass(), val)) !=  null) {
+	            				if (tmp instanceof String) {
+	        	            		p = cb.and(p, cb.like(e.get(name).<String>get(at.getName()), "%".concat(tmp.toString()).concat("%")));
+	        	            	} else if (!(tmp instanceof Collection)) {
+	        	            		p = cb.and(p, cb.equal(e.get(name).get(at.getName()), tmp));
+	        	            	}
+	            			}
+	            		}	            		
+	            	} else if (!(val instanceof Collection)) {
+	            		p = cb.and(p, cb.equal(e.get(name), val));
 	            	}
 	            }
 	        }
-	        cq.select(r).where(p);
+	        cq.select(e).where(p);
 	        TypedQuery<T> query = em.createQuery(cq);
 	        list = query.getResultList();
 		} catch (Exception e) {
@@ -121,7 +130,12 @@ public abstract class GenericService {
         return list;
 	}
 	
-	
+	private Object getValue(Attribute<?, ?> a, Class<?> clazz, Object t) throws Exception {
+        String javaName = a.getJavaMember().getName();
+        String getter = "get" + javaName.substring(0,1).toUpperCase() + javaName.substring(1);
+        Method m = clazz.getMethod(getter, (Class<?>[]) null);
+        return m.invoke(t, (Object[]) null);
+	}
 
 	/*
 	 * (non-Javadoc)

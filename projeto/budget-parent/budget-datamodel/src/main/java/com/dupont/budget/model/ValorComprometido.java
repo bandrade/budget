@@ -3,15 +3,23 @@ package com.dupont.budget.model;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 @Entity
 @Table(name = "valor_comprometido", uniqueConstraints = { @UniqueConstraint(columnNames = {
-		"centro_custo_id", "tipo_despesa_id", "acao_id", "mes" }) })
+		"centro_custo_id", "tipo_despesa_id", "acao_id", "mes" }) 
+})
+@NamedQueries({
+	@NamedQuery(name = ValorComprometido.FIND_BY_FILTRO, query = "select v from ValorCompromentido v where lower(v.acao.nome) = :acao and lower(v.centroCusto.nome) = :centroCusto and lower(v.tipoDespesa.nome) = :tipoDespesa and v.mes = :mes")
+})
 public class ValorComprometido extends AbstractEntity<Long> {
 
 	private static final long serialVersionUID = -8857965323037059577L;
+	
+	public static final String FIND_BY_FILTRO = "ValorCmprometido.findByFiltro";
 
 	@ManyToOne
 	@JoinColumn(name = "centro_custo_id")

@@ -18,7 +18,10 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 
+import com.dupont.budget.model.Acao;
+import com.dupont.budget.model.CentroCusto;
 import com.dupont.budget.model.Fornecedor;
+import com.dupont.budget.model.TipoDespesa;
 import com.dupont.budget.model.ValorComprometido;
 import com.dupont.budget.service.DeliveryHandlerService;
 import com.dupont.budget.service.DomainService;
@@ -65,9 +68,7 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
 
 		try {
 			Sheet sheet = loadFileSheet(file);
-
 			Iterator<Row> rowIterator = sheet.iterator();
-
 			int counter = 0;
 
 			try {
@@ -104,9 +105,7 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
 			} catch (Exception e) {
 				logger.error(String.format("Nao foi possivel finalizar o cadastro de fornecedores: %s", e.getLocalizedMessage()));
 			}
-
 			logger.debug(String.format("%d entradas do arquivos processadas com sucesso!",counter));
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -122,41 +121,49 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
 
 		try {
 			Sheet sheet = loadFileSheet(file);
-			
 			Iterator<Row> rowIterator = sheet.iterator();
-
 			int counter = 0;
 
 			try {
-				int blank = 0;
-				List<Fornecedor> persistent = service.findAll(Fornecedor.class);
+				ValorComprometido valor = null;
 				while (rowIterator.hasNext()) {
 					Row row = rowIterator.next();
-					Cell cell = row.getCell(0);
-					String value = cell.getStringCellValue();
-					if (value != null && !value.isEmpty()) {
-						Fornecedor fornecedor = new Fornecedor(value, true);
-						if (!service.findByName(fornecedor).isEmpty()) {
-							persistent.remove(fornecedor);
-						} else {
-							service.create(fornecedor);
-						}
-						counter++;
+					valor = service.findValorComprometidoByFiltro(
+							row.getCell(0).getStringCellValue(), 
+							row.getCell(1).getStringCellValue(), 
+							row.getCell(2).getStringCellValue(), 
+							(int) row.getCell(4).getNumericCellValue());
+					if (valor != null) {
+						valor.setValor(row.getCell(5).getNumericCellValue());
+						service.update(valor);
 					} else {
-						blank++;
+						valor = new ValorComprometido();
+						List<CentroCusto> centrosCusto = service.findByName(new CentroCusto(row.getCell(0).getStringCellValue()));
+						if (centrosCusto.isEmpty() || centrosCusto.size() > 1) {
+							continue;
+						}
+						valor.setCentroCusto(centrosCusto.get(0));
+						List<TipoDespesa> tiposDespesa = service.findByName(new TipoDespesa(row.getCell(1).getStringCellValue()));
+						if (tiposDespesa.isEmpty() || tiposDespesa.size() > 1) {
+							continue;
+						}
+						valor.setTipoDespesa(tiposDespesa.get(0));
+						List<Acao> acoes = service.findByName(new Acao(row.getCell(2).getStringCellValue()));
+						if (acoes.isEmpty() || acoes.size() > 1) {
+							continue;
+						}
+						valor.setAcao(acoes.get(0));
+						valor.setAtivo(true);
+						valor.setMes((int) row.getCell(4).getNumericCellValue());
+						valor.setValor(row.getCell(5).getNumericCellValue());
+						service.create(valor);
 					}
-
-					if (blank >= 3) {
-						break;
-					}
+					counter++;
 				}
-
 			} catch (Exception e) {
 				logger.error(String.format("Nao foi possivel finalizar a carga de valores comprometidos: %s", e.getLocalizedMessage()));
 			}
-
 			logger.debug(String.format("%d entradas do arquivos processadas com sucesso!",counter));
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

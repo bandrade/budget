@@ -42,6 +42,14 @@ public class CentroCusto extends NamedAbstractEntity<Long> {
 
 	@OneToMany(mappedBy = "centroCusto", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<PapelUsuario> responsaveis;
+	
+	public CentroCusto() {
+		this(null);
+	}
+	
+	public CentroCusto(String nome) {
+		this.nome = nome;
+	}
 
 	public String getCodigo() {
 		return codigo;

@@ -13,7 +13,15 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "acao")
 public class Acao extends NamedAbstractEntity<Long> {
-
+	
 	private static final long serialVersionUID = -1359075483819011154L;
+	
+	public Acao() {
+		this(null);
+	}
+	
+	public Acao(String nome) {
+		this.nome = nome;
+	}
 
 }
