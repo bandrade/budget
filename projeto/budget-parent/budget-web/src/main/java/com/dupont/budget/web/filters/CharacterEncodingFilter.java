@@ -25,8 +25,9 @@ public class CharacterEncodingFilter implements Filter {
 	protected FilterConfig filterConfig = null;
 	protected boolean ignore = true;
 
-	/**
-	 * Take this filter out of service.
+	/*
+	 * (non-Javadoc)
+	 * @see javax.servlet.Filter#destroy()
 	 */
 	public void destroy() {
 		this.encoding = null;
