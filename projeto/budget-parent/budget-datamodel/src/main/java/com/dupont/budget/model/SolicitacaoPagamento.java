@@ -17,9 +17,13 @@ import javax.persistence.TemporalType;
 
 /**
  * Entidade de solicitação de pagamentos de despesas.
- * 
+ *
  * @author <a href="asouza@redhat.com">Ângelo Galvão</a>
  * @since 2014
+ *
+ */
+/**
+ * @author bandrade
  *
  */
 @Entity
@@ -29,23 +33,27 @@ public class SolicitacaoPagamento {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
-	
+
 	private Double valor;
-	
+
 	@Column(name="num_nota_fiscal")
 	private String numeroNotaFiscal;
-	
+
 	@Column(name="data_pagamento")
 	@Temporal(TemporalType.DATE)
 	private Date dataPagamento;
-	
+
 	@Column(name="tipo_solicitacao")
 	@Enumerated(EnumType.STRING)
 	private TipoSolicitacao tipoSolicitacao;
-	
+
 	@ManyToOne
 	@JoinColumn(name="fornecedor_id")
 	private Fornecedor fornecedor;
+
+	@Column(name="status")
+	@Enumerated(EnumType.STRING)
+	private StatusPagamento status;
 
 	public Long getId() {
 		return id;
@@ -94,6 +102,13 @@ public class SolicitacaoPagamento {
 	public void setFornecedor(Fornecedor fornecedor) {
 		this.fornecedor = fornecedor;
 	}
-	
-	
+
+	public StatusPagamento getStatus() {
+		return status;
+	}
+
+	public void setStatus(StatusPagamento status) {
+		this.status = status;
+	}
+
 }

@@ -1,0 +1,108 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="/WEB-INF/templates/default.xhtml">
+
+	<ui:param name="pageTitle" value="Human Tasks" />
+	<f:metadata>
+        <f:viewParam name="taskId" value="#{divisaoBudgetMesAction.idTarefa}" />
+        <f:viewParam name="processInstanceId" value="#{divisaoBudgetMesAction.idInstanciaProcesso}" />
+        <f:event type="preRenderView" listener="#{divisaoBudgetMesAction.obterDadosBudget()}" />
+    </f:metadata>
+
+	<ui:define name="content">
+		<h:form id="form"> 
+			<p:panelGrid columns="1" styleClass="body-content">
+				<p:fieldset value="Aprovar Budget" legend="Aprovar Budget">
+				<p:panel>
+					<p:panelGrid columns="2">
+						<p:outputLabel value="Centro de Custo:"></p:outputLabel>
+						<p:outputLabel styleClass="bold-label" value="#{divisaoBudgetMesAction.centroDeCusto.nome}"></p:outputLabel>
+						<p:outputLabel value="Ano:"></p:outputLabel>
+						<p:outputLabel styleClass="bold-label" value="#{divisaoBudgetMesAction.ano}"></p:outputLabel>
+					</p:panelGrid>
+					<p:panelGrid id="panelDetalhe" columns="1">
+					<p:dataTable 
+						id="tblDespesa"
+						emptyMessage="Não existem despesas cadastradas" 
+						value="#{divisaoBudgetMesAction.despesasNoDetalhe}"
+						selection="#{divisaoBudgetMesAction.despesaDetalheSelecionada}"
+						var="detalheDespesa"
+						paginator="true"
+						paginatorPosition="bottom"
+						rows="20" style="margin-left:-10px">
+						<f:facet name="header">
+        				 Despesa
+   						 </f:facet>
+   						 <p:column>
+							<f:facet name="header">
+								<h:outputText value="Tipo Despesa" />
+							</f:facet>
+							<h:outputText value="#{detalheDespesa.tipoDespesa.nome}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Ação" />
+							</f:facet>
+							<h:outputText value="#{detalheDespesa.acao.nome}" />
+						</p:column>
+						
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Produto" />
+							</f:facet>
+							<h:outputText value="#{detalheDespesa.produto.nome}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Cultura" />
+							</f:facet>
+							<h:outputText value="#{detalheDespesa.cultura.nome}" />
+						</p:column>
+						<p:column width="8%">
+							<f:facet name="header">
+								<h:outputText value="Distrito" />
+							</f:facet>
+							<h:outputText value="#{detalheDespesa.distrito.nome}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="ERC" />
+							</f:facet>
+							<h:outputText value="#{detalheDespesa.vendedor.nome}" />
+						</p:column>
+						
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Comentário" />
+							</f:facet>
+							<h:outputText value="#{detalheDespesa.comentario}" />
+						</p:column>
+						<p:column footerText="Total:#{facesUtils.formatarDinheiro(divisaoBudgetMesAction.valorTotalDetalhe)}" style="text-align:center" >
+							<f:facet name="header">
+								<h:outputText value="Valor Proposto" />
+							</f:facet>
+							<h:outputText value="#{detalheDespesa.valor}" >
+								<f:convertNumber type="currency"/>
+							</h:outputText>
+						</p:column> 
+					</p:dataTable>
+					
+					</p:panelGrid>
+						<p:panelGrid columns="1" styleClass="painel-botoes">
+						<p:commandButton value="Concluir"  action="#{divisaoBudgetMesAction.concluir()}">
+							<p:confirm header="Confirmação" message="Confirma a conclusão da Aprovação do Budget?" icon="ui-icon-alert"/>
+						</p:commandButton>
+					</p:panelGrid>
+					</p:panel>
+				</p:fieldset>
+			
+			</p:panelGrid>
+			
+			</h:form>
+					
+	</ui:define>
+</ui:composition>

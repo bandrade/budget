@@ -2,7 +2,7 @@ package com.dupont.budget.exception;
 
 /**
  * Exceção lançada caso tente-se criar uma entidade já existente.
- * 
+ *
  * @author <a href="asouza@redhat.com">Ângelo Galvão</a>
  * @since 2014
  *
@@ -15,7 +15,7 @@ public class ExistingNameRuntimeException extends ApplicationRuntimeException {
 	private Object entity;
 
 	public ExistingNameRuntimeException(Object entity) {
-		super(String.format("Entidade %s já existe no meio persistente.", (entity == null ? "< NÃO INFORMADA > " : entity.getClass().getSimpleName())));
+		super(String.format("Ja existe um %s cadastrado no sistema com os mesmos dados.", (entity == null ? "< NÃO INFORMADA > " : entity.getClass().getSimpleName())));
 		this.entity = entity;
 	}
 

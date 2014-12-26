@@ -17,6 +17,13 @@
 	<navigation-rule>
 		<from-view-id>*</from-view-id>
 		<navigation-case>
+			<from-outcome>divisaoBudgetMes</from-outcome>
+			<to-view-id>/pages/process/budget/divisaoBudgetMes.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<from-view-id>*</from-view-id>
+		<navigation-case>
 			<from-outcome>ajustarValoresCC</from-outcome>
 			<to-view-id>/pages/process/budget/ajustarValoresCC.xhtml</to-view-id>
 		</navigation-case>

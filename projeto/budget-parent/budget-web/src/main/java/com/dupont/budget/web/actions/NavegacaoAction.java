@@ -19,6 +19,7 @@ public class NavegacaoAction {
 		navegationMap.put("Auditar Budget", "auditarBudget");
 		navegationMap.put("Inserir Budget Aprovado", "inserirBudgetAprovado");
 		navegationMap.put("Ajustar o Budget aprovado por Centro de Custo", "ajustarValoresCC");
+		navegationMap.put("Dividir budget por mes", "divisaoBudgetMes");
 
 	}
 
