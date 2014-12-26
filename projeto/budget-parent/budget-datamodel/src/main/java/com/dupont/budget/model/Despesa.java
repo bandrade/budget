@@ -20,6 +20,7 @@ import javax.persistence.Table;
 @NamedQueries({
 	@NamedQuery(name="Despesa.agruparPorTipoDeDespesa", query="select c.tipoDespesa, sum(c.valor) from Despesa c where c.budget.id = :id group by c.tipoDespesa"),
 	@NamedQuery(name="Despesa.obterDespesaNoDetalhe", query="select c from Despesa c where c.budget.id = :budgetId and c.tipoDespesa.id=:id"),
+	@NamedQuery(name="Despesa.obterSomaDespesa", query="select sum(c.valor) from Despesa c where c.budget.id = :budgetId"),
 	@NamedQuery(name="Despesa.obterDespesaNoDetalheBudget", query="select c from Despesa c where c.budget.id = :budgetId order by c.tipoDespesa.id")
 })
 public class Despesa extends AbstractEntity<Long> {

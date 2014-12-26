@@ -133,36 +133,42 @@
 					<p:autoComplete id="cboTipoDespesa" dropdown="true" value="#{aprovarBudgetAction.despesa.tipoDespesa}" completeMethod="#{autocompleteAction.autocompleteTipoDespesa}" 
 					 var="_tipoDespesa" itemLabel="#{_tipoDespesa.nome}" itemValue="#{_tipoDespesa}" emptyMessage="NAO ENCONTRADO" effect="size" maxResults="10" required="true" 
 					 styleClass="input"
+					 scrollHeight="300"
 					 converter="com.dupont.EntityConverter" />
 					 
 					<p:outputLabel value="Produto:"></p:outputLabel>
 					<p:autoComplete id="cboProduto" dropdown="true" value="#{aprovarBudgetAction.despesa.produto}" completeMethod="#{autocompleteAction.autocompleteProduto}" 
 					 styleClass="input"
-					 var="_produto" itemLabel="#{_produto.nome}" itemValue="#{_produto}" emptyMessage="NAO ENCONTRADO" effect="size" maxResults="10" converter="com.dupont.EntityConverter"/>
+					 scrollHeight="300"
+					 var="_produto" itemLabel="#{_produto.nome}" itemValue="#{_produto}" emptyMessage="NAO ENCONTRADO" effect="size" converter="com.dupont.EntityConverter"/>
 
 					<p:outputLabel value="Cultura:"></p:outputLabel>
 					<p:autoComplete id="cboCultura" dropdown="true" value="#{aprovarBudgetAction.despesa.cultura}" completeMethod="#{autocompleteAction.autocompleteCultura}" 
 					 styleClass="input"
+					 scrollHeight="300"
 					converter="com.dupont.EntityConverter"
-					 var="_cultura" itemLabel="#{_cultura.nome}" itemValue="#{_cultura}" emptyMessage="NAO ENCONTRADO" effect="size" maxResults="10" />
+					 var="_cultura" itemLabel="#{_cultura.nome}" itemValue="#{_cultura}" emptyMessage="NAO ENCONTRADO" effect="size"  />
 					
 					<p:outputLabel value="Distrito:" ></p:outputLabel>
 					<p:autoComplete id="cboDistrito" dropdown="true" value="#{aprovarBudgetAction.despesa.distrito}" completeMethod="#{autocompleteAction.autocompleteDistrito}" 
 					 styleClass="input"
+					 scrollHeight="300"
 					converter="com.dupont.EntityConverter"
-					 var="distrito" itemLabel="#{distrito.nome}" itemValue="#{distrito}" emptyMessage="NAO ENCONTRADO" effect="size" maxResults="10" />
+					 var="distrito" itemLabel="#{distrito.nome}" itemValue="#{distrito}" emptyMessage="NAO ENCONTRADO" effect="size"/>
  
 					<p:outputLabel value="ERC:"></p:outputLabel>
 					<p:autoComplete id="cboVendedor" dropdown="true" value="#{aprovarBudgetAction.despesa.vendedor}" completeMethod="#{autocompleteAction.autocompleteVendedor}" 
 					 styleClass="input"
+					 scrollHeight="300"
 					converter="com.dupont.EntityConverter"
-					 var="_vendedor" itemLabel="#{_vendedor.nome}" itemValue="#{_vendedor}" emptyMessage="NAO ENCONTRADO" effect="size" maxResults="10" />
+					 var="_vendedor" itemLabel="#{_vendedor.nome}" itemValue="#{_vendedor}" emptyMessage="NAO ENCONTRADO" effect="size"/>
 					
 					<p:outputLabel value="Cliente:"></p:outputLabel>
 					<p:autoComplete id="cboCliente" dropdown="true" value="#{aprovarBudgetAction.despesa.cliente}" completeMethod="#{autocompleteAction.autocompleteCliente}" 
 				     converter="com.dupont.EntityConverter"	
+				     scrollHeight="300"
 				      styleClass="input"
-					 var="_cliente" itemLabel="#{_cliente.nome}" itemValue="#{_cliente}" emptyMessage="NAO ENCONTRADO" effect="size" maxResults="10" />
+					 var="_cliente" itemLabel="#{_cliente.nome}" itemValue="#{_cliente}" emptyMessage="NAO ENCONTRADO" effect="size" />
 					<p:outputLabel value="Ação:"></p:outputLabel>
 					 <p:panelGrid columns="3" id="painel">
 					<p:selectOneRadio value="#{aprovarBudgetAction.tipoAcao}" >
@@ -173,7 +179,8 @@
 					<p:autoComplete id="cboAcao" dropdown="true" value="#{aprovarBudgetAction.despesa.acao}" completeMethod="#{autocompleteAction.autocompleteAcao}" 
 				     converter="com.dupont.EntityConverter"
 				      styleClass="input"
-					 var="_acao" itemLabel="#{_acao.nome}" itemValue="#{_acao}" emptyMessage="NAO ENCONTRADO" effect="size" maxResults="10"
+				      scrollHeight="300"
+					 var="_acao" itemLabel="#{_acao.nome}" itemValue="#{_acao}" emptyMessage="NAO ENCONTRADO" effect="size"
 					 rendered="#{aprovarBudgetAction.tipoAcao =='S'}" />
 						<p:inputTextarea id="inputAcao" value="#{aprovarBudgetAction.despesa.acao.nome}" required="true" rendered="#{aprovarBudgetAction.tipoAcao =='N'}"/>
 					</p:panelGrid>

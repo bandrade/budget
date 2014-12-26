@@ -20,4 +20,6 @@ public interface BudgetService {
 	public void submeterBudget(String budgetId);
 	public List<BudgetAreaDTO> listarBudgetsAprovadosPorArea(String ano) throws Exception;
 	public void adicionarBudgetsSubmetidos(List<BudgetEstipuladoAno> budgets) throws Exception;
+	public BudgetEstipuladoAno obterValoresAprovadosESubmetidos(Long areaId, String ano) throws Exception;
+	public List<Budget> obterBudgetsPorArea (Long areaId, String ano) throws Exception;
 }

@@ -18,6 +18,8 @@ public class NavegacaoAction {
 		navegationMap.put("Aprovar Budget", "aprovarBudget");
 		navegationMap.put("Auditar Budget", "auditarBudget");
 		navegationMap.put("Inserir Budget Aprovado", "inserirBudgetAprovado");
+		navegationMap.put("Ajustar o Budget aprovado por Centro de Custo", "ajustarValoresCC");
+
 	}
 
 	public String obterOutcome(String taskname)

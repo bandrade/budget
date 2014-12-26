@@ -25,7 +25,8 @@ import javax.persistence.Table;
 @Entity
 @Table(name="centro_custo")
 @NamedQueries({
-	@NamedQuery(name="CentroCusto.findAll"   , query="select c from CentroCusto c")
+	@NamedQuery(name="CentroCusto.findAll"   , query="select c from CentroCusto c"),
+	@NamedQuery(name="CentroCusto.findByArea"   , query="select c from CentroCusto c where c.area.id=:area_id")
 })
 public class CentroCusto extends NamedAbstractEntity<Long> {
 
@@ -42,11 +43,11 @@ public class CentroCusto extends NamedAbstractEntity<Long> {
 
 	@OneToMany(mappedBy = "centroCusto", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<PapelUsuario> responsaveis;
-	
+
 	public CentroCusto() {
 		this(null);
 	}
-	
+
 	public CentroCusto(String nome) {
 		this.nome = nome;
 	}

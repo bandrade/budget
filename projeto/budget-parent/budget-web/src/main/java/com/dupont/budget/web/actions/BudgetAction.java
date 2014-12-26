@@ -174,6 +174,7 @@ public class BudgetAction implements Serializable{
 
 			bpmsTask.aprovarTarefa(facesUtils.getUserLogin(), idTarefa,params);
 			facesUtils.addInfoMessage("Tarefa concluida com sucesso");
+			conversation.end();
 			return "minhasTarefas";
 		} catch (Exception e) {
 			facesUtils.addErrorMessage("Erro ao adicionar a despesa");
