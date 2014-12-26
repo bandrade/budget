@@ -70,9 +70,6 @@ public class AjustarValoresBudgetAction extends BudgetAction implements Serializ
 	public void adicionarDespesa() {
 		despesa.setAprovado(true);
 		possuiBudgetSalvo=true;
-		//CentroDeCustoDTO centroCusto = new CentroDeCustoDTO();
-		//centroCusto.setId(budgetSelecionado.getCentroCusto().getId());
-		//setCentroDeCusto(centroCusto);
 		setBudget(budgetSelecionado);
 		super.adicionarDespesa();
 	}
