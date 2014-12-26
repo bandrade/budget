@@ -57,7 +57,8 @@ public class BudgetServiceBean extends GenericService implements BudgetService {
 	@Override
 	public List<Despesa> obterDespesaNoDetalhe(Long tipoDespesaId,Long budgetId)  throws Exception{
 
-		return em.createNamedQuery("Despesa.obterDespesaNoDetalhe",Despesa.class).setParameter("budgetId", budgetId).getResultList();
+		return em.createNamedQuery("Despesa.obterDespesaNoDetalhe",Despesa.class).setParameter("budgetId", budgetId)
+				.setParameter("id", tipoDespesaId).getResultList();
 	}
 
 	@Override
@@ -149,9 +150,8 @@ public class BudgetServiceBean extends GenericService implements BudgetService {
 			BudgetEstipuladoAno budgetAno = null;
 			try
 			{
-				budgetAno = em.createNamedQuery("BudgetEstipulado.findByAnoAndArea",BudgetEstipuladoAno.class)
-				.setParameter("ano", budget.getAno())
-				.setParameter("area_id", budget.getArea().getId()).getSingleResult();
+				budgetAno = obterValoresAprovadosESubmetidos(budget.getArea().getId(), budget.getAno());
+
 			}
 			catch(NoResultException nre)
 			{
@@ -171,5 +171,27 @@ public class BudgetServiceBean extends GenericService implements BudgetService {
 		}
 	}
 
+	public BudgetEstipuladoAno obterValoresAprovadosESubmetidos(Long areaId, String ano) throws Exception
+	{
 
+		BudgetEstipuladoAno budgetAno = em.createNamedQuery("BudgetEstipulado.findByAnoAndArea",BudgetEstipuladoAno.class)
+				.setParameter("ano",ano)
+				.setParameter("area_id",areaId).getSingleResult();
+		return budgetAno;
+	}
+
+	public List<Budget> obterBudgetsPorArea (Long areaId, String ano) throws Exception
+	{
+
+		List<Budget> budgets = em.createNamedQuery("Budget.findByAnoAndArea",Budget.class)
+				.setParameter("ano",ano)
+				.setParameter("area_id",areaId).getResultList();
+		for(Budget budget : budgets )
+		{
+			budget.setValorTotalBudget(em.createNamedQuery("Despesa.obterSomaDespesa",Double.class)
+			.setParameter("budgetId",budget.getId()).getSingleResult());
+
+		}
+		return budgets;
+	}
 }

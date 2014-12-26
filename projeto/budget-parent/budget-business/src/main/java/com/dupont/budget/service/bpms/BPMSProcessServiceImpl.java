@@ -10,6 +10,7 @@ import com.dupont.budget.bpm.custom.process.BPMProcessManagerApiImpl;
 import com.dupont.budget.dto.AreaDTO;
 import com.dupont.budget.dto.CentroDeCustoDTO;
 import com.dupont.budget.model.Area;
+import com.dupont.budget.model.CentroCusto;
 import com.dupont.budget.service.DomainService;
 import com.dupont.budget.service.centrodecusto.CentroDeCustoService;
 @Model
@@ -27,12 +28,17 @@ public class BPMSProcessServiceImpl implements BPMSProcessService{
 		CentroDeCustoDTO [] ceDtos = ccService.obterCentrosDeCusto();
 		List<AreaDTO> areasListDto =  new ArrayList<>();
 		List<Area> areas = domainService.findAll(Area.class);
+
 		for(Area area : areas)
 		{
-			AreaDTO areaDto =  new AreaDTO();
-			areaDto.setId(area.getId());
-			areaDto.setNome(area.getNome());
-			areasListDto.add(areaDto);
+			List<CentroCusto> centrosDeCusto = ccService.findByArea(area.getId());
+			if(centrosDeCusto !=null && centrosDeCusto.size() >0)
+			{
+				AreaDTO areaDto =  new AreaDTO();
+				areaDto.setId(area.getId());
+				areaDto.setNome(area.getNome());
+				areasListDto.add(areaDto);
+			}
 		}
 		AreaDTO [] areaArray = areasListDto.toArray(new AreaDTO[areasListDto.size()]);
 		return processApi.startBudgetProcess(ceDtos,areaArray,ano);

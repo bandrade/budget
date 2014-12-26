@@ -1,5 +1,6 @@
 package com.dupont.budget.web.actions;
 
+import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -72,6 +73,20 @@ public class AreaBudgetAction {
 		{
 			valorTotalBudget+=budgetArea.getValorTotalBudget();
 		}
+	}
+
+	public String concluir()
+	{
+		try
+		{
+			bpmsTask.aprovarTarefa(facesUtils.getUserLogin(), idTarefa,new HashMap<String,Object>());
+		}
+		catch(Exception e)
+		{
+			facesUtils.addErrorMessage("Erro ao concluir a tarefa");
+			logger.error("Erro ao concluir a tarefa",e);
+		}
+		return "minhasTarefas";
 	}
 
 	public String getAno() {

@@ -20,6 +20,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 /**
  * Entidade que representa o dudget do ano.
@@ -31,7 +32,8 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "budget")
 @NamedQueries({
-		@NamedQuery(name = "Budget.findByAnoAndCentroDeCusto", query = "select b from Budget b where b.centroCusto.id=:centroDeCustoId and b.ano like :ano")
+		@NamedQuery(name = "Budget.findByAnoAndCentroDeCusto", query = "select b from Budget b where b.centroCusto.id=:centroDeCustoId and b.ano like :ano"),
+		@NamedQuery(name = "Budget.findByAnoAndArea", query = "select b from Budget b where b.centroCusto.area.id=:area_id and b.ano like :ano")
 		})
 public class Budget {
 
@@ -51,6 +53,8 @@ public class Budget {
 	private Long processInstanceId;
 
 	private String ano;
+	@Transient
+	private Double valorTotalBudget;
 
 	@Column(name = "data_criacao")
 	@Temporal(TemporalType.TIMESTAMP)
@@ -142,6 +146,14 @@ public class Budget {
 
 	public void setStatus(StatusBudget status) {
 		this.status = status;
+	}
+
+	public Double getValorTotalBudget() {
+		return valorTotalBudget;
+	}
+
+	public void setValorTotalBudget(Double valorTotalBudget) {
+		this.valorTotalBudget = valorTotalBudget;
 	}
 
 

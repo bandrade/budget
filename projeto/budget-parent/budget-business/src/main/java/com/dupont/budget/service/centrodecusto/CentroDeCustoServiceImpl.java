@@ -66,4 +66,10 @@ public class CentroDeCustoServiceImpl extends GenericService implements CentroDe
 		return centrosDeCusto.toArray(new CentroDeCustoDTO[centrosDeCusto.size()]);
 	}
 
+	@Override
+	public List<CentroCusto> findByArea(Long areaId) throws Exception{
+
+		return em.createNamedQuery("CentroCusto.findByArea",CentroCusto.class).setParameter("area_id",areaId).getResultList();
+	}
+
 }

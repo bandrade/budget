@@ -33,6 +33,7 @@ public class InserirBudgetAprovadoAction extends AreaBudgetAction implements
 			adicionarBudgetsAprovados();
 			bpmsTask.aprovarTarefa(facesUtils.getUserLogin(), idTarefa,new HashMap<String, Object>());
 			facesUtils.addInfoMessage("Tarefa concluida com sucesso");
+			conversation.end();
 			return "minhasTarefas";
 		} catch (Exception e) {
 			logger.error("Erro ao concluir a tarefa de Auditoria de Budget",e);

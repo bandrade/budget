@@ -69,4 +69,10 @@ public class BPMSTaskServiceImpl implements BPMSTaskService {
 		return tarefaDTO;
 
 	}
+
+	public Map<String,Object> obterConteudoTarefa(long taskId) throws BPMException
+	{
+		return taskApi.getTaskContent(taskId);
+
+	}
 }

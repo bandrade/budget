@@ -56,7 +56,7 @@ public class AprovarBudgetAction extends BudgetAction  implements Serializable{
 		valorTotalDetalhe = 0d;
 		for(Despesa despesa : despesasNoDetalhe)
 		{
-			if(despesa.getAprovado())
+			if(despesa.getAprovado() !=null &&  despesa.getAprovado())
 				valorTotalDetalhe+=despesa.getValor();
 
 		}
