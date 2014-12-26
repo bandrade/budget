@@ -1,10 +1,9 @@
 package com.dupont.budget.model;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 /**
  * Despesa da solicitação de pagamento.
@@ -13,51 +12,48 @@ import javax.persistence.ManyToOne;
  * @since 2014
  *
  */
-public class DespesaSolicitacaoPagamento {
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	private Long id;
-	
+@Entity
+@Table(name = "despesa_solicitacao_pagamento")
+public class DespesaSolicitacaoPagamento extends AbstractEntity<Long> {
+
+	private static final long serialVersionUID = -1567944689224148141L;
+
 	@ManyToOne
-	@JoinColumn(name="centro_custo_id")
+	@JoinColumn(name = "centro_custo_id")
 	private CentroCusto centroCusto;
-	
+
 	@ManyToOne
-	@JoinColumn(name="produto_id")
+	@JoinColumn(name = "produto_id")
 	private Produto produto;
-	
+
 	@ManyToOne
-	@JoinColumn(name="cultura_id")
+	@JoinColumn(name = "cultura_id")
 	private Cultura cultura;
-	
-	@ManyToOne	
-	@JoinColumn(name="distrito_id")
+
+	@ManyToOne
+	@JoinColumn(name = "distrito_id")
 	private Distrito distrito;
-	
+
 	@ManyToOne
-	@JoinColumn(name="tipo_despesa_id")
+	@JoinColumn(name = "tipo_despesa_id")
 	private TipoDespesa tipoDespesa;
-	
+
 	@ManyToOne
-	@JoinColumn(name="acao_id")
+	@JoinColumn(name = "acao_id")
 	private Acao acao;
-	
+
 	@ManyToOne
-	@JoinColumn(name="cliente_id")
+	@JoinColumn(name = "cliente_id")
 	private Cliente cliente;
-	
+
 	@ManyToOne
-	@JoinColumn(name="vendedor_id")
+	@JoinColumn(name = "vendedor_id")
 	private Vendedor vendedor;
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
+	@ManyToOne
+	@JoinColumn(name = "solicitacao_id")
+	private SolicitacaoPagamento solicitacaoPagamento;
 
 	public CentroCusto getCentroCusto() {
 		return centroCusto;
@@ -121,5 +117,13 @@ public class DespesaSolicitacaoPagamento {
 
 	public void setVendedor(Vendedor vendedor) {
 		this.vendedor = vendedor;
+	}
+
+	public SolicitacaoPagamento getSolicitacaoPagamento() {
+		return solicitacaoPagamento;
+	}
+
+	public void setSolicitacaoPagamento(SolicitacaoPagamento solicitacaoPagamento) {
+		this.solicitacaoPagamento = solicitacaoPagamento;
 	}
 }

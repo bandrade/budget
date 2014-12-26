@@ -1,16 +1,17 @@
 package com.dupont.budget.model;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -18,21 +19,20 @@ import javax.persistence.TemporalType;
 /**
  * Entidade de solicitação de pagamentos de despesas.
  *
- * @author <a href="asouza@redhat.com">Ângelo Galvão</a>
+ * @author @author bandrade
  * @since 2014
- *
- */
-/**
- * @author bandrade
  *
  */
 @Entity
 @Table(name="solicitacao_pagamento")
-public class SolicitacaoPagamento {
+@NamedQueries({
+	@NamedQuery(name = SolicitacaoPagamento.FIND_BY_FILTRO, query = "select o from SolicitacaoPagamento o join o.despesas d where o.numeroNotaFiscal = :numeroNotaFiscal and lower(o.fornecedor.nome) = :fornecedor and lower(d.centroCusto.nome) = :codigoCentroCusto")
+})
+public class SolicitacaoPagamento extends AbstractEntity<Long> {
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	private Long id;
+	private static final long serialVersionUID = 4098491678812403894L;
+	
+	public static final String FIND_BY_FILTRO = "SolicitacaoPagamento.findByFiltro";
 
 	private Double valor;
 
@@ -54,14 +54,9 @@ public class SolicitacaoPagamento {
 	@Column(name="status")
 	@Enumerated(EnumType.STRING)
 	private StatusPagamento status;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
+	
+	@OneToMany(mappedBy = "solicitacaoPagamento")
+	private List<DespesaSolicitacaoPagamento> despesas;
 
 	public Double getValor() {
 		return valor;
@@ -109,6 +104,14 @@ public class SolicitacaoPagamento {
 
 	public void setStatus(StatusPagamento status) {
 		this.status = status;
+	}
+
+	public List<DespesaSolicitacaoPagamento> getDespesas() {
+		return despesas;
+	}
+
+	public void setDespesas(List<DespesaSolicitacaoPagamento> despesas) {
+		this.despesas = despesas;
 	}
 
 }

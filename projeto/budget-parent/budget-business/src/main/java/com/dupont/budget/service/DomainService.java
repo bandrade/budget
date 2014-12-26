@@ -6,6 +6,7 @@ import com.dupont.budget.model.AbstractEntity;
 import com.dupont.budget.model.NamedAbstractEntity;
 import com.dupont.budget.model.Papel;
 import com.dupont.budget.model.PapelUsuario;
+import com.dupont.budget.model.SolicitacaoPagamento;
 import com.dupont.budget.model.Usuario;
 import com.dupont.budget.model.ValorComprometido;
 
@@ -113,9 +114,21 @@ public interface DomainService {
 	 * @param tipoDespesa nome do tipo de despesa
 	 * @param acao nome da acao
 	 * @param mes mes de referência
-	 * @return o valor comprometido
+	 * @return o valor comprometido ou <code>null</code> caso não encontre
 	 */
 	ValorComprometido findValorComprometidoByFiltro(String centroCusto,
 			String tipoDespesa, String acao, Integer mes);
 	
+	/**
+	 * Retorna uma solicitação de pagamento com base nos parametros 
+	 * especificados como filtro.
+	 * 
+	 * @param numeroNotaFiscal numero da nota fiscal
+	 * @param fornecedor nome do fornecedor 
+	 * @param codigoCentroCusto codigo do centro de custo
+	 * 
+	 * @return a solicitação de pagamento ou <code>null</code> caso não encontre
+	 */
+	SolicitacaoPagamento findSolicitacaoPagamentoByFiltro(String numeroNotaFiscal,
+			String fornecedor, String codigoCentroCusto);
 }

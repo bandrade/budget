@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import com.dupont.budget.model.Acao;
 import com.dupont.budget.model.CentroCusto;
 import com.dupont.budget.model.Fornecedor;
+import com.dupont.budget.model.SolicitacaoPagamento;
 import com.dupont.budget.model.TipoDespesa;
 import com.dupont.budget.model.ValorComprometido;
 import com.dupont.budget.service.DeliveryHandlerService;
@@ -115,7 +116,7 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
     @Override
     @Asynchronous
 	public void onValorComprometidoUpload(@Observes @Uploaded(ValorComprometido.class) FileUploadEvent event) {
-		logger.debug("Evento de cadastro de fornecedores sendo processado pelo serviço.");
+		logger.debug("Evento de cadastro de valores comprometidos sendo processado pelo serviço.");
 
 		File file = new File(event.getPath());
 
@@ -168,4 +169,55 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
 			e.printStackTrace();
 		}
 	}
+    
+    @Override
+    @Asynchronous
+	public void onSolicitacaoPagamentoUpload(@Observes @Uploaded(SolicitacaoPagamento.class) FileUploadEvent event) {
+    	logger.debug("Evento de atualização de solicitações de pagamento sendo processado pelo serviço.");
+
+		File file = new File(event.getPath());
+
+		try {
+			Sheet sheet = loadFileSheet(file);
+			Iterator<Row> rowIterator = sheet.iterator();
+			int counter = 0;
+
+			try {
+				int blank = 0;
+				List<Fornecedor> persistent = service.findAll(Fornecedor.class);
+				SolicitacaoPagamento valor = null;
+				while (rowIterator.hasNext()) {
+					Row row = rowIterator.next();
+					valor = service.findSolicitacaoPagamentoByFiltro(
+							row.getCell(2).getStringCellValue(), 
+							row.getCell(6).getStringCellValue(), 
+							row.getCell(8).getStringCellValue());
+					if (valor != null) {
+						Double d = row.getCell(8).getNumericCellValue();
+						valor.setValor(d);
+						counter++;
+					} else {
+						blank++;
+					}
+
+					if (blank >= 3) {
+						break;
+					}
+				}
+
+				if (!persistent.isEmpty()) {
+					for (Fornecedor o : persistent) {
+						o.setAtivo(false);
+						service.update(o);
+					}
+				}
+
+			} catch (Exception e) {
+				logger.error(String.format("Nao foi possivel finalizar o cadastro de fornecedores: %s", e.getLocalizedMessage()));
+			}
+			logger.debug(String.format("%d entradas do arquivos processadas com sucesso!",counter));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    }
 }

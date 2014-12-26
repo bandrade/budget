@@ -23,4 +23,11 @@ public interface DeliveryHandlerService {
 	 */
 	void onValorComprometidoUpload(FileUploadEvent event);
 
+	/**
+	 * Trata eventos de upload da planilha de notas para a solicitação de pagamento
+	 * 
+	 * @param event evento
+	 */
+	void onSolicitacaoPagamentoUpload(FileUploadEvent event);
+
 }
