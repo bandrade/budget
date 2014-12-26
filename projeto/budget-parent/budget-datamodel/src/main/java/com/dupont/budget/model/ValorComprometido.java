@@ -13,7 +13,7 @@ import javax.persistence.UniqueConstraint;
 		"centro_custo_id", "tipo_despesa_id", "acao_id", "mes" }) 
 })
 @NamedQueries({
-	@NamedQuery(name = ValorComprometido.FIND_BY_FILTRO, query = "select v from ValorCompromentido v where lower(v.acao.nome) = :acao and lower(v.centroCusto.nome) = :centroCusto and lower(v.tipoDespesa.nome) = :tipoDespesa and v.mes = :mes")
+	@NamedQuery(name = ValorComprometido.FIND_BY_FILTRO, query = "select v from ValorComprometido v where lower(v.acao.nome) = :acao and lower(v.centroCusto.nome) = :centroCusto and lower(v.tipoDespesa.nome) = :tipoDespesa and v.mes = :mes")
 })
 public class ValorComprometido extends AbstractEntity<Long> {
 

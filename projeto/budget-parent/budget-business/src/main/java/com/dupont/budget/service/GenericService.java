@@ -34,7 +34,10 @@ public abstract class GenericService {
 	 */
 	@SuppressWarnings("unchecked")
 	public <T extends AbstractEntity<?>> List<T> findAll(Class<T> t) {
-		String query = String.format("select o from %s o", t.getSimpleName());
+		String query = String.format("select o from %s o ", t.getSimpleName());
+		if (t.getSuperclass().equals(NamedAbstractEntity.class)) {
+			query = query.concat("order by o.nome");
+		}
 		return (List<T>) em.createQuery(query).getResultList();
 	}
 
@@ -62,7 +65,7 @@ public abstract class GenericService {
 		}
 
 		List<T> result = (List<T>) em.createQuery(
-					String.format("select o from %s o where lower(o.nome) like :nome", t.getClass().getSimpleName())
+					String.format("select o from %s o where lower(o.nome) like :nome order by nome", t.getClass().getSimpleName())
 				).setParameter("nome", "%".concat(name.trim().toLowerCase()).concat("%")).getResultList();
 
 		return result;
