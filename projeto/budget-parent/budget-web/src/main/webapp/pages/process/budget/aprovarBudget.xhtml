@@ -33,7 +33,7 @@
 					</p:panelGrid>
 					<p:panelGrid columns="1" styleClass="painel-botoes">
 						<p:commandButton value="Incluir Despesa"
-							onclick="PF('criarDespesa').show();" action="#{aprovarBudgetAction.inicializarDespesa()}" update=":formDespesa"/>
+							oncomplete="PF('criarDespesa').show();" action="#{aprovarBudgetAction.trataInclusao()}" update=":criarDespesaPanel,:formDespesa"/>
 					</p:panelGrid>
 					<p:panelGrid id="panelDetalhe" columns="1">
 					<p:dataTable 

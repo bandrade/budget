@@ -12,6 +12,7 @@ import javax.inject.Named;
 
 import org.slf4j.Logger;
 
+import com.dupont.budget.bpm.custom.user.UserGroupCallbackCacheManager;
 import com.dupont.budget.model.Area;
 import com.dupont.budget.model.CentroCusto;
 import com.dupont.budget.model.Papel;
@@ -51,6 +52,9 @@ public class CentroCustoAction extends GenericAction<CentroCusto> {
 
 	private Usuario gestor;
 
+	@Inject
+	private UserGroupCallbackCacheManager userCallBackCache;
+
 
 
 	@Override
@@ -85,8 +89,14 @@ public class CentroCustoAction extends GenericAction<CentroCusto> {
 			result = update();
 		}
 
+		userCallBackCache.removeGroupsFromCache(responsavel.getLogin());
+		userCallBackCache.removeGroupsFromCache(gestor.getLogin());
 		clearInstance();
+		if(bpms.existeProcessoAtivo(Calendar.getInstance().get(Calendar.YEAR)+""))
+		{
+			facesUtils.addInfoMessage("Centro de Custo nao fara parte do processo de budget do ano "+Calendar.getInstance().get(Calendar.YEAR));
 
+		}
 		return result;
 	}
 
@@ -109,6 +119,12 @@ public class CentroCustoAction extends GenericAction<CentroCusto> {
 		return "edit";
 	}
 
+	@Override
+	public String update() {
+		userCallBackCache.removeGroupsFromCache(responsavel.getLogin());
+		userCallBackCache.removeGroupsFromCache(gestor.getLogin());
+		return super.update();
+	}
 	private String createNomePapel(CentroCusto cc, int nivel) {
 		final String[] papel = {"RESPONSAVEL_", "GESTOR_","GERENTE_"};
 		StringBuilder nomePapel = new StringBuilder(papel[nivel - 1]);
@@ -128,7 +144,8 @@ public class CentroCustoAction extends GenericAction<CentroCusto> {
 		}
 		else
 		{
-
+			userCallBackCache.removeGroupsFromCache(responsavel.getLogin());
+			userCallBackCache.removeGroupsFromCache(gestor.getLogin());
 			super.delete(t);
 		}
 	}

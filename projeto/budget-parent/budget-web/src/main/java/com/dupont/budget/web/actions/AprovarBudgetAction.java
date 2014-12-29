@@ -87,6 +87,11 @@ public class AprovarBudgetAction extends BudgetAction  implements Serializable{
 	}
 	public String concluir()
 	{
+		if(valorTotalDetalhe==null || valorTotalDetalhe == 0 )
+		{
+			facesUtils.addErrorMessage("Nao deve-se concluir a tarefa de Aprovar Budget sem aprovar nenhuma despesa");
+			return null;
+		}
 		try {
 			budgetService.atualizarDespesas(despesasNoDetalhe);
 			params = new HashMap<String,Object>();

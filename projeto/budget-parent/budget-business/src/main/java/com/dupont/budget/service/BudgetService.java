@@ -25,4 +25,5 @@ public interface BudgetService {
 	public List<Budget> obterBudgetsPorArea (Long areaId, String ano) throws Exception;
 	public List<DespesaMesDTO> obterDespesaNoDetalheBudgetAsDTO(Long budgetId) throws Exception ;
 	public void mensalisarBudget(List<DespesaMesDTO> despesas) throws Exception;
+	public void aprovarDespesasBudget(String budgetId);
 }

@@ -26,7 +26,7 @@
 					</p:panelGrid>
 					<p:panelGrid columns="1" styleClass="painel-botoes">
 						<p:commandButton value="Incluir Despesa"
-							onclick="PF('criarDespesa').show();" action="#{criarBudgetAction.inicializarDespesa()}" update=":formDespesa"/>
+							oncomplete="PF('criarDespesa').show();" action="#{criarBudgetAction.trataInclusao()}" update=":criarDespesaPanel,:formDespesa"/>
 					</p:panelGrid>
 					<p:dataTable emptyMessage="Não existem despesas cadastradas" value="#{criarBudgetAction.despesasAgrupadas}" 
 					  id="gridDespesasAgrupadas" var="itemDespesa"
@@ -141,7 +141,7 @@
 			</p:panelGrid>
 			
 			</h:form>
-			<p:dialog header="#{not criarBudgetAction.inclusao? 'Alterar Despesa' : 'Incluir Despesa'}  " id="criarDespesaPanel" widgetVar="criarDespesa" height="400"
+			<p:dialog header="#{not criarBudgetAction.inclusao? 'Alterar Despesa' : 'Incluir Despesa'}" id="criarDespesaPanel" widgetVar="criarDespesa" height="400" 
 				width="500">
 				<h:form id="formDespesa">
 				<p:panel id="panelDespesa">

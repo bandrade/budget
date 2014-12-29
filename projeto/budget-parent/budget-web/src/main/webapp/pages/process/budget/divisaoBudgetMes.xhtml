@@ -103,7 +103,7 @@
 								<h:outputText value="Jan." />
 							</f:facet>
 							<pe:inputNumber  id="valorJan" value="#{detalheDespesa.janeiro}" converter="javax.faces.Double" >
-								<p:ajax event="blur"  listener="#{divisaoBudgetMesAction.calcularValorColuna('JAN')}" update=":form" process="@this"></p:ajax>
+								<p:ajax   listener="#{divisaoBudgetMesAction.calcularValorColuna('JAN')}" update=":form" process="@this"></p:ajax>
 							</pe:inputNumber>
 						</p:column> 
 						<p:column  style="text-align:center" width="100" footerText="#{facesUtils.formatarDinheiro(divisaoBudgetMesAction.calcularValorColuna('FEV'))}">
@@ -111,7 +111,7 @@
 								<h:outputText value="Fev." />
 							</f:facet>
 							<pe:inputNumber  id="valorFev" value="#{detalheDespesa.fevereiro}" converter="javax.faces.Double" >
-								<p:ajax event="blur"  listener="#{divisaoBudgetMesAction.calcularValorColuna('FEV')}" update=":form" process="@this"></p:ajax>
+								<p:ajax   listener="#{divisaoBudgetMesAction.calcularValorColuna('FEV')}" update=":form" process="@this"></p:ajax>
 							</pe:inputNumber>
 						</p:column> 
 						<p:column  style="text-align:center" width="100"  footerText="#{facesUtils.formatarDinheiro(divisaoBudgetMesAction.calcularValorColuna('MAR'))}">
@@ -119,7 +119,7 @@
 								<h:outputText value="Mar." />
 							</f:facet>
 							<pe:inputNumber  id="valorMar" value="#{detalheDespesa.marco}" converter="javax.faces.Double" >
-								<p:ajax event="blur"  listener="#{divisaoBudgetMesAction.calcularValorColuna('MAR')}" update=":form" process="@this"></p:ajax>
+								<p:ajax   listener="#{divisaoBudgetMesAction.calcularValorColuna('MAR')}" update=":form" process="@this"></p:ajax>
 							</pe:inputNumber>
 						</p:column> 
 						<p:column  style="text-align:center" width="100" footerText="#{facesUtils.formatarDinheiro(divisaoBudgetMesAction.calcularValorColuna('ABR'))}">
@@ -127,7 +127,7 @@
 								<h:outputText value="Abr."  />
 							</f:facet>
 							<pe:inputNumber  id="valorAbr" value="#{detalheDespesa.abril}" converter="javax.faces.Double" >
-								<p:ajax event="blur"  listener="#{divisaoBudgetMesAction.calcularValorColuna('ABR')}" update=":form" process="@this"></p:ajax>
+								<p:ajax   listener="#{divisaoBudgetMesAction.calcularValorColuna('ABR')}" update=":form" process="@this"></p:ajax>
 							</pe:inputNumber>
 						</p:column> 
 						<p:column  style="text-align:center"  width="100" footerText="#{facesUtils.formatarDinheiro(divisaoBudgetMesAction.calcularValorColuna('MAI'))}">
@@ -135,7 +135,7 @@
 								<h:outputText value="Mai." />
 							</f:facet>
 							<pe:inputNumber  id="valorMaio" value="#{detalheDespesa.maio}" converter="javax.faces.Double" >
-								<p:ajax event="blur"  listener="#{divisaoBudgetMesAction.calcularValorColuna('MAI')}" update=":form" process="@this"></p:ajax>
+								<p:ajax   listener="#{divisaoBudgetMesAction.calcularValorColuna('MAI')}" update=":form" process="@this"></p:ajax>
 							</pe:inputNumber>
 						</p:column> 
 						<p:column  style="text-align:center" width="100" footerText="#{facesUtils.formatarDinheiro(divisaoBudgetMesAction.calcularValorColuna('JUN'))}">
@@ -143,7 +143,7 @@
 								<h:outputText value="Jun." />
 							</f:facet>
 							<pe:inputNumber  id="valorJun" value="#{detalheDespesa.junho}" converter="javax.faces.Double" >
-								<p:ajax event="blur"  listener="#{divisaoBudgetMesAction.calcularValorColuna('JUN')}" update=":form" process="@this"></p:ajax>
+								<p:ajax   listener="#{divisaoBudgetMesAction.calcularValorColuna('JUN')}" update=":form" process="@this"></p:ajax>
 							</pe:inputNumber>
 						</p:column>
 						<p:column  style="text-align:center"  width="100" footerText="#{facesUtils.formatarDinheiro(divisaoBudgetMesAction.calcularValorColuna('JUL'))}">
@@ -151,7 +151,7 @@
 								<h:outputText value="Jul." />
 							</f:facet>
 							<pe:inputNumber  id="valorJul" value="#{detalheDespesa.julho}" converter="javax.faces.Double" >
-								<p:ajax event="blur"  listener="#{divisaoBudgetMesAction.calcularValorColuna('JUL')}" update=":form" process="@this"></p:ajax>
+								<p:ajax   listener="#{divisaoBudgetMesAction.calcularValorColuna('JUL')}" update=":form" process="@this"></p:ajax>
 							</pe:inputNumber>
 						</p:column>
 						<p:column  style="text-align:center"  width="100" footerText="#{facesUtils.formatarDinheiro(divisaoBudgetMesAction.calcularValorColuna('AGO'))}">
@@ -159,7 +159,7 @@
 								<h:outputText value="Ago." />
 							</f:facet>
 							<pe:inputNumber  id="valorAgo" value="#{detalheDespesa.agosto}" converter="javax.faces.Double" >
-								<p:ajax event="blur"  listener="#{divisaoBudgetMesAction.calcularValorColuna('AGO')}" update=":form" process="@this"></p:ajax>
+								<p:ajax   listener="#{divisaoBudgetMesAction.calcularValorColuna('AGO')}" update=":form" process="@this"></p:ajax>
 							</pe:inputNumber>
 						</p:column>
 						<p:column  style="text-align:center" width="100" footerText="#{facesUtils.formatarDinheiro(divisaoBudgetMesAction.calcularValorColuna('SET'))}">
@@ -167,7 +167,7 @@
 								<h:outputText value="Set." />
 							</f:facet>
 							<pe:inputNumber  id="valorSet" value="#{detalheDespesa.setembro}" converter="javax.faces.Double" >
-								<p:ajax event="blur"  listener="#{divisaoBudgetMesAction.calcularValorColuna('SET')}" update=":form" process="@this"></p:ajax>
+								<p:ajax   listener="#{divisaoBudgetMesAction.calcularValorColuna('SET')}" update=":form" process="@this"></p:ajax>
 							</pe:inputNumber>
 						</p:column>
 						<p:column  style="text-align:center" width="100"  footerText="#{facesUtils.formatarDinheiro(divisaoBudgetMesAction.calcularValorColuna('OUT'))}">
@@ -175,7 +175,7 @@
 								<h:outputText value="Out." />
 							</f:facet>
 							<pe:inputNumber  id="valorOut" value="#{detalheDespesa.outubro}" converter="javax.faces.Double" >
-								<p:ajax event="blur"  listener="#{divisaoBudgetMesAction.calcularValorColuna('OUT')}" update=":form" process="@this"></p:ajax>
+								<p:ajax   listener="#{divisaoBudgetMesAction.calcularValorColuna('OUT')}" update=":form" process="@this"></p:ajax>
 							</pe:inputNumber>
 						</p:column>
 						<p:column  style="text-align:center" width="100" footerText="#{facesUtils.formatarDinheiro(divisaoBudgetMesAction.calcularValorColuna('NOV'))}">
@@ -183,7 +183,7 @@
 								<h:outputText value="Nov." />
 							</f:facet>
 							<pe:inputNumber  id="valorNov" value="#{detalheDespesa.novembro}" converter="javax.faces.Double" >
-								<p:ajax event="blur"  listener="#{divisaoBudgetMesAction.calcularValorColuna('AGO')}" update=":form" process="@this"></p:ajax>
+								<p:ajax   listener="#{divisaoBudgetMesAction.calcularValorColuna('AGO')}" update=":form" process="@this"></p:ajax>
 							</pe:inputNumber>
 						</p:column>
 						<p:column  style="text-align:center" width="100"  footerText="#{facesUtils.formatarDinheiro(divisaoBudgetMesAction.calcularValorColuna('DEZ'))}">
@@ -191,7 +191,7 @@
 								<h:outputText value="Dez." />
 							</f:facet>
 							<pe:inputNumber  id="valorDez" value="#{detalheDespesa.dezembro}" converter="javax.faces.Double" >
-								<p:ajax event="blur"  listener="#{divisaoBudgetMesAction.calcularValorColuna('DEZ')}" update=":form" process="@this"></p:ajax>
+								<p:ajax   listener="#{divisaoBudgetMesAction.calcularValorColuna('DEZ')}" update=":form" process="@this"></p:ajax>
 							</pe:inputNumber>
 							
 						</p:column>

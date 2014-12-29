@@ -199,9 +199,21 @@ public class UsuarioAction extends GenericAction<Usuario> {
 		return super.persist();
 	}
 
+	@Override
+	public String update() {
+		userCallBackCache.removeGroupsFromCache(entidade.getLogin());
+		return super.update();
+	}
+
 	public void showRoles(Usuario usuario) {
 		Usuario u = service.getUsuarioByLogin(usuario.getLogin());
 		papeis = u.getPapeis();
+	}
+
+	@Override
+	public void delete(Usuario t) {
+		userCallBackCache.removeGroupsFromCache(entidade.getLogin());
+		super.delete(t);
 	}
 
 	/**
