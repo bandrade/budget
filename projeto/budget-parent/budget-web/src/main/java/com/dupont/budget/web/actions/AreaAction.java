@@ -69,6 +69,11 @@ public class AreaAction extends GenericAction<Area> {
 		if (mustCreate()) {
 			entidade.setLider(new PapelUsuario(new Papel(createNomePapel(entidade)), lider, entidade));
 			result = create();
+			if(bpms.existeProcessoAtivo(Calendar.getInstance().get(Calendar.YEAR)+""))
+			{
+				facesUtils.addInfoMessage("Area nao fara parte do processo de budget do ano "+Calendar.getInstance().get(Calendar.YEAR));
+			}
+
 		} else {
 			Area tmp = service.findById(entidade);
 			entidade.setLider(tmp.getLider());
@@ -76,12 +81,7 @@ public class AreaAction extends GenericAction<Area> {
 			result = update();
 		}
 
-		if(bpms.existeProcessoAtivo(Calendar.getInstance().get(Calendar.YEAR)+""))
-		{
-			facesUtils.addInfoMessage("Area nao fara parte do processo de budget do ano "+Calendar.getInstance().get(Calendar.YEAR));
-
-		}
-		userCallBackCache.removeGroupsFromCache(entidade.getLider().getUsuario().getLogin());
+				userCallBackCache.removeGroupsFromCache(entidade.getLider().getUsuario().getLogin());
 		clearInstance();
 
 		return result;

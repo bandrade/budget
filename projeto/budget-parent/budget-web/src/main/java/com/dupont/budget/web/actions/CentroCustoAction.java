@@ -66,6 +66,11 @@ public class CentroCustoAction extends GenericAction<CentroCusto> {
 			entidade.getResponsaveis().add(new PapelUsuario(new Papel(createNomePapel(entidade, 2)), gestor, entidade, 2));
 
 			result = create();
+			if(bpms.existeProcessoAtivo(Calendar.getInstance().get(Calendar.YEAR)+""))
+			{
+				facesUtils.addInfoMessage("Centro de Custo nao fara parte do processo de budget do ano "+Calendar.getInstance().get(Calendar.YEAR));
+			}
+
 		} else {
 			CentroCusto tmp = service.findById(entidade);
 			List<PapelUsuario> list = tmp.getResponsaveis();
@@ -92,12 +97,7 @@ public class CentroCustoAction extends GenericAction<CentroCusto> {
 		userCallBackCache.removeGroupsFromCache(responsavel.getLogin());
 		userCallBackCache.removeGroupsFromCache(gestor.getLogin());
 		clearInstance();
-		if(bpms.existeProcessoAtivo(Calendar.getInstance().get(Calendar.YEAR)+""))
-		{
-			facesUtils.addInfoMessage("Centro de Custo nao fara parte do processo de budget do ano "+Calendar.getInstance().get(Calendar.YEAR));
-
-		}
-		return result;
+				return result;
 	}
 
 	public String edit(CentroCusto t) {
