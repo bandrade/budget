@@ -90,6 +90,7 @@ public class CentroCustoAction extends GenericAction<CentroCusto> {
 				}
 			}
 			entidade.setResponsaveis(list);
+			entidade.setCodigo(tmp.getCodigo());
 
 			result = update();
 		}
