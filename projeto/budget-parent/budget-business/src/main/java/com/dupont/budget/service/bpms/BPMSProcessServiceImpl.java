@@ -6,7 +6,8 @@ import java.util.List;
 import javax.enterprise.inject.Model;
 import javax.inject.Inject;
 
-import com.dupont.budget.bpm.custom.process.BPMProcessManagerApiImpl;
+import com.dupont.budget.bpm.custom.exception.BPMException;
+import com.dupont.budget.bpm.custom.process.BPMProcessManagerApi;
 import com.dupont.budget.dto.AreaDTO;
 import com.dupont.budget.dto.CentroDeCustoDTO;
 import com.dupont.budget.model.Area;
@@ -16,7 +17,7 @@ import com.dupont.budget.service.centrodecusto.CentroDeCustoService;
 @Model
 public class BPMSProcessServiceImpl implements BPMSProcessService{
 	@Inject
-	private BPMProcessManagerApiImpl processApi ;
+	private BPMProcessManagerApi processApi ;
 
 	@Inject
 	private CentroDeCustoService ccService;
@@ -44,14 +45,26 @@ public class BPMSProcessServiceImpl implements BPMSProcessService{
 		return processApi.startBudgetProcess(ceDtos,areaArray,ano);
 	}
 
+
 	@Override
 	public Object obterVariavelProcesso(Long idProcesso,String variavel) throws Exception {
 		return processApi.getProcessVariable(idProcesso, variavel);
 	}
 
 	@Override
-	public boolean existeProcessoAtivo(String ano) {
+	public boolean existeProcessoAtivo(String ano) throws BPMException {
 		return processApi.isProcessAlreadyStarted(ano);
+	}
+
+
+	@Override
+	public long iniciarProcessoSolicitacaoPagamento(Area area,
+			Long idSolicitacao, String numeroNota) throws Exception {
+
+		AreaDTO areaDto =  new AreaDTO();
+		areaDto.setId(area.getId());
+		areaDto.setNome(area.getNome());
+		return processApi.startSolicitacaoPagamentoProcess(areaDto, numeroNota, String.valueOf(idSolicitacao));
 	}
 
 

@@ -93,6 +93,29 @@ public class BPMProcessManagerApiImpl implements BPMProcessManagerApi {
 	}
 
 
+
+	public long startSolicitacaoPagamentoProcess(AreaDTO area, String numeroNota, String idSolicitacao) throws Exception
+	{
+		RuntimeEngine runtime = singletonManager.getRuntimeEngine(EmptyContext
+				.get());
+		KieSession ksession = runtime.getKieSession();
+
+		long processInstanceId = -1;
+
+		try {
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("area", area);
+			params.put("numeroNota",numeroNota);
+			params.put("idSolicitacao", idSolicitacao);
+			ProcessInstance processInstance = ksession.startProcess(
+					"com.dupont.bpm.solicitarpagamento", params);
+			processInstanceId = processInstance.getId();
+
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	return processInstanceId;
+	}
 	public boolean isProcessAlreadyStarted(String ano) {
 		RuntimeEngine runtime = singletonManager.getRuntimeEngine(EmptyContext
 				.get());
