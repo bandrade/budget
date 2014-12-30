@@ -71,6 +71,9 @@ public class SolicitacaoPagamento extends AbstractEntity<Long> {
 	@JoinColumn(name = "usuario_id")
 	private Usuario usuarioCriador;
 
+	@Column(name="process_instance_id")
+	private Integer processInstanceId;
+
 
 	public Double getValor() {
 		return valor;
@@ -151,5 +154,15 @@ public class SolicitacaoPagamento extends AbstractEntity<Long> {
 	public void setUsuarioCriador(Usuario usuarioCriador) {
 		this.usuarioCriador = usuarioCriador;
 	}
+
+	public Integer getProcessInstanceId() {
+		return processInstanceId;
+	}
+
+	public void setProcessInstanceId(Integer processInstanceId) {
+		this.processInstanceId = processInstanceId;
+	}
+	
+	
 
 }

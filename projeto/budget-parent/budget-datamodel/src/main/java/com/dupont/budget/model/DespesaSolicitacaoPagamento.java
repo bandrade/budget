@@ -9,7 +9,7 @@ import javax.persistence.Table;
 
 /**
  * Despesa da solicitação de pagamento.
- * 
+ *
  * @author <a href="asouza@redhat.com">Ângelo Galvão</a>
  * @since 2014
  *
@@ -61,6 +61,8 @@ public class DespesaSolicitacaoPagamento extends AbstractEntity<Long> {
 	@ManyToOne
 	@JoinColumn(name = "solicitacao_id")
 	private SolicitacaoPagamento solicitacaoPagamento;
+
+	private Double valor;
 
 	public CentroCusto getCentroCusto() {
 		return centroCusto;
@@ -133,4 +135,14 @@ public class DespesaSolicitacaoPagamento extends AbstractEntity<Long> {
 	public void setSolicitacaoPagamento(SolicitacaoPagamento solicitacaoPagamento) {
 		this.solicitacaoPagamento = solicitacaoPagamento;
 	}
+
+	public Double getValor() {
+		return valor;
+	}
+
+	public void setValor(Double valor) {
+		this.valor = valor;
+	}
+
+
 }
