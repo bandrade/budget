@@ -59,7 +59,7 @@ public abstract class GenericService {
 	 */
 	@SuppressWarnings("unchecked")
 	public <T extends NamedAbstractEntity<?>> List<T> findByName(T t) {
-		String name = t.getNome();
+		String name = t != null ? t.getNome() : "";
 		if (StringUtils.isBlank(name)) {
 			return (List<T>) findAll(t.getClass());
 		}

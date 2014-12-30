@@ -183,25 +183,19 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
 			int counter = 0;
 
 			try {
-				int blank = 0;
 				List<Fornecedor> persistent = service.findAll(Fornecedor.class);
-				SolicitacaoPagamento valor = null;
+				SolicitacaoPagamento solicitacao = null;
 				while (rowIterator.hasNext()) {
 					Row row = rowIterator.next();
-					valor = service.findSolicitacaoPagamentoByFiltro(
+					solicitacao = service.findSolicitacaoPagamentoByFiltro(
 							row.getCell(2).getStringCellValue(), 
 							row.getCell(6).getStringCellValue(), 
 							row.getCell(8).getStringCellValue());
-					if (valor != null) {
+					if (solicitacao != null) {
 						Double d = row.getCell(8).getNumericCellValue();
-						valor.setValor(d);
+						solicitacao.setValor(d);
+						service.update(solicitacao);
 						counter++;
-					} else {
-						blank++;
-					}
-
-					if (blank >= 3) {
-						break;
 					}
 				}
 

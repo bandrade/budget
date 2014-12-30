@@ -10,6 +10,7 @@ import javax.inject.Named;
 
 import org.slf4j.Logger;
 
+import com.dupont.budget.bpm.custom.user.UserGroupCallbackCacheManager;
 import com.dupont.budget.model.Area;
 import com.dupont.budget.model.Papel;
 import com.dupont.budget.model.PapelUsuario;
@@ -44,6 +45,10 @@ public class AreaAction extends GenericAction<Area> {
 	@Inject
     private BPMSProcessService bpms;
 
+	@Inject
+	private UserGroupCallbackCacheManager userCallBackCache;
+
+
 	@Named
 	@Produces
 	public Area getArea() {
@@ -64,13 +69,20 @@ public class AreaAction extends GenericAction<Area> {
 		if (mustCreate()) {
 			entidade.setLider(new PapelUsuario(new Papel(createNomePapel(entidade)), lider, entidade));
 			result = create();
+			if(bpms.existeProcessoAtivo(Calendar.getInstance().get(Calendar.YEAR)+""))
+			{
+				facesUtils.addInfoMessage("Area nao fara parte do processo de budget do ano "+Calendar.getInstance().get(Calendar.YEAR));
+			}
+
 		} else {
 			Area tmp = service.findById(entidade);
 			entidade.setLider(tmp.getLider());
 			entidade.getLider().setUsuario(lider);
+			userCallBackCache.removeGroupsFromCache(lider.getLogin());
 			result = update();
 		}
 
+		userCallBackCache.removeGroupsFromCache(entidade.getLider().getUsuario().getLogin());
 		clearInstance();
 
 		return result;
@@ -84,6 +96,12 @@ public class AreaAction extends GenericAction<Area> {
 		return nomePapel.toString();
 	}
 
+
+	@Override
+	public String update() {
+		userCallBackCache.removeGroupsFromCache(entidade.getLider().getUsuario().getLogin());
+		return super.update();
+	}
 	public String edit(Area t) {
 		this.setEntidade(t);
 
@@ -104,7 +122,7 @@ public class AreaAction extends GenericAction<Area> {
 		}
 		else
 		{
-
+			userCallBackCache.removeGroupsFromCache(entidade.getLider().getUsuario().getLogin());
 			super.delete(t);
 		}
 
