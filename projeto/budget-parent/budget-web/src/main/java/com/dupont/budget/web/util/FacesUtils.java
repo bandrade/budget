@@ -24,6 +24,8 @@ import com.dupont.budget.model.NamedAbstractEntity;
 @ApplicationScoped
 public class FacesUtils implements Serializable{
 
+	private static final long serialVersionUID = 374768315446835217L;
+
 	/**
 	 * Adiciona uma mensagem de erro no contexto JSF.
 	 * @param message mensagem a ser adicionada
@@ -38,6 +40,14 @@ public class FacesUtils implements Serializable{
 	 */
 	public void addInfoMessage(String message){
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Informação", message));
+	}
+	
+	/**
+	 * Adiciona uma mensagem de aviso no contexto JSF.
+	 * @param message mensagem a ser adicionada
+	 */
+	public void addWarnMessage(String message){
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Aviso", message));
 	}
 
 

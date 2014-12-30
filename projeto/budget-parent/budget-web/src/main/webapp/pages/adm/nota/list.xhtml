@@ -1,0 +1,53 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/templates/default.xhtml">
+                
+	<ui:define name="content">
+	<p:panelGrid columns="1" styleClass="body-content">
+		<p:fieldset value="Pesquisa de Valores Comprometidos" legend="Pesquisa de Valores Comprometidos">
+	
+			<h3></h3>
+			
+			<h:form id="form" prependId="false">
+			
+				<h:panelGrid columns="1" border="0">
+					<p:commandButton value="Carregar arquivo"  icon="ui-icon-arrowthickstop-1-n" styleClass="button" action="/pages/adm/nota/load.xml"   />
+				</h:panelGrid>
+				
+				<p:separator />
+				
+				<p:dataTable id="cargaRelatorios" var="item" value="#{cargaRelatorioAction.list}" emptyMessage="Nenhum registro encontrado."
+						paginator="true"
+						paginatorPosition="bottom"
+						rows="10">
+					<f:facet name="header">
+						Resultado Carga Planilha SAP
+					</f:facet>
+					<p:column headerText="Nº Nota Fiscal">
+						#{item.numeroNota}
+					</p:column>
+					<p:column headerText="Centro de Custo">
+						#{item.centroCusto}
+					</p:column>
+					<p:column headerText="Fornecedor">
+                        #{item.fornecedor}
+                    </p:column>
+                    <p:column headerText="Valor">
+                        #{item.valor}
+                    </p:column>
+                    <p:column headerText="Status">
+                        #{item.status}
+                    </p:column>
+				</p:dataTable>
+				
+                <p:poll interval="10" listener="#{cargaRelatorioAction.updateList}" update="cargaRelatorios" />
+			</h:form>
+			
+		</p:fieldset>
+		</p:panelGrid>		
+	</ui:define>
+	
+</ui:composition>

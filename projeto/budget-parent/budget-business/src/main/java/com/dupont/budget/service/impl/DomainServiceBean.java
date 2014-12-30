@@ -8,6 +8,7 @@ import javax.persistence.NoResultException;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.dupont.budget.model.CentroCusto;
 import com.dupont.budget.model.Papel;
 import com.dupont.budget.model.PapelUsuario;
 import com.dupont.budget.model.SolicitacaoPagamento;
@@ -100,14 +101,29 @@ public class DomainServiceBean extends GenericService implements DomainService {
 	 * @see com.dupont.budget.service.DomainService#findSolicitacaoPagamentoByFiltro(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public SolicitacaoPagamento findSolicitacaoPagamentoByFiltro(String numeroNotaFiscal,
-			String fornecedor, String codigoCentroCusto) {
+	public SolicitacaoPagamento findDespesaSolicitacaoByFiltro(String numeroNotaFiscal,
+			String fornecedor, Double valor) {
 
 		try {
 			return em.createNamedQuery(SolicitacaoPagamento.FIND_BY_FILTRO, SolicitacaoPagamento.class)
 						.setParameter("nomeroNotaFiscal", numeroNotaFiscal.toLowerCase())
 						.setParameter("fornecedor", fornecedor.toLowerCase())
-						.setParameter("codigoCentroCusto", codigoCentroCusto.toLowerCase())
+						.setParameter("valor", valor)
+						.getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see com.dupont.budget.service.DomainService#findCentroCustoByCodigo(java.lang.String)
+	 */
+	@Override
+	public CentroCusto findCentroCustoByCodigo(String codigo) {
+		try {
+			return em.createNamedQuery(CentroCusto.FIND_BY_CODIGO, CentroCusto.class)
+						.setParameter("codigo", codigo)
 						.getSingleResult();
 		} catch (NoResultException e) {
 			return null;

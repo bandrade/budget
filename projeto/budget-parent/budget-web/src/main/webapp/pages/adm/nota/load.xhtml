@@ -1,0 +1,58 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/templates/default.xhtml">
+                
+	<ui:define name="content">
+	
+		<p:panel id="content">
+		
+			<h3> 
+				<h:outputText value="Carregar Pagamentos" /> 
+			</h3>
+			
+			<h:form id="form" enctype="multipart/form-data"> 
+			
+				<h:panelGrid columns="3" border="0">
+				
+					<p:outputLabel value="Arquivo:" for="arquivoInput" />
+					<p:fileUpload id="arquivoInput" value="#{valorComprometidoAction.file}" mode="simple" allowTypes="/(\.|\/)(xls?x)$/" />
+					<p:message for="arquivoInput" />			
+					
+				</h:panelGrid>
+				
+				<p:separator />
+                
+                <p:dataTable id="fornecedors" var="item" value="#{fornecedorAction.list}" emptyMessage="Nenhum registro encontrado."
+                        paginator="true"
+                        paginatorPosition="bottom"
+                        rows="10">
+                    <f:facet name="header">
+                        Resultado Carga Planilha SAP
+                    </f:facet>
+                    <p:column headerText="Nome" sortBy="#{item.nome}" >
+                        #{item.nome}
+                    </p:column>
+                    
+                    <p:column headerText="Ações" width="10%">
+                        
+                        <p:commandButton icon="ui-icon-trash"  action="#{fornecedorAction.delete(item)}" update="fornecedors" immediate="true">
+                            <p:confirm header="Confirmação" message="Deseja realmente remover o dado?" icon="ui-icon-alert" />
+                        </p:commandButton>
+                        
+                    </p:column>
+                
+                </p:dataTable>
+				
+				<p:commandButton value="Enviar" icon="ui-icon-check" action="#{valorComprometidoAction.upload}" styleClass="button" ajax="false" />
+				<p:commandButton value="Cancelar"    icon="ui-icon-closethick" action="/pages/adm/valorComprometido/list.xhtml" styleClass="button" ajax="false" immediate="true" />
+				
+			</h:form>
+		
+		</p:panel>
+		
+	</ui:define>
+	
+</ui:composition>

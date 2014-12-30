@@ -48,7 +48,6 @@ public class AreaAction extends GenericAction<Area> {
 	@Inject
 	private UserGroupCallbackCacheManager userCallBackCache;
 
-
 	@Named
 	@Produces
 	public Area getArea() {
@@ -69,11 +68,9 @@ public class AreaAction extends GenericAction<Area> {
 		if (mustCreate()) {
 			entidade.setLider(new PapelUsuario(new Papel(createNomePapel(entidade)), lider, entidade));
 			result = create();
-			if(bpms.existeProcessoAtivo(Calendar.getInstance().get(Calendar.YEAR)+""))
-			{
+			if (bpms.existeProcessoAtivo(Calendar.getInstance().get(Calendar.YEAR) + "")) {
 				facesUtils.addInfoMessage("Area nao fara parte do processo de budget do ano "+Calendar.getInstance().get(Calendar.YEAR));
 			}
-
 		} else {
 			Area tmp = service.findById(entidade);
 			entidade.setLider(tmp.getLider());

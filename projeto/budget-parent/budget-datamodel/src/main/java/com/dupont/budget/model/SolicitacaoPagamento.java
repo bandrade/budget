@@ -26,7 +26,7 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name="solicitacao_pagamento")
 @NamedQueries({
-	@NamedQuery(name = SolicitacaoPagamento.FIND_BY_FILTRO, query = "select o from SolicitacaoPagamento o join o.despesas d where o.numeroNotaFiscal = :numeroNotaFiscal and lower(o.fornecedor.nome) = :fornecedor and lower(d.centroCusto.nome) = :codigoCentroCusto")
+	@NamedQuery(name = SolicitacaoPagamento.FIND_BY_FILTRO, query = "select o from SolicitacaoPagamento o join o.despesas d where o.numeroNotaFiscal = :numeroNotaFiscal and lower(o.fornecedor.nome) = :fornecedor and lower(d.centroCusto.nome) = :codigoCentroCusto and o.mes = :mes")
 })
 public class SolicitacaoPagamento extends AbstractEntity<Long> {
 

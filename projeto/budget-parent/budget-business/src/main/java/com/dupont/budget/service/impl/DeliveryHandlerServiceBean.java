@@ -1,8 +1,12 @@
 package com.dupont.budget.service.impl;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.Iterator;
 import java.util.List;
 
@@ -185,20 +189,37 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
 			try {
 				List<Fornecedor> persistent = service.findAll(Fornecedor.class);
 				SolicitacaoPagamento solicitacao = null;
-				while (rowIterator.hasNext()) {
-					Row row = rowIterator.next();
-					solicitacao = service.findSolicitacaoPagamentoByFiltro(
-							row.getCell(2).getStringCellValue(), 
-							row.getCell(6).getStringCellValue(), 
-							row.getCell(8).getStringCellValue());
-					if (solicitacao != null) {
-						Double d = row.getCell(8).getNumericCellValue();
-						solicitacao.setValor(d);
-						service.update(solicitacao);
-						counter++;
+				
+				File csv = createFile();
+				try (BufferedWriter bw = new BufferedWriter(new FileWriter(csv))) {
+					while (rowIterator.hasNext()) {
+						Row row = rowIterator.next();
+						List<Fornecedor> fornecedor = service.findByName(new Fornecedor(row.getCell(6).getStringCellValue()));
+						if (fornecedor.isEmpty() || fornecedor.size() > 1) {
+							bw.write(";;;;Fornecedor não encontrado");
+							continue;
+						}
+						
+						CentroCusto centroCusto = service.findCentroCustoByCodigo(row.getCell(8).getStringCellValue());
+						if (centroCusto == null) {
+							bw.write(";;;;Centro de Custo não encontrado");
+							continue;
+						}
+						
+						solicitacao = service.findDespesaSolicitacaoByFiltro(
+								row.getCell(2).getStringCellValue(), 
+								row.getCell(6).getStringCellValue(),
+								row.getCell(0).getNumericCellValue());
+						if (solicitacao != null) {
+							Double d = row.getCell(8).getNumericCellValue();
+							solicitacao.setValor(d);
+							service.update(solicitacao);
+							counter++;
+						}
 					}
+				} catch (IOException e) {
+					logger.error(String.format("Erro durante a gravação do arquivo de log: %s", e.getLocalizedMessage()));
 				}
-
 				if (!persistent.isEmpty()) {
 					for (Fornecedor o : persistent) {
 						o.setAtivo(false);
@@ -213,5 +234,18 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+    }
+    
+    private File createFile() {
+    	String tmpDir = System.getProperty("java.io.tmpdir");
+		final String name = DeliveryHandlerService.RELATORIO_SAP_TEMP_DIR;
+		tmpDir = tmpDir.endsWith(String.valueOf(File.separatorChar)) ? tmpDir.concat(name) : tmpDir.concat(String.valueOf(File.separatorChar)).concat(name);
+		
+		File dir = new File(tmpDir);
+		if (!dir.exists()) {
+			dir.mkdir();
+		}
+		
+		return new File(dir.getAbsolutePath().concat(new BigInteger(130, new SecureRandom()).toString(32)));
     }
 }
