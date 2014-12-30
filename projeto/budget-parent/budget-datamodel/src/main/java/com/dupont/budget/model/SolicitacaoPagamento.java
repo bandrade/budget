@@ -31,7 +31,7 @@ import javax.persistence.TemporalType;
 public class SolicitacaoPagamento extends AbstractEntity<Long> {
 
 	private static final long serialVersionUID = 4098491678812403894L;
-	
+
 	public static final String FIND_BY_FILTRO = "SolicitacaoPagamento.findByFiltro";
 
 	private Double valor;
@@ -42,6 +42,15 @@ public class SolicitacaoPagamento extends AbstractEntity<Long> {
 	@Column(name="data_pagamento")
 	@Temporal(TemporalType.DATE)
 	private Date dataPagamento;
+
+	@Column(name="data_pagamento_realizado")
+	@Temporal(TemporalType.DATE)
+	private Date dataPagamentoRealizado;
+
+
+	@Column(name = "data_criacao")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date criacao;
 
 	@Column(name="tipo_solicitacao")
 	@Enumerated(EnumType.STRING)
@@ -54,9 +63,14 @@ public class SolicitacaoPagamento extends AbstractEntity<Long> {
 	@Column(name="status")
 	@Enumerated(EnumType.STRING)
 	private StatusPagamento status;
-	
+
 	@OneToMany(mappedBy = "solicitacaoPagamento")
 	private List<DespesaSolicitacaoPagamento> despesas;
+
+	@ManyToOne
+	@JoinColumn(name = "usuario_id")
+	private Usuario usuarioCriador;
+
 
 	public Double getValor() {
 		return valor;
@@ -112,6 +126,30 @@ public class SolicitacaoPagamento extends AbstractEntity<Long> {
 
 	public void setDespesas(List<DespesaSolicitacaoPagamento> despesas) {
 		this.despesas = despesas;
+	}
+
+	public Date getDataPagamentoRealizado() {
+		return dataPagamentoRealizado;
+	}
+
+	public void setDataPagamentoRealizado(Date dataPagamentoRealizado) {
+		this.dataPagamentoRealizado = dataPagamentoRealizado;
+	}
+
+	public Date getCriacao() {
+		return criacao;
+	}
+
+	public void setCriacao(Date criacao) {
+		this.criacao = criacao;
+	}
+
+	public Usuario getUsuarioCriador() {
+		return usuarioCriador;
+	}
+
+	public void setUsuarioCriador(Usuario usuarioCriador) {
+		this.usuarioCriador = usuarioCriador;
 	}
 
 }
