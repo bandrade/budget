@@ -9,9 +9,9 @@ import javax.persistence.NoResultException;
 import org.apache.commons.lang3.StringUtils;
 
 import com.dupont.budget.model.CentroCusto;
+import com.dupont.budget.model.DespesaSolicitacaoPagamento;
 import com.dupont.budget.model.Papel;
 import com.dupont.budget.model.PapelUsuario;
-import com.dupont.budget.model.SolicitacaoPagamento;
 import com.dupont.budget.model.Usuario;
 import com.dupont.budget.model.ValorComprometido;
 import com.dupont.budget.service.DomainService;
@@ -101,11 +101,11 @@ public class DomainServiceBean extends GenericService implements DomainService {
 	 * @see com.dupont.budget.service.DomainService#findSolicitacaoPagamentoByFiltro(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public SolicitacaoPagamento findDespesaSolicitacaoByFiltro(String numeroNotaFiscal,
+	public DespesaSolicitacaoPagamento findDespesaSolicitacaoByFiltro(String numeroNotaFiscal,
 			String fornecedor, Double valor) {
 
 		try {
-			return em.createNamedQuery(SolicitacaoPagamento.FIND_BY_FILTRO, SolicitacaoPagamento.class)
+			return em.createNamedQuery(DespesaSolicitacaoPagamento.FIND_BY_FILTRO, DespesaSolicitacaoPagamento.class)
 						.setParameter("nomeroNotaFiscal", numeroNotaFiscal.toLowerCase())
 						.setParameter("fornecedor", fornecedor.toLowerCase())
 						.setParameter("valor", valor)

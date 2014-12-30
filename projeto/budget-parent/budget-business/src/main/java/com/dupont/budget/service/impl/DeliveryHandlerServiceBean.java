@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 
 import com.dupont.budget.model.Acao;
 import com.dupont.budget.model.CentroCusto;
+import com.dupont.budget.model.DespesaSolicitacaoPagamento;
 import com.dupont.budget.model.Fornecedor;
 import com.dupont.budget.model.SolicitacaoPagamento;
 import com.dupont.budget.model.TipoDespesa;
@@ -188,7 +189,7 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
 
 			try {
 				List<Fornecedor> persistent = service.findAll(Fornecedor.class);
-				SolicitacaoPagamento solicitacao = null;
+				DespesaSolicitacaoPagamento despesa = null;
 				
 				File csv = createFile();
 				try (BufferedWriter bw = new BufferedWriter(new FileWriter(csv))) {
@@ -206,14 +207,14 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
 							continue;
 						}
 						
-						solicitacao = service.findDespesaSolicitacaoByFiltro(
+						despesa = service.findDespesaSolicitacaoByFiltro(
 								row.getCell(2).getStringCellValue(), 
 								row.getCell(6).getStringCellValue(),
 								row.getCell(0).getNumericCellValue());
-						if (solicitacao != null) {
+						if (despesa != null) {
 							Double d = row.getCell(8).getNumericCellValue();
-							solicitacao.setValor(d);
-							service.update(solicitacao);
+//							solicitacao.setValor(d);
+							service.update(despesa);
 							counter++;
 						}
 					}
