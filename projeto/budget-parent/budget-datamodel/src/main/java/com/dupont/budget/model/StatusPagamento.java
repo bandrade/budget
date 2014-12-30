@@ -1,5 +1,5 @@
 package com.dupont.budget.model;
 
 public enum StatusPagamento {
-	COMPROMETIDO, PAGO
+	COMPROMETIDO, PAGO,PENDENTE_VALIDACAO,INATIVO
 }
