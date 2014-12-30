@@ -19,6 +19,7 @@
 
 					<p:panelGrid columns="1" styleClass="painel-botoes" >
 						<p:commandButton
+							onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"
 							action="#{processoAction.iniciarProcessoBudget()}"
 							value="Iniciar Processo" update=":form"/>
 					</p:panelGrid>

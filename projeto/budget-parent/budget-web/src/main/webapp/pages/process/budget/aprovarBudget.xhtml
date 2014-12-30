@@ -33,7 +33,7 @@
 					</p:panelGrid>
 					<p:panelGrid columns="1" styleClass="painel-botoes">
 						<p:commandButton value="Incluir Despesa"
-							onclick="PF('criarDespesa').show();" action="#{aprovarBudgetAction.inicializarDespesa()}" update=":formDespesa"/>
+							oncomplete="PF('criarDespesa').show();" action="#{aprovarBudgetAction.trataInclusao()}" update=":criarDespesaPanel,:formDespesa"/>
 					</p:panelGrid>
 					<p:panelGrid id="panelDetalhe" columns="1">
 					<p:dataTable 
@@ -114,7 +114,7 @@
 					
 					</p:panelGrid>
 						<p:panelGrid columns="1" styleClass="painel-botoes">
-						<p:commandButton value="Concluir"  action="#{aprovarBudgetAction.concluir()}">
+						<p:commandButton value="Concluir"  action="#{aprovarBudgetAction.concluir()}" onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()">
 							<p:confirm header="Confirmação" message="Confirma a conclusão da Aprovação do Budget?" icon="ui-icon-alert"/>
 						</p:commandButton>
 					</p:panelGrid>
@@ -195,10 +195,12 @@
 				<p:panelGrid styleClass="painel-botoes" columns="1">				
 						<p:commandButton value="Incluir Despesa" action="#{aprovarBudgetAction.adicionarDespesa()}"  
 						 update=":formDespesa:panelDespesa,:form" rendered="#{aprovarBudgetAction.inclusao}" 
+						 onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"
 						 oncomplete="if(document.getElementById('formDespesa:incAltSucesso').value=='true'){PF('criarDespesa').hide();}"/>
 						<p:commandButton value="Alterar Despesa" action="#{aprovarBudgetAction.alterarDespesa()}"  
 						 update=":formDespesa:panelDespesa,:form" rendered="#{not aprovarBudgetAction.inclusao}"  
-						 oncomplete="if(document.getElementById('formDespesa:incAltSucesso').value=='true'){PF('criarDespesa').hide();}"/>
+						 oncomplete="if(document.getElementById('formDespesa:incAltSucesso').value=='true'){PF('criarDespesa').hide();}"
+						 onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"/>
 				</p:panelGrid>
 				</p:panel>
 			

@@ -12,9 +12,11 @@ import javax.ws.rs.Path;
 import org.slf4j.Logger;
 
 import com.dupont.budget.dto.BudgetAreaDTO;
+import com.dupont.budget.dto.DespesaMesDTO;
 import com.dupont.budget.dto.DespesasAgrupadasDTO;
 import com.dupont.budget.model.Budget;
 import com.dupont.budget.model.BudgetEstipuladoAno;
+import com.dupont.budget.model.BudgetMes;
 import com.dupont.budget.model.Despesa;
 import com.dupont.budget.model.StatusBudget;
 import com.dupont.budget.model.TipoDespesa;
@@ -52,6 +54,68 @@ public class BudgetServiceBean extends GenericService implements BudgetService {
 
 		return em.createNamedQuery("Despesa.obterDespesaNoDetalheBudget",Despesa.class).setParameter("budgetId", budgetId)
 				.getResultList();
+	}
+
+
+	public List<DespesaMesDTO> obterDespesaNoDetalheBudgetAsDTO(Long budgetId) throws Exception {
+
+		List<Despesa> despesas = obterDespesaNoDetalheBudget(budgetId);
+		List<DespesaMesDTO> despesasMes = new ArrayList<>();
+		for(Despesa despesa : despesas)
+		{
+			DespesaMesDTO despesaMes = new DespesaMesDTO();
+			despesaMes.setIdDespesa(despesa.getId());
+			despesaMes.setTipoDespesa(despesa.getTipoDespesa().getNome());
+			despesaMes.setCliente(despesa.getCliente() !=null ? despesa.getCliente().getNome(): null);
+			despesaMes.setVendedor(despesa.getVendedor() !=null ? despesa.getVendedor().getNome() : "");
+			despesaMes.setAcao(despesa.getAcao() !=null ? despesa.getAcao().getNome() : "");
+			despesaMes.setProduto(despesa.getProduto() !=null ? despesa.getProduto().getNome() : "");
+			despesaMes.setCultura(despesa.getCultura() !=null ? despesa.getCultura().getNome() : "");
+			despesaMes.setDistrito(despesa.getDistrito() !=null ? despesa.getDistrito().getNome() : "");
+			despesaMes.setValor(despesa.getValor());
+			despesaMes.setComentario(despesa.getComentario());
+			despesasMes.add(despesaMes);
+		}
+
+		return despesasMes;
+	}
+
+	public void mensalisarBudget(List<DespesaMesDTO> despesas) throws Exception
+	{
+		for(DespesaMesDTO despesa : despesas)
+		{
+			BudgetMes budgetMes = new BudgetMes();
+			budgetMes.setId(despesa.getIdDespesa());
+			budgetMes.setJaneiro(despesa.getJaneiro());
+			budgetMes.setFevereiro(despesa.getFevereiro());
+			budgetMes.setMarco(despesa.getMarco());
+			budgetMes.setAbril(despesa.getAbril());
+			budgetMes.setMaio(despesa.getMaio());
+			budgetMes.setJunho(despesa.getJunho());
+			budgetMes.setJulho(despesa.getJulho());
+			budgetMes.setSetembro(despesa.getSetembro());
+			budgetMes.setNovembro(despesa.getNovembro());
+			budgetMes.setDezembro(despesa.getDezembro());
+			BudgetMes _budgetMes= null;
+			try
+			{
+				_budgetMes= em.find(BudgetMes.class, budgetMes.getId());
+			}
+			catch(NoResultException nre)
+			{
+				logger.debug("Nao existe budget mes submetido deste ano");
+			}
+			if(_budgetMes !=null)
+			{
+				em.merge(budgetMes);
+			}
+			else
+			{
+				em.persist(budgetMes);
+
+			}
+
+		}
 	}
 
 	@Override
@@ -105,6 +169,7 @@ public class BudgetServiceBean extends GenericService implements BudgetService {
 		}
 	}
 
+	@Path("submeter")
 	@POST
 	public void submeterBudget(String budgetId){
  			Budget budget = em.find(Budget.class,Long.valueOf(budgetId));
@@ -193,5 +258,15 @@ public class BudgetServiceBean extends GenericService implements BudgetService {
 
 		}
 		return budgets;
+	}
+
+
+	@Path("aprovar")
+	@POST
+	public void aprovarDespesasBudget(String budgetId) {
+		em.createNamedQuery("Despesa.aprovarDespesasBudget")
+		.setParameter("budgetId",Long.valueOf(budgetId)).executeUpdate();
+
+
 	}
 }

@@ -1,0 +1,49 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<title>Efetuar Login</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+	<h:outputStylesheet library="css" name="default.css" />
+
+
+</h:head>
+
+<h:body>
+
+	<p:layout fullPage="true">
+
+		<p:layoutUnit collapsible="false" resizable="false" gutter="0"
+			styleClass="layoutUnit header" position="north">
+
+			<p>Efetuar Login</p>
+
+		</p:layoutUnit>
+
+		<p:layoutUnit resizable="false" styleClass="layoutUnit main"
+			gutter="0" position="center">
+			
+			<h:form id="login"
+				onsubmit="document.getElementById('login').action='j_security_check';"
+				prependId="false" >
+				<p:panel header="Login"   style="width:400px;height:150px;" styleClass="centered">
+				<h:panelGrid columns="2">
+					<p:outputLabel for="j_username" value="Username" />
+					<p:inputText id="j_username" name="j_username" />
+					<p:outputLabel for="j_password" value="Password" />
+					<p:password id="j_password" name="j_password" />
+					<p:commandButton id="submit" value="Login" ajax="false" />
+				</h:panelGrid>
+				</p:panel>
+			</h:form>
+
+		</p:layoutUnit>
+
+	</p:layout>
+
+</h:body>
+
+</html>

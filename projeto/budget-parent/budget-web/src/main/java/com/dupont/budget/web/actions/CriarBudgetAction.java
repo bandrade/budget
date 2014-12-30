@@ -101,6 +101,12 @@ public class CriarBudgetAction extends BudgetAction implements Serializable {
 
 	@Override
 	public String concluir() {
+
+		if(valorTotalAgrupado==null || valorTotalAgrupado==0d)
+		{
+			facesUtils.addErrorMessage("Nao deve-se concluir a tarefa de Criar Budget sem adicionar nenhuma despesa com valor");
+			return null;
+		}
 		params = new HashMap<String,Object>();
 		params.put("_budgetId",budget.getId().toString());
 		return super.concluir();

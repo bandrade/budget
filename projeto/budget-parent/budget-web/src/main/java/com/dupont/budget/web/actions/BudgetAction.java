@@ -90,6 +90,12 @@ public class BudgetAction implements Serializable{
 
 	}
 
+	public void trataInclusao()
+	{
+		incAltComSucesso=false;
+		inclusao=true;
+		inicializarDespesa();
+	}
 	public void inicializarDespesa(){
 		despesa = new Despesa();
 		despesa.init();
@@ -125,6 +131,7 @@ public class BudgetAction implements Serializable{
 
 	public void tratarDadosAlteracao()
 	{
+		incAltComSucesso=false;
 		despesa.initLists();
 		if(despesa.getAcao().getId()==null || despesa.getAcao().getId()==0)
 		{
@@ -153,6 +160,7 @@ public class BudgetAction implements Serializable{
 			budgetService.insertItemDespesa(despesa);
 			incAltComSucesso=true;
 			inicializarDespesa();
+			facesUtils.addInfoMessage("Despesa adicionada com sucesso");
 		}
 		catch(Exception e)
 		{
@@ -165,6 +173,7 @@ public class BudgetAction implements Serializable{
 	public void removerDespesa()
 	{
 		domainService.delete(despesaDetalheSelecionada);
+		facesUtils.addInfoMessage("Despesa removida com sucesso");
 	}
 
 
@@ -255,6 +264,7 @@ public class BudgetAction implements Serializable{
 			budgetService.updateItemDespesa(despesa);
 			incAltComSucesso= true;
 			inicializarDespesa();
+			facesUtils.addInfoMessage("Despesa alterada com sucesso");
 		}
 		catch(Exception e)
 		{

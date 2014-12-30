@@ -3,6 +3,7 @@ package com.dupont.budget.service;
 import java.util.List;
 
 import com.dupont.budget.dto.BudgetAreaDTO;
+import com.dupont.budget.dto.DespesaMesDTO;
 import com.dupont.budget.dto.DespesasAgrupadasDTO;
 import com.dupont.budget.model.Budget;
 import com.dupont.budget.model.BudgetEstipuladoAno;
@@ -22,4 +23,7 @@ public interface BudgetService {
 	public void adicionarBudgetsSubmetidos(List<BudgetEstipuladoAno> budgets) throws Exception;
 	public BudgetEstipuladoAno obterValoresAprovadosESubmetidos(Long areaId, String ano) throws Exception;
 	public List<Budget> obterBudgetsPorArea (Long areaId, String ano) throws Exception;
+	public List<DespesaMesDTO> obterDespesaNoDetalheBudgetAsDTO(Long budgetId) throws Exception ;
+	public void mensalisarBudget(List<DespesaMesDTO> despesas) throws Exception;
+	public void aprovarDespesasBudget(String budgetId);
 }

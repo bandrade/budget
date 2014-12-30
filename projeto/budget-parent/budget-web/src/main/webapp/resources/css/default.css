@@ -130,6 +130,15 @@ body {
 .ui-autocomplete-list{
 	background-color: white;
 }
+
+.ui-columntoggler-items{
+	background-color: white;
+}
+
+.ui-columntoggler-items-wrapper{
+	background-color: white;
+}
+
 .ui-selectonemenu-items-wrapper
 {
 	background-color: white;

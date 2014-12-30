@@ -60,13 +60,22 @@
 					<p:layoutUnit collapsible="false" resizable="false" gutter="0" styleClass="layoutUnit header"  position="north">
 					
 						<!-- Propriedade criada no classeLoggedUserAction -->
-						<p> Bem-vindo #{loggedUsername} ao sistema de Budget da Dupont </p>
+						<h:panelGrid columns="1" style="text-align:right" width="100%">
+						<h:panelGrid columns="2" style="float:right;text-align:right" width="40%">
+						<p:column style="text-align:right" width="10%">
+							<h:outputText value="Bem-vindo #{loggedUsername} ao sistema de Budget da Dupont" style="color:white"/>
+						</p:column>
+						<p:column  width="5%"> 
+						<h:form><p:commandButton value="Logout" action="#{usuarioAction.logout()}" ajax="false" /></h:form>
+						</p:column>
 						
-						<p>Versão:0.0.4</p>
-						
+						<h:panelGroup></h:panelGroup>
+						<p>Versão:0.0.5</p>
+						</h:panelGrid>
+						</h:panelGrid>
 					</p:layoutUnit>
 					
-					<p:layoutUnit resizable="false" styleClass="layoutUnit main" gutter="0" position="center">
+					<p:layoutUnit resizable="false" styleClass="layoutUnit main" gutter="0" position="center" >
 					
 						<p:messages id="messages" showDetail="true" showSummary="false" autoUpdate="true" closable="true" globalOnly="true"/>
 	        	
@@ -82,7 +91,11 @@
 			</p:layoutUnit>
 		
 		</p:layout>
-		<p:confirmDialog global="true" showEffect="fade" hideEffect="explode" style="background-color:white">
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false" style="background-color:white">
+    						<p:graphicImage value="/resources/images/ajaxloadingbar.gif" />
+		   </p:dialog>
+ 
+		<p:confirmDialog global="true" showEffect="fade" hideEffect="slide" style="background-color:white">
 			        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
 			        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no"  icon="ui-icon-close" />
 			    </p:confirmDialog>
