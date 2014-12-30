@@ -1,0 +1,41 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<title>Efetuar Login</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+	<h:outputStylesheet library="css" name="default.css" />
+
+
+</h:head>
+
+<h:body>
+
+	<p:layout fullPage="true">
+
+		<p:layoutUnit collapsible="false" resizable="false" gutter="0"
+			styleClass="layoutUnit header" position="north">
+
+			<p>Erro</p>
+
+		</p:layoutUnit>
+		<p:layoutUnit resizable="false" styleClass="layoutUnit main"
+			gutter="0" position="center">
+			
+			<h:form id="login"
+				onsubmit="document.getElementById('login').action='j_security_check';"
+				prependId="false" >
+			  <h2>Usuario ou senha invalidos</h2>
+			   <h:link outcome="login">Retornar a pagina de login</h:link>
+			</h:form>
+
+		</p:layoutUnit>
+	  
+
+	  
+	</p:layout>/
+    </h:body>
+</html>

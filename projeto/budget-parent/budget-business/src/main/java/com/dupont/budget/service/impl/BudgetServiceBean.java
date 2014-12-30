@@ -24,7 +24,7 @@ import com.dupont.budget.service.BudgetService;
 import com.dupont.budget.service.GenericService;
 
 @Stateless
-
+@Path("budget")
 public class BudgetServiceBean extends GenericService implements BudgetService {
 
 	@Inject
@@ -169,7 +169,7 @@ public class BudgetServiceBean extends GenericService implements BudgetService {
 		}
 	}
 
-	@Path("budget")
+	@Path("submeter")
 	@POST
 	public void submeterBudget(String budgetId){
  			Budget budget = em.find(Budget.class,Long.valueOf(budgetId));
@@ -261,7 +261,7 @@ public class BudgetServiceBean extends GenericService implements BudgetService {
 	}
 
 
-	@Path("aprovarBudget")
+	@Path("aprovar")
 	@POST
 	public void aprovarDespesasBudget(String budgetId) {
 		em.createNamedQuery("Despesa.aprovarDespesasBudget")

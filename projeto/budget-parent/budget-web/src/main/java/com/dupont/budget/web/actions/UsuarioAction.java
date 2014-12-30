@@ -1,5 +1,6 @@
 package com.dupont.budget.web.actions;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -8,8 +9,13 @@ import java.util.Set;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.inject.Model;
 import javax.enterprise.inject.Produces;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.jboss.crypto.CryptoUtil;
 import org.primefaces.model.DualListModel;
@@ -199,6 +205,14 @@ public class UsuarioAction extends GenericAction<Usuario> {
 		return super.persist();
 	}
 
+
+	public String logout()
+	{
+
+		FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+		return "minhasTarefas?faces-redirect=true";
+
+	}
 	@Override
 	public String update() {
 		userCallBackCache.removeGroupsFromCache(entidade.getLogin());

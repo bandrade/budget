@@ -78,10 +78,11 @@ public class AreaAction extends GenericAction<Area> {
 			Area tmp = service.findById(entidade);
 			entidade.setLider(tmp.getLider());
 			entidade.getLider().setUsuario(lider);
+			userCallBackCache.removeGroupsFromCache(lider.getLogin());
 			result = update();
 		}
 
-				userCallBackCache.removeGroupsFromCache(entidade.getLider().getUsuario().getLogin());
+		userCallBackCache.removeGroupsFromCache(entidade.getLider().getUsuario().getLogin());
 		clearInstance();
 
 		return result;

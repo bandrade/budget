@@ -74,8 +74,10 @@ public class CentroCustoAction extends GenericAction<CentroCusto> {
 		} else {
 			CentroCusto tmp = service.findById(entidade);
 			List<PapelUsuario> list = tmp.getResponsaveis();
+
 			for (Iterator<PapelUsuario> i = list.iterator(); i.hasNext();) {
 				PapelUsuario o = i.next();
+				userCallBackCache.removeGroupsFromCache(o.getUsuario().getLogin());
 				switch (o.getNivel()) {
 				case 1:
 					o.setUsuario(responsavel);
