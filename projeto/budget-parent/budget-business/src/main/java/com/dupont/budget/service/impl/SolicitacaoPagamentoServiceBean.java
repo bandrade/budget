@@ -30,7 +30,11 @@ public class SolicitacaoPagamentoServiceBean implements SolicitacaoPagamentoServ
 		
 
 		// Inicia o processo
-		long processInstanceId = processService.startSolicitacaoPagamentoProcess(solicitacaoPagamento);
+		long processInstanceId = 0;
+		try {
+			processInstanceId = processService.iniciarProcessoSolicitacaoPagamento(null, null, null);
+		} catch (Exception e) {
+		}
 		
 		solicitacaoPagamento.setProcessInstanceId(processInstanceId);
 		
