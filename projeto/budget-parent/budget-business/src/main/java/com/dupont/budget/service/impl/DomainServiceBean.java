@@ -8,6 +8,7 @@ import javax.persistence.NoResultException;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.dupont.budget.model.NamedAbstractEntity;
 import com.dupont.budget.model.CentroCusto;
 import com.dupont.budget.model.Papel;
 import com.dupont.budget.model.PapelUsuario;
@@ -124,5 +125,14 @@ public class DomainServiceBean extends GenericService implements DomainService {
 		} catch (NoResultException e) {
 			return null;
 		}
+	}
+	
+	@Override
+	public <T extends NamedAbstractEntity<?>> List<T> findByNamedQuery(String namedQuery, Class<T> clazz) {
+
+		if( namedQuery == null)
+			return null;		
+
+		return em.createNamedQuery(namedQuery, clazz).getResultList();
 	}
 }

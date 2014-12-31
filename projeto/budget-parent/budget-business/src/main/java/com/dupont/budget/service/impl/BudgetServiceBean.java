@@ -144,7 +144,7 @@ public class BudgetServiceBean extends GenericService implements BudgetService {
 	}
 
 	@Override
-	public Budget findByAnoAndCentroDeCusto(String ano, Long centroDeCustoId) throws Exception{
+	public Budget findByAnoAndCentroDeCusto(String ano, Long centroDeCustoId) {
 		Budget budget = null;
 		try
 		{

@@ -43,6 +43,9 @@ public class SolicitacaoPagamento extends AbstractEntity<Long> {
 
 	@Column(name="num_nota_fiscal")
 	private String numeroNotaFiscal;
+	
+	@Column(name="process_instance_id")
+	private Long processInstanceId;
 
 	@Column(name="data_pagamento")
 	@Temporal(TemporalType.DATE)
@@ -59,7 +62,7 @@ public class SolicitacaoPagamento extends AbstractEntity<Long> {
 
 	@Column(name="tipo_solicitacao")
 	@Enumerated(EnumType.STRING)
-	private TipoSolicitacao tipoSolicitacao;
+	private TipoSolicitacao tipoSolicitacao = TipoSolicitacao.CC;
 
 	@ManyToOne
 	@JoinColumn(name="fornecedor_id")
@@ -76,8 +79,6 @@ public class SolicitacaoPagamento extends AbstractEntity<Long> {
 	@JoinColumn(name = "usuario_id")
 	private Usuario usuarioCriador;
 
-	@Column(name="process_instance_id")
-	private Integer processInstanceId;
 
 	public SolicitacaoPagamento() {
 		this(null);
@@ -146,6 +147,14 @@ public class SolicitacaoPagamento extends AbstractEntity<Long> {
 		this.despesas = despesas;
 	}
 
+	public Long getProcessInstanceId() {
+		return processInstanceId;
+	}
+
+	public void setProcessInstanceId(Long processInstanceId) {
+		this.processInstanceId = processInstanceId;
+	}
+
 	public Date getDataPagamentoRealizado() {
 		return dataPagamentoRealizado;
 	}
@@ -168,16 +177,6 @@ public class SolicitacaoPagamento extends AbstractEntity<Long> {
 
 	public void setUsuarioCriador(Usuario usuarioCriador) {
 		this.usuarioCriador = usuarioCriador;
-	}
-
-	public Integer getProcessInstanceId() {
-		return processInstanceId;
-	}
-
-	public void setProcessInstanceId(Integer processInstanceId) {
-		this.processInstanceId = processInstanceId;
-	}
-	
-	
+	}	
 
 }

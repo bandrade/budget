@@ -13,7 +13,7 @@ public interface BudgetService {
 	public List<DespesasAgrupadasDTO> obterDespesaAgrupadas(Long budgetId) throws Exception;
 	public List<Despesa> obterDespesaNoDetalhe(Long tipoDespesaId,Long budgetId) throws Exception;
 	public Budget insertBudget(Budget budget) throws Exception;
-	public Budget findByAnoAndCentroDeCusto(String ano,Long centroDeCustoId) throws Exception;
+	public Budget findByAnoAndCentroDeCusto(String ano,Long centroDeCustoId);
 	public void insertItemDespesa(Despesa despesa) throws Exception;
 	public void updateItemDespesa(Despesa despesa) throws Exception;
 	public List<Despesa> obterDespesaNoDetalheBudget(Long budgetId)throws Exception ;

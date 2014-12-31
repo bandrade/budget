@@ -1,6 +1,8 @@
 package com.dupont.budget.model;
 
 import javax.persistence.Entity;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
@@ -12,6 +14,9 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name="fornecedor")
+@NamedQueries({
+	@NamedQuery(name="Fornecedor.findAllAtivos", query="select f from Fornecedor f where f.ativo = true")
+})
 public class Fornecedor extends NamedAbstractEntity<Long>{
 	
 	private static final long serialVersionUID = -2495897745436716001L;

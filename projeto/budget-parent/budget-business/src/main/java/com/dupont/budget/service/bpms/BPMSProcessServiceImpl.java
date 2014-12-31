@@ -12,8 +12,10 @@ import com.dupont.budget.dto.AreaDTO;
 import com.dupont.budget.dto.CentroDeCustoDTO;
 import com.dupont.budget.model.Area;
 import com.dupont.budget.model.CentroCusto;
+import com.dupont.budget.model.SolicitacaoPagamento;
 import com.dupont.budget.service.DomainService;
 import com.dupont.budget.service.centrodecusto.CentroDeCustoService;
+
 @Model
 public class BPMSProcessServiceImpl implements BPMSProcessService{
 	@Inject
@@ -55,7 +57,6 @@ public class BPMSProcessServiceImpl implements BPMSProcessService{
 	public boolean existeProcessoAtivo(String ano) throws BPMException {
 		return processApi.isProcessAlreadyStarted(ano);
 	}
-
 
 	@Override
 	public long iniciarProcessoSolicitacaoPagamento(Area area,

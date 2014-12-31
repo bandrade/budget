@@ -136,4 +136,12 @@ public interface DomainService {
 	 * @return o centro de custo ou <code>null</code> caso não exista
 	 */
 	CentroCusto findCentroCustoByCodigo(String codigo);
+	
+	
+	/**
+	  * Retorna todas as entidades da named query
+	  * @param nome nome da named query
+	  * @return lista com as entidades encontradas.
+	  */
+	<T extends NamedAbstractEntity<?>>List<T> findByNamedQuery(String namedQuery, Class<T> clazz);
 }
