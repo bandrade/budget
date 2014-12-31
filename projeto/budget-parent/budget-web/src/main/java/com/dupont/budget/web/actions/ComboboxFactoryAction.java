@@ -71,12 +71,4 @@ public class ComboboxFactoryAction {
 		
 		return service.findAll(Acao.class);
 	}
-	
-	public List<String> getTiposSolicitacao(){
-		
-		List<String> result = new ArrayList<String>();
-		result.add("CC");
-		result.add("RATEIO");
-		
-	}
 }

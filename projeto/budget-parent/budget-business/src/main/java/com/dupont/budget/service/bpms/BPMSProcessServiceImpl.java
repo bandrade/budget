@@ -59,35 +59,6 @@ public class BPMSProcessServiceImpl implements BPMSProcessService{
 	}
 
 	@Override
-	public long startSolicitacaoPagamentoProcess( SolicitacaoPagamento solicitacaoPagamento) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-
-	@Override
-	public long iniciarProcessoSolicitacaoPagamento(Area area,
-			Long idSolicitacao, String numeroNota) throws Exception {
-
-		AreaDTO areaDto =  new AreaDTO();
-		areaDto.setId(area.getId());
-		areaDto.setNome(area.getNome());
-		return processApi.startSolicitacaoPagamentoProcess(areaDto, numeroNota, String.valueOf(idSolicitacao));
-	}
-
-
-	@Override
-	public long iniciarProcessoSolicitacaoPagamento(Area area,
-			Long idSolicitacao, String numeroNota) throws Exception {
-
-		AreaDTO areaDto =  new AreaDTO();
-		areaDto.setId(area.getId());
-		areaDto.setNome(area.getNome());
-		return processApi.startSolicitacaoPagamentoProcess(areaDto, numeroNota, String.valueOf(idSolicitacao));
-	}
-
-
-	@Override
 	public long iniciarProcessoSolicitacaoPagamento(Area area,
 			Long idSolicitacao, String numeroNota) throws Exception {
 
