@@ -186,11 +186,10 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
 		try {
 			Sheet sheet = loadFileSheet(file);
 			Iterator<Row> rowIterator = sheet.iterator();
-			int counter = 0;
 
 			try {
 				List<Fornecedor> persistent = service.findAll(Fornecedor.class);
-				DespesaSolicitacaoPagamento despesa = null;
+				SolicitacaoPagamento solicitacao = null;
 				
 				File csv = createFile();
 				try (BufferedWriter bw = new BufferedWriter(new FileWriter(csv))) {
@@ -208,25 +207,23 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
 							continue;
 						}
 						
-						despesa = service.findDespesaSolicitacaoByFiltro(
-								row.getCell(2).getStringCellValue(), 
-								row.getCell(6).getStringCellValue(),
-								row.getCell(0).getNumericCellValue());
+						solicitacao = service.findSolicitacaoByNumeroNota(row.getCell(2).getStringCellValue());
 						
-						if (despesa == null) {
+						if (solicitacao == null) {
 							DespesaSolicitacaoPagamento tmp = new DespesaSolicitacaoPagamento();
 							tmp.setCentroCusto(centroCusto);
-							SolicitacaoPagamento solicitacao = new SolicitacaoPagamento(StatusPagamento.PENDENTE_VALIDACAO);
-							solicitacao.setFornecedor(fornecedor.get(0));
-							//solicitacao.setNumeroNotaFiscal(numeroNotaFiscal);
+							SolicitacaoPagamento o = new SolicitacaoPagamento(StatusPagamento.PENDENTE_VALIDACAO);
+							o.setFornecedor(fornecedor.get(0));
+							o.setNumeroNotaFiscal(row.getCell(2).getStringCellValue());
+							DespesaSolicitacaoPagamento d = new DespesaSolicitacaoPagamento();
+							d.setSolicitacaoPagamento(solicitacao);
+							d.setCentroCusto(centroCusto);
+							d.setValor(row.getCell(16).getNumericCellValue());
+							o.getDespesas().add(d);
+							service.create(o);
+							continue;
+						} else {
 							
-						}
-						
-						if (despesa != null) {
-							Double d = row.getCell(8).getNumericCellValue();
-//							solicitacao.setValor(d);
-							service.update(despesa);
-							counter++;
 						}
 					}
 				} catch (IOException e) {
@@ -242,7 +239,6 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
 			} catch (Exception e) {
 				logger.error(String.format("Nao foi possivel finalizar o cadastro de fornecedores: %s", e.getLocalizedMessage()));
 			}
-			logger.debug(String.format("%d entradas do arquivos processadas com sucesso!",counter));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

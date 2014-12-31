@@ -1,8 +1,10 @@
 package com.dupont.budget.model;
 
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -26,13 +28,16 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name="solicitacao_pagamento")
 @NamedQueries({
-	@NamedQuery(name = SolicitacaoPagamento.FIND_BY_FILTRO, query = "select o from SolicitacaoPagamento o join o.despesas d where o.numeroNotaFiscal = :numeroNotaFiscal and lower(o.fornecedor.nome) = :fornecedor and lower(d.centroCusto.nome) = :codigoCentroCusto")
+	@NamedQuery(name = SolicitacaoPagamento.FIND_BY_FILTRO, query = "select o from SolicitacaoPagamento o join o.despesas d where o.numeroNotaFiscal = :numeroNotaFiscal and lower(o.fornecedor.nome) = :fornecedor and lower(d.centroCusto.nome) = :codigoCentroCusto"),
+	@NamedQuery(name = SolicitacaoPagamento.FIND_BY_NUMERO_NOTA, query = "select o from SolicitacaoPagamento o where lower(o.numeroNotaFiscal) = :numeroNotaFiscal"),
 })
 public class SolicitacaoPagamento extends AbstractEntity<Long> {
 
 	private static final long serialVersionUID = 4098491678812403894L;
 
 	public static final String FIND_BY_FILTRO = "SolicitacaoPagamento.findByFiltro";
+	
+	public static final String FIND_BY_NUMERO_NOTA = "SolicitacaoPagamento.findByNumeroNota";
 
 	private Double valor;
 
@@ -64,7 +69,7 @@ public class SolicitacaoPagamento extends AbstractEntity<Long> {
 	@Enumerated(EnumType.STRING)
 	private StatusPagamento status;
 
-	@OneToMany(mappedBy = "solicitacaoPagamento")
+	@OneToMany(mappedBy = "solicitacaoPagamento", cascade = CascadeType.ALL)
 	private List<DespesaSolicitacaoPagamento> despesas;
 
 	@ManyToOne
@@ -131,6 +136,9 @@ public class SolicitacaoPagamento extends AbstractEntity<Long> {
 	}
 
 	public List<DespesaSolicitacaoPagamento> getDespesas() {
+		if (despesas == null) {
+			despesas = new LinkedList<>();
+		}
 		return despesas;
 	}
 
