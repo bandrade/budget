@@ -26,20 +26,23 @@
 		<p:layoutUnit resizable="false" styleClass="layoutUnit main"
 			gutter="0" position="center">
 			
+			<div id="login">
 			<h:form id="login"
 				onsubmit="document.getElementById('login').action='j_security_check';"
 				prependId="false" >
-				<p:panel header="Login"   style="width:400px;height:150px;" styleClass="centered">
+				<p:panel header="Login" style="height:150px">
 				<h:panelGrid columns="2">
-					<p:outputLabel for="j_username" value="Username" />
+					<p:outputLabel for="j_username" value="Usuario" />
 					<p:inputText id="j_username" name="j_username" />
-					<p:outputLabel for="j_password" value="Password" />
+					<p:outputLabel for="j_password" value="Senha" />
 					<p:password id="j_password" name="j_password" />
-					<p:commandButton id="submit" value="Login" ajax="false" />
 				</h:panelGrid>
+				<div style="float:right;">
+					<p:commandButton id="submit" value="Login" ajax="false" />
+				</div>
 				</p:panel>
 			</h:form>
-
+			</div>
 		</p:layoutUnit>
 
 	</p:layout>

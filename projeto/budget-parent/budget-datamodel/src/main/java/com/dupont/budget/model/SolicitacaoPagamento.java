@@ -31,21 +31,33 @@ import javax.persistence.TemporalType;
 public class SolicitacaoPagamento extends AbstractEntity<Long> {
 
 	private static final long serialVersionUID = 4098491678812403894L;
-	
+
 	public static final String FIND_BY_FILTRO = "SolicitacaoPagamento.findByFiltro";
 
 	private Double valor;
 
 	@Column(name="num_nota_fiscal")
 	private String numeroNotaFiscal;
+	
+	@Column(name="process_instance_id")
+	private Long processInstanceId;
 
 	@Column(name="data_pagamento")
 	@Temporal(TemporalType.DATE)
 	private Date dataPagamento;
 
+	@Column(name="data_pagamento_realizado")
+	@Temporal(TemporalType.DATE)
+	private Date dataPagamentoRealizado;
+
+
+	@Column(name = "data_criacao")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date criacao;
+
 	@Column(name="tipo_solicitacao")
 	@Enumerated(EnumType.STRING)
-	private TipoSolicitacao tipoSolicitacao;
+	private TipoSolicitacao tipoSolicitacao = TipoSolicitacao.CC;
 
 	@ManyToOne
 	@JoinColumn(name="fornecedor_id")
@@ -54,9 +66,17 @@ public class SolicitacaoPagamento extends AbstractEntity<Long> {
 	@Column(name="status")
 	@Enumerated(EnumType.STRING)
 	private StatusPagamento status;
-	
+
 	@OneToMany(mappedBy = "solicitacaoPagamento")
 	private List<DespesaSolicitacaoPagamento> despesas;
+
+	@ManyToOne
+	@JoinColumn(name = "usuario_id")
+	private Usuario usuarioCriador;
+
+	@Column(name="process_instance_id")
+	private Integer processInstanceId;
+
 
 	public Double getValor() {
 		return valor;
@@ -112,6 +132,14 @@ public class SolicitacaoPagamento extends AbstractEntity<Long> {
 
 	public void setDespesas(List<DespesaSolicitacaoPagamento> despesas) {
 		this.despesas = despesas;
+	}
+
+	public Long getProcessInstanceId() {
+		return processInstanceId;
+	}
+
+	public void setProcessInstanceId(Long processInstanceId) {
+		this.processInstanceId = processInstanceId;
 	}
 
 }

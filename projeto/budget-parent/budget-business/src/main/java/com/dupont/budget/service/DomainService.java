@@ -131,4 +131,12 @@ public interface DomainService {
 	 */
 	SolicitacaoPagamento findSolicitacaoPagamentoByFiltro(String numeroNotaFiscal,
 			String fornecedor, String codigoCentroCusto);
+	
+	
+	/**
+	  * Retorna todas as entidades da named query
+	  * @param nome nome da named query
+	  * @return lista com as entidades encontradas.
+	  */
+	<T extends NamedAbstractEntity<?>>List<T> findByNamedQuery(String namedQuery, Class<T> clazz);
 }

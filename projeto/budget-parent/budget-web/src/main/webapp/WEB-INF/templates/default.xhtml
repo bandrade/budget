@@ -20,7 +20,13 @@
 			<p:layoutUnit styleClass="layoutUnit sidebar" position="west" gutter="0" resizable="false" collapsible="false"  size="15%">
 				<ul class="menu">
 					<li><p:link  outcome="/pages/process/minhasTarefas.xhtml" value="Minhas tarefas"/>  </li>
-					<li> Lançar Despesa </li>
+					<li> Lançar Despesa 
+						<ul>
+							<li> <p:link  outcome="/pages/process/pagamento/edit.xhtml" value="Iniciar Lançamento de Despesas"/>  </li>
+						
+						</ul>
+					
+					</li>
 					
 					
 					<h:panelGroup rendered="#{request.isUserInRole('ADMINISTRADOR')}">				
@@ -70,7 +76,7 @@
 						</p:column>
 						
 						<h:panelGroup></h:panelGroup>
-						<p>Versão:0.0.5</p>
+						<p>Versão:0.0.6</p>
 						</h:panelGrid>
 						</h:panelGrid>
 					</p:layoutUnit>

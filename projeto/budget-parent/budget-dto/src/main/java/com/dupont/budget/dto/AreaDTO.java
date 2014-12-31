@@ -21,4 +21,9 @@ public class AreaDTO implements Serializable {
 		return "LIDER_"+nome.toUpperCase();
 	}
 
+	public String getNomePapelLancamentoNotas()
+	{
+		return "NOTAS_"+nome.toUpperCase();
+	}
+
 }
