@@ -74,9 +74,14 @@ public class SolicitacaoPagamento extends AbstractEntity<Long> {
 	@JoinColumn(name = "usuario_id")
 	private Usuario usuarioCriador;
 
-	@Column(name="process_instance_id")
-	private Integer processInstanceId;
 
+	public SolicitacaoPagamento() {
+		this(null);
+	}
+	
+	public SolicitacaoPagamento(StatusPagamento status) {
+		this.status = status;
+	}
 
 	public Double getValor() {
 		return valor;
@@ -141,5 +146,29 @@ public class SolicitacaoPagamento extends AbstractEntity<Long> {
 	public void setProcessInstanceId(Long processInstanceId) {
 		this.processInstanceId = processInstanceId;
 	}
+
+	public Date getDataPagamentoRealizado() {
+		return dataPagamentoRealizado;
+	}
+
+	public void setDataPagamentoRealizado(Date dataPagamentoRealizado) {
+		this.dataPagamentoRealizado = dataPagamentoRealizado;
+	}
+
+	public Date getCriacao() {
+		return criacao;
+	}
+
+	public void setCriacao(Date criacao) {
+		this.criacao = criacao;
+	}
+
+	public Usuario getUsuarioCriador() {
+		return usuarioCriador;
+	}
+
+	public void setUsuarioCriador(Usuario usuarioCriador) {
+		this.usuarioCriador = usuarioCriador;
+	}	
 
 }

@@ -87,4 +87,15 @@ public class BPMSProcessServiceImpl implements BPMSProcessService{
 	}
 
 
+	@Override
+	public long iniciarProcessoSolicitacaoPagamento(Area area,
+			Long idSolicitacao, String numeroNota) throws Exception {
+
+		AreaDTO areaDto =  new AreaDTO();
+		areaDto.setId(area.getId());
+		areaDto.setNome(area.getNome());
+		return processApi.startSolicitacaoPagamentoProcess(areaDto, numeroNota, String.valueOf(idSolicitacao));
+	}
+
+
 }

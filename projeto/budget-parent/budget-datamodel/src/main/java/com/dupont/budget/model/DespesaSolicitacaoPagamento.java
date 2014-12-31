@@ -3,6 +3,8 @@ package com.dupont.budget.model;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
@@ -15,9 +17,14 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "despesa_solicitacao_pagamento")
+//@NamedQueries({
+//	@NamedQuery(name = DespesaSolicitacaoPagamento.FIND_BY_FILTRO, query = "select o from DespesaSolicitacaoPagamento o join o.solicitacaoPagamento s where s.fornecedor.id = :fornecedor and s.centroCusto.id")
+//})
 public class DespesaSolicitacaoPagamento extends AbstractEntity<Long> {
 
 	private static final long serialVersionUID = -1567944689224148141L;
+	
+	public static final String FIND_BY_FILTRO = "DespesaSolicitacaoPagamento.findByFiltro";
 
 	@ManyToOne
 	@JoinColumn(name = "centro_custo_id")

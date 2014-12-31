@@ -48,7 +48,6 @@ public class AreaAction extends GenericAction<Area> {
 	@Inject
 	private UserGroupCallbackCacheManager userCallBackCache;
 
-
 	@Named
 	@Produces
 	public Area getArea() {
@@ -81,7 +80,6 @@ public class AreaAction extends GenericAction<Area> {
 				facesUtils.addErrorMessage("Erro inserir a Area");
 				logger.error("Erro ao inserir a area",e);
 			}
-
 		} else {
 			Area tmp = service.findById(entidade);
 			entidade.setLider(tmp.getLider());

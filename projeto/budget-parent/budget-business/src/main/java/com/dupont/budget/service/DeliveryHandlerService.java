@@ -9,6 +9,8 @@ import com.dupont.budget.service.event.FileUploadEvent;
  *
  */
 public interface DeliveryHandlerService {
+	
+	static final String RELATORIO_SAP_TEMP_DIR = "dupont_carga_sap";
 
 	/**
 	 * Trata eventos de upload da planilha de fornecedores do sistema.

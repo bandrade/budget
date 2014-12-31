@@ -1,8 +1,12 @@
 package com.dupont.budget.service.impl;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.Iterator;
 import java.util.List;
 
@@ -20,8 +24,10 @@ import org.slf4j.Logger;
 
 import com.dupont.budget.model.Acao;
 import com.dupont.budget.model.CentroCusto;
+import com.dupont.budget.model.DespesaSolicitacaoPagamento;
 import com.dupont.budget.model.Fornecedor;
 import com.dupont.budget.model.SolicitacaoPagamento;
+import com.dupont.budget.model.StatusPagamento;
 import com.dupont.budget.model.TipoDespesa;
 import com.dupont.budget.model.ValorComprometido;
 import com.dupont.budget.service.DeliveryHandlerService;
@@ -183,28 +189,49 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
 			int counter = 0;
 
 			try {
-				int blank = 0;
 				List<Fornecedor> persistent = service.findAll(Fornecedor.class);
-				SolicitacaoPagamento valor = null;
-				while (rowIterator.hasNext()) {
-					Row row = rowIterator.next();
-					valor = service.findSolicitacaoPagamentoByFiltro(
-							row.getCell(2).getStringCellValue(), 
-							row.getCell(6).getStringCellValue(), 
-							row.getCell(8).getStringCellValue());
-					if (valor != null) {
-						Double d = row.getCell(8).getNumericCellValue();
-						valor.setValor(d);
-						counter++;
-					} else {
-						blank++;
+				DespesaSolicitacaoPagamento despesa = null;
+				
+				File csv = createFile();
+				try (BufferedWriter bw = new BufferedWriter(new FileWriter(csv))) {
+					while (rowIterator.hasNext()) {
+						Row row = rowIterator.next();
+						List<Fornecedor> fornecedor = service.findByName(new Fornecedor(row.getCell(6).getStringCellValue()));
+						if (fornecedor.isEmpty() || fornecedor.size() > 1) {
+							bw.write(";;;;Fornecedor não encontrado");
+							continue;
+						}
+						
+						CentroCusto centroCusto = service.findCentroCustoByCodigo(row.getCell(8).getStringCellValue());
+						if (centroCusto == null) {
+							bw.write(";;;;Centro de Custo não encontrado");
+							continue;
+						}
+						
+						despesa = service.findDespesaSolicitacaoByFiltro(
+								row.getCell(2).getStringCellValue(), 
+								row.getCell(6).getStringCellValue(),
+								row.getCell(0).getNumericCellValue());
+						
+						if (despesa == null) {
+							DespesaSolicitacaoPagamento tmp = new DespesaSolicitacaoPagamento();
+							tmp.setCentroCusto(centroCusto);
+							SolicitacaoPagamento solicitacao = new SolicitacaoPagamento(StatusPagamento.PENDENTE_VALIDACAO);
+							solicitacao.setFornecedor(fornecedor.get(0));
+							//solicitacao.setNumeroNotaFiscal(numeroNotaFiscal);
+							
+						}
+						
+						if (despesa != null) {
+							Double d = row.getCell(8).getNumericCellValue();
+//							solicitacao.setValor(d);
+							service.update(despesa);
+							counter++;
+						}
 					}
-
-					if (blank >= 3) {
-						break;
-					}
+				} catch (IOException e) {
+					logger.error(String.format("Erro durante a gravação do arquivo de log: %s", e.getLocalizedMessage()));
 				}
-
 				if (!persistent.isEmpty()) {
 					for (Fornecedor o : persistent) {
 						o.setAtivo(false);
@@ -219,5 +246,18 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+    }
+    
+    private File createFile() {
+    	String tmpDir = System.getProperty("java.io.tmpdir");
+		final String name = DeliveryHandlerService.RELATORIO_SAP_TEMP_DIR;
+		tmpDir = tmpDir.endsWith(String.valueOf(File.separatorChar)) ? tmpDir.concat(name) : tmpDir.concat(String.valueOf(File.separatorChar)).concat(name);
+		
+		File dir = new File(tmpDir);
+		if (!dir.exists()) {
+			dir.mkdir();
+		}
+		
+		return new File(dir.getAbsolutePath().concat(new BigInteger(130, new SecureRandom()).toString(32)));
     }
 }
