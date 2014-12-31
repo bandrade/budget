@@ -3,6 +3,7 @@ package com.dupont.budget.dto;
 import java.io.Serializable;
 
 public class AreaDTO implements Serializable {
+	private static final long serialVersionUID = 4140788853802341849L;
 	private Long id;
 	private String nome;
 	public Long getId() {
