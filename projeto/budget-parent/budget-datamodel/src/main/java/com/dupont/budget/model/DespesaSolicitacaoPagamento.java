@@ -17,9 +17,9 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "despesa_solicitacao_pagamento")
-@NamedQueries({
-	@NamedQuery(name = DespesaSolicitacaoPagamento.FIND_BY_FILTRO, query = "select o from DespesaSolicitacaoPagamento o join o.solicitacaoPagamento s where s.fornecedor.id = :fornecedor and s.centroCusto.id")
-})
+//@NamedQueries({
+//	@NamedQuery(name = DespesaSolicitacaoPagamento.FIND_BY_FILTRO, query = "select o from DespesaSolicitacaoPagamento o join o.solicitacaoPagamento s where s.fornecedor.id = :fornecedor and s.centroCusto.id")
+//})
 public class DespesaSolicitacaoPagamento extends AbstractEntity<Long> {
 
 	private static final long serialVersionUID = -1567944689224148141L;

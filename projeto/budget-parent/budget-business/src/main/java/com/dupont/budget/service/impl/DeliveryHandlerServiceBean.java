@@ -27,6 +27,7 @@ import com.dupont.budget.model.CentroCusto;
 import com.dupont.budget.model.DespesaSolicitacaoPagamento;
 import com.dupont.budget.model.Fornecedor;
 import com.dupont.budget.model.SolicitacaoPagamento;
+import com.dupont.budget.model.StatusPagamento;
 import com.dupont.budget.model.TipoDespesa;
 import com.dupont.budget.model.ValorComprometido;
 import com.dupont.budget.service.DeliveryHandlerService;
@@ -211,6 +212,16 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
 								row.getCell(2).getStringCellValue(), 
 								row.getCell(6).getStringCellValue(),
 								row.getCell(0).getNumericCellValue());
+						
+						if (despesa == null) {
+							DespesaSolicitacaoPagamento tmp = new DespesaSolicitacaoPagamento();
+							tmp.setCentroCusto(centroCusto);
+							SolicitacaoPagamento solicitacao = new SolicitacaoPagamento(StatusPagamento.PENDENTE_VALIDACAO);
+							solicitacao.setFornecedor(fornecedor.get(0));
+							//solicitacao.setNumeroNotaFiscal(numeroNotaFiscal);
+							
+						}
+						
 						if (despesa != null) {
 							Double d = row.getCell(8).getNumericCellValue();
 //							solicitacao.setValor(d);
