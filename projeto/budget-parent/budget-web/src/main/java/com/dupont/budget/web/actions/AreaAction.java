@@ -68,8 +68,17 @@ public class AreaAction extends GenericAction<Area> {
 		if (mustCreate()) {
 			entidade.setLider(new PapelUsuario(new Papel(createNomePapel(entidade)), lider, entidade));
 			result = create();
-			if (bpms.existeProcessoAtivo(Calendar.getInstance().get(Calendar.YEAR) + "")) {
-				facesUtils.addInfoMessage("Area nao fara parte do processo de budget do ano "+Calendar.getInstance().get(Calendar.YEAR));
+			try
+			{
+				if(bpms.existeProcessoAtivo(Calendar.getInstance().get(Calendar.YEAR)+""))
+				{
+					facesUtils.addInfoMessage("Area nao fara parte do processo de budget do ano "+Calendar.getInstance().get(Calendar.YEAR));
+				}
+			}
+			catch(Exception e)
+			{
+				facesUtils.addErrorMessage("Erro inserir a Area");
+				logger.error("Erro ao inserir a area",e);
 			}
 		} else {
 			Area tmp = service.findById(entidade);
@@ -112,17 +121,25 @@ public class AreaAction extends GenericAction<Area> {
 	@Override
 	public void delete(Area t) {
 
-		if(bpms.existeProcessoAtivo(Calendar.getInstance().get(Calendar.YEAR)+""))
+		try
 		{
-			facesUtils.addErrorMessage("Não é possível remover uma Área enquanto haja um processo de budget ativo");
+			if(bpms.existeProcessoAtivo(Calendar.getInstance().get(Calendar.YEAR)+""))
+			{
+				facesUtils.addErrorMessage("Não é possível remover uma Área enquanto haja um processo de budget ativo");
+
+			}
+			else
+			{
+				userCallBackCache.removeGroupsFromCache(entidade.getLider().getUsuario().getLogin());
+				super.delete(t);
+			}
 
 		}
-		else
+		catch(Exception e)
 		{
-			userCallBackCache.removeGroupsFromCache(entidade.getLider().getUsuario().getLogin());
-			super.delete(t);
+			facesUtils.addErrorMessage("Erro ao remover a Area");
+			logger.error("Erro ao remover a area",e);
 		}
-
 	}
 
 	/**

@@ -74,6 +74,13 @@ public class SolicitacaoPagamento extends AbstractEntity<Long> {
 	@Column(name="process_instance_id")
 	private Integer processInstanceId;
 
+	public SolicitacaoPagamento() {
+		this(null);
+	}
+	
+	public SolicitacaoPagamento(StatusPagamento status) {
+		this.status = status;
+	}
 
 	public Double getValor() {
 		return valor;

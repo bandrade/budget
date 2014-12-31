@@ -66,9 +66,17 @@ public class CentroCustoAction extends GenericAction<CentroCusto> {
 			entidade.getResponsaveis().add(new PapelUsuario(new Papel(createNomePapel(entidade, 2)), gestor, entidade, 2));
 
 			result = create();
-			if(bpms.existeProcessoAtivo(Calendar.getInstance().get(Calendar.YEAR)+""))
+			try
 			{
-				facesUtils.addInfoMessage("Centro de Custo nao fara parte do processo de budget do ano "+Calendar.getInstance().get(Calendar.YEAR));
+				if(bpms.existeProcessoAtivo(Calendar.getInstance().get(Calendar.YEAR)+""))
+				{
+					facesUtils.addInfoMessage("Centro de Custo nao fara parte do processo de budget do ano "+Calendar.getInstance().get(Calendar.YEAR));
+				}
+			}
+			catch(Exception e )
+			{
+				facesUtils.addErrorMessage("Erro ao consultar o processo BPM");
+				logger.error("Erro ao consultar o processo BPM",e);
 			}
 
 		} else {
@@ -140,16 +148,24 @@ public class CentroCustoAction extends GenericAction<CentroCusto> {
 	@Override
 	public void delete(CentroCusto t) {
 
-		if(bpms.existeProcessoAtivo(Calendar.getInstance().get(Calendar.YEAR)+""))
+		try
 		{
-			facesUtils.addErrorMessage("Não é possível remover um Centro de Custo enquanto haja um processo de budget ativo");
+			if(bpms.existeProcessoAtivo(Calendar.getInstance().get(Calendar.YEAR)+""))
+			{
+				facesUtils.addErrorMessage("Não é possível remover um Centro de Custo enquanto haja um processo de budget ativo");
 
+			}
+			else
+			{
+				userCallBackCache.removeGroupsFromCache(responsavel.getLogin());
+				userCallBackCache.removeGroupsFromCache(gestor.getLogin());
+				super.delete(t);
+			}
 		}
-		else
+		catch(Exception e )
 		{
-			userCallBackCache.removeGroupsFromCache(responsavel.getLogin());
-			userCallBackCache.removeGroupsFromCache(gestor.getLogin());
-			super.delete(t);
+			facesUtils.addErrorMessage("Erro ao consultar o processo BPM");
+			logger.error("Erro ao consultar o processo BPM",e);
 		}
 	}
 
