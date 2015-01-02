@@ -241,7 +241,7 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
 									}
 								} else {
 									if (d.getCentroCusto().equals(centroCusto) && solicitacao.getFornecedor().equals(list.get(0))) {
-										writeLine("Valor divergente entre Cover Sheet e Relatório SAP", bw, row);
+										writeLine("Não foi possível tratar o registro. Existe mais de uma despesa com o mesmo fornecedor e centro de custo.", bw, row);
 										continue line;
 									}
 								}
