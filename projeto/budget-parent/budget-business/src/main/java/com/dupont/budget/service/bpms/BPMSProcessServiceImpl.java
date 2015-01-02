@@ -10,6 +10,7 @@ import com.dupont.budget.bpm.custom.exception.BPMException;
 import com.dupont.budget.bpm.custom.process.BPMProcessManagerApi;
 import com.dupont.budget.dto.AreaDTO;
 import com.dupont.budget.dto.CentroDeCustoDTO;
+import com.dupont.budget.dto.SolicitacaoPagamentoDTO;
 import com.dupont.budget.model.Area;
 import com.dupont.budget.model.CentroCusto;
 import com.dupont.budget.model.SolicitacaoPagamento;
@@ -59,13 +60,9 @@ public class BPMSProcessServiceImpl implements BPMSProcessService{
 	}
 
 	@Override
-	public long iniciarProcessoSolicitacaoPagamento(Area area,
-			Long idSolicitacao, String numeroNota) throws Exception {
+	public long iniciarProcessoSolicitacaoPagamento(SolicitacaoPagamentoDTO [] solicitacoes) throws Exception {
 
-		AreaDTO areaDto =  new AreaDTO();
-		areaDto.setId(area.getId());
-		areaDto.setNome(area.getNome());
-		return processApi.startSolicitacaoPagamentoProcess(areaDto, numeroNota, String.valueOf(idSolicitacao));
+		return processApi.startSolicitacaoPagamentoProcess(solicitacoes);
 	}
 
 

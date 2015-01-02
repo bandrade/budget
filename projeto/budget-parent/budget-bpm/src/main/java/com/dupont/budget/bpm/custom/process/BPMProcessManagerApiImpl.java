@@ -38,6 +38,7 @@ import com.dupont.budget.bpm.custom.exception.BPMException;
 import com.dupont.budget.bpm.custom.workitem.DupontEmailWorkItemHandler;
 import com.dupont.budget.dto.AreaDTO;
 import com.dupont.budget.dto.CentroDeCustoDTO;
+import com.dupont.budget.dto.SolicitacaoPagamentoDTO;
 
 @ApplicationScoped
 //@TransactionManagement(TransactionManagementType.BEAN)
@@ -94,7 +95,7 @@ public class BPMProcessManagerApiImpl implements BPMProcessManagerApi {
 
 
 
-	public long startSolicitacaoPagamentoProcess(AreaDTO area, String numeroNota, String idSolicitacao) throws Exception
+	public long startSolicitacaoPagamentoProcess(SolicitacaoPagamentoDTO [] solicitacoes) throws Exception
 	{
 		RuntimeEngine runtime = singletonManager.getRuntimeEngine(EmptyContext
 				.get());
@@ -104,9 +105,7 @@ public class BPMProcessManagerApiImpl implements BPMProcessManagerApi {
 
 		try {
 			Map<String, Object> params = new HashMap<String, Object>();
-			params.put("area", area);
-			params.put("numeroNota",numeroNota);
-			params.put("idSolicitacao", idSolicitacao);
+			params.put("solicitacoes", solicitacoes);
 			ProcessInstance processInstance = ksession.startProcess(
 					"com.dupont.bpm.solicitarpagamento", params);
 			processInstanceId = processInstance.getId();
