@@ -66,19 +66,14 @@ public class CentroCustoAction extends GenericAction<CentroCusto> {
 			entidade.getResponsaveis().add(new PapelUsuario(new Papel(createNomePapel(entidade, 2)), gestor, entidade, 2));
 
 			result = create();
-			try
-			{
-				if(bpms.existeProcessoAtivo(Calendar.getInstance().get(Calendar.YEAR)+""))
-				{
+			try {
+				if (bpms.existeProcessoAtivo(Calendar.getInstance().get(Calendar.YEAR) + "")) {
 					facesUtils.addInfoMessage("Centro de Custo nao fara parte do processo de budget do ano "+Calendar.getInstance().get(Calendar.YEAR));
 				}
-			}
-			catch(Exception e )
-			{
+			} catch(Exception e) {
 				facesUtils.addErrorMessage("Erro ao consultar o processo BPM");
 				logger.error("Erro ao consultar o processo BPM",e);
 			}
-
 		} else {
 			CentroCusto tmp = service.findById(entidade);
 			List<PapelUsuario> list = tmp.getResponsaveis();
@@ -111,6 +106,7 @@ public class CentroCustoAction extends GenericAction<CentroCusto> {
 				return result;
 	}
 
+	@Override
 	public String edit(CentroCusto t) {
 		this.setEntidade(t);
 
@@ -136,6 +132,7 @@ public class CentroCustoAction extends GenericAction<CentroCusto> {
 		userCallBackCache.removeGroupsFromCache(gestor.getLogin());
 		return super.update();
 	}
+	
 	private String createNomePapel(CentroCusto cc, int nivel) {
 		final String[] papel = {"RESPONSAVEL_", "GESTOR_","GERENTE_"};
 		StringBuilder nomePapel = new StringBuilder(papel[nivel - 1]);
@@ -148,22 +145,15 @@ public class CentroCustoAction extends GenericAction<CentroCusto> {
 	@Override
 	public void delete(CentroCusto t) {
 
-		try
-		{
-			if(bpms.existeProcessoAtivo(Calendar.getInstance().get(Calendar.YEAR)+""))
-			{
+		try {
+			if (bpms.existeProcessoAtivo(Calendar.getInstance().get(Calendar.YEAR) + "")) {
 				facesUtils.addErrorMessage("Não é possível remover um Centro de Custo enquanto haja um processo de budget ativo");
-
-			}
-			else
-			{
+			} else {
 				userCallBackCache.removeGroupsFromCache(responsavel.getLogin());
 				userCallBackCache.removeGroupsFromCache(gestor.getLogin());
 				super.delete(t);
 			}
-		}
-		catch(Exception e )
-		{
+		} catch(Exception e ) {
 			facesUtils.addErrorMessage("Erro ao consultar o processo BPM");
 			logger.error("Erro ao consultar o processo BPM",e);
 		}

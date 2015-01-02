@@ -10,7 +10,7 @@
 		<p:panel id="content">
 		
 			<h3> 
-				<h:outputText value="Carregar Pagamentos" /> 
+				<h:outputText value="Carregar Fornecedores" /> 
 			</h3>
 			
 			<h:form id="form" enctype="multipart/form-data"> 
@@ -18,14 +18,13 @@
 				<h:panelGrid columns="3" border="0">
 				
 					<p:outputLabel value="Arquivo:" for="arquivoInput" />
-					<p:fileUpload fileUploadListener="#{cargaRelatorioAction.handleUpload}" id="arquivoInput" mode="advanced" allowTypes="/(\.|\/)(xls?x)$/" />
+					<p:fileUpload id="arquivoInput" skinSimple="true" fileUploadListener="#{fornecedorAction.handleUpload}" mode="advanced" allowTypes="/(\.|\/)(xls?x)$/" />
 					<p:message for="arquivoInput" />			
 					
 				</h:panelGrid>
 				
-				<p:separator />
+				<p:commandButton value="Retornar" icon="ui-icon-arrowthick-1-w" action="/pages/adm/fornecedor/list.xhtml" styleClass="button" ajax="false" immediate="true" />
 				
-				<p:commandButton value="Retornar" icon="ui-icon-arrowthick-1-w" action="/pages/adm/nota/list.xhtml" styleClass="button" ajax="false" immediate="true" />
 			</h:form>
 		
 		</p:panel>

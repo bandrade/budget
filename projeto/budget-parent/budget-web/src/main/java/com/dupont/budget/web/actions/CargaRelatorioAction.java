@@ -6,14 +6,19 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.security.RolesAllowed;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 import org.slf4j.Logger;
 
@@ -21,7 +26,7 @@ import com.dupont.budget.dto.ResultadoCargaDTO;
 import com.dupont.budget.model.SolicitacaoPagamento;
 import com.dupont.budget.service.DeliveryHandlerService;
 import com.dupont.budget.service.EventDispatcherService;
-import com.dupont.budget.service.event.FileUploadEvent;
+import com.dupont.budget.service.event.UploadEvent;
 import com.dupont.budget.web.util.FacesUtils;
 
 /**
@@ -53,27 +58,34 @@ public class CargaRelatorioAction implements Serializable {
 	
 	private long readedChars;
 	
-	public String upload() {
+	private DateFormat format = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+	
+	private long last = 0L;
+	
+	@PostConstruct
+	public void init() {
+		updateList();
+	}
+	
+	public void handleUpload(FileUploadEvent event) {
+		this.file = event.getFile();
 		logger.debug("Arquivo recebido, iniciando processamento!");
 
-		FileUploadEvent event = new FileUploadEvent(SolicitacaoPagamento.class);
+		UploadEvent evt = new UploadEvent(SolicitacaoPagamento.class);
 		try {
 			String name = file.getFileName();
 			File tmp = File.createTempFile("dupont_", name.substring(name.lastIndexOf(".")));
 			FileOutputStream fos = new FileOutputStream(tmp);
 			fos.write(file.getContents());
 			fos.close();
-			event.setPath(tmp.getAbsolutePath());
-		} catch (IOException e) {
+			evt.setPath(tmp.getAbsolutePath());
+		} catch (Exception e) {
 			facesUtils.addErrorMessage("Ocorreu um erro durante o upload do arquivo, por favor tente novamente.");
-			return null;
 		}
 		
-		facesUtils.addInfoMessage("Arquivo recebido e enviado para o processamento. Por favor, aguarde a pagina será atualizada automaticamente.");
-		eventDispatcher.publish(event);
-		
-		return "list";
-	}
+		facesUtils.addInfoMessage("Arquivo recebido e enviado para o processamento. Clique em retornar para acompanhar o processo.");
+		eventDispatcher.publish(evt);
+    }
 	
 	public void updateList() {
 		String tmpDir = System.getProperty("java.io.tmpdir");
@@ -92,26 +104,29 @@ public class CargaRelatorioAction implements Serializable {
 			}
 		}
 		
-		if (log != null) {
+		if (log != null && log.lastModified() != last) {
 			try (BufferedReader br = new BufferedReader(new FileReader(log))) {
 				String line = null;
 				br.skip(readedChars);
 				while ((line = br.readLine()) != null) {
-					readedChars += line.length();
-					String[] nota = line.split(",");
-					ResultadoCargaDTO dto = new ResultadoCargaDTO();
-					dto.setNumeroNota(nota[0]);
-					dto.setCentroCusto(nota[1]);
-					dto.setFornecedor(nota[2]);
-					dto.setValor(Double.parseDouble(nota[3]));
-					dto.setStatus(nota[4]);
-					list.add(dto);
+					try {
+						readedChars += line.length();
+						String[] nota = line.split(";");
+						ResultadoCargaDTO dto = new ResultadoCargaDTO();
+						dto.setNumeroNota(nota[0]);
+						dto.setCentroCusto(nota[1]);
+						dto.setFornecedor(nota[2]);
+						dto.setValor(Double.parseDouble(nota[3].replace(",", ".")));
+						dto.setStatus(nota[4]);
+						list.add(dto);
+					} catch (Exception e) {
+						
+					}
 				}
+				last = log.lastModified();
 			} catch (IOException e) {
 				facesUtils.addErrorMessage("Ocorreu um erro durante a leitura do arquivo de log.");
 			}
-		} else {
-			facesUtils.addWarnMessage("Ainda não foi realizado nenhum upload.");
 		}
 	}
 
@@ -131,7 +146,7 @@ public class CargaRelatorioAction implements Serializable {
 		this.list = list;
 	}
 	
-	public static void main(String[] args) {
-		
+	public String getUltimaCarga() {
+		return String.format("Ultima carga: %s", format.format(new Date(last)));
 	}
 }

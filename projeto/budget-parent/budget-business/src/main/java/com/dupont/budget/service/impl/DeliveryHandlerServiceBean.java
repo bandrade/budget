@@ -32,7 +32,7 @@ import com.dupont.budget.model.TipoDespesa;
 import com.dupont.budget.model.ValorComprometido;
 import com.dupont.budget.service.DeliveryHandlerService;
 import com.dupont.budget.service.DomainService;
-import com.dupont.budget.service.event.FileUploadEvent;
+import com.dupont.budget.service.event.UploadEvent;
 import com.dupont.budget.service.event.Uploaded;
 
 @Stateless
@@ -68,7 +68,7 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
      */
     @Override
     @Asynchronous
-    public void onFornecedorUpload(@Observes @Uploaded(Fornecedor.class) FileUploadEvent event) {
+    public void onFornecedorUpload(@Observes @Uploaded(Fornecedor.class) UploadEvent event) {
 		logger.debug("Evento de cadastro de fornecedores sendo processado pelo serviço.");
 
 		File file = new File(event.getPath());
@@ -121,7 +121,7 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
 
     @Override
     @Asynchronous
-	public void onValorComprometidoUpload(@Observes @Uploaded(ValorComprometido.class) FileUploadEvent event) {
+	public void onValorComprometidoUpload(@Observes @Uploaded(ValorComprometido.class) UploadEvent event) {
 		logger.debug("Evento de cadastro de valores comprometidos sendo processado pelo serviço.");
 
 		File file = new File(event.getPath());
@@ -178,7 +178,7 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
     
     @Override
     @Asynchronous
-	public void onSolicitacaoPagamentoUpload(@Observes @Uploaded(SolicitacaoPagamento.class) FileUploadEvent event) {
+	public void onSolicitacaoPagamentoUpload(@Observes @Uploaded(SolicitacaoPagamento.class) UploadEvent event) {
     	logger.debug("Evento de atualização de solicitações de pagamento sendo processado pelo serviço.");
 
 		File file = new File(event.getPath());
@@ -190,57 +190,66 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
 			
 			File csv = createFile();
 			try (BufferedWriter bw = new BufferedWriter(new FileWriter(csv))) {
-				row: 
+				line: 
 				while (rowIterator.hasNext()) {
 					Row row = rowIterator.next();
-					List<Fornecedor> list = service.findByName(new Fornecedor(row.getCell(6).getStringCellValue()));
-					if (list.isEmpty() || list.size() > 1) {
-						bw.write(String.format("%s;%s;%s;%.2f;Fornecedor não encontrado", row.getCell(2).getStringCellValue(), row.getCell(8).getStringCellValue(), row.getCell(6).getStringCellValue(), row.getCell(16).getNumericCellValue()));
-						continue;
-					}
-					
-					CentroCusto centroCusto = service.findCentroCustoByCodigo(row.getCell(8).getStringCellValue());
-					if (centroCusto == null) {
-						bw.write(String.format("%s;%s;%s;%.2f;Centro de Custo não encontrado", row.getCell(2).getStringCellValue(), row.getCell(8).getStringCellValue(), row.getCell(6).getStringCellValue(), row.getCell(16).getNumericCellValue()));
-						continue;
-					}
-					
-					String numeroNota = row.getCell(2).getStringCellValue();
-					Double valor = row.getCell(16).getNumericCellValue();
-					Fornecedor fornecedor = list.get(0);
-					solicitacao = service.findSolicitacaoByNumeroNota(row.getCell(2).getStringCellValue());
-					
-					if (solicitacao == null) {
-						DespesaSolicitacaoPagamento tmp = new DespesaSolicitacaoPagamento();
-						tmp.setCentroCusto(centroCusto);
-						SolicitacaoPagamento o = new SolicitacaoPagamento(StatusPagamento.PENDENTE_VALIDACAO);
-						o.setFornecedor(list.get(0));
-						o.setNumeroNotaFiscal(row.getCell(2).getStringCellValue());
-						DespesaSolicitacaoPagamento d = new DespesaSolicitacaoPagamento();
-						d.setSolicitacaoPagamento(solicitacao);
-						d.setCentroCusto(centroCusto);
-						d.setValor(valor);
-						o.getDespesas().add(d);
-						service.create(o);
-						bw.write(String.format("%s;%s;%s;%.2f;PENDENTE_VALIDACAO", numeroNota, centroCusto.getNome(), fornecedor.getNome(), valor));
-					} else {
-						for (Iterator<DespesaSolicitacaoPagamento> iterator = solicitacao.getDespesas().iterator(); iterator.hasNext();) {
-							DespesaSolicitacaoPagamento d = iterator.next();
-							if (d.getValor().equals(valor)) {
-								if (!d.getCentroCusto().equals(centroCusto)) {
-									bw.write(String.format("%s;%s;%s;%.2f;Centro de Custo divergente entre Cover Sheet e Relatório SAP", numeroNota, centroCusto.getNome(), fornecedor.getNome(), valor));
-									continue row;
-								} else if (solicitacao.getFornecedor().equals(list)) {
-									bw.write(String.format("%s;%s;%s;%.2f;Fornecedor divergente entre Cover Sheet e Relatório SAP", numeroNota, centroCusto.getNome(), fornecedor.getNome(), valor));
-									continue row;
-								}
-							} else {
-								if (d.getCentroCusto().equals(centroCusto) && solicitacao.getFornecedor().equals(list)) {
-									bw.write(String.format("%s;%s;%s;%d;Valor divergente entre Cover Sheet e Relatório SAP"));
-									continue row;
+					try {
+						String numeroNota = row.getCell(7).getStringCellValue();
+						if (numeroNota == null || numeroNota.trim().isEmpty()) {
+							writeLine("Número da Nota vazio.", bw, row);
+							continue;
+						}
+						
+						List<Fornecedor> list = service.findByName(new Fornecedor(row.getCell(6).getStringCellValue()));
+						if (list.isEmpty() || list.size() > 1) {
+							writeLine("Fornecedor não encontrado", bw, row);
+							continue;
+						}
+						
+						CentroCusto centroCusto = service.findCentroCustoByCodigo(row.getCell(8).getStringCellValue());
+						if (centroCusto == null) {
+							writeLine("Centro de custo não encontrado", bw, row);
+							continue;
+						}
+						
+						Double valor = row.getCell(16).getNumericCellValue();
+						solicitacao = service.findSolicitacaoByNumeroNotaMes(row.getCell(7).getStringCellValue());
+						
+						if (solicitacao == null) {
+							SolicitacaoPagamento o = new SolicitacaoPagamento(StatusPagamento.PENDENTE_VALIDACAO);
+							o.setFornecedor(list.get(0));
+							o.setNumeroNotaFiscal(numeroNota);
+							DespesaSolicitacaoPagamento d = new DespesaSolicitacaoPagamento();
+							d.setSolicitacaoPagamento(solicitacao);
+							d.setCentroCusto(centroCusto);
+							d.setValor(valor);
+							o.getDespesas().add(d);
+							service.create(o);
+							writeLine("PENDENTE_VALIDACAO", bw, row);
+							continue;
+						} else {
+							List<DespesaSolicitacaoPagamento> despesas = solicitacao.getDespesas();
+							for (Iterator<DespesaSolicitacaoPagamento> iterator = despesas.iterator(); iterator.hasNext();) {
+								DespesaSolicitacaoPagamento d = iterator.next();
+								if (d.getValor().equals(valor)) {
+									if (!d.getCentroCusto().equals(centroCusto)) {
+										writeLine("Centro de Custo divergente entre Cover Sheet e Relatório SAP", bw, row);
+										continue line;
+									} else if (solicitacao.getFornecedor().equals(list.get(0))) {
+										writeLine("Fornecedor divergente entre Cover Sheet e Relatório SAP", bw, row);
+										continue line;
+									}
+								} else {
+									if (d.getCentroCusto().equals(centroCusto) && solicitacao.getFornecedor().equals(list.get(0))) {
+										writeLine("Valor divergente entre Cover Sheet e Relatório SAP", bw, row);
+										continue line;
+									}
 								}
 							}
 						}
+						writeLine("Valor não processado.", bw, row);
+					} catch (Exception e) {
+						bw.write(String.format("%s;%s;%s;%s;Erro durante a leitura\n", row.getCell(7).getStringCellValue(), row.getCell(8).getStringCellValue(), row.getCell(6).getStringCellValue(), row.getCell(16).getStringCellValue().replace(",", ".")));
 					}
 				}
 			} catch (IOException e) {
@@ -250,6 +259,10 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
 			e.printStackTrace();
 		}
     }
+
+	private void writeLine(String message, BufferedWriter bw, Row row) throws IOException {
+		bw.write(String.format("%s;%s;%s;%.2f;%s\n", row.getCell(7).getStringCellValue(), row.getCell(8).getStringCellValue(), row.getCell(6).getStringCellValue(), row.getCell(16).getNumericCellValue(), message));
+	}
     
     private File createFile() {
     	String tmpDir = System.getProperty("java.io.tmpdir");
@@ -261,6 +274,6 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
 			dir.mkdir();
 		}
 		
-		return new File(dir.getAbsolutePath().concat(new BigInteger(130, new SecureRandom()).toString(32)));
+		return new File(dir.getAbsolutePath().concat(String.valueOf(File.separatorChar)).concat(new BigInteger(130, new SecureRandom()).toString(32)));
     }
 }

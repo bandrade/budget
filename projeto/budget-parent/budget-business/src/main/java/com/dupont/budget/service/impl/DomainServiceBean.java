@@ -8,8 +8,8 @@ import javax.persistence.NoResultException;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.dupont.budget.model.NamedAbstractEntity;
 import com.dupont.budget.model.CentroCusto;
+import com.dupont.budget.model.NamedAbstractEntity;
 import com.dupont.budget.model.Papel;
 import com.dupont.budget.model.PapelUsuario;
 import com.dupont.budget.model.SolicitacaoPagamento;
@@ -102,10 +102,10 @@ public class DomainServiceBean extends GenericService implements DomainService {
 	 * @see com.dupont.budget.service.DomainService#findSolicitacaoPagamentoByFiltro(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public SolicitacaoPagamento findSolicitacaoByNumeroNota(String numeroNotaFiscal) {
+	public SolicitacaoPagamento findSolicitacaoByNumeroNotaMes(String numeroNotaFiscal) {
 		try {
 			return em.createNamedQuery(SolicitacaoPagamento.FIND_BY_NUMERO_NOTA, SolicitacaoPagamento.class)
-						.setParameter("nomeroNotaFiscal", numeroNotaFiscal.toLowerCase())
+						.setParameter("numeroNotaFiscal", numeroNotaFiscal.toLowerCase())
 						.getSingleResult();
 		} catch (NoResultException e) {
 			return null;

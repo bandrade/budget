@@ -18,13 +18,12 @@
 				<h:panelGrid columns="3" border="0">
 				
 					<p:outputLabel value="Arquivo:" for="arquivoInput" />
-					<p:fileUpload id="arquivoInput" value="#{valorComprometidoAction.file}" mode="simple" allowTypes="/(\.|\/)(xls?x)$/" />
+					<p:fileUpload id="arquivoInput" skinSimple="true" fileUploadListener="#{valorComprometidoAction.handleUpload}" mode="advanced" allowTypes="/(\.|\/)(xls?x)$/" />
 					<p:message for="arquivoInput" />			
 					
 				</h:panelGrid>
 				
-				<p:commandButton value="Enviar" icon="ui-icon-check" action="#{valorComprometidoAction.upload}" styleClass="button" ajax="false" />
-				<p:commandButton value="Cancelar"    icon="ui-icon-closethick" action="/pages/adm/valorComprometido/list.xhtml" styleClass="button" ajax="false" immediate="true" />
+				<p:commandButton value="Retornar"    icon="ui-icon-arrowthick-1-w" action="/pages/adm/valorComprometido/list.xhtml" styleClass="button" ajax="false" immediate="true" />
 				
 			</h:form>
 		

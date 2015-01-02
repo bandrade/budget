@@ -7,7 +7,7 @@
                 
 	<ui:define name="content">
 	<p:panelGrid columns="1" styleClass="body-content">
-		<p:fieldset value="Pesquisa de Valores Comprometidos" legend="Pesquisa de Valores Comprometidos">
+		<p:fieldset value="Resultado de Carga: Planilha SAP" legend="Resultado de Carga: Planilha SAP">
 	
 			<h3></h3>
 			
@@ -36,14 +36,17 @@
                         #{item.fornecedor}
                     </p:column>
                     <p:column headerText="Valor">
-                        #{item.valor}
+                        R$ #{item.valor}
                     </p:column>
                     <p:column headerText="Status">
                         #{item.status}
                     </p:column>
+                    <f:facet name="footer">
+                        #{cargaRelatorioAction.ultimaCarga}
+                    </f:facet>
 				</p:dataTable>
 				
-                <p:poll interval="10" listener="#{cargaRelatorioAction.updateList}" update="cargaRelatorios" />
+                <p:poll interval="3" listener="#{cargaRelatorioAction.updateList}" update="cargaRelatorios" />
 			</h:form>
 			
 		</p:fieldset>

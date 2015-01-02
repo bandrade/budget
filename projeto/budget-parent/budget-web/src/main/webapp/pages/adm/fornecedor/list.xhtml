@@ -20,7 +20,8 @@
 					<p:message for="nomeInput"/>
 					
 					<p:commandButton value="Pesquisar" icon="ui-icon-search"   styleClass="button" action="#{fornecedorAction.find}" update="fornecedors"/>
-					<p:commandButton value="Novo"      icon="ui-icon-document" styleClass="button" action="/pages/adm/fornecedor/edit.xml"   />
+					<p:commandButton value="Novo"      icon="ui-icon-document" styleClass="button" action="/pages/adm/fornecedor/edit.xml" disabled="true"  />
+					<p:commandButton value="Carregar arquivo"  icon="ui-icon-arrowthickstop-1-n" styleClass="button" action="/pages/adm/fornecedor/load.xhtml"   />
 				</h:panelGrid>
 				
 				<p:separator />

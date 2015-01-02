@@ -9,7 +9,7 @@ import javax.enterprise.util.AnnotationLiteral;
  *
  */
 @SuppressWarnings("all")
-public class FileUploadEvent extends AnnotationLiteral<Uploaded> implements Uploaded {
+public class UploadEvent extends AnnotationLiteral<Uploaded> implements Uploaded {
 
 	private static final long serialVersionUID = -2454622597076066897L;
 
@@ -17,7 +17,7 @@ public class FileUploadEvent extends AnnotationLiteral<Uploaded> implements Uplo
 	
 	private final Class<?> type;
 	
-	public FileUploadEvent(Class<?> type) {
+	public UploadEvent(Class<?> type) {
 		this.type = type;
 	}
 

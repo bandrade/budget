@@ -1,6 +1,6 @@
 package com.dupont.budget.service;
 
-import com.dupont.budget.service.event.FileUploadEvent;
+import com.dupont.budget.service.event.UploadEvent;
 
 
 /**
@@ -16,6 +16,6 @@ public interface EventDispatcherService {
 	 * 
 	 * @param event
 	 */
-	void publish(FileUploadEvent event);
+	void publish(UploadEvent event);
 
 }

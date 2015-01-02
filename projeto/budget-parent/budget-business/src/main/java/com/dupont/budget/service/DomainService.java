@@ -127,7 +127,7 @@ public interface DomainService {
 	 * 
 	 * @return a solicitação de pagamento ou <code>null</code> caso não encontre
 	 */
-	SolicitacaoPagamento findSolicitacaoByNumeroNota(String numeroNotaFiscal);
+	SolicitacaoPagamento findSolicitacaoByNumeroNotaMes(String numeroNotaFiscal);
 
 	/**
 	 * Consulta um centro de custo através do código solicitado.
