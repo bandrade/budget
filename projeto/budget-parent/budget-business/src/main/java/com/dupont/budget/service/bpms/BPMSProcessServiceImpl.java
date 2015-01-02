@@ -13,7 +13,6 @@ import com.dupont.budget.dto.CentroDeCustoDTO;
 import com.dupont.budget.dto.SolicitacaoPagamentoDTO;
 import com.dupont.budget.model.Area;
 import com.dupont.budget.model.CentroCusto;
-import com.dupont.budget.model.SolicitacaoPagamento;
 import com.dupont.budget.service.DomainService;
 import com.dupont.budget.service.centrodecusto.CentroDeCustoService;
 
