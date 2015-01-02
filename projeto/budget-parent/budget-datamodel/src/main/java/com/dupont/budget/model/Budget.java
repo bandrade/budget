@@ -68,10 +68,6 @@ public class Budget {
 	@JoinColumn(name = "budget_id")
 	private Set<Despesa> despesas;
 
-	@OneToOne
-	@JoinColumn(name = "id")
-	private BudgetMes budgetMes;
-
 	@Enumerated(EnumType.STRING)
 	private StatusBudget status;
 

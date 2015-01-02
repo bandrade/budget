@@ -56,7 +56,6 @@ public class BPMTaskManagerApiImpl implements BPMTaskManagerApi {
 				taskService.start(taskId, actorId);
 			taskService.complete(taskId, actorId, content);
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw new BPMException("Erro ao aprovar a tarefa", e);
 		}
 	}

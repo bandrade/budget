@@ -1,0 +1,30 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/templates/default.xhtml">
+
+	<ui:param name="pageTitle" value="Human Tasks" />
+
+	<ui:define name="content">
+		<h:form id="form">
+			<p:panelGrid columns="1" styleClass="body-content">
+				<p:fieldset legend="Iniciar processo de Budget">
+					<p:panelGrid columns="2">
+						<p:outputLabel value="Ano:" />
+						<p:outputLabel value="#{processoAction.ano}"
+							styleClass="bold-label" />
+					</p:panelGrid>
+
+					<p:panelGrid columns="1" styleClass="painel-botoes" >
+						<p:commandButton
+							onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"
+							action="#{processoAction.iniciarProcessoBudget()}"
+							value="Iniciar Processo" update=":form"/>
+					</p:panelGrid>
+				</p:fieldset>
+			</p:panelGrid>
+		</h:form>
+	</ui:define>
+</ui:composition>

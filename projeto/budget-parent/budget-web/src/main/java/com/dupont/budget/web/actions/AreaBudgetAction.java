@@ -56,7 +56,8 @@ public class AreaBudgetAction {
 	{
 		try {
 			ano = (String)bpmsProcesso.obterVariavelProcesso(idInstanciaProcesso, "anoBudget");
-			budgetsArea = budgetService.listarBudgetsAprovadosPorArea(ano);
+			if(budgetsArea==null)
+				budgetsArea = budgetService.listarBudgetsAprovadosPorArea(ano);
 			calcularValorTotalBudget();
 
 		} catch (Exception e) {
