@@ -4,6 +4,9 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
 
 	<application>
+		<action-listener>org.primefaces.application.DialogActionListener</action-listener>
+ 		<navigation-handler>org.primefaces.application.DialogNavigationHandler</navigation-handler>
+ 		<view-handler>org.primefaces.application.DialogViewHandler</view-handler>
 		<locale-config>
 			<default-locale>pt_BR</default-locale>
 			<message-bundle>com.dupont.budget.web.message.JSFMessages_pt_BR</message-bundle>
