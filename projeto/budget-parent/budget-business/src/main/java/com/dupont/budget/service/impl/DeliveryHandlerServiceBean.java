@@ -182,67 +182,70 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
     	logger.debug("Evento de atualização de solicitações de pagamento sendo processado pelo serviço.");
 
 		File file = new File(event.getPath());
+		Sheet sheet = loadFileSheet(file);
+		Iterator<Row> rowIterator = sheet.iterator();
 
 		try {
-			Sheet sheet = loadFileSheet(file);
-			Iterator<Row> rowIterator = sheet.iterator();
-			int counter = 0;
-
-			try {
-				List<Fornecedor> persistent = service.findAll(Fornecedor.class);
-				DespesaSolicitacaoPagamento despesa = null;
-				
-				File csv = createFile();
-				try (BufferedWriter bw = new BufferedWriter(new FileWriter(csv))) {
-					while (rowIterator.hasNext()) {
-						Row row = rowIterator.next();
-						List<Fornecedor> fornecedor = service.findByName(new Fornecedor(row.getCell(6).getStringCellValue()));
-						if (fornecedor.isEmpty() || fornecedor.size() > 1) {
-							bw.write(";;;;Fornecedor não encontrado");
-							continue;
-						}
-						
-						CentroCusto centroCusto = service.findCentroCustoByCodigo(row.getCell(8).getStringCellValue());
-						if (centroCusto == null) {
-							bw.write(";;;;Centro de Custo não encontrado");
-							continue;
-						}
-						
-						despesa = service.findDespesaSolicitacaoByFiltro(
-								row.getCell(2).getStringCellValue(), 
-								row.getCell(6).getStringCellValue(),
-								row.getCell(0).getNumericCellValue());
-						
-						if (despesa == null) {
-							DespesaSolicitacaoPagamento tmp = new DespesaSolicitacaoPagamento();
-							tmp.setCentroCusto(centroCusto);
-							SolicitacaoPagamento solicitacao = new SolicitacaoPagamento(StatusPagamento.PENDENTE_VALIDACAO);
-							solicitacao.setFornecedor(fornecedor.get(0));
-							//solicitacao.setNumeroNotaFiscal(numeroNotaFiscal);
-							
-						}
-						
-						if (despesa != null) {
-							Double d = row.getCell(8).getNumericCellValue();
-//							solicitacao.setValor(d);
-							service.update(despesa);
-							counter++;
+			SolicitacaoPagamento solicitacao = null;
+			
+			File csv = createFile();
+			try (BufferedWriter bw = new BufferedWriter(new FileWriter(csv))) {
+				row: 
+				while (rowIterator.hasNext()) {
+					Row row = rowIterator.next();
+					List<Fornecedor> list = service.findByName(new Fornecedor(row.getCell(6).getStringCellValue()));
+					if (list.isEmpty() || list.size() > 1) {
+						bw.write(String.format("%s;%s;%s;%.2f;Fornecedor não encontrado", row.getCell(2).getStringCellValue(), row.getCell(8).getStringCellValue(), row.getCell(6).getStringCellValue(), row.getCell(16).getNumericCellValue()));
+						continue;
+					}
+					
+					CentroCusto centroCusto = service.findCentroCustoByCodigo(row.getCell(8).getStringCellValue());
+					if (centroCusto == null) {
+						bw.write(String.format("%s;%s;%s;%.2f;Centro de Custo não encontrado", row.getCell(2).getStringCellValue(), row.getCell(8).getStringCellValue(), row.getCell(6).getStringCellValue(), row.getCell(16).getNumericCellValue()));
+						continue;
+					}
+					
+					String numeroNota = row.getCell(2).getStringCellValue();
+					Double valor = row.getCell(16).getNumericCellValue();
+					Fornecedor fornecedor = list.get(0);
+					solicitacao = service.findSolicitacaoByNumeroNota(row.getCell(2).getStringCellValue());
+					
+					if (solicitacao == null) {
+						DespesaSolicitacaoPagamento tmp = new DespesaSolicitacaoPagamento();
+						tmp.setCentroCusto(centroCusto);
+						SolicitacaoPagamento o = new SolicitacaoPagamento(StatusPagamento.PENDENTE_VALIDACAO);
+						o.setFornecedor(list.get(0));
+						o.setNumeroNotaFiscal(row.getCell(2).getStringCellValue());
+						DespesaSolicitacaoPagamento d = new DespesaSolicitacaoPagamento();
+						d.setSolicitacaoPagamento(solicitacao);
+						d.setCentroCusto(centroCusto);
+						d.setValor(valor);
+						o.getDespesas().add(d);
+						service.create(o);
+						bw.write(String.format("%s;%s;%s;%.2f;PENDENTE_VALIDACAO", numeroNota, centroCusto.getNome(), fornecedor.getNome(), valor));
+					} else {
+						for (Iterator<DespesaSolicitacaoPagamento> iterator = solicitacao.getDespesas().iterator(); iterator.hasNext();) {
+							DespesaSolicitacaoPagamento d = iterator.next();
+							if (d.getValor().equals(valor)) {
+								if (!d.getCentroCusto().equals(centroCusto)) {
+									bw.write(String.format("%s;%s;%s;%.2f;Centro de Custo divergente entre Cover Sheet e Relatório SAP", numeroNota, centroCusto.getNome(), fornecedor.getNome(), valor));
+									continue row;
+								} else if (solicitacao.getFornecedor().equals(list)) {
+									bw.write(String.format("%s;%s;%s;%.2f;Fornecedor divergente entre Cover Sheet e Relatório SAP", numeroNota, centroCusto.getNome(), fornecedor.getNome(), valor));
+									continue row;
+								}
+							} else {
+								if (d.getCentroCusto().equals(centroCusto) && solicitacao.getFornecedor().equals(list)) {
+									bw.write(String.format("%s;%s;%s;%d;Valor divergente entre Cover Sheet e Relatório SAP"));
+									continue row;
+								}
+							}
 						}
 					}
-				} catch (IOException e) {
-					logger.error(String.format("Erro durante a gravação do arquivo de log: %s", e.getLocalizedMessage()));
 				}
-				if (!persistent.isEmpty()) {
-					for (Fornecedor o : persistent) {
-						o.setAtivo(false);
-						service.update(o);
-					}
-				}
-
-			} catch (Exception e) {
-				logger.error(String.format("Nao foi possivel finalizar o cadastro de fornecedores: %s", e.getLocalizedMessage()));
+			} catch (IOException e) {
+				logger.error(String.format("Erro durante a gravação do arquivo de log: %s", e.getLocalizedMessage()));
 			}
-			logger.debug(String.format("%d entradas do arquivos processadas com sucesso!",counter));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

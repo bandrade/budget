@@ -1,6 +1,7 @@
 package com.dupont.budget.web.actions;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -140,7 +141,9 @@ public class DivisaoBudgetMesAction implements Serializable{
 		{
 			try {
 				budgetService.mensalisarBudget(despesas);
-				bpmsTask.aprovarTarefa(facesUtils.getUserLogin(), idTarefa,null);
+				HashMap<String, Object> param =  new HashMap<>();
+				param.put("_budgetId", String.valueOf(budget.getId()));
+				bpmsTask.aprovarTarefa(facesUtils.getUserLogin(), idTarefa,param);
 				facesUtils.addInfoMessage("Tarefa concluida com sucesso");
 				conversation.end();
 				return "minhasTarefas";

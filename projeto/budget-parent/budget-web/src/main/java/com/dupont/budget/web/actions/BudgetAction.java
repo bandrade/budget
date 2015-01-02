@@ -173,6 +173,7 @@ public class BudgetAction implements Serializable{
 	public void removerDespesa()
 	{
 		domainService.delete(despesaDetalheSelecionada);
+		calcularTotalBudget();
 		facesUtils.addInfoMessage("Despesa removida com sucesso");
 	}
 
@@ -264,6 +265,7 @@ public class BudgetAction implements Serializable{
 			budgetService.updateItemDespesa(despesa);
 			incAltComSucesso= true;
 			inicializarDespesa();
+			calcularTotalBudget();
 			facesUtils.addInfoMessage("Despesa alterada com sucesso");
 		}
 		catch(Exception e)

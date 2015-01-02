@@ -1,6 +1,8 @@
 package com.dupont.budget.model;
 
+import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -28,14 +30,24 @@ import javax.persistence.TemporalType;
 @Table(name = "forecast")
 @NamedQueries({
 		})
-public class Forecast {
+public class Forecast implements Serializable{
+
+	public Forecast() {
+	}
+
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+
 	@Column(name = "mes")
 	private Integer mes;
+
+
+	@ManyToOne
+	@JoinColumn(name = "budget_id")
+	private Budget budget;
 
 	@ManyToOne
 	@JoinColumn(name = "usuario_id")
@@ -57,6 +69,13 @@ public class Forecast {
 	@JoinColumn(name = "forecast_id")
 	private Set<DespesaForecast> despesas;
 
+	public Forecast(Integer mes, Usuario usuarioCriador, Date cricao, Budget budget) {
+		super();
+		this.mes = mes;
+		this.usuarioCriador = usuarioCriador;
+		this.cricao = cricao;
+		this.budget =budget;
+	}
 
 	public Long getId() {
 		return id;
@@ -96,6 +115,33 @@ public class Forecast {
 		this.ultimaAtualizacao = ultimaAtualizacao;
 	}
 
+	public Integer getMes() {
+		return mes;
+	}
+
+	public void setMes(Integer mes) {
+		this.mes = mes;
+	}
+
+	public Budget getBudget() {
+		return budget;
+	}
+
+	public void setBudget(Budget budget) {
+		this.budget = budget;
+	}
+
+	public Set<DespesaForecast> getDespesas() {
+		return despesas;
+	}
+
+	public void setDespesas(Set<DespesaForecast> despesas) {
+		this.despesas = despesas;
+	}
+
+	public Usuario getUsuarioCriador() {
+		return usuarioCriador;
+	}
 
 
 }

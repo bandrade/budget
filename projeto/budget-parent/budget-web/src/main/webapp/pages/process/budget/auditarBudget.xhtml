@@ -53,11 +53,51 @@
 							</f:facet>
 							<h:outputText value="#{budgetArea.status}" />
 						</p:column>
+						<p:column width="10%" style="text-align:center">
+							<p:commandButton icon="ui-icon-plus" action="#{auditarBudgetAction.obterBudgetsArea()}" update=":form:panelDetalheBudget" 
+								 onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()">
+								<f:setPropertyActionListener target="#{auditarBudgetAction.budgetAreaSelecionado}" value="#{budgetArea}"/>
+							</p:commandButton>
+						</p:column>
 					</p:dataTable>
 					
 					</p:panelGrid>
+					<p:panelGrid id="panelDetalheBudget" columns="1">
+					<p:dataTable 
+						id="tblBudgetCC"
+						emptyMessage="Não existem centros de custo cadastrados" 
+						value="#{auditarBudgetAction.budgets}"
+						rendered="#{not empty auditarBudgetAction.budgets}"
+						var="budget"
+						paginator="true"
+						paginatorPosition="bottom"
+						rows="10" style="margin-left:-10px">
+						<f:facet name="header">
+        				Centros de custo
+   						 </f:facet>
+   						 <p:column>
+							<f:facet name="header">
+								<h:outputText value="Nome" />
+							</f:facet>
+							<h:outputText value="#{budget.centroCusto.nome}" />
+						</p:column>
+						 <p:column>
+							<f:facet name="header">
+								<h:outputText value="Codigo" />
+							</f:facet>
+							<h:outputText value="#{budget.centroCusto.codigo}" />
+						</p:column>
+						 <p:column footerText="#{facesUtils.formatarDinheiro(auditarBudgetAction.budgetAreaSelecionado.valorTotalBudget)}" style="text-align:center">
+							<f:facet name="header">
+								<h:outputText value="Valor" />
+							</f:facet>							
+							<h:outputText value="#{facesUtils.formatarDinheiro(budget.valorTotalBudget)}" />
+						</p:column>
+ 					</p:dataTable>
+					</p:panelGrid>
+					
 						<p:panelGrid columns="1" styleClass="painel-botoes">
-						<p:commandButton value="Concluir" action="#{auditarBudgetAction.concluir()}">
+						<p:commandButton value="Concluir" action="#{auditarBudgetAction.concluir()}" onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()">
 							<p:confirm header="Confirmação" message="Confirma a conclusão da Auditoria do Budget?" icon="ui-icon-alert"/>
 						</p:commandButton>
 					</p:panelGrid>

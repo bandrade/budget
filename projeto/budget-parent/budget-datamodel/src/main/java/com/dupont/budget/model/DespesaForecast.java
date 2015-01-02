@@ -1,11 +1,15 @@
 package com.dupont.budget.model;
 
+import javax.inject.Inject;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import com.sun.crypto.provider.DESParameters;
 
 /**
  * Itens de despesa do Forecast
@@ -21,6 +25,7 @@ import javax.persistence.Table;
 public class DespesaForecast extends AbstractEntity<Long> {
 
 	private static final long serialVersionUID = -4344680928557842077L;
+
 
 	@ManyToOne
 	@JoinColumn(name="tipo_despesa_id")
@@ -59,11 +64,13 @@ public class DespesaForecast extends AbstractEntity<Long> {
 
 	private Double valor;
 
-	private String comentario;
-
 	@OneToOne
 	@JoinColumn(name = "id")
-	private DespesaForecast forecastMes;
+	private DespesaForecastMes despesaMensalisada ;
+
+	private String comentario;
+
+
 
 	public TipoDespesa getTipoDespesa() {
 		return tipoDespesa;
@@ -154,14 +161,26 @@ public class DespesaForecast extends AbstractEntity<Long> {
 	}
 
 
-
-	public DespesaForecast getForecastMes() {
-		return forecastMes;
+	public Long getId()
+	{
+		return id;
 	}
 
-	public void setForecastMes(DespesaForecast forecastMes) {
-		this.forecastMes = forecastMes;
+	public void setId(Long id)
+	{
+		this.id = id;
 	}
+
+
+	public DespesaForecastMes getDespesaMensalisada() {
+		return despesaMensalisada;
+	}
+
+	public void setDespesaMensalisada(DespesaForecastMes despesaMensalisada) {
+		this.despesaMensalisada = despesaMensalisada;
+	}
+
+
 
 	public void initLists(){
 		if(acao==null)
@@ -183,6 +202,31 @@ public class DespesaForecast extends AbstractEntity<Long> {
 	public void init(){
 			initLists();
 			setValor(null);
+	}
+
+
+	public DespesaForecast(TipoDespesa tipoDespesa, Cliente cliente,
+			Acao acao, Vendedor vendedor, Produto produto, Cultura cultura,
+			Distrito distrito, Boolean ativo, Double valor,
+			String comentario) {
+		this.tipoDespesa = tipoDespesa;
+		this.cliente = cliente;
+		this.acao = acao;
+		this.vendedor = vendedor;
+		this.produto = produto;
+		this.cultura = cultura;
+		this.distrito = distrito;
+		this.ativo = ativo;
+		this.valor = valor;
+		this.comentario = comentario;
+	}
+
+	public static DespesaForecast createFromDespesa(Despesa despesa) {
+		DespesaForecast despesaForecast = new DespesaForecast(despesa.getTipoDespesa(),despesa.getCliente(),despesa.getAcao(),
+				despesa.getVendedor(),despesa.getProduto(),despesa.getCultura(),despesa.getDistrito(),true,despesa.getValor(),
+				despesa.getComentario());
+
+		return despesaForecast;
 	}
 
 

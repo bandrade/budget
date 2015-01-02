@@ -10,9 +10,9 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.dupont.budget.model.NamedAbstractEntity;
 import com.dupont.budget.model.CentroCusto;
-import com.dupont.budget.model.DespesaSolicitacaoPagamento;
 import com.dupont.budget.model.Papel;
 import com.dupont.budget.model.PapelUsuario;
+import com.dupont.budget.model.SolicitacaoPagamento;
 import com.dupont.budget.model.Usuario;
 import com.dupont.budget.model.ValorComprometido;
 import com.dupont.budget.service.DomainService;
@@ -102,14 +102,10 @@ public class DomainServiceBean extends GenericService implements DomainService {
 	 * @see com.dupont.budget.service.DomainService#findSolicitacaoPagamentoByFiltro(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public DespesaSolicitacaoPagamento findDespesaSolicitacaoByFiltro(String numeroNotaFiscal,
-			String fornecedor, Double valor) {
-
+	public SolicitacaoPagamento findSolicitacaoByNumeroNota(String numeroNotaFiscal) {
 		try {
-			return em.createNamedQuery(DespesaSolicitacaoPagamento.FIND_BY_FILTRO, DespesaSolicitacaoPagamento.class)
+			return em.createNamedQuery(SolicitacaoPagamento.FIND_BY_NUMERO_NOTA, SolicitacaoPagamento.class)
 						.setParameter("nomeroNotaFiscal", numeroNotaFiscal.toLowerCase())
-						.setParameter("fornecedor", fornecedor.toLowerCase())
-						.setParameter("valor", valor)
 						.getSingleResult();
 		} catch (NoResultException e) {
 			return null;

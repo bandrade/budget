@@ -4,10 +4,10 @@ import java.util.List;
 
 import com.dupont.budget.model.AbstractEntity;
 import com.dupont.budget.model.CentroCusto;
-import com.dupont.budget.model.DespesaSolicitacaoPagamento;
 import com.dupont.budget.model.NamedAbstractEntity;
 import com.dupont.budget.model.Papel;
 import com.dupont.budget.model.PapelUsuario;
+import com.dupont.budget.model.SolicitacaoPagamento;
 import com.dupont.budget.model.Usuario;
 import com.dupont.budget.model.ValorComprometido;
 
@@ -121,17 +121,13 @@ public interface DomainService {
 			String tipoDespesa, String acao, Integer mes);
 	
 	/**
-	 * Retorna uma solicitação de pagamento com base nos parametros 
-	 * especificados como filtro.
+	 * Retorna uma solicitação de pagamento com base no numero da nota.
 	 * 
 	 * @param numeroNotaFiscal numero da nota fiscal
-	 * @param fornecedor nome do fornecedor 
-	 * @param valor valor da despesa
 	 * 
 	 * @return a solicitação de pagamento ou <code>null</code> caso não encontre
 	 */
-	DespesaSolicitacaoPagamento findDespesaSolicitacaoByFiltro(String numeroNotaFiscal,
-			String fornecedor, Double valor);
+	SolicitacaoPagamento findSolicitacaoByNumeroNota(String numeroNotaFiscal);
 
 	/**
 	 * Consulta um centro de custo através do código solicitado.

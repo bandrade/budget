@@ -125,7 +125,7 @@
 			
 			</h:form>
 			<p:dialog header="#{not aprovarBudgetAction.inclusao? 'Alterar Despesa' : 'Incluir Despesa'}  " id="criarDespesaPanel" widgetVar="criarDespesa" height="400"
-				width="500">
+				width="500" resizable="false" draggable="false">
 				<h:form id="formDespesa">
 				<p:panel id="panelDespesa">
 				<p:panelGrid columns="2">
@@ -182,7 +182,7 @@
 				      scrollHeight="300"
 					 var="_acao" itemLabel="#{_acao.nome}" itemValue="#{_acao}" emptyMessage="NAO ENCONTRADO" effect="size"
 					 rendered="#{aprovarBudgetAction.tipoAcao =='S'}" />
-						<p:inputTextarea id="inputAcao" value="#{aprovarBudgetAction.despesa.acao.nome}" required="true" rendered="#{aprovarBudgetAction.tipoAcao =='N'}"/>
+						<p:inputTextarea id="inputAcao" value="#{aprovarBudgetAction.despesa.acao.nome}" required="true" rendered="#{aprovarBudgetAction.tipoAcao =='N'}" />
 					</p:panelGrid>
 					
 					<p:outputLabel value="Comentário:"></p:outputLabel>

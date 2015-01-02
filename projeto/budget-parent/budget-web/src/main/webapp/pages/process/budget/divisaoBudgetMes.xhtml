@@ -66,13 +66,13 @@
 							</f:facet>
 							<h:outputText value="#{facesUtils.formatarDinheiro(divisaoBudgetMesAction.calcularValorMensalisado(detalheDespesa))}" />
 						</p:column> 
-						<p:column width="50">
+						<p:column width="100">
 							<f:facet name="header">
 								<h:outputText value="Produto" />
 							</f:facet>
 							<h:outputText value="#{detalheDespesa.produto}" />
 						</p:column>
-						<p:column width="50">
+						<p:column width="100">
 							<f:facet name="header">
 								<h:outputText value="Cultura" />
 							</f:facet>
@@ -84,14 +84,14 @@
 							</f:facet>
 							<h:outputText value="#{detalheDespesa.distrito}" />
 						</p:column>
-						<p:column width="50">
+						<p:column width="150">
 							<f:facet name="header">
 								<h:outputText value="ERC" />
 							</f:facet>
 							<h:outputText value="#{detalheDespesa.vendedor}" />
 						</p:column>
 						
-						<p:column width="100">
+						<p:column width="200">
 							<f:facet name="header">
 								<h:outputText value="Comentário" />
 							</f:facet>
@@ -242,7 +242,7 @@
 					
 						</p:panelGrid>
 						<p:panelGrid columns="1" styleClass="painel-botoes">
-						<p:commandButton value="Concluir"  action="#{divisaoBudgetMesAction.concluir()}">
+						<p:commandButton value="Concluir"  action="#{divisaoBudgetMesAction.concluir()}" onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()">
 							<p:confirm header="Confirmação" message="Confirma a conclusão da Divisao do Budget?" icon="ui-icon-alert"/>
 						</p:commandButton>
 					</p:panelGrid>
