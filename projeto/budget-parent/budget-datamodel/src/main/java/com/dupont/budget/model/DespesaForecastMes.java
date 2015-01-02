@@ -1,5 +1,7 @@
 package com.dupont.budget.model;
 
+import java.io.Serializable;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -12,8 +14,8 @@ import javax.persistence.Table;
  *
  */
 @Entity
-@Table(name="despesa_forecast_mes")
-public class DespesaForecastMes {
+@Table(name = "despesa_forecast_mes")
+public class DespesaForecastMes implements Serializable {
 
 	@Id
 	private Long id;
@@ -42,6 +44,36 @@ public class DespesaForecastMes {
 
 	private Double dezembro;
 
+	public DespesaForecastMes() {
+	}
+
+
+	public DespesaForecastMes( Double janeiro, Double fevereiro,
+			Double marco, Double abril, Double maio, Double junho,
+			Double julho, Double agosto, Double setembro, Double outubro,
+			Double novembro, Double dezembro) {
+		this.janeiro = janeiro;
+		this.fevereiro = fevereiro;
+		this.marco = marco;
+		this.abril = abril;
+		this.maio = maio;
+		this.junho = junho;
+		this.julho = julho;
+		this.agosto = agosto;
+		this.setembro = setembro;
+		this.outubro = outubro;
+		this.novembro = novembro;
+		this.dezembro = dezembro;
+	}
+
+	public static DespesaForecastMes createFromBudgetMes(BudgetMes mes)
+	{
+		DespesaForecastMes forecastMes = new DespesaForecastMes(mes.getJaneiro(), mes.getFevereiro(),
+				mes.getMarco(), mes.getAbril(), mes.getMaio(), mes.getJunho(), mes.getJulho(),
+				mes.getAgosto(), mes.getSetembro(), mes.getOutubro(), mes.getNovembro(), mes.getDezembro());
+
+		return forecastMes;
+	}
 	public Long getId() {
 		return id;
 	}
@@ -145,5 +177,7 @@ public class DespesaForecastMes {
 	public void setDezembro(Double dezembro) {
 		this.dezembro = dezembro;
 	}
+
+
 
 }

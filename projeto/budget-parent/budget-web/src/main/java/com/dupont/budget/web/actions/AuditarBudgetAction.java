@@ -11,6 +11,7 @@ import javax.inject.Named;
 
 import com.dupont.budget.dto.BudgetAreaDTO;
 import com.dupont.budget.model.Area;
+import com.dupont.budget.model.Budget;
 import com.dupont.budget.model.BudgetEstipuladoAno;
 
 
@@ -18,10 +19,22 @@ import com.dupont.budget.model.BudgetEstipuladoAno;
 @Named
 public class AuditarBudgetAction extends AreaBudgetAction implements Serializable {
 
+	private List<Budget> budgets;
+	private BudgetAreaDTO budgetAreaSelecionado;
+
 	@PostConstruct
 	@Override
 	public void init() {
 		super.init();
+	}
+
+	public void obterBudgetsArea(){
+		try {
+			setBudgets(budgetService.obterBudgetsPorArea(budgetAreaSelecionado.getIdArea(), ano));
+		} catch (Exception e) {
+			logger.error("Erro ao obter budgets da area",e);
+			facesUtils.addErrorMessage("Erro ao obter budgets da area");
+		}
 	}
 
 	public void adicionarBudgetsEstipulados() throws Exception
@@ -57,5 +70,22 @@ public class AuditarBudgetAction extends AreaBudgetAction implements Serializabl
 		}
 
 	}
+
+	public List<Budget> getBudgets() {
+		return budgets;
+	}
+
+	public void setBudgets(List<Budget> budgets) {
+		this.budgets = budgets;
+	}
+
+	public BudgetAreaDTO getBudgetAreaSelecionado() {
+		return budgetAreaSelecionado;
+	}
+
+	public void setBudgetAreaSelecionado(BudgetAreaDTO budgetAreaSelecionado) {
+		this.budgetAreaSelecionado = budgetAreaSelecionado;
+	}
+
 
 }

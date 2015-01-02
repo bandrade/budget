@@ -59,7 +59,7 @@
 							<h:outputText value="#{facesUtils.formatarDinheiro(budget.valorTotalBudget)}" />
 						</p:column>
 						<p:column width="5%">
-							<p:commandButton icon="ui-icon-pencil" action="#{ajustarValoresBudgetAction.obterBudgetNoDetalhe()}" update=":form:panelDetalheBudget">
+							<p:commandButton icon="ui-icon-plus" action="#{ajustarValoresBudgetAction.obterBudgetNoDetalhe()}" update=":form:panelDetalheBudget">
 								<f:setPropertyActionListener target="#{ajustarValoresBudgetAction.budgetSelecionado}" value="#{budget}"/>
 							</p:commandButton>
 						</p:column>
@@ -152,7 +152,7 @@
 					</p:panelGrid>
 			
 				<p:panelGrid columns="1" styleClass="painel-botoes">
-						<p:commandButton value="Concluir" action="#{ajustarValoresBudgetAction.concluir()}">
+						<p:commandButton value="Concluir" action="#{ajustarValoresBudgetAction.concluir()}" onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()">
 							<p:confirm header="Confirmação" message="Confirma a conclusão da tarefa Ajustar o Budget aprovado por Centro de Custo?" icon="ui-icon-alert"/>
 						</p:commandButton>
 					</p:panelGrid>
@@ -160,6 +160,7 @@
 			</p:panelGrid>
 			</h:form>
 				<p:dialog header="#{not ajustarValoresBudgetAction.inclusao? 'Alterar Despesa' : 'Incluir Despesa'}  " id="criarDespesaPanel" widgetVar="criarDespesa" height="400"
+				resizable="false" draggable="false"
 				width="500">
 				<h:form id="formDespesa">
 				<p:panel id="panelDespesa">
@@ -175,35 +176,39 @@
 					<p:autoComplete id="cboProduto" dropdown="true" value="#{ajustarValoresBudgetAction.despesa.produto}" completeMethod="#{autocompleteAction.autocompleteProduto}" 
 					 styleClass="input"
 					 scrollHeight="300"
-					 var="_produto" itemLabel="#{_produto.nome}" itemValue="#{_produto}" emptyMessage="NAO ENCONTRADO" effect="size" converter="com.dupont.EntityConverter"/>
+					 var="_produto" itemLabel="#{_produto.nome}" itemValue="#{_produto}" emptyMessage="NAO ENCONTRADO" effect="size" converter="com.dupont.EntityConverter" required="true"/>
 
 					<p:outputLabel value="Cultura:"></p:outputLabel>
 					<p:autoComplete id="cboCultura" dropdown="true" value="#{ajustarValoresBudgetAction.despesa.cultura}" completeMethod="#{autocompleteAction.autocompleteCultura}" 
 					 styleClass="input"
 					 scrollHeight="300"
 					converter="com.dupont.EntityConverter"
-					 var="_cultura" itemLabel="#{_cultura.nome}" itemValue="#{_cultura}" emptyMessage="NAO ENCONTRADO" effect="size"  />
+					 var="_cultura" itemLabel="#{_cultura.nome}" itemValue="#{_cultura}" emptyMessage="NAO ENCONTRADO" effect="size" 
+					 required="true" />
 					
 					<p:outputLabel value="Distrito:" ></p:outputLabel>
 					<p:autoComplete id="cboDistrito" dropdown="true" value="#{ajustarValoresBudgetAction.despesa.distrito}" completeMethod="#{autocompleteAction.autocompleteDistrito}" 
 					 styleClass="input"
 					 scrollHeight="300"
 					converter="com.dupont.EntityConverter"
-					 var="distrito" itemLabel="#{distrito.nome}" itemValue="#{distrito}" emptyMessage="NAO ENCONTRADO" effect="size"/>
+					 var="distrito" itemLabel="#{distrito.nome}" itemValue="#{distrito}" emptyMessage="NAO ENCONTRADO" effect="size"
+					 required="true"/>
  
 					<p:outputLabel value="ERC:"></p:outputLabel>
 					<p:autoComplete id="cboVendedor" dropdown="true" value="#{ajustarValoresBudgetAction.despesa.vendedor}" completeMethod="#{autocompleteAction.autocompleteVendedor}" 
 					 styleClass="input"
 					 scrollHeight="300"
 					converter="com.dupont.EntityConverter"
-					 var="_vendedor" itemLabel="#{_vendedor.nome}" itemValue="#{_vendedor}" emptyMessage="NAO ENCONTRADO" effect="size"/>
+					 var="_vendedor" itemLabel="#{_vendedor.nome}" itemValue="#{_vendedor}" emptyMessage="NAO ENCONTRADO" effect="size"
+					 required="true"/>
 					
 					<p:outputLabel value="Cliente:"></p:outputLabel>
 					<p:autoComplete id="cboCliente" dropdown="true" value="#{ajustarValoresBudgetAction.despesa.cliente}" completeMethod="#{autocompleteAction.autocompleteCliente}" 
 				     converter="com.dupont.EntityConverter"	
 				     scrollHeight="300"
 				      styleClass="input"
-					 var="_cliente" itemLabel="#{_cliente.nome}" itemValue="#{_cliente}" emptyMessage="NAO ENCONTRADO" effect="size" />
+					 var="_cliente" itemLabel="#{_cliente.nome}" itemValue="#{_cliente}" emptyMessage="NAO ENCONTRADO" effect="size"
+					 required="true" />
 					<p:outputLabel value="Ação:"></p:outputLabel>
 					 <p:panelGrid columns="3" id="painel">
 					<p:selectOneRadio value="#{ajustarValoresBudgetAction.tipoAcao}" >
@@ -216,12 +221,12 @@
 				      styleClass="input"
 				      scrollHeight="300"
 					 var="_acao" itemLabel="#{_acao.nome}" itemValue="#{_acao}" emptyMessage="NAO ENCONTRADO" effect="size"
-					 rendered="#{ajustarValoresBudgetAction.tipoAcao =='S'}" />
+					 rendered="#{ajustarValoresBudgetAction.tipoAcao =='S'}" required="true"/>
 						<p:inputTextarea id="inputAcao" value="#{ajustarValoresBudgetAction.despesa.acao.nome}" required="true" rendered="#{ajustarValoresBudgetAction.tipoAcao =='N'}"/>
 					</p:panelGrid>
 					
 					<p:outputLabel value="Comentário:"></p:outputLabel>
-					<p:inputTextarea value="#{ajustarValoresBudgetAction.despesa.comentario}" />
+					<p:inputTextarea value="#{ajustarValoresBudgetAction.despesa.comentario}" required="true"/>
 					
 					<p:outputLabel value="Valor:"></p:outputLabel>
 					<pe:inputNumber  id="valor" value="#{ajustarValoresBudgetAction.despesa.valor}" converter="javax.faces.Double" required="true"/>
@@ -229,9 +234,11 @@
 				</p:panelGrid>
 				<p:panelGrid styleClass="painel-botoes" columns="1">				
 						<p:commandButton value="Incluir Despesa" action="#{ajustarValoresBudgetAction.adicionarDespesa()}"  
+						 onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"
 						 update=":formDespesa:panelDespesa,:form" rendered="#{ajustarValoresBudgetAction.inclusao}" 
 						 oncomplete="if(document.getElementById('formDespesa:incAltSucesso').value=='true'){PF('criarDespesa').hide();}"/>
 						<p:commandButton value="Alterar Despesa" action="#{ajustarValoresBudgetAction.alterarDespesa()}"  
+						 onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"
 						 update=":formDespesa:panelDespesa,:form" rendered="#{not ajustarValoresBudgetAction.inclusao}"  
 						 oncomplete="if(document.getElementById('formDespesa:incAltSucesso').value=='true'){PF('criarDespesa').hide();}"/>
 				</p:panelGrid>

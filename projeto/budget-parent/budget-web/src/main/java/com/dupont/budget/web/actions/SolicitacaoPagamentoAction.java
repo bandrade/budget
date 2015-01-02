@@ -3,15 +3,21 @@ package com.dupont.budget.web.actions;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.enterprise.context.Conversation;
 import javax.enterprise.context.ConversationScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.enterprise.inject.Produces;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.SelectEvent;
 
 import com.dupont.budget.model.Acao;
 import com.dupont.budget.model.Budget;
@@ -24,6 +30,7 @@ import com.dupont.budget.model.SolicitacaoPagamento;
 import com.dupont.budget.model.TipoDespesa;
 import com.dupont.budget.model.Vendedor;
 import com.dupont.budget.service.BudgetService;
+import com.dupont.budget.service.DomainService;
 import com.dupont.budget.service.SolicitacaoPagamentoService;
 import com.dupont.budget.web.util.FacesUtils;
 
@@ -49,7 +56,10 @@ public class SolicitacaoPagamentoAction implements Serializable {
 	private SolicitacaoPagamentoService solicitacaoPagamentoService;
 	
 	@Inject
-	private Conversation conversation;
+	protected Conversation conversation;
+	
+	@Inject
+	private DomainService domainService;
 	
 	private SolicitacaoPagamento solicitacaoPagamento               = new SolicitacaoPagamento();	
 	private DespesaSolicitacaoPagamento despesaSolicitacaoPagamento = new DespesaSolicitacaoPagamento();
@@ -59,7 +69,7 @@ public class SolicitacaoPagamentoAction implements Serializable {
 		return solicitacaoPagamento;
 	}
 	
-	@Produces @Named
+	@Produces @Named @RequestScoped
 	public DespesaSolicitacaoPagamento getDespesaSolicitacaoPagamento(){
 		return despesaSolicitacaoPagamento;
 	}
@@ -73,7 +83,8 @@ public class SolicitacaoPagamentoAction implements Serializable {
 	private List<Acao> acoes				= new ArrayList<Acao>();
 	
 	// Propriedades da tela
-	private String checkAcao = "Existente";
+	private String checkAcao = "Existente";	
+	private String novaAcao;
 	
 	/* Inicia o scopo de conversação */
 	public void initConversation(){
@@ -91,7 +102,7 @@ public class SolicitacaoPagamentoAction implements Serializable {
 		
 		// Popula os combos a partir do CENTRO DE CUSTO selecionado
 		
-		Budget budget = budgetService.findByAnoAndCentroDeCusto(ano, despesaSolicitacaoPagamento.getCentroCusto().getId());
+		Budget budget = getBudget(ano);
 
 		if( budget == null ) {
 			facesUtils.addErrorMessage("Não exite BUDGET cadastro para o centro de custo informado!");
@@ -125,17 +136,55 @@ public class SolicitacaoPagamentoAction implements Serializable {
 		}
 		
 	}
+
+	protected Budget getBudget(String ano) {
+		return budgetService.findByAnoAndCentroDeCusto(ano, despesaSolicitacaoPagamento.getCentroCusto().getId());
+	}
 	
 	/* Salva a solicitacao  */
-	public void save(){		
+	public String save(){
 		
+		// Salvar a nova ação caso tenha sido pedido
+		if( getCheckAcao().equals("Criar Nova")){
+			Acao acao = new Acao(novaAcao);
+			
+			acao = domainService.create(acao);
+			
+			despesaSolicitacaoPagamento.setAcao(acao);
+		}
+		
+		solicitacaoPagamento.addDespesaSolicitacaoPagamento(despesaSolicitacaoPagamento);
 		solicitacaoPagamentoService.startSolicitacaoPagamento(solicitacaoPagamento);		
 		
 		conversation.end();
 		
 		facesUtils.addInfoMessage("Solicitação de pagamento enviada para processamento.");
+		FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+		
+		return "edit.xhtml?faces-redirect=true";
 	}
 	
+	public void openCCDialog() {
+		
+		Map<String,Object> options = new HashMap<String, Object>();
+		options.put("modal", true);
+		options.put("draggable", false);
+		options.put("resizable", false);
+		// options.put("contentHeight", 320);
+		options.put("contentWidth", 800);
+		
+		RequestContext.getCurrentInstance().openDialog("rateio-dialog", options, null);
+	}
+		
+	public void incluirDespesa(SelectEvent event){
+		DespesaSolicitacaoPagamento despesa = (DespesaSolicitacaoPagamento) event.getObject();
+		
+		solicitacaoPagamento.addDespesaSolicitacaoPagamento(despesa);
+		
+		Double valor = despesa.getValor() + (solicitacaoPagamento.getValor()==null?0.0:solicitacaoPagamento.getValor());
+		
+		solicitacaoPagamento.setValor(valor);
+	}
 	
 	public List<Produto> getProdutos() {
 		return produtos;
@@ -167,5 +216,13 @@ public class SolicitacaoPagamentoAction implements Serializable {
 	
 	public void setCheckAcao(String checkAcao) {
 		this.checkAcao = checkAcao;
+	}
+
+	public String getNovaAcao() {
+		return novaAcao;
+	}
+
+	public void setNovaAcao(String novaAcao) {
+		this.novaAcao = novaAcao;
 	}
 }

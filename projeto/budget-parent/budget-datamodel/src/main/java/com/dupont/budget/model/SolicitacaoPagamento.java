@@ -1,5 +1,6 @@
 package com.dupont.budget.model;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -79,7 +80,13 @@ public class SolicitacaoPagamento extends AbstractEntity<Long> {
 	@JoinColumn(name = "usuario_id")
 	private Usuario usuarioCriador;
 
-
+	public void addDespesaSolicitacaoPagamento(DespesaSolicitacaoPagamento despesaSolicitacaoPagamento) {
+		if(this.despesas == null) 
+			this.despesas = new ArrayList<DespesaSolicitacaoPagamento>();
+		
+		this.despesas.add(despesaSolicitacaoPagamento);
+	}
+	
 	public SolicitacaoPagamento() {
 		this(null);
 	}

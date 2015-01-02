@@ -10,9 +10,9 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import com.dupont.budget.dto.AreaDTO;
-import com.dupont.budget.dto.CentroDeCustoDTO;
 import com.dupont.budget.model.Budget;
 import com.dupont.budget.model.BudgetEstipuladoAno;
+import com.dupont.budget.model.Despesa;
 import com.dupont.budget.service.BudgetService;
 
 @ConversationScoped
@@ -76,21 +76,38 @@ public class AjustarValoresBudgetAction extends BudgetAction implements Serializ
 
 	public String concluir()
 	{
-		if(getValorTotalBudgetArea().equals(budgetEstipuladoAno.getValorAprovado()))
+		if(!validarPreenchimentoDespesas())
 		{
-			return super.concluir();
+			facesUtils.addErrorMessage("Todas as despesas devem ser preenchidas por completo(Produto,Cultura,Acao,Cliente,Distrito e ERC)");
+			return null;
 		}
-		else
+		if(!getValorTotalBudgetArea().equals(budgetEstipuladoAno.getValorAprovado()))
 		{
 			facesUtils.addErrorMessage("O valor do budget da Area deve ser igual ao valor aprovado");
 			return null;
-		}
 
+		}
+		return super.concluir();
 	}
 
 
+	private boolean validarPreenchimentoDespesas() {
+		for(Budget budget : budgets)
+		{
+			for(Despesa despesa : budget.getDespesas())
+			{
+				if(!despesa.isPreeenchimentoCompleto())
+				{
+					return false;
+				}
+			}
+		}
+		return true;
+
+	}
 	@Override
 	protected void alterarDespesa() {
+		setBudget(budgetSelecionado);
 		super.alterarDespesa();
 	}
 

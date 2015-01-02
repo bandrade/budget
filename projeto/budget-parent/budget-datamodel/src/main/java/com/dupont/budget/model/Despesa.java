@@ -6,6 +6,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
@@ -13,6 +14,10 @@ import javax.persistence.Table;
  *
  * @author <a href="asouza@redhat.com">Ângelo Galvão</a>
  * @since 2014
+ *
+ */
+/**
+ * @author bandrade
  *
  */
 @Entity
@@ -66,6 +71,12 @@ public class Despesa extends AbstractEntity<Long> {
 	private Double valor;
 
 	private String comentario;
+
+	@OneToOne
+	@JoinColumn(name = "id")
+	private BudgetMes despesaMensalisada;
+
+
 
 	public TipoDespesa getTipoDespesa() {
 		return tipoDespesa;
@@ -147,6 +158,22 @@ public class Despesa extends AbstractEntity<Long> {
 		this.budget = budget;
 	}
 
+	public Boolean getAprovado() {
+		return aprovado;
+	}
+
+	public void setAprovado(Boolean aprovado) {
+		this.aprovado = aprovado;
+	}
+
+
+	public BudgetMes getDespesaMensalisada() {
+		return despesaMensalisada;
+	}
+
+	public void setDespesaMensalisada(BudgetMes despesaMensalisada) {
+		this.despesaMensalisada = despesaMensalisada;
+	}
 
 	public void initLists(){
 		if(acao==null)
@@ -165,18 +192,20 @@ public class Despesa extends AbstractEntity<Long> {
 			setTipoDespesa(new TipoDespesa());
 
 	}
+	public boolean isPreeenchimentoCompleto()
+	{
+		if(acao==null || produto==null || cultura==null || cliente==null || distrito==null || vendedor==null || tipoDespesa==null )
+		{
+			return false;
+		}
+		return true;
+	}
+
 	public void init(){
 			initLists();
 			setValor(null);
 	}
 
-	public Boolean getAprovado() {
-		return aprovado;
-	}
-
-	public void setAprovado(Boolean aprovado) {
-		this.aprovado = aprovado;
-	}
 
 
 }

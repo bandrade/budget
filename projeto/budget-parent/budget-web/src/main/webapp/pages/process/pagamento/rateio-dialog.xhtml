@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:pe="http://primefaces.org/ui/extensions"
+	  xmlns:p="http://primefaces.org/ui">
+
+	<h:head>
+		<title>Adicionar Centro de Custo</title>
+		<h:outputStylesheet library="css" name="default.css" />
+	</h:head>
+	
+	<h:body >
+	
+		<f:event listener="#{incluirDespesaRateioAction.initConversation}" type="preRenderView" />
+		
+		
+		<h:form>
+		
+			<p:messages id="messages" showDetail="true" showSummary="false" autoUpdate="true" closable="true" globalOnly="true"/>
+			 	
+			<p:panelGrid columns="6" id="dadosCC" styleClass="layoutUnit main">
+						
+				<p:outputLabel value="Centro de custo:" for="centroCustosSelectOneMenu"/>
+				<p:selectOneMenu id="centroCustosSelectOneMenu" label="Centro de custo" value="#{incluirDespesaRateioAction.despesaSolicitacaoPagamento.centroCusto}" converter="com.dupont.EntityConverter" required="true">
+					<p:ajax listener="#{incluirDespesaRateioAction.doSelectCentroCusto}" update="dadosCC"/>
+					
+					<f:selectItem itemLabel="Selecione um centro de custo" itemValue="#{null}" />
+					<f:selectItems value="#{centroCustos}" var="item" itemLabel="#{item.nome}" itemValue="#{item}" />
+				</p:selectOneMenu>
+				<p:message for="centroCustosSelectOneMenu" />
+				
+				
+				<p:outputLabel value="Descrição: "/>
+				<h:outputText id="descricaoOutput" value="#{incluirDespesaRateioAction.despesaSolicitacaoPagamento.centroCusto.nome}"  />
+				<h:outputText  value="" />
+	
+				
+				<p:outputLabel value="Produto:" for="produtosSelectOneMenu"/>
+				<p:selectOneMenu id="produtosSelectOneMenu" value="#{incluirDespesaRateioAction.despesaSolicitacaoPagamento.produto}" label="Produto" converter="com.dupont.EntityConverter" required="true">
+				
+					<f:selectItem itemLabel="Selecione um produto" itemValue="#{null}" />
+					<f:selectItems value="#{incluirDespesaRateioAction.produtos}" var="item" itemLabel="#{item.nome}"/>
+				</p:selectOneMenu>
+				<p:message for="produtosSelectOneMenu" />
+				
+				<p:outputLabel value="Tipo de Despesa:" for="despesasSelectOneMenu"/>
+				<p:selectOneMenu id="despesasSelectOneMenu" label="Tipo de Despesa" value="#{incluirDespesaRateioAction.despesaSolicitacaoPagamento.tipoDespesa}" converter="com.dupont.EntityConverter" required="true">
+				
+					<p:ajax update="contaContabilPanel" />
+					<f:selectItem itemLabel="Selecione um tipo de despesa" itemValue="#{null}" />
+					<f:selectItems value="#{incluirDespesaRateioAction.tiposDespesas}" var="item" itemLabel="#{item.nome}" itemValue="#{item}"/>
+				</p:selectOneMenu>
+				<p:message for="despesasSelectOneMenu"  />
+				
+				<p:outputLabel value="Cultura:" for="culturasSelecOneMenu"/>	
+				<p:selectOneMenu id="culturasSelecOneMenu" label="Cultura"  value="#{incluirDespesaRateioAction.despesaSolicitacaoPagamento.cultura}" converter="com.dupont.EntityConverter">
+					<f:selectItem itemLabel="Selecione uma cultura" itemValue="#{null}" />
+					<f:selectItems value="#{incluirDespesaRateioAction.culturas}" var="item" itemLabel="#{item.nome}" itemValue="#{item}"/>
+				</p:selectOneMenu>
+				<p:message for="culturasSelecOneMenu" />
+				
+				<p:outputLabel value="Conta Contábil: "/>
+				<h:panelGroup id="contaContabilPanel">
+					<h:outputText id="contaContabilOutput" value="#{incluirDespesaRateioAction.despesaSolicitacaoPagamento.tipoDespesa.contaContabil}" />
+				</h:panelGroup>
+				<h:outputText  value="" />
+				
+				<p:outputLabel value="Distrito:" for="distritosSelectOneMenu"/>	
+				<p:selectOneMenu id="distritosSelectOneMenu" label="Distrito" value="#{incluirDespesaRateioAction.despesaSolicitacaoPagamento.distrito}" converter="com.dupont.EntityConverter" required="true">
+					<f:selectItem itemLabel="Selecione um distrito" itemValue="#{null}" />
+					<f:selectItems value="#{incluirDespesaRateioAction.distritos}" var="item" itemLabel="#{item.nome}" itemValue="#{item}"/>
+				</p:selectOneMenu>
+				<p:message for="distritosSelectOneMenu" />
+				
+				<p:outputLabel value="ERC/CCE:" for="vendedoresSelectOneMenu"/>	
+				<p:selectOneMenu id="vendedoresSelectOneMenu" label="ERC/CCE" value="#{incluirDespesaRateioAction.despesaSolicitacaoPagamento.vendedor}" converter="com.dupont.EntityConverter">
+					<f:selectItem itemLabel="Selecione um vendedor" itemValue="#{null}" />
+					<f:selectItems value="#{incluirDespesaRateioAction.vendedores}" var="item" itemLabel="#{item.nome}" itemValue="#{item}"/>
+				</p:selectOneMenu>
+				<p:message for="vendedoresSelectOneMenu" />
+				
+				
+				<p:outputLabel value="Valor:" for="valorTotalNotaInput"/>						
+					<pe:inputNumber id="valorTotalNotaInput" value="#{incluirDespesaRateioAction.despesaSolicitacaoPagamento.valor}" label="Valor" required="true" decimalSeparator="," thousandSeparator="." decimalPlaces="2">
+				</pe:inputNumber>
+				<p:message for="valorTotalNotaInput"  />
+				
+				<h:outputText  value="" />
+				<h:outputText  value="" />
+				<h:outputText  value="" />
+				
+				
+				<p:outputLabel value="Ação:"/>
+					<p:selectOneRadio value="#{incluirDespesaRateioAction.checkAcao}">
+						<p:ajax update="acoesPanel" />
+					<f:selectItem itemValue="Existente"  itemLabel="Existente"/>
+					<f:selectItem itemValue="Criar Nova" itemLabel="Criar Nova"/>
+				</p:selectOneRadio> 
+				<h:outputText  value="" />
+				
+				<h:panelGroup id="acoesPanel">
+					<p:selectOneMenu id="acoesSelectOneMenu" value="#{incluirDespesaRateioAction.despesaSolicitacaoPagamento.acao}" converter="com.dupont.EntityConverter" rendered="#{incluirDespesaRateioAction.checkAcao == 'Existente'}" required="true">
+						<f:selectItem itemLabel="Selecione uma ação" itemValue="#{null}" />
+						<f:selectItems value="#{incluirDespesaRateioAction.acoes}" var="item" itemLabel="#{item.nome}" itemValue="#{item}"/>						
+					</p:selectOneMenu>					
+					<p:inputText label="Ação" id="novaAcaoInput" value="#{incluirDespesaRateioAction.novaAcao}" rendered="#{incluirDespesaRateioAction.checkAcao == 'Criar Nova'}" required="true"/>					
+				</h:panelGroup>
+				<p:message for="novaAcaoInput" />
+				<p:message for="acoesSelectOneMenu" />
+				
+				
+			</p:panelGrid>
+			
+			<p:commandButton value="Incluir"  icon="ui-icon-check" action="#{incluirDespesaRateioAction.closeCCDialog}" styleClass="button" update="dadosCC"/>
+		</h:form>
+	</h:body>
+
+</html>

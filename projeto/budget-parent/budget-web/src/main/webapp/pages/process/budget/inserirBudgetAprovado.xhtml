@@ -46,20 +46,16 @@
 							</f:facet>
 							<h:outputText value="#{facesUtils.formatarDinheiro(budgetArea.valorTotalBudget)}" />
 						</p:column>
-						<p:column style="text-align:center">
+						<p:column footerText="#{facesUtils.formatarDinheiro(inserirBudgetAprovadoAction.valorTotalAprovadoBudget)}" style="text-align:center">
 							<f:facet name="header" >
 								<h:outputText value="Valor Aprovado" />
 							</f:facet>
 							<pe:inputNumber value="#{budgetArea.valorTotalAprovadoBudget}">
-								<p:ajax  listener="#{inserirBudgetAprovadoAction.calcularValorTotalBudgetAprovado()}" update=":form:panelValorTotal"></p:ajax>
+								<p:ajax  listener="#{inserirBudgetAprovadoAction.calcularValorTotalBudgetAprovado()}" update=":form"></p:ajax>
 							</pe:inputNumber>
 						</p:column>
 					</p:dataTable>
 					
-					</p:panelGrid>
-					<p:panelGrid columns="2" id="panelValorTotal">
-						<h:outputText value="Valor Total:" />
-						<h:outputText id="valorTotal" value="#{facesUtils.formatarDinheiro(inserirBudgetAprovadoAction.valorTotalAprovadoBudget)}" styleClass="bold-label" />
 					</p:panelGrid>
 						<p:panelGrid columns="1" styleClass="painel-botoes">
 						<p:commandButton value="Concluir" action="#{inserirBudgetAprovadoAction.concluir()}">
