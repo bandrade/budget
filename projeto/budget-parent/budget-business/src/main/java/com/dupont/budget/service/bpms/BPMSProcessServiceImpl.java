@@ -32,6 +32,7 @@ public class BPMSProcessServiceImpl implements BPMSProcessService{
 		List<AreaDTO> areasListDto =  new ArrayList<>();
 		List<Area> areas = domainService.findAll(Area.class);
 
+
 		for(Area area : areas)
 		{
 			List<CentroCusto> centrosDeCusto = ccService.findByArea(area.getId());
