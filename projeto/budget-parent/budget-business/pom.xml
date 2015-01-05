@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.dupont.budget</groupId>
 		<artifactId>budget-parent</artifactId>
-		<version>0.0.6-SNAPSHOT</version>
+		<version>${version.com.dupont.budget}</version>
 	</parent>
 	<artifactId>budget-business</artifactId>
 	<dependencies>
