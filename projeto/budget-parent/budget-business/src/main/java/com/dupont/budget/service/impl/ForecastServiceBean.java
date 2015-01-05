@@ -1,6 +1,7 @@
 package com.dupont.budget.service.impl;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.ejb.Stateless;
@@ -43,6 +44,12 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 		}
 		forecast.setDespesas(despesas);
 		em.merge(forecast);
+	}
+
+	@Override
+	public List<Forecast> findForecastsByBudgetId(Long id) {
+		
+		return em.createNamedQuery("Forecast.findByBudgetId", Forecast.class).setParameter("budgetId", id).getResultList();
 	}
 
 }

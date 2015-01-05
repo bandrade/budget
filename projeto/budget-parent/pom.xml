@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.dupont.budget</groupId>
 	<artifactId>budget-parent</artifactId>
-	<version>0.0.6-SNAPSHOT</version>
+	<version>${version.com.dupont.budget}</version>
 	<packaging>pom</packaging>
 	<properties>
 		<version.jboss.bom.eap>6.3.0.GA</version.jboss.bom.eap>
@@ -15,6 +15,7 @@
 		<version.org.apache.poi>3.9</version.org.apache.poi>
 		<maven.compiler.target>1.7</maven.compiler.target>
 		<maven.compiler.source>1.7</maven.compiler.source>
+		<version.com.dupont.budget>0.0.7-SNAPSHOT</version.com.dupont.budget>
 	</properties>
 	<modules>
 		<module>budget-bpm</module>

@@ -24,9 +24,11 @@ import com.dupont.budget.model.Acao;
 import com.dupont.budget.model.Budget;
 import com.dupont.budget.model.Cultura;
 import com.dupont.budget.model.Despesa;
+import com.dupont.budget.model.DespesaForecast;
 import com.dupont.budget.model.DespesaSolicitacaoPagamento;
 import com.dupont.budget.model.Distrito;
 import com.dupont.budget.model.Fornecedor;
+import com.dupont.budget.model.Forecast;
 import com.dupont.budget.model.Produto;
 import com.dupont.budget.model.SolicitacaoPagamento;
 import com.dupont.budget.model.StatusPagamento;
@@ -35,6 +37,7 @@ import com.dupont.budget.model.TipoSolicitacao;
 import com.dupont.budget.model.Vendedor;
 import com.dupont.budget.service.BudgetService;
 import com.dupont.budget.service.DomainService;
+import com.dupont.budget.service.ForecastService;
 import com.dupont.budget.service.SolicitacaoPagamentoService;
 import com.dupont.budget.web.util.FacesUtils;
 
@@ -52,6 +55,9 @@ public class SolicitacaoPagamentoAction implements Serializable {
 
 	@Inject
 	private BudgetService budgetService;
+	
+	@Inject
+	private ForecastService forecastService;
 	
 	@Inject
 	private FacesUtils facesUtils;
@@ -116,7 +122,7 @@ public class SolicitacaoPagamentoAction implements Serializable {
 	private String checkAcao = "Existente";	
 	private String novaAcao;
 	
-	/* Inicia o scopo de conversação */
+	/* Inicia o escopo de conversação */
 	public void initConversation(){
 		if (!FacesContext.getCurrentInstance().isPostback() && conversation.isTransient()) {
 			conversation.begin();
@@ -165,6 +171,43 @@ public class SolicitacaoPagamentoAction implements Serializable {
 			acoes.add(despesa.getAcao());
 		}
 		
+		// Popula combos a partir do forecast
+		List<Forecast> forecasts = forecastService.findForecastsByBudgetId(budget.getId());
+		
+		if(forecasts != null ) {
+			for (Forecast forecast : forecasts) {
+				
+				
+				Set<DespesaForecast> _despesas = forecast.getDespesas();
+				
+				if( _despesas == null)
+					continue;
+				
+				for (DespesaForecast _despesa : _despesas) {
+					
+					if( _despesa.getAtivo() == false )
+						continue;
+					
+					if(!produtos.contains(_despesa.getProduto()))
+						produtos.add(_despesa.getProduto());
+					
+					if(!tiposDespesas.contains(_despesa.getTipoDespesa()))
+						tiposDespesas.add(_despesa.getTipoDespesa());
+					
+					if(!culturas.contains(_despesa.getCultura()))
+						culturas.add(_despesa.getCultura());
+					
+					if(!distritos.contains(_despesa.getDistrito()))
+						distritos.add(_despesa.getDistrito());
+					
+					if(!vendedores.contains(_despesa.getVendedor()))
+						vendedores.add(_despesa.getVendedor());
+					
+					if(!acoes.contains(_despesa.getAcao()))
+						acoes.add(_despesa.getAcao());
+				}
+			}
+		}
 	}
 
 	protected Budget getBudget(String ano) {

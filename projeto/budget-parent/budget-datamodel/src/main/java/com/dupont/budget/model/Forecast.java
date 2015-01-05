@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -29,12 +30,11 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "forecast")
 @NamedQueries({
-		})
-public class Forecast implements Serializable{
-
-	public Forecast() {
-	}
-
+	@NamedQuery(name="Forecast.findByBudgetId", query="select f from Forecast f where f.budget.id = :budgetId")
+})
+public class Forecast implements Serializable {
+	
+	private static final long serialVersionUID = 6795074865859720715L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -68,6 +68,9 @@ public class Forecast implements Serializable{
 	@OneToMany(fetch = FetchType.EAGER)
 	@JoinColumn(name = "forecast_id")
 	private Set<DespesaForecast> despesas;
+	
+
+	public Forecast() {}
 
 	public Forecast(Integer mes, Usuario usuarioCriador, Date cricao, Budget budget) {
 		super();
