@@ -186,7 +186,8 @@
 
 				</h:panelGroup>
 			
-				<p:commandButton value="Concluir" icon="ui-icon-check" action="#{solicitacaoPagamentoAction.save}" styleClass="button" ajax="false"/>
+				<p:commandButton value="Concluir" icon="ui-icon-check" action="#{solicitacaoPagamentoAction.save}" styleClass="button" ajax="false" rendered="#{solicitacaoPagamento.id == null}"/>
+				<p:commandButton value="Concluir" icon="ui-icon-check" action="#{solicitacaoPagamentoAction.update}" styleClass="button" ajax="false" rendered="#{solicitacaoPagamento.id  != null}"/>
 				
 			</h:form>
 		

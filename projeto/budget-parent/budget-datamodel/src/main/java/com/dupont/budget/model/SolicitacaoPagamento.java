@@ -10,6 +10,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
@@ -37,14 +38,14 @@ public class SolicitacaoPagamento extends AbstractEntity<Long> {
 	private static final long serialVersionUID = 4098491678812403894L;
 
 	public static final String FIND_BY_FILTRO = "SolicitacaoPagamento.findByFiltro";
-	
+
 	public static final String FIND_BY_NUMERO_NOTA = "SolicitacaoPagamento.findByNumeroNota";
 
 	private Double valor;
 
 	@Column(name="num_nota_fiscal")
 	private String numeroNotaFiscal;
-	
+
 	@Column(name="process_instance_id")
 	private Long processInstanceId;
 
@@ -73,24 +74,29 @@ public class SolicitacaoPagamento extends AbstractEntity<Long> {
 	@Enumerated(EnumType.STRING)
 	private StatusPagamento status;
 
-	@OneToMany(mappedBy = "solicitacaoPagamento", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "solicitacaoPagamento", cascade = CascadeType.ALL, fetch=FetchType.EAGER)
 	private List<DespesaSolicitacaoPagamento> despesas;
 
 	@ManyToOne
 	@JoinColumn(name = "usuario_id")
 	private Usuario usuarioCriador;
 
+	@Column(name="origem")
+	@Enumerated(EnumType.STRING)
+	private OrigemSolicitacao origem;
+
 	public void addDespesaSolicitacaoPagamento(DespesaSolicitacaoPagamento despesaSolicitacaoPagamento) {
-		if(this.despesas == null) 
+		if(this.despesas == null)
 			this.despesas = new ArrayList<DespesaSolicitacaoPagamento>();
-		
+
 		this.despesas.add(despesaSolicitacaoPagamento);
+		despesaSolicitacaoPagamento.setSolicitacaoPagamento(this);
 	}
-	
+
 	public SolicitacaoPagamento() {
 		this(null);
 	}
-	
+
 	public SolicitacaoPagamento(StatusPagamento status) {
 		this.status = status;
 	}
@@ -184,6 +190,14 @@ public class SolicitacaoPagamento extends AbstractEntity<Long> {
 
 	public void setUsuarioCriador(Usuario usuarioCriador) {
 		this.usuarioCriador = usuarioCriador;
-	}	
+	}
+
+	public OrigemSolicitacao getOrigem() {
+		return origem;
+	}
+
+	public void setOrigem(OrigemSolicitacao origem) {
+		this.origem = origem;
+	}
 
 }

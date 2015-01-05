@@ -39,30 +39,43 @@ public class SolicitacaoPagamentoServiceBean implements SolicitacaoPagamentoServ
 		em.persist(solicitacaoPagamento);
 
 		// Instanciar os DTOs que serão os parametros da chamada ao processo  
-		List<SolicitacaoPagamentoDTO> _solicitacoes = new ArrayList<SolicitacaoPagamentoDTO>();
+//		List<SolicitacaoPagamentoDTO> _solicitacoes = new ArrayList<SolicitacaoPagamentoDTO>();
+//		
+//		for (DespesaSolicitacaoPagamento despesa : solicitacaoPagamento.getDespesas()) {
+//			
+//			SolicitacaoPagamentoDTO _solicitacao = new SolicitacaoPagamentoDTO();
+//			_solicitacao.setIdDespesa(despesa.getId());
+//			_solicitacao.setIdSolicitacao(solicitacaoPagamento.getId());
+//			_solicitacao.setNumeroNota(solicitacaoPagamento.getNumeroNotaFiscal());
+//			
+//			AreaDTO _area = new AreaDTO();
+//			_area.setId(despesa.getAcao().getId());
+//			_area.setNome(despesa.getAcao().getNome());
+//			
+//			_solicitacoes.add(_solicitacao);			
+//		}
+//		
+//		// Inicia o processo
+//		long processInstanceId = 0;
+//		try {
+//			processInstanceId = processService.iniciarProcessoSolicitacaoPagamento(null);
+//		} catch (Exception e) {
+//		}
+//
+//		solicitacaoPagamento.setProcessInstanceId(processInstanceId);
 		
-		for (DespesaSolicitacaoPagamento despesa : solicitacaoPagamento.getDespesas()) {
-			
-			SolicitacaoPagamentoDTO _solicitacao = new SolicitacaoPagamentoDTO();
-			_solicitacao.setIdDespesa(despesa.getId());
-			_solicitacao.setIdSolicitacao(solicitacaoPagamento.getId());
-			_solicitacao.setNumeroNota(solicitacaoPagamento.getNumeroNotaFiscal());
-			
-			AreaDTO _area = new AreaDTO();
-			_area.setId(despesa.getAcao().getId());
-			_area.setNome(despesa.getAcao().getNome());
-			
-			_solicitacoes.add(_solicitacao);			
-		}
-		
-		// Inicia o processo
-		long processInstanceId = 0;
-		try {
-			processInstanceId = processService.iniciarProcessoSolicitacaoPagamento(null);
-		} catch (Exception e) {
-		}
+	}
 
-		solicitacaoPagamento.setProcessInstanceId(processInstanceId);
+	@Override
+	public SolicitacaoPagamento findSolicitacaoPagamento(Long id) {
+		
+		return em.find(SolicitacaoPagamento.class, id);
+	}
+
+	@Override
+	public void updateSolicitacaoPagamento( SolicitacaoPagamento solicitacaoPagamento) {
+		
+		solicitacaoPagamento = em.merge(solicitacaoPagamento);
 		
 	}
 

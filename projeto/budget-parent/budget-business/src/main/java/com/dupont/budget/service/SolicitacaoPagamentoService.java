@@ -16,4 +16,18 @@ public interface SolicitacaoPagamentoService {
 	 * @param solicitacaoPagamento solicitaçao de pagamento
 	 */
 	public void startSolicitacaoPagamento(SolicitacaoPagamento solicitacaoPagamento);
+	
+	/**
+	 * Atualiza o procesos de solicitacao de pagamento
+	 * @param solicitacaoPagamento
+	 */
+	public void updateSolicitacaoPagamento(SolicitacaoPagamento solicitacaoPagamento);
+	
+	
+	/**
+	 * Retorna a solicitacao de pagamento por id
+	 * @param id id da solicitacao do pagamento
+	 * @return
+	 */
+	public SolicitacaoPagamento findSolicitacaoPagamento(Long id);
 }

@@ -3,6 +3,7 @@ package com.dupont.budget.web.actions;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -140,6 +141,10 @@ public class SolicitacaoPagamentoAction implements Serializable {
 		
 		Budget budget = getBudget(ano);
 
+		populateCombos(budget);
+	}
+
+	private void populateCombos(Budget budget) {
 		if( budget == null ) {
 			facesUtils.addErrorMessage("Não exite BUDGET cadastro para o centro de custo informado!");
 			return;
@@ -152,7 +157,7 @@ public class SolicitacaoPagamentoAction implements Serializable {
 		}
 		
 		
-		// Popula os combos da tela 
+		// Popula os combos da tela a partir do budget
 		for (Despesa despesa : despesas) {
 			
 			if( despesa.getAprovado() == false )
@@ -171,7 +176,7 @@ public class SolicitacaoPagamentoAction implements Serializable {
 			acoes.add(despesa.getAcao());
 		}
 		
-		// Popula combos a partir do forecast
+		// Popula combos a partir dos forecasts do budget
 		List<Forecast> forecasts = forecastService.findForecastsByBudgetId(budget.getId());
 		
 		if(forecasts != null ) {
@@ -226,7 +231,15 @@ public class SolicitacaoPagamentoAction implements Serializable {
 			despesaSolicitacaoPagamento.setAcao(acao);
 		}
 		
+		solicitacaoPagamento.setCriacao(new Date());
+		solicitacaoPagamento.setStatus(StatusPagamento.COMPROMETIDO);
+		
+		if( solicitacaoPagamento.getTipoSolicitacao() == TipoSolicitacao.CC )
+			despesaSolicitacaoPagamento.setValor(solicitacaoPagamento.getValor());
+		
+		
 		solicitacaoPagamento.addDespesaSolicitacaoPagamento(despesaSolicitacaoPagamento);
+		
 		solicitacaoPagamentoService.startSolicitacaoPagamento(solicitacaoPagamento);		
 		
 		conversation.end();
@@ -235,6 +248,61 @@ public class SolicitacaoPagamentoAction implements Serializable {
 		FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
 		
 		return "edit.xhtml?faces-redirect=true";
+	}
+	
+	public String edit(){
+		// Salvar a nova ação caso tenha sido pedido
+		if( getCheckAcao().equals("Criar Nova")){
+			Acao acao = new Acao(novaAcao);
+			
+			acao = domainService.create(acao);
+			
+			despesaSolicitacaoPagamento.setAcao(acao);
+		}
+		
+		solicitacaoPagamento.setStatus(StatusPagamento.COMPROMETIDO);
+		
+		if( solicitacaoPagamento.getTipoSolicitacao() == TipoSolicitacao.CC )
+			despesaSolicitacaoPagamento.setValor(solicitacaoPagamento.getValor());
+		
+		solicitacaoPagamentoService.updateSolicitacaoPagamento(solicitacaoPagamento);
+		
+		conversation.end();
+		
+		facesUtils.addInfoMessage("Solicitação de pagamento atualizada e reenviada para processamento.");
+		FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+		
+		return "edit.xhtml?faces-redirect=true";
+	}
+	
+	
+	public String edit(SolicitacaoPagamento _solicitacaoPagamento) {	
+		
+		solicitacaoPagamento = solicitacaoPagamentoService.findSolicitacaoPagamento(_solicitacaoPagamento.getId());
+		
+		// Verifica se pode editar
+		if( _solicitacaoPagamento.getStatus() == StatusPagamento.INATIVO || _solicitacaoPagamento.getStatus() == StatusPagamento.PAGO ) {
+			
+			facesUtils.addErrorMessage("Não é possível editar Solicitações de pagamento inativas ou pagas");
+			
+			return null;
+		}
+		
+		if (solicitacaoPagamento.getTipoSolicitacao() == TipoSolicitacao.CC && !solicitacaoPagamento.getDespesas().isEmpty()) {
+			this.despesaSolicitacaoPagamento = solicitacaoPagamento.getDespesas().get(0);
+			
+			Calendar criacao = Calendar.getInstance();
+			criacao.setTime(solicitacaoPagamento.getCriacao());
+			
+
+			Budget budget = getBudget(criacao.get(Calendar.YEAR) + "");
+			
+			populateCombos(budget);
+		} 
+		
+		
+		
+		return "/pages/process/pagamento/edit.xhtml";
 	}
 	
 	public void openCCDialog() {

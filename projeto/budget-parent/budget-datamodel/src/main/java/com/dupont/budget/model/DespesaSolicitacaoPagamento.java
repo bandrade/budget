@@ -1,5 +1,6 @@
 package com.dupont.budget.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -51,7 +52,7 @@ public class DespesaSolicitacaoPagamento extends AbstractEntity<Long> {
 	@JoinColumn(name = "vendedor_id")
 	private Vendedor vendedor;
 
-	@ManyToOne
+	@ManyToOne(cascade=CascadeType.ALL)
 	@JoinColumn(name = "solicitacao_id")
 	private SolicitacaoPagamento solicitacaoPagamento;
 
