@@ -6,7 +6,7 @@ import com.dupont.budget.model.Forecast;
 
 public interface ForecastService {
 
-	void criarPrimeiroForecast(String budgetId);
-	
+	void criarPrimeiroForecast(String budgetId) throws Exception;
+
 	List<Forecast> findForecastsByBudgetId(Long id);
 }

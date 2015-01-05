@@ -1,15 +1,11 @@
 package com.dupont.budget.model;
 
-import javax.inject.Inject;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-
-import com.sun.crypto.provider.DESParameters;
 
 /**
  * Itens de despesa do Forecast
@@ -67,6 +63,10 @@ public class DespesaForecast extends AbstractEntity<Long> {
 	@OneToOne
 	@JoinColumn(name = "id")
 	private DespesaForecastMes despesaMensalisada ;
+
+	@ManyToOne
+	@JoinColumn(name="despesa_budget_id")
+	private Despesa despesaBudget;
 
 	private String comentario;
 
@@ -181,6 +181,13 @@ public class DespesaForecast extends AbstractEntity<Long> {
 	}
 
 
+	public Despesa getDespesaBudget() {
+		return despesaBudget;
+	}
+
+	public void setDespesaBudget(Despesa despesaBudget) {
+		this.despesaBudget = despesaBudget;
+	}
 
 	public void initLists(){
 		if(acao==null)

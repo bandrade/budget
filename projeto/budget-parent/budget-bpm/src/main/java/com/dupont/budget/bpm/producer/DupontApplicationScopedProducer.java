@@ -64,7 +64,7 @@ public class DupontApplicationScopedProducer {
     @PerRequest
     public RuntimeEnvironment produceEnvironment(EntityManagerFactory emf) {
     	KieServices kieServices = KieServices.Factory.get();
-    	ReleaseId releaseId = kieServices.newReleaseId( "com.dupont.budget", "budget-bpm-repo", "1.0.9" );
+    	ReleaseId releaseId = kieServices.newReleaseId( "com.dupont.budget", "budget-bpm-repo", "1.0.10" );
     	String deploymentId = releaseId.toString();
     	AbstractAuditLogger auditLogger =AuditLoggerFactory.newJPAInstance();
     	ServicesAwareAuditEventBuilder auditEventBuilder = new ServicesAwareAuditEventBuilder();
