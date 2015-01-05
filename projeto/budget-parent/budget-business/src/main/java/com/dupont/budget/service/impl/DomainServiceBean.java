@@ -1,10 +1,14 @@
 package com.dupont.budget.service.impl;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.ejb.Stateless;
 import javax.persistence.NoResultException;
+import javax.persistence.Query;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -13,6 +17,8 @@ import com.dupont.budget.model.NamedAbstractEntity;
 import com.dupont.budget.model.Papel;
 import com.dupont.budget.model.PapelUsuario;
 import com.dupont.budget.model.SolicitacaoPagamento;
+import com.dupont.budget.model.StatusPagamento;
+import com.dupont.budget.model.TipoSolicitacao;
 import com.dupont.budget.model.Usuario;
 import com.dupont.budget.model.ValorComprometido;
 import com.dupont.budget.service.DomainService;
@@ -102,13 +108,73 @@ public class DomainServiceBean extends GenericService implements DomainService {
 	 * @see com.dupont.budget.service.DomainService#findSolicitacaoPagamentoByFiltro(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public SolicitacaoPagamento findSolicitacaoByNumeroNotaMes(String numeroNotaFiscal) {
+	public SolicitacaoPagamento findSolicitacaoByNumeroNota(String numeroNotaFiscal) {
 		try {
 			return em.createNamedQuery(SolicitacaoPagamento.FIND_BY_NUMERO_NOTA, SolicitacaoPagamento.class)
 						.setParameter("numeroNotaFiscal", numeroNotaFiscal.toLowerCase())
 						.getSingleResult();
 		} catch (NoResultException e) {
 			return null;
+		}
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see com.dupont.budget.service.DomainService#listSolicitacaoByFiltro(java.lang.String, com.dupont.budget.model.TipoSolicitacao, com.dupont.budget.model.StatusPagamento)
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<SolicitacaoPagamento> listSolicitacaoByFiltro(String numeroNotaFiscal, TipoSolicitacao tipo, StatusPagamento status, String fornecedor) {
+		
+		StringBuilder q = new StringBuilder("select o from SolicitacaoPagamento o ");
+		Map<String, Object> params = new HashMap<>();
+		
+		if (numeroNotaFiscal != null && !numeroNotaFiscal.isEmpty()) {
+			params.put("numeroNotaFiscal", numeroNotaFiscal.toLowerCase());
+		}
+		
+		if (fornecedor != null && !fornecedor.isEmpty()) {
+			params.put("fornecedor.nome", fornecedor);
+		}
+		
+		if (status != null) {
+			params.put("status", status);
+		}
+		
+		if (tipo != null) {
+			params.put("tipoSolicitacao", tipo);
+		}
+		
+		if (!params.isEmpty()) {
+			q.append("where ");
+			boolean con = false;
+			for (Entry<String, Object> e: params.entrySet()) {
+				if (con) {
+					q.append(" and ");
+				}
+				String n = e.getKey();
+				if (n.contains(".")) {
+					n = n.substring(0, n.lastIndexOf("."));
+				}
+				q.append(String.format("%s %s :%s", (e.getValue() instanceof String ? "lower(o.".concat(e.getKey()).concat(")") : "o.".concat(e.getKey())), e.getValue() instanceof String ? "like" : "=", n));
+				con = true;
+			}
+		}
+		
+		Query query = em.createQuery(q.toString());
+		
+		for (Entry<String, Object> e: params.entrySet()) {
+			String n = e.getKey();
+			if (n.contains(".")) {
+				n = n.substring(0, n.lastIndexOf("."));
+			}
+			query.setParameter(n, e.getValue() instanceof String ? "%".concat(e.getValue().toString().toLowerCase()).concat("%") : e.getValue());
+		}
+		
+		try {
+			return query.getResultList();
+		} catch (NoResultException e) {
+			return new LinkedList<SolicitacaoPagamento>();
 		}
 	}
 	
