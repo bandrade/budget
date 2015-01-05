@@ -68,6 +68,13 @@
 			<to-view-id>/pages/process/budget/criarBudget.xhtml</to-view-id>
 		</navigation-case>
 	</navigation-rule>
+    <navigation-rule>
+        <from-view-id>*</from-view-id>
+        <navigation-case>
+            <from-outcome>detalharPagamentoDespesa</from-outcome>
+            <to-view-id>/pages/process/pagamento/detail.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
 	<navigation-rule>
 		<from-view-id>/pages/adm/cultura/edit.xhtml</from-view-id>
 		<navigation-case>

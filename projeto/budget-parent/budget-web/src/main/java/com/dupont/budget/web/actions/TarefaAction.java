@@ -1,6 +1,8 @@
 package com.dupont.budget.web.actions;
 
 import java.io.Serializable;
+import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.enterprise.context.SessionScoped;
@@ -16,23 +18,32 @@ import com.dupont.budget.web.util.FacesUtils;
 @SessionScoped
 @Named
 public class TarefaAction implements Serializable {
+
+	private static final long serialVersionUID = -554836510005741119L;
+
 	@Inject
 	private BPMSTaskService bpms;
-
-
-	private TarefaDTO tarefaSelecionada;
-
 
 	@Inject
 	private Logger logger;
 
 	@Inject
 	private FacesUtils facesUtils;
+	
+	private TarefaDTO tarefaSelecionada;
 
 	public List<TarefaDTO> getTarefas() {
 		 List<TarefaDTO> tarefas = null;
 		try {
-			tarefas = bpms.obterTarefas(facesUtils.getUserLogin());
+			//tarefas = bpms.obterTarefas(facesUtils.getUserLogin());
+			TarefaDTO dto = new TarefaDTO();
+			dto.setId(1L);
+			dto.setProcessInstanceId(2L);
+			dto.setDescription("Tarefa de Testes");
+			dto.setName("Detalhar Despesa");
+			dto.setCreatedOn(new Date());
+			tarefas = new LinkedList<>();
+			tarefas.add(dto);
 		} catch (Exception e) {
 			facesUtils.addErrorMessage("Erro ao obter tarefas do usuario.");
 			logger.error("Erro ao obter tarefas do usuario.", e);
