@@ -213,7 +213,7 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
 						}
 						
 						Double valor = row.getCell(16).getNumericCellValue();
-						solicitacao = service.findSolicitacaoByNumeroNotaMes(row.getCell(7).getStringCellValue());
+						solicitacao = service.findSolicitacaoByNumeroNota(row.getCell(7).getStringCellValue());
 						
 						if (solicitacao == null) {
 							SolicitacaoPagamento o = new SolicitacaoPagamento(StatusPagamento.PENDENTE_VALIDACAO);

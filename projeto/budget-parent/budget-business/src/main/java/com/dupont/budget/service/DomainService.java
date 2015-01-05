@@ -8,6 +8,8 @@ import com.dupont.budget.model.NamedAbstractEntity;
 import com.dupont.budget.model.Papel;
 import com.dupont.budget.model.PapelUsuario;
 import com.dupont.budget.model.SolicitacaoPagamento;
+import com.dupont.budget.model.StatusPagamento;
+import com.dupont.budget.model.TipoSolicitacao;
 import com.dupont.budget.model.Usuario;
 import com.dupont.budget.model.ValorComprometido;
 
@@ -127,7 +129,7 @@ public interface DomainService {
 	 * 
 	 * @return a solicitação de pagamento ou <code>null</code> caso não encontre
 	 */
-	SolicitacaoPagamento findSolicitacaoByNumeroNotaMes(String numeroNotaFiscal);
+	SolicitacaoPagamento findSolicitacaoByNumeroNota(String numeroNotaFiscal);
 
 	/**
 	 * Consulta um centro de custo através do código solicitado.
@@ -144,4 +146,16 @@ public interface DomainService {
 	  * @return lista com as entidades encontradas.
 	  */
 	<T extends NamedAbstractEntity<?>>List<T> findByNamedQuery(String namedQuery, Class<T> clazz);
+
+	/**
+	 * Retorna uma lista de solicitações de pagamento que atende aos filtros indicados
+	 * 
+	 * @param numeroNotaFiscal número da nota fiscal
+	 * @param tipo tipo da solicitação
+	 * @param status status da solicitacao de pagamento
+	 * @param fornecedor TODO
+	 * @return
+	 */
+	List<SolicitacaoPagamento> listSolicitacaoByFiltro(String numeroNotaFiscal,
+			TipoSolicitacao tipo, StatusPagamento status, String fornecedor);
 }

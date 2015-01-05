@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.Conversation;
 import javax.enterprise.context.ConversationScoped;
 import javax.enterprise.context.RequestScoped;
@@ -26,10 +27,13 @@ import com.dupont.budget.model.Despesa;
 import com.dupont.budget.model.DespesaForecast;
 import com.dupont.budget.model.DespesaSolicitacaoPagamento;
 import com.dupont.budget.model.Distrito;
+import com.dupont.budget.model.Fornecedor;
 import com.dupont.budget.model.Forecast;
 import com.dupont.budget.model.Produto;
 import com.dupont.budget.model.SolicitacaoPagamento;
+import com.dupont.budget.model.StatusPagamento;
 import com.dupont.budget.model.TipoDespesa;
+import com.dupont.budget.model.TipoSolicitacao;
 import com.dupont.budget.model.Vendedor;
 import com.dupont.budget.service.BudgetService;
 import com.dupont.budget.service.DomainService;
@@ -68,7 +72,17 @@ public class SolicitacaoPagamentoAction implements Serializable {
 	private DomainService domainService;
 	
 	private SolicitacaoPagamento solicitacaoPagamento               = new SolicitacaoPagamento();	
+	
 	private DespesaSolicitacaoPagamento despesaSolicitacaoPagamento = new DespesaSolicitacaoPagamento();
+	
+	private List<SolicitacaoPagamento> list;
+	
+	@PostConstruct
+	private void init() {
+		solicitacaoPagamento = new SolicitacaoPagamento();
+		solicitacaoPagamento.setFornecedor(new Fornecedor());
+		despesaSolicitacaoPagamento = new DespesaSolicitacaoPagamento();
+	}
 	
 	@Produces @Named
 	public SolicitacaoPagamento getSolicitacaoPagamento(){
@@ -78,6 +92,22 @@ public class SolicitacaoPagamentoAction implements Serializable {
 	@Produces @Named @RequestScoped
 	public DespesaSolicitacaoPagamento getDespesaSolicitacaoPagamento(){
 		return despesaSolicitacaoPagamento;
+	}
+	
+	@Produces 
+	@Named 
+	public TipoSolicitacao[] getTipoSolicitacaoPagamentoList() {
+		return TipoSolicitacao.values();
+	}
+	
+	@Produces 
+	@Named 
+	public StatusPagamento[] getStatusSolicitacaoPagamentoList() {
+		return StatusPagamento.values();
+	}
+	
+	public void find() {
+		list = domainService.listSolicitacaoByFiltro(solicitacaoPagamento.getNumeroNotaFiscal(), solicitacaoPagamento.getTipoSolicitacao(), solicitacaoPagamento.getStatus(), solicitacaoPagamento.getFornecedor().getNome());
 	}
 	
 	// Listas que populam os combos da tela
@@ -267,5 +297,12 @@ public class SolicitacaoPagamentoAction implements Serializable {
 
 	public void setNovaAcao(String novaAcao) {
 		this.novaAcao = novaAcao;
+	}
+	
+	public List<SolicitacaoPagamento> getList() {
+		if (list == null) {
+			list = (List<SolicitacaoPagamento>) domainService.findAll(SolicitacaoPagamento.class);
+		}
+		return list;
 	}
 }
