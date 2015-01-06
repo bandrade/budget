@@ -20,6 +20,7 @@ import javax.inject.Named;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 
+import com.dupont.budget.dto.SolicitacaoPagamentoDTO;
 import com.dupont.budget.model.Acao;
 import com.dupont.budget.model.Budget;
 import com.dupont.budget.model.Cultura;
@@ -27,8 +28,8 @@ import com.dupont.budget.model.Despesa;
 import com.dupont.budget.model.DespesaForecast;
 import com.dupont.budget.model.DespesaSolicitacaoPagamento;
 import com.dupont.budget.model.Distrito;
-import com.dupont.budget.model.Fornecedor;
 import com.dupont.budget.model.Forecast;
+import com.dupont.budget.model.Fornecedor;
 import com.dupont.budget.model.Produto;
 import com.dupont.budget.model.SolicitacaoPagamento;
 import com.dupont.budget.model.StatusPagamento;
@@ -39,6 +40,8 @@ import com.dupont.budget.service.BudgetService;
 import com.dupont.budget.service.DomainService;
 import com.dupont.budget.service.ForecastService;
 import com.dupont.budget.service.SolicitacaoPagamentoService;
+import com.dupont.budget.service.bpms.BPMSProcessService;
+import com.dupont.budget.service.bpms.BPMSTaskService;
 import com.dupont.budget.web.util.FacesUtils;
 
 /**
@@ -71,17 +74,51 @@ public class SolicitacaoPagamentoAction implements Serializable {
 	@Inject
 	private DomainService domainService;
 	
+	@Inject
+	private BPMSTaskService taskService;
+	
+	@Inject
+	private BPMSProcessService processService;
+	
 	private SolicitacaoPagamento solicitacaoPagamento               = new SolicitacaoPagamento();	
 	
 	private DespesaSolicitacaoPagamento despesaSolicitacaoPagamento = new DespesaSolicitacaoPagamento();
 	
 	private List<SolicitacaoPagamento> list;
 	
+	private Long tarefa;
+	
+	private Long processInstanceId;
+	
 	@PostConstruct
 	private void init() {
 		solicitacaoPagamento = new SolicitacaoPagamento();
 		solicitacaoPagamento.setFornecedor(new Fornecedor());
 		despesaSolicitacaoPagamento = new DespesaSolicitacaoPagamento();
+	}
+	
+	public void load() {
+		try {
+			DespesaSolicitacaoPagamento despesa = new DespesaSolicitacaoPagamento();
+			SolicitacaoPagamentoDTO dto = (SolicitacaoPagamentoDTO) processService.obterVariavelProcesso(processInstanceId, "solicitacaoAtual");
+			despesa.setId(dto.getIdDespesa());
+			despesa = domainService.findById(despesa);
+			this.solicitacaoPagamento = despesa.getSolicitacaoPagamento();
+			this.despesaSolicitacaoPagamento = despesa;
+		} catch (Exception e) {
+			facesUtils.addErrorMessage("Não foi possível recuperar a solicitação");
+		}
+	}
+	
+	public void approve() {
+		try {
+			solicitacaoPagamento = domainService.findById(solicitacaoPagamento);
+			solicitacaoPagamento.setStatus(StatusPagamento.ENVIADO_SAP);
+			domainService.update(solicitacaoPagamento);
+			taskService.aprovarTarefa(facesUtils.getUserLogin(), tarefa, new HashMap<String,Object>());
+		} catch (Exception e) {
+			facesUtils.addErrorMessage("Não foi possível aprovar a tarefa");
+		}
 	}
 	
 	@Produces @Named
@@ -304,5 +341,21 @@ public class SolicitacaoPagamentoAction implements Serializable {
 			list = (List<SolicitacaoPagamento>) domainService.findAll(SolicitacaoPagamento.class);
 		}
 		return list;
+	}
+
+	public Long getTarefa() {
+		return tarefa;
+	}
+
+	public void setTarefa(Long tarefa) {
+		this.tarefa = tarefa;
+	}
+
+	public Long getProcessInstanceId() {
+		return processInstanceId;
+	}
+
+	public void setProcessInstanceId(Long processInstanceId) {
+		this.processInstanceId = processInstanceId;
 	}
 }

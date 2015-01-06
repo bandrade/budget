@@ -26,6 +26,7 @@ import com.dupont.budget.model.Acao;
 import com.dupont.budget.model.CentroCusto;
 import com.dupont.budget.model.DespesaSolicitacaoPagamento;
 import com.dupont.budget.model.Fornecedor;
+import com.dupont.budget.model.OrigemSolicitacao;
 import com.dupont.budget.model.SolicitacaoPagamento;
 import com.dupont.budget.model.StatusPagamento;
 import com.dupont.budget.model.TipoDespesa;
@@ -219,8 +220,9 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
 							SolicitacaoPagamento o = new SolicitacaoPagamento(StatusPagamento.PENDENTE_VALIDACAO);
 							o.setFornecedor(list.get(0));
 							o.setNumeroNotaFiscal(numeroNota);
+							o.setOrigem(OrigemSolicitacao.SAP);
 							DespesaSolicitacaoPagamento d = new DespesaSolicitacaoPagamento();
-							d.setSolicitacaoPagamento(solicitacao);
+							d.setSolicitacaoPagamento(o);
 							d.setCentroCusto(centroCusto);
 							d.setValor(valor);
 							o.getDespesas().add(d);
