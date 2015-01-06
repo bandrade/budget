@@ -21,6 +21,7 @@ public class NavegacaoAction {
 		navegationMap.put("Ajustar o Budget aprovado por Centro de Custo", "ajustarValoresCC");
 		navegationMap.put("Dividir budget por mes", "divisaoBudgetMes");
 		navegationMap.put("Detalhar Despesa", "detalharPagamentoDespesa");
+		navegationMap.put("Atualizar Forecast", "atualizarForecast");
 
 	}
 

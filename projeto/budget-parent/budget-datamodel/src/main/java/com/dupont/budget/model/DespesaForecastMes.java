@@ -5,6 +5,7 @@ import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * Divisao do valor da Despesa do Forecast por mes.
@@ -43,6 +44,44 @@ public class DespesaForecastMes implements Serializable {
 	private Double novembro;
 
 	private Double dezembro;
+
+
+	@Transient
+	private Double despesaJaneiro;
+
+	@Transient
+	private Double despesaFevereiro;
+
+	@Transient
+	private Double despesaMarco;
+
+	@Transient
+	private Double despesaAbril;
+
+	@Transient
+	private Double despesaMaio;
+
+	@Transient
+	private Double despesaJunho;
+
+	@Transient
+	private Double despesaJulho;
+
+	@Transient
+	private Double despesaAgosto;
+
+	@Transient
+	private Double despesaSetembro;
+
+	@Transient
+	private Double despesaOutubro;
+
+	@Transient
+	private Double despesaNovembro;
+
+	@Transient
+	private Double despesaDezembro;
+
 
 	public DespesaForecastMes() {
 	}
@@ -176,6 +215,126 @@ public class DespesaForecastMes implements Serializable {
 
 	public void setDezembro(Double dezembro) {
 		this.dezembro = dezembro;
+	}
+
+
+	public Double getDespesaJaneiro() {
+		return despesaJaneiro;
+	}
+
+
+	public void setDespesaJaneiro(Double despesaJaneiro) {
+		this.despesaJaneiro = despesaJaneiro;
+	}
+
+
+	public Double getDespesaFevereiro() {
+		return despesaFevereiro;
+	}
+
+
+	public void setDespesaFevereiro(Double despesaFevereiro) {
+		this.despesaFevereiro = despesaFevereiro;
+	}
+
+
+	public Double getDespesaMarco() {
+		return despesaMarco;
+	}
+
+
+	public void setDespesaMarco(Double despesaMarco) {
+		this.despesaMarco = despesaMarco;
+	}
+
+
+	public Double getDespesaAbril() {
+		return despesaAbril;
+	}
+
+
+	public void setDespesaAbril(Double despesaAbril) {
+		this.despesaAbril = despesaAbril;
+	}
+
+
+	public Double getDespesaMaio() {
+		return despesaMaio;
+	}
+
+
+	public void setDespesaMaio(Double despesaMaio) {
+		this.despesaMaio = despesaMaio;
+	}
+
+
+	public Double getDespesaJunho() {
+		return despesaJunho;
+	}
+
+
+	public void setDespesaJunho(Double despesaJunho) {
+		this.despesaJunho = despesaJunho;
+	}
+
+
+	public Double getDespesaJulho() {
+		return despesaJulho;
+	}
+
+
+	public void setDespesaJulho(Double despesaJulho) {
+		this.despesaJulho = despesaJulho;
+	}
+
+
+	public Double getDespesaAgosto() {
+		return despesaAgosto;
+	}
+
+
+	public void setDespesaAgosto(Double despesaAgosto) {
+		this.despesaAgosto = despesaAgosto;
+	}
+
+
+	public Double getDespesaSetembro() {
+		return despesaSetembro;
+	}
+
+
+	public void setDespesaSetembro(Double despesaSetembro) {
+		this.despesaSetembro = despesaSetembro;
+	}
+
+
+	public Double getDespesaOutubro() {
+		return despesaOutubro;
+	}
+
+
+	public void setDespesaOutubro(Double despesaOutubro) {
+		this.despesaOutubro = despesaOutubro;
+	}
+
+
+	public Double getDespesaNovembro() {
+		return despesaNovembro;
+	}
+
+
+	public void setDespesaNovembro(Double despesaNovembro) {
+		this.despesaNovembro = despesaNovembro;
+	}
+
+
+	public Double getDespesaDezembro() {
+		return despesaDezembro;
+	}
+
+
+	public void setDespesaDezembro(Double despesaDezembro) {
+		this.despesaDezembro = despesaDezembro;
 	}
 
 

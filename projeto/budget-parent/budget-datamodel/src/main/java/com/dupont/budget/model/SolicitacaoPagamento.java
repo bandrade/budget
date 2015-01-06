@@ -9,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
@@ -72,7 +73,7 @@ public class SolicitacaoPagamento extends AbstractEntity<Long> {
 	@Enumerated(EnumType.STRING)
 	private StatusPagamento status;
 
-	@OneToMany(mappedBy = "solicitacaoPagamento", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "solicitacaoPagamento", cascade = CascadeType.ALL, fetch=FetchType.EAGER, orphanRemoval= true)
 	private List<DespesaSolicitacaoPagamento> despesas;
 
 	@ManyToOne
@@ -85,6 +86,17 @@ public class SolicitacaoPagamento extends AbstractEntity<Long> {
 
 	public void addDespesaSolicitacaoPagamento(DespesaSolicitacaoPagamento despesaSolicitacaoPagamento) {
 		getDespesas().add(despesaSolicitacaoPagamento);
+
+		this.despesas.add(despesaSolicitacaoPagamento);
+		despesaSolicitacaoPagamento.setSolicitacaoPagamento(this);
+	}
+	
+	public void removeDespesaSolicitacaoPagamento(DespesaSolicitacaoPagamento despesaSolicitacaoPagamento) {
+		if( this.despesas == null )
+			return;
+		
+		this.despesas.remove(despesaSolicitacaoPagamento);
+		//despesaSolicitacaoPagamento.setSolicitacaoPagamento(null);
 	}
 
 	public SolicitacaoPagamento() {
