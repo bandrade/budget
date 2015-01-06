@@ -132,45 +132,45 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
 			Iterator<Row> rowIterator = sheet.iterator();
 			int counter = 0;
 
-			try {
 				ValorComprometido valor = null;
 				while (rowIterator.hasNext()) {
-					Row row = rowIterator.next();
-					valor = service.findValorComprometidoByFiltro(
-							row.getCell(0).getStringCellValue(), 
-							row.getCell(1).getStringCellValue(), 
-							row.getCell(2).getStringCellValue(), 
-							(int) row.getCell(4).getNumericCellValue());
-					if (valor != null) {
-						valor.setValor(row.getCell(5).getNumericCellValue());
-						service.update(valor);
-					} else {
-						valor = new ValorComprometido();
-						List<CentroCusto> centrosCusto = service.findByName(new CentroCusto(row.getCell(0).getStringCellValue()));
-						if (centrosCusto.isEmpty() || centrosCusto.size() > 1) {
-							continue;
+					try {
+						Row row = rowIterator.next();
+						valor = service.findValorComprometidoByFiltro(
+								row.getCell(0).getStringCellValue(), 
+								row.getCell(1).getStringCellValue(), 
+								row.getCell(2).getStringCellValue(), 
+								(int) row.getCell(4).getNumericCellValue());
+						if (valor != null) {
+							valor.setValor(row.getCell(5).getNumericCellValue());
+							service.update(valor);
+						} else {
+							valor = new ValorComprometido();
+							List<CentroCusto> centrosCusto = service.findByName(new CentroCusto(row.getCell(0).getStringCellValue()));
+							if (centrosCusto.isEmpty() || centrosCusto.size() > 1) {
+								continue;
+							}
+							valor.setCentroCusto(centrosCusto.get(0));
+							List<TipoDespesa> tiposDespesa = service.findByName(new TipoDespesa(row.getCell(1).getStringCellValue()));
+							if (tiposDespesa.isEmpty() || tiposDespesa.size() > 1) {
+								continue;
+							}
+							valor.setTipoDespesa(tiposDespesa.get(0));
+							List<Acao> acoes = service.findByName(new Acao(row.getCell(2).getStringCellValue()));
+							if (acoes.isEmpty() || acoes.size() > 1) {
+								continue;
+							}
+							valor.setAcao(acoes.get(0));
+							valor.setAtivo(true);
+							valor.setMes((int) row.getCell(4).getNumericCellValue());
+							valor.setValor(row.getCell(5).getNumericCellValue());
+							service.create(valor);
 						}
-						valor.setCentroCusto(centrosCusto.get(0));
-						List<TipoDespesa> tiposDespesa = service.findByName(new TipoDespesa(row.getCell(1).getStringCellValue()));
-						if (tiposDespesa.isEmpty() || tiposDespesa.size() > 1) {
-							continue;
-						}
-						valor.setTipoDespesa(tiposDespesa.get(0));
-						List<Acao> acoes = service.findByName(new Acao(row.getCell(2).getStringCellValue()));
-						if (acoes.isEmpty() || acoes.size() > 1) {
-							continue;
-						}
-						valor.setAcao(acoes.get(0));
-						valor.setAtivo(true);
-						valor.setMes((int) row.getCell(4).getNumericCellValue());
-						valor.setValor(row.getCell(5).getNumericCellValue());
-						service.create(valor);
+						counter++;
+					} catch (Exception e) {
+						logger.error(String.format("Nao foi possivel finalizar a carga de valores comprometidos: %s", e.getLocalizedMessage()));
 					}
-					counter++;
 				}
-			} catch (Exception e) {
-				logger.error(String.format("Nao foi possivel finalizar a carga de valores comprometidos: %s", e.getLocalizedMessage()));
-			}
 			logger.debug(String.format("%d entradas do arquivos processadas com sucesso!",counter));
 		} catch (Exception e) {
 			e.printStackTrace();
