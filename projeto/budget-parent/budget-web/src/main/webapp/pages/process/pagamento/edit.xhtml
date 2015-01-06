@@ -21,7 +21,7 @@
 			
 				<p:panelGrid columns="4">
 					<p:outputLabel value="Tipo de Solicitação:"/>
-					<p:selectOneRadio id="tipoSolicitacaoSelectOneRadio" value="#{solicitacaoPagamento.tipoSolicitacao}">
+					<p:selectOneRadio id="tipoSolicitacaoSelectOneRadio" value="#{solicitacaoPagamento.tipoSolicitacao}" >
 						<p:ajax update="dadosPanel, valorTotalNotaInput1" oncomplete="PF('valorTotalNotaInputVar').value='';"/>
 						<f:selectItem itemValue="CC" itemLabel="CC" />
 						<f:selectItem itemValue="RATEIO" itemLabel="Rateio"/>
@@ -33,10 +33,10 @@
 					
 					<p:panelGrid columns="6">
 						<p:outputLabel value="Fornecedor:" for="fornecedoresSelectOneMenu"  />
-						<p:selectOneMenu id="fornecedoresSelectOneMenu" label="Fornecedor" value="#{solicitacaoPagamento.fornecedor}" converter="com.dupont.EntityConverter" required="true">
+						<p:selectOneMenu id="fornecedoresSelectOneMenu" label="Fornecedor" value="#{solicitacaoPagamento.fornecedor}"  converter="com.dupont.EntityConverter" required="true">
 						
 							<f:selectItem itemLabel="Selecione um fornecedor" itemValue="#{null}" />
-							<f:selectItems value="#{fornecedores}" var="item" itemLabel="#{item.nome}" itemValue="#{item}"/>
+							<f:selectItems value="#{fornecedores}" var="item" itemLabel="#{item.nome}" itemValue="#{item}" />
 						</p:selectOneMenu>
 						<p:message for="fornecedoresSelectOneMenu" />
 						
@@ -172,9 +172,7 @@
 								<h:outputText value="#{item.valor}">
 									<f:convertNumber type="currency"/>
 								</h:outputText>
-							</p:column>
-							
-							
+							</p:column>							
 							
 						</p:dataTable>
 						
@@ -186,9 +184,16 @@
 
 				</h:panelGroup>
 			
-				<p:commandButton value="Concluir" icon="ui-icon-check" action="#{solicitacaoPagamentoAction.save}" styleClass="button" ajax="false" rendered="#{solicitacaoPagamento.id == null}"/>
-				<p:commandButton value="Concluir" icon="ui-icon-check" action="#{solicitacaoPagamentoAction.update}" styleClass="button" ajax="false" rendered="#{solicitacaoPagamento.id  != null}"/>
+				<p:commandButton id="saveBtn" value="Concluir" icon="ui-icon-check" action="#{solicitacaoPagamentoAction.save}" styleClass="button" ajax="false" rendered="#{solicitacaoPagamento.id == null}"/>
+				<p:commandButton id="updateBtn" value="Concluir" icon="ui-icon-check" action="#{solicitacaoPagamentoAction.update}" styleClass="button" ajax="false" rendered="#{solicitacaoPagamento.id  != null}"/>
 				
+				<p:blockUI block=":content" trigger="saveBtn" />
+				<p:blockUI block=":content" trigger="updateBtn" />
+				
+				<p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+			        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+			        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no"  icon="ui-icon-close" />
+			    </p:confirmDialog>
 			</h:form>
 		
 		</p:panel>		

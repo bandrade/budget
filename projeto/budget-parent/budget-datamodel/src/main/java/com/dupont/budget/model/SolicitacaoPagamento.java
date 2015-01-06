@@ -74,7 +74,7 @@ public class SolicitacaoPagamento extends AbstractEntity<Long> {
 	@Enumerated(EnumType.STRING)
 	private StatusPagamento status;
 
-	@OneToMany(mappedBy = "solicitacaoPagamento", cascade = CascadeType.ALL, fetch=FetchType.EAGER)
+	@OneToMany(mappedBy = "solicitacaoPagamento", cascade = CascadeType.ALL, fetch=FetchType.EAGER, orphanRemoval= true)
 	private List<DespesaSolicitacaoPagamento> despesas;
 
 	@ManyToOne
@@ -91,6 +91,14 @@ public class SolicitacaoPagamento extends AbstractEntity<Long> {
 
 		this.despesas.add(despesaSolicitacaoPagamento);
 		despesaSolicitacaoPagamento.setSolicitacaoPagamento(this);
+	}
+	
+	public void removeDespesaSolicitacaoPagamento(DespesaSolicitacaoPagamento despesaSolicitacaoPagamento) {
+		if( this.despesas == null )
+			return;
+		
+		this.despesas.remove(despesaSolicitacaoPagamento);
+		//despesaSolicitacaoPagamento.setSolicitacaoPagamento(null);
 	}
 
 	public SolicitacaoPagamento() {

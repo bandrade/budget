@@ -11,6 +11,7 @@ import javax.persistence.PersistenceContext;
 import com.dupont.budget.dto.AreaDTO;
 import com.dupont.budget.dto.SolicitacaoPagamentoDTO;
 import com.dupont.budget.model.DespesaSolicitacaoPagamento;
+import com.dupont.budget.model.OrigemSolicitacao;
 import com.dupont.budget.model.SolicitacaoPagamento;
 import com.dupont.budget.service.SolicitacaoPagamentoService;
 import com.dupont.budget.service.bpms.BPMSProcessService;
@@ -37,34 +38,10 @@ public class SolicitacaoPagamentoServiceBean implements SolicitacaoPagamentoServ
 		// Salva a entidade no banco
 		// Necessario salvar antes para que os IDs estejam populados
 		em.persist(solicitacaoPagamento);
-
-		// Instanciar os DTOs que serão os parametros da chamada ao processo  
-//		List<SolicitacaoPagamentoDTO> _solicitacoes = new ArrayList<SolicitacaoPagamentoDTO>();
-//		
-//		for (DespesaSolicitacaoPagamento despesa : solicitacaoPagamento.getDespesas()) {
-//			
-//			SolicitacaoPagamentoDTO _solicitacao = new SolicitacaoPagamentoDTO();
-//			_solicitacao.setIdDespesa(despesa.getId());
-//			_solicitacao.setIdSolicitacao(solicitacaoPagamento.getId());
-//			_solicitacao.setNumeroNota(solicitacaoPagamento.getNumeroNotaFiscal());
-//			
-//			AreaDTO _area = new AreaDTO();
-//			_area.setId(despesa.getAcao().getId());
-//			_area.setNome(despesa.getAcao().getNome());
-//			
-//			_solicitacoes.add(_solicitacao);			
-//		}
-//		
-//		// Inicia o processo
-//		long processInstanceId = 0;
-//		try {
-//			processInstanceId = processService.iniciarProcessoSolicitacaoPagamento(null);
-//		} catch (Exception e) {
-//		}
-//
-//		solicitacaoPagamento.setProcessInstanceId(processInstanceId);
 		
+		callSolicitacaoPagamentoProcess(solicitacaoPagamento);		
 	}
+
 
 	@Override
 	public SolicitacaoPagamento findSolicitacaoPagamento(Long id) {
@@ -77,6 +54,38 @@ public class SolicitacaoPagamentoServiceBean implements SolicitacaoPagamentoServ
 		
 		solicitacaoPagamento = em.merge(solicitacaoPagamento);
 		
+		callSolicitacaoPagamentoProcess(solicitacaoPagamento);
 	}
 
+	private void callSolicitacaoPagamentoProcess( SolicitacaoPagamento solicitacaoPagamento) {
+		
+		if( solicitacaoPagamento.getOrigem() == OrigemSolicitacao.SAP )
+			return;
+		
+		// Instanciar os DTOs que serão os parametros da chamada ao processo  
+		List<SolicitacaoPagamentoDTO> _solicitacoes = new ArrayList<SolicitacaoPagamentoDTO>();
+		
+		for (DespesaSolicitacaoPagamento despesa : solicitacaoPagamento.getDespesas()) {
+			
+			SolicitacaoPagamentoDTO _solicitacao = new SolicitacaoPagamentoDTO();
+			_solicitacao.setIdDespesa(despesa.getId());
+			_solicitacao.setIdSolicitacao(solicitacaoPagamento.getId());
+			_solicitacao.setNumeroNota(solicitacaoPagamento.getNumeroNotaFiscal());
+			
+			AreaDTO _area = new AreaDTO();
+			_area.setId(despesa.getAcao().getId());
+			_area.setNome(despesa.getAcao().getNome());
+			
+			_solicitacoes.add(_solicitacao);			
+		}
+		
+		// Inicia o processo
+		long processInstanceId = 0;
+		try {
+			processInstanceId = processService.iniciarProcessoSolicitacaoPagamento(_solicitacoes.toArray(new SolicitacaoPagamentoDTO[_solicitacoes.size()]));
+		} catch (Exception e) {
+		}
+
+		solicitacaoPagamento.setProcessInstanceId(processInstanceId);
+	}
 }

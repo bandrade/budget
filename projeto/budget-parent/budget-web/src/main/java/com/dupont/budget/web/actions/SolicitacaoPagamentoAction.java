@@ -28,8 +28,8 @@ import com.dupont.budget.model.Despesa;
 import com.dupont.budget.model.DespesaForecast;
 import com.dupont.budget.model.DespesaSolicitacaoPagamento;
 import com.dupont.budget.model.Distrito;
-import com.dupont.budget.model.Fornecedor;
 import com.dupont.budget.model.Forecast;
+import com.dupont.budget.model.Fornecedor;
 import com.dupont.budget.model.Produto;
 import com.dupont.budget.model.SolicitacaoPagamento;
 import com.dupont.budget.model.StatusPagamento;
@@ -234,11 +234,11 @@ public class SolicitacaoPagamentoAction implements Serializable {
 		solicitacaoPagamento.setCriacao(new Date());
 		solicitacaoPagamento.setStatus(StatusPagamento.COMPROMETIDO);
 		
-		if( solicitacaoPagamento.getTipoSolicitacao() == TipoSolicitacao.CC )
+		if( solicitacaoPagamento.getTipoSolicitacao() == TipoSolicitacao.CC ) {
 			despesaSolicitacaoPagamento.setValor(solicitacaoPagamento.getValor());
+			solicitacaoPagamento.addDespesaSolicitacaoPagamento(despesaSolicitacaoPagamento);
+		}
 		
-		
-		solicitacaoPagamento.addDespesaSolicitacaoPagamento(despesaSolicitacaoPagamento);
 		
 		solicitacaoPagamentoService.startSolicitacaoPagamento(solicitacaoPagamento);		
 		
@@ -250,7 +250,7 @@ public class SolicitacaoPagamentoAction implements Serializable {
 		return "edit.xhtml?faces-redirect=true";
 	}
 	
-	public String edit(){
+	public String update(){
 		// Salvar a nova ação caso tenha sido pedido
 		if( getCheckAcao().equals("Criar Nova")){
 			Acao acao = new Acao(novaAcao);
@@ -277,6 +277,8 @@ public class SolicitacaoPagamentoAction implements Serializable {
 	
 	
 	public String edit(SolicitacaoPagamento _solicitacaoPagamento) {	
+		
+		conversation.begin();
 		
 		solicitacaoPagamento = solicitacaoPagamentoService.findSolicitacaoPagamento(_solicitacaoPagamento.getId());
 		
@@ -315,6 +317,17 @@ public class SolicitacaoPagamentoAction implements Serializable {
 		options.put("contentWidth", 800);
 		
 		RequestContext.getCurrentInstance().openDialog("rateio-dialog", options, null);
+	}
+	
+	public void deleteDespesaSolicitacaoPagamento(DespesaSolicitacaoPagamento despesa) {
+		solicitacaoPagamento.removeDespesaSolicitacaoPagamento(despesa);
+		
+		Double valor = solicitacaoPagamento.getValor() - despesa.getValor() ;
+		
+		if( valor < 0 )
+			valor = 0.0;
+		
+		solicitacaoPagamento.setValor(valor);
 	}
 		
 	public void incluirDespesa(SelectEvent event){

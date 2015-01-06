@@ -36,8 +36,7 @@ public class IncluirDespesaRateioAction extends SolicitacaoPagamentoAction {
 		return despesaSolicitacaoPagamento;
 	}
 
-	public void setDespesaSolicitacaoPagamento(
-			DespesaSolicitacaoPagamento despesaSolicitacaoPagamento) {
+	public void setDespesaSolicitacaoPagamento(DespesaSolicitacaoPagamento despesaSolicitacaoPagamento) {
 		this.despesaSolicitacaoPagamento = despesaSolicitacaoPagamento;
 	}
 	
