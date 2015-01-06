@@ -1,11 +1,11 @@
 package com.dupont.budget.web.actions;
 
 import javax.annotation.security.RolesAllowed;
-import javax.enterprise.inject.Model;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.deltaspike.core.api.scope.ViewAccessScoped;
 import org.slf4j.Logger;
 
 import com.dupont.budget.model.Cultura;
@@ -19,7 +19,7 @@ import com.dupont.budget.web.util.FacesUtils;
  * @since 2014
  *
  */
-@Model
+@ViewAccessScoped @Named
 @RolesAllowed(value = "ADMINISTRADOR")
 public class CulturaAction extends GenericAction<Cultura> {
 
@@ -44,7 +44,7 @@ public class CulturaAction extends GenericAction<Cultura> {
 	 * Buscar as culturas a partir do filtro.
 	 */
 	public void find() {
-		list = service.findByName(entidade);
+		list = service.findByName(getCultura());
 	}
 
 	@Override

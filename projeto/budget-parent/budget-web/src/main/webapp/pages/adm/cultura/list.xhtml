@@ -35,8 +35,8 @@
 					
 					<p:column headerText="Ações" style="width:10%" >
 						
-						<p:commandButton icon="ui-icon-pencil" action="#{culturaAction.edit(item)}"   update="culturas" immediate="true"/>
-						<p:commandButton icon="ui-icon-trash"  action="#{culturaAction.delete(item)}" update="culturas" immediate="true">
+						<p:commandButton icon="ui-icon-pencil" action="#{culturaAction.edit(item)}"   update="culturas" />
+						<p:commandButton icon="ui-icon-trash"  action="#{culturaAction.delete(item)}" update="culturas" >
 							<p:confirm header="Confirmação" message="Deseja realmente remover o dado?" icon="ui-icon-alert" />
 						</p:commandButton>
 						

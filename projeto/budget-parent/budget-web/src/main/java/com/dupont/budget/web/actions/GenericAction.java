@@ -49,6 +49,9 @@ public abstract class GenericAction<T extends AbstractEntity<?>>  implements Ser
 		} catch (ExistingNameRuntimeException e) {
 			getFacesUtils().addErrorMessage("Registro com mesmo nome já cadastrado!");
 		}
+		
+		find();
+		
 		return action;
 	}
 	
@@ -111,6 +114,8 @@ public abstract class GenericAction<T extends AbstractEntity<?>>  implements Ser
 			list.remove(t);
 			
 			getFacesUtils().addInfoMessage(String.format("%s removido(a) com sucesso.", tipo));
+			
+			
 		} catch (Exception e) {
 			handleException(e);
 		}
