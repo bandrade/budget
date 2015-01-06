@@ -1,5 +1,6 @@
 package com.dupont.budget.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -17,10 +18,12 @@ import org.slf4j.Logger;
 
 import com.dupont.budget.model.Budget;
 import com.dupont.budget.model.BudgetMes;
+import com.dupont.budget.model.CentroCusto;
 import com.dupont.budget.model.Despesa;
 import com.dupont.budget.model.DespesaForecast;
 import com.dupont.budget.model.DespesaForecastMes;
 import com.dupont.budget.model.Forecast;
+import com.dupont.budget.service.BudgetService;
 import com.dupont.budget.service.ForecastService;
 import com.dupont.budget.service.GenericService;
 
@@ -30,8 +33,13 @@ import com.dupont.budget.service.GenericService;
 public class ForecastServiceBean extends GenericService implements ForecastService{
 	@Inject
 	private Logger logger;
+
 	@Resource
 	private UserTransaction tx;
+
+	@Inject
+	private BudgetService budgetService;
+
 	@Path("criar")
 	@POST
 	public void criarPrimeiroForecast(String budgetId) throws Exception {
@@ -76,6 +84,12 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 	public List<Forecast> findForecastsByBudgetId(Long id) {
 
 		return em.createNamedQuery("Forecast.findByBudgetId", Forecast.class).setParameter("budgetId", id).getResultList();
+	}
+
+	public List<DespesaForecast> obterDespesasForecast(String mes, String  ano, Long idCentroCusto) throws Exception{
+		Budget budget = budgetService.findByAnoAndCentroDeCusto(ano, idCentroCusto);
+		Forecast forecast = em.createNamedQuery("Forecast.findByBudgetId", Forecast.class).setParameter("budgetId", budget.getId()).getSingleResult();
+		return new ArrayList<DespesaForecast>(forecast.getDespesas());
 	}
 
 }

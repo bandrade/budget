@@ -1,0 +1,291 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="/WEB-INF/templates/default.xhtml">
+
+	<ui:param name="pageTitle" value="Human Tasks" />
+	<f:metadata>
+        <f:viewParam name="taskId" value="#{atualizarForecastAction.idTarefa}" />
+        <f:viewParam name="processInstanceId" value="#{atualizarForecastAction.idInstanciaProcesso}" />
+        <f:event type="preRenderView" listener="#{atualizarForecastAction.obterDadosForecast()}" />
+    </f:metadata>
+
+	<ui:define name="content">
+		<h:form id="form"> 
+			<p:panelGrid columns="1" styleClass="body-content">
+				<p:fieldset value="Atualizar Forecast" legend="Atualizar Forecast">
+				<p:panel>
+					<p:panelGrid columns="2">
+						<p:outputLabel value="Centro de Custo:"></p:outputLabel>
+						<p:outputLabel styleClass="bold-label" value="#{atualizarForecastAction.centroDeCusto.nome}"></p:outputLabel>
+						<p:outputLabel value="Ano:"></p:outputLabel>
+						<p:outputLabel styleClass="bold-label" value="#{atualizarForecastAction.ano}"></p:outputLabel>
+						<p:outputLabel value="Mes:"></p:outputLabel>
+						<p:outputLabel styleClass="bold-label" value="#{atualizarForecastAction.mes}"></p:outputLabel>
+						
+					</p:panelGrid>
+					<p:panelGrid columns="1" styleClass="painel-botoes">
+						<p:commandButton value="Incluir Despesa"
+							oncomplete="PF('criarDespesa').show();" action="#{aprovarBudgetAction.trataInclusao()}" update=":criarDespesaPanel,:formDespesa"/>
+					</p:panelGrid>
+					<p:panelGrid id="panelDetalhe" columns="1">
+					<p:dataTable 
+						id="tblDespesa"
+						emptyMessage="Não existem despesas cadastradas" 
+						value="#{atualizarForecastAction.despesasNoDetalhe}"
+						selection="#{atualizarForecastAction.despesaDetalheSelecionada}"
+						var="detalheDespesa"
+						paginator="true"
+						paginatorPosition="bottom"
+						rows="20" style="margin-left:-10px"
+						scrollable="true"
+						scrollWidth="700"
+						frozenColumns="4">
+						<f:facet name="header">
+        				 Despesa
+   						 </f:facet>
+   						 <p:column width="50" >
+							<f:facet name="header">
+								<h:outputText value="Tipo Despesa" />
+							</f:facet>
+							<h:outputText value="#{detalheDespesa.tipoDespesa.nome}" />
+						</p:column>
+						<p:column width="50">
+							<f:facet name="header">
+								<h:outputText value="Ação" />
+							</f:facet>
+							<h:outputText value="#{detalheDespesa.acao.nome}" />
+						</p:column>
+						<p:column width="50" footerText="#{facesUtils.formatarDinheiro(atualizarForecastAction.valorTotalDetalhe)}" style="text-align:center" >
+							<f:facet name="header">
+								<h:outputText value="YTD" />
+							</f:facet>
+							<h:outputText value="#{detalheDespesa.valor}" >
+								<f:convertNumber type="currency"/>
+							</h:outputText>
+						</p:column> 
+						<p:column width="50" footerText="#{facesUtils.formatarDinheiro(atualizarForecastAction.valorTotalDetalhe)}" style="text-align:center" >
+							<f:facet name="header">
+								<h:outputText value="Budget Ano" />
+							</f:facet>
+							<h:outputText value="#{detalheDespesa.valor}" >
+								<f:convertNumber type="currency"/>
+							</h:outputText>
+						</p:column> 
+						<p:column width="50" footerText="#{facesUtils.formatarDinheiro(atualizarForecastAction.valorTotalDetalhe)}" style="text-align:center" >
+							<f:facet name="header">
+								<h:outputText value="PLM Forecast" />
+							</f:facet>
+							<h:outputText value="#{detalheDespesa.valor}" >
+								<f:convertNumber type="currency"/>
+							</h:outputText>
+						</p:column> 
+					
+						
+						<p:column rendered="#{atualizarForecastAction.exibirColuna('JANEIRO')}" style="text-align:center"
+								 width="#{atualizarForecastAction.exibirDespesa('JANEIRO')? 200 :100}" footerText="#{facesUtils.formatarDinheiro(divisaoBudgetMesAction.calcularValorColuna('JAN'))}" >
+							<f:facet name="header">
+								<h:outputText value="Jan." />
+							</f:facet>
+							<pe:inputNumber  id="valorJan" value="#{detalheDespesa.despesaMensalisada.janeiro}" converter="javax.faces.Double" >
+								<p:ajax   listener="#{divisaoBudgetMesAction.calcularValorColuna('JANEIRO')}" update=":form" process="@this"></p:ajax>
+							</pe:inputNumber>
+							<h:outputText rendered="#{atualizarForecastAction.exibirColuna('JANEIRO')}" value="/#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaJaneiro)}" />
+						</p:column> 
+						<p:column  style="text-align:center" width="100" footerText="#{facesUtils.formatarDinheiro(divisaoBudgetMesAction.calcularValorColuna('FEVEREIRO'))}">
+							<f:facet name="header">
+								<h:outputText value="Fev." />
+							</f:facet>
+							<pe:inputNumber  id="valorFev" value="#{detalheDespesa.despesaMensalisada.fevereiro}" converter="javax.faces.Double" >
+								<p:ajax   listener="#{divisaoBudgetMesAction.calcularValorColuna('FEV')}" update=":form" process="@this"></p:ajax>
+							</pe:inputNumber>
+						</p:column> 
+						<p:column  style="text-align:center" width="100"  footerText="#{facesUtils.formatarDinheiro(divisaoBudgetMesAction.calcularValorColuna('MARCO'))}">
+							<f:facet name="header">
+								<h:outputText value="Mar." />
+							</f:facet>
+							<pe:inputNumber  id="valorMar" value="#{detalheDespesa.despesaMensalisada.marco}" converter="javax.faces.Double" >
+								<p:ajax   listener="#{divisaoBudgetMesAction.calcularValorColuna('MAR')}" update=":form" process="@this"></p:ajax>
+							</pe:inputNumber>
+						</p:column> 
+						<p:column  style="text-align:center" width="100" footerText="#{facesUtils.formatarDinheiro(divisaoBudgetMesAction.calcularValorColuna('ABRIL'))}">
+							<f:facet name="header">
+								<h:outputText value="Abr."  />
+							</f:facet>
+							<pe:inputNumber  id="valorAbr" value="#{detalheDespesa.despesaMensalisada.abril}" converter="javax.faces.Double" >
+								<p:ajax   listener="#{divisaoBudgetMesAction.calcularValorColuna('ABR')}" update=":form" process="@this"></p:ajax>
+							</pe:inputNumber>
+						</p:column> 
+						<p:column  style="text-align:center"  width="100" footerText="#{facesUtils.formatarDinheiro(divisaoBudgetMesAction.calcularValorColuna('MAIO'))}">
+							<f:facet name="header">
+								<h:outputText value="Mai." />
+							</f:facet>
+							<pe:inputNumber  id="valorMaio" value="#{detalheDespesa.despesaMensalisada.maio}" converter="javax.faces.Double" >
+								<p:ajax   listener="#{divisaoBudgetMesAction.calcularValorColuna('MAI')}" update=":form" process="@this"></p:ajax>
+							</pe:inputNumber>
+						</p:column> 
+						<p:column  style="text-align:center" width="100" footerText="#{facesUtils.formatarDinheiro(divisaoBudgetMesAction.calcularValorColuna('JUNHO'))}">
+							<f:facet name="header">
+								<h:outputText value="Jun." />
+							</f:facet>
+							<pe:inputNumber  id="valorJun" value="#{detalheDespesa.despesaMensalisada.junho}" converter="javax.faces.Double" >
+								<p:ajax   listener="#{divisaoBudgetMesAction.calcularValorColuna('JUN')}" update=":form" process="@this"></p:ajax>
+							</pe:inputNumber>
+						</p:column>
+						<p:column  style="text-align:center"  width="100" footerText="#{facesUtils.formatarDinheiro(divisaoBudgetMesAction.calcularValorColuna('JULHO'))}">
+							<f:facet name="header">
+								<h:outputText value="Jul." />
+							</f:facet>
+							<pe:inputNumber  id="valorJul" value="#{detalheDespesa.despesaMensalisada.julho}" converter="javax.faces.Double" >
+								<p:ajax   listener="#{divisaoBudgetMesAction.calcularValorColuna('JUL')}" update=":form" process="@this"></p:ajax>
+							</pe:inputNumber>
+						</p:column>
+						<p:column  style="text-align:center"  width="100" footerText="#{facesUtils.formatarDinheiro(divisaoBudgetMesAction.calcularValorColuna('AGOSTO'))}">
+							<f:facet name="header">
+								<h:outputText value="Ago." />
+							</f:facet>
+							<pe:inputNumber  id="valorAgo" value="#{detalheDespesa.despesaMensalisada.agosto}" converter="javax.faces.Double" >
+								<p:ajax   listener="#{divisaoBudgetMesAction.calcularValorColuna('AGO')}" update=":form" process="@this"></p:ajax>
+							</pe:inputNumber>
+						</p:column>
+						<p:column  style="text-align:center" width="100" footerText="#{facesUtils.formatarDinheiro(divisaoBudgetMesAction.calcularValorColuna('SETEMBRO'))}">
+							<f:facet name="header">
+								<h:outputText value="Set." />
+							</f:facet>
+							<pe:inputNumber  id="valorSet" value="#{detalheDespesa.despesaMensalisada.setembro}" converter="javax.faces.Double" >
+								<p:ajax   listener="#{divisaoBudgetMesAction.calcularValorColuna('SET')}" update=":form" process="@this"></p:ajax>
+							</pe:inputNumber>
+						</p:column>
+						<p:column  style="text-align:center" width="100"  footerText="#{facesUtils.formatarDinheiro(divisaoBudgetMesAction.calcularValorColuna('OUTUBRO'))}">
+							<f:facet name="header">
+								<h:outputText value="Out." />
+							</f:facet>
+							<pe:inputNumber  id="valorOut" value="#{detalheDespesa.despesaMensalisada.outubro}" converter="javax.faces.Double" >
+								<p:ajax   listener="#{divisaoBudgetMesAction.calcularValorColuna('OUT')}" update=":form" process="@this"></p:ajax>
+							</pe:inputNumber>
+						</p:column>
+						<p:column  style="text-align:center" width="100" footerText="#{facesUtils.formatarDinheiro(divisaoBudgetMesAction.calcularValorColuna('NOVEMBRO'))}">
+							<f:facet name="header">
+								<h:outputText value="Nov." />
+							</f:facet>
+							<pe:inputNumber  id="valorNov" value="#{detalheDespesa.despesaMensalisada.novembro}" converter="javax.faces.Double" >
+								<p:ajax   listener="#{divisaoBudgetMesAction.calcularValorColuna('AGO')}" update=":form" process="@this"></p:ajax>
+							</pe:inputNumber>
+						</p:column>
+						<p:column  style="text-align:center" width="100"  footerText="#{facesUtils.formatarDinheiro(divisaoBudgetMesAction.calcularValorColuna('DEZEMBRO'))}">
+							<f:facet name="header">
+								<h:outputText value="Dez." />
+							</f:facet>
+							<pe:inputNumber  id="valorDez" value="#{detalheDespesa.despesaMensalisada.dezembro}" converter="javax.faces.Double" >
+								<p:ajax   listener="#{divisaoBudgetMesAction.calcularValorColuna('DEZ')}" update=":form" process="@this"></p:ajax>
+							</pe:inputNumber>
+							
+						</p:column>
+						<p:column width="50" style="text-align:center" footerText="#{facesUtils.formatarDinheiro(divisaoBudgetMesAction.calcularValorColuna('TOT'))}" >
+								<f:facet name="header">
+								<h:outputText value="Valor Mensalisado" />
+							</f:facet>
+							<h:outputText value="#{facesUtils.formatarDinheiro(atualizarForecastAction.helper.calcularValorMensalisado(detalheDespesa))}" />
+						</p:column> 
+					</p:dataTable>
+					
+					</p:panelGrid>
+						<p:panelGrid columns="1" styleClass="painel-botoes">
+						<p:commandButton value="Concluir"  action="#{aprovarBudgetAction.concluir()}" onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()">
+							<p:confirm header="Confirmação" message="Confirma a conclusão da Aprovação do Budget?" icon="ui-icon-alert"/>
+						</p:commandButton>
+					</p:panelGrid>
+					</p:panel>
+				</p:fieldset>
+			
+			</p:panelGrid>
+			
+			</h:form>
+			<p:dialog header="#{not aprovarBudgetAction.inclusao? 'Alterar Despesa' : 'Incluir Despesa'}  " id="criarDespesaPanel" widgetVar="criarDespesa" height="400"
+				width="500" resizable="false" draggable="false">
+				<h:form id="formDespesa">
+				<p:panel id="panelDespesa">
+				<p:panelGrid columns="2">
+					<p:outputLabel value="Tipo de Despesa:"></p:outputLabel>
+					<p:autoComplete id="cboTipoDespesa" dropdown="true" value="#{aprovarBudgetAction.despesa.tipoDespesa}" completeMethod="#{autocompleteAction.autocompleteTipoDespesa}" 
+					 var="_tipoDespesa" itemLabel="#{_tipoDespesa.nome}" itemValue="#{_tipoDespesa}" emptyMessage="NAO ENCONTRADO" effect="size" maxResults="10" required="true" 
+					 styleClass="input"
+					 scrollHeight="300"
+					 converter="com.dupont.EntityConverter" />
+					 
+					<p:outputLabel value="Produto:"></p:outputLabel>
+					<p:autoComplete id="cboProduto" dropdown="true" value="#{aprovarBudgetAction.despesa.produto}" completeMethod="#{autocompleteAction.autocompleteProduto}" 
+					 styleClass="input"
+					 scrollHeight="300"
+					 var="_produto" itemLabel="#{_produto.nome}" itemValue="#{_produto}" emptyMessage="NAO ENCONTRADO" effect="size" converter="com.dupont.EntityConverter"/>
+
+					<p:outputLabel value="Cultura:"></p:outputLabel>
+					<p:autoComplete id="cboCultura" dropdown="true" value="#{aprovarBudgetAction.despesa.cultura}" completeMethod="#{autocompleteAction.autocompleteCultura}" 
+					 styleClass="input"
+					 scrollHeight="300"
+					converter="com.dupont.EntityConverter"
+					 var="_cultura" itemLabel="#{_cultura.nome}" itemValue="#{_cultura}" emptyMessage="NAO ENCONTRADO" effect="size"  />
+					
+					<p:outputLabel value="Distrito:" ></p:outputLabel>
+					<p:autoComplete id="cboDistrito" dropdown="true" value="#{aprovarBudgetAction.despesa.distrito}" completeMethod="#{autocompleteAction.autocompleteDistrito}" 
+					 styleClass="input"
+					 scrollHeight="300"
+					converter="com.dupont.EntityConverter"
+					 var="distrito" itemLabel="#{distrito.nome}" itemValue="#{distrito}" emptyMessage="NAO ENCONTRADO" effect="size"/>
+ 
+					<p:outputLabel value="ERC:"></p:outputLabel>
+					<p:autoComplete id="cboVendedor" dropdown="true" value="#{aprovarBudgetAction.despesa.vendedor}" completeMethod="#{autocompleteAction.autocompleteVendedor}" 
+					 styleClass="input"
+					 scrollHeight="300"
+					converter="com.dupont.EntityConverter"
+					 var="_vendedor" itemLabel="#{_vendedor.nome}" itemValue="#{_vendedor}" emptyMessage="NAO ENCONTRADO" effect="size"/>
+					
+					<p:outputLabel value="Cliente:"></p:outputLabel>
+					<p:autoComplete id="cboCliente" dropdown="true" value="#{aprovarBudgetAction.despesa.cliente}" completeMethod="#{autocompleteAction.autocompleteCliente}" 
+				     converter="com.dupont.EntityConverter"	
+				     scrollHeight="300"
+				      styleClass="input"
+					 var="_cliente" itemLabel="#{_cliente.nome}" itemValue="#{_cliente}" emptyMessage="NAO ENCONTRADO" effect="size" />
+					<p:outputLabel value="Ação:"></p:outputLabel>
+					 <p:panelGrid columns="3" id="painel">
+					<p:selectOneRadio value="#{aprovarBudgetAction.tipoAcao}" >
+						<p:ajax update=":formDespesa:painel" process="@this" ></p:ajax>
+						<f:selectItem itemValue="S"  itemLabel="Existente"/>
+						<f:selectItem itemValue="N" itemLabel="Nova"/>
+					</p:selectOneRadio>					
+					<p:autoComplete id="cboAcao" dropdown="true" value="#{aprovarBudgetAction.despesa.acao}" completeMethod="#{autocompleteAction.autocompleteAcao}" 
+				     converter="com.dupont.EntityConverter"
+				      styleClass="input"
+				      scrollHeight="300"
+					 var="_acao" itemLabel="#{_acao.nome}" itemValue="#{_acao}" emptyMessage="NAO ENCONTRADO" effect="size"
+					 rendered="#{aprovarBudgetAction.tipoAcao =='S'}" />
+						<p:inputTextarea id="inputAcao" value="#{aprovarBudgetAction.despesa.acao.nome}" required="true" rendered="#{aprovarBudgetAction.tipoAcao =='N'}" />
+					</p:panelGrid>
+					
+					<p:outputLabel value="Comentário:"></p:outputLabel>
+					<p:inputTextarea value="#{aprovarBudgetAction.despesa.comentario}" />
+					
+					<p:outputLabel value="Valor:"></p:outputLabel>
+					<pe:inputNumber  id="valor" value="#{aprovarBudgetAction.despesa.valor}" converter="javax.faces.Double" required="true"/>
+					<h:inputHidden value="#{aprovarBudgetAction.incAltComSucesso}" id="incAltSucesso" />
+				</p:panelGrid>
+				<p:panelGrid styleClass="painel-botoes" columns="1">				
+						<p:commandButton value="Incluir Despesa" action="#{aprovarBudgetAction.adicionarDespesa()}"  
+						 update=":formDespesa:panelDespesa,:form" rendered="#{aprovarBudgetAction.inclusao}" 
+						 onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"
+						 oncomplete="if(document.getElementById('formDespesa:incAltSucesso').value=='true'){PF('criarDespesa').hide();}"/>
+						<p:commandButton value="Alterar Despesa" action="#{aprovarBudgetAction.alterarDespesa()}"  
+						 update=":formDespesa:panelDespesa,:form" rendered="#{not aprovarBudgetAction.inclusao}"  
+						 oncomplete="if(document.getElementById('formDespesa:incAltSucesso').value=='true'){PF('criarDespesa').hide();}"
+						 onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"/>
+				</p:panelGrid>
+				</p:panel>
+			
+				</h:form>
+			</p:dialog>
+			
+	</ui:define>
+</ui:composition>

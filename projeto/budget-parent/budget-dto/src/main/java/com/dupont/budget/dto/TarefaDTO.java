@@ -36,17 +36,11 @@ public class TarefaDTO  implements Serializable{
 	private String processId;
 
 	private int processSessionId;
-	
-	
+
+
 	private List<String> potentialOwners;
-	
 
 
-	public String getNavegacao()
-	{
-		return NavegacaoEnum.obterNavegacao(name);
-	}
-	
 	public long getId() {
 		return id;
 	}

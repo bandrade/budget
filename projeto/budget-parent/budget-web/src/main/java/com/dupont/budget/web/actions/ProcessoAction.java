@@ -8,6 +8,7 @@ import javax.inject.Inject;
 
 import org.slf4j.Logger;
 
+import com.dupont.budget.model.MesEnum;
 import com.dupont.budget.service.bpms.BPMSProcessService;
 import com.dupont.budget.web.util.FacesUtils;
 
@@ -23,6 +24,8 @@ public class ProcessoAction {
 
 	@Inject
 	private FacesUtils facesUtils;
+
+	private String mes;
 
 
 	@PostConstruct
@@ -48,6 +51,24 @@ public class ProcessoAction {
 			logger.error("Erro ao iniciar processo de Budget", e);
 		}
 	}
+	public void iniciarProcessoForecast()
+	{
+		try {
+
+			if(bpms.existeProcessoForecastAtivo(mes, ano))
+			{
+				facesUtils.addErrorMessage("Ja existe um processo de forecast para o ano "+ano +" e mes de "+mes);
+			}
+			else
+			{
+				bpms.iniciarProcessoForecast(ano, mes);
+				facesUtils.addInfoMessage("Processo de Forecast iniciado com sucesso");
+			}
+		} catch (Exception e) {
+			facesUtils.addErrorMessage("Erro ao iniciar processo de Forecast.");
+			logger.error("Erro ao iniciar processo de Forecast", e);
+		}
+	}
 
 	public String getAno() {
 		return ano;
@@ -55,6 +76,19 @@ public class ProcessoAction {
 
 	public void setAno(String ano) {
 		this.ano = ano;
+	}
+
+	public String getMes() {
+		return mes;
+	}
+
+	public void setMes(String mes) {
+		this.mes = mes;
+	}
+
+	public MesEnum [] getMeses()
+	{
+		return MesEnum.values();
 	}
 
 

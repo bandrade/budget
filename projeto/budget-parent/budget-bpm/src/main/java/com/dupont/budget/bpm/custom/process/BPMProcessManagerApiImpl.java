@@ -93,6 +93,30 @@ public class BPMProcessManagerApiImpl implements BPMProcessManagerApi {
 		return processInstanceId;
 	}
 
+	public long startForecastProcess(CentroDeCustoDTO[] ceDtos, String ano, String mes) throws Exception {
+		RuntimeEngine runtime = singletonManager.getRuntimeEngine(EmptyContext
+				.get());
+
+		KieSession ksession = runtime.getKieSession();
+
+		long processInstanceId = -1;
+
+		try {
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("url",System.getProperty("com.dupont.budget.url"));
+			params.put("centrosDeCustoArray", ceDtos);
+			params.put("mesForecast", mes);
+			params.put("anoForecast", ano);
+			ProcessInstance processInstance = ksession.startProcess(
+			"com.dupont.bpm.atualizarforecast", params);
+			processInstanceId = processInstance.getId();
+
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		return processInstanceId;
+	}
+
 
 
 	public long startSolicitacaoPagamentoProcess(SolicitacaoPagamentoDTO [] solicitacoes) throws Exception
@@ -115,6 +139,7 @@ public class BPMProcessManagerApiImpl implements BPMProcessManagerApi {
 		}
 	return processInstanceId;
 	}
+
 	public boolean isProcessAlreadyStarted(String ano) {
 		RuntimeEngine runtime = singletonManager.getRuntimeEngine(EmptyContext
 				.get());
@@ -128,6 +153,26 @@ public class BPMProcessManagerApiImpl implements BPMProcessManagerApi {
 				WorkflowProcessInstance work = (WorkflowProcessInstance) ksession.getProcessInstance(id);
 			    String anoProcesso =  (String)work.getVariable("anoBudget");
 			    if(ano.equals(anoProcesso))
+			    	return true;
+		}
+		return false;
+
+	}
+
+	public boolean isProcessForecastAlreadyStarted(String ano,String mes) {
+		RuntimeEngine runtime = singletonManager.getRuntimeEngine(EmptyContext
+				.get());
+		KieSession ksession = runtime.getKieSession();
+		List<Long> lista =
+				emf.createEntityManager().createQuery("SELECT procInfo.id from ProcessInstanceInfo procInfo where procInfo.state=1 and procInfo.processId='com.dupont.bpm.atualizarforecast'"
+						,Long.class).getResultList();
+		for(Long id :lista)
+		{
+
+				WorkflowProcessInstance work = (WorkflowProcessInstance) ksession.getProcessInstance(id);
+			    String anoProcesso =  (String)work.getVariable("anoForecast");
+			    String mesProcesso =  (String)work.getVariable("mesForecast");
+			    if(ano.equals(anoProcesso) && mes.equals(mesProcesso))
 			    	return true;
 		}
 		return false;
