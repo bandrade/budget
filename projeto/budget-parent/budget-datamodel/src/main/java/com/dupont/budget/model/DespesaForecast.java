@@ -22,6 +22,7 @@ public class DespesaForecast extends AbstractEntity<Long> {
 
 	private static final long serialVersionUID = -4344680928557842077L;
 
+	public DespesaForecast(){}
 
 	@ManyToOne
 	@JoinColumn(name="tipo_despesa_id")

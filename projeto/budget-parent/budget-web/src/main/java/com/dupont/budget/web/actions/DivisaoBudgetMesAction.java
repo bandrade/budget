@@ -159,6 +159,8 @@ public class DivisaoBudgetMesAction implements Serializable{
 	public Double calcularValorColuna(String mes)
 	{
 		Double valor = 0d;
+		if(despesas == null)
+			return null;
 
 		for(DespesaMesDTO despesa : despesas)
 		{

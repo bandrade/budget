@@ -50,6 +50,13 @@ public class BPMSProcessServiceImpl implements BPMSProcessService{
 
 
 	@Override
+	public long iniciarProcessoForecast(String ano, String mes)
+			throws Exception {
+		CentroDeCustoDTO [] ceDtos = ccService.obterCentrosDeCusto();
+		return processApi.startForecastProcess(ceDtos, ano, mes);
+	}
+
+	@Override
 	public Object obterVariavelProcesso(Long idProcesso,String variavel) throws Exception {
 		return processApi.getProcessVariable(idProcesso, variavel);
 	}
@@ -64,6 +71,16 @@ public class BPMSProcessServiceImpl implements BPMSProcessService{
 
 		return processApi.startSolicitacaoPagamentoProcess(solicitacoes);
 	}
+
+
+	@Override
+	public boolean existeProcessoForecastAtivo(String mes, String ano)
+			throws Exception {
+
+		return processApi.isProcessForecastAlreadyStarted(ano, mes);
+	}
+
+
 
 
 }
