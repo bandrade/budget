@@ -1,7 +1,6 @@
 package com.dupont.budget.web.actions;
 
 import javax.annotation.security.RolesAllowed;
-import javax.enterprise.inject.Model;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.inject.Named;
