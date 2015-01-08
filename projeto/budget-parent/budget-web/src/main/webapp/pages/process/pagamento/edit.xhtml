@@ -73,7 +73,7 @@
 								<p:ajax listener="#{solicitacaoPagamentoAction.doSelectCentroCusto}" update="dadosCC"/>
 								
 								<f:selectItem itemLabel="Selecione um centro de custo" itemValue="#{null}" />
-								<f:selectItems value="#{centroCustos}" var="item" itemLabel="#{item.nome}" itemValue="#{item}" />
+								<f:selectItems value="#{centroCustos}" var="item" itemLabel="#{item.codigo}" itemValue="#{item}" />
 							</p:selectOneMenu>
 							<p:message for="centroCustosSelectOneMenu" />
 							
