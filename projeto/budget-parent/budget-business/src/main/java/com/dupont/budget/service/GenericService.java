@@ -71,6 +71,20 @@ public abstract class GenericService {
 		return result;
 	}
 	
+	@SuppressWarnings("unchecked")
+	private <T extends NamedAbstractEntity<?>> List<T> findByExactName(T t) {
+		String name = t != null ? t.getNome() : "";
+		if (StringUtils.isBlank(name)) {
+			return (List<T>) findAll(t.getClass());
+		}
+
+		List<T> result = (List<T>) em.createQuery(
+					String.format("select o from %s o where lower(o.nome) like :nome order by nome", t.getClass().getSimpleName())
+				).setParameter("nome", name.trim().toLowerCase()).getResultList();
+
+		return result;
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * @see com.dupont.budget.service.DomainService#findByExample(com.dupont.budget.model.AbstractEntity)
@@ -156,7 +170,7 @@ public abstract class GenericService {
 	@SuppressWarnings("unchecked")
 	public <T extends AbstractEntity<?>> T update(T t) {
 		if (t instanceof NamedAbstractEntity) {
-			List<T> list = (List<T>) findByName((NamedAbstractEntity<?>) t);
+			List<T> list = (List<T>) findByExactName((NamedAbstractEntity<?>) t);
 			list.remove(t);
 			if (!list.isEmpty()) {
 				throw new ExistingNameRuntimeException(t);

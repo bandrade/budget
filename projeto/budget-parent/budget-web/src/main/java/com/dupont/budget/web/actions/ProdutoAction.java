@@ -6,6 +6,7 @@ import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.deltaspike.core.api.scope.ViewAccessScoped;
 import org.slf4j.Logger;
 
 import com.dupont.budget.model.Produto;
@@ -18,7 +19,7 @@ import com.dupont.budget.web.util.FacesUtils;
  * @since 2014
  *
  */
-@Model
+@ViewAccessScoped @Named
 @RolesAllowed(value = "ADMINISTRADOR")
 public class ProdutoAction extends GenericAction<Produto> {
 
