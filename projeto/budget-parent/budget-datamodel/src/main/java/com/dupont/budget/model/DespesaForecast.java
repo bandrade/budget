@@ -1,11 +1,12 @@
 package com.dupont.budget.model;
 
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * Itens de despesa do Forecast
@@ -18,11 +19,14 @@ import javax.persistence.Table;
 @Table(name="despesa_forecast")
 @NamedQueries({
 })
-public class DespesaForecast extends AbstractEntity<Long> {
+public class DespesaForecast {
 
 	private static final long serialVersionUID = -4344680928557842077L;
 
 	public DespesaForecast(){}
+
+	@EmbeddedId
+	private DespesaForecastPK despesaPK;
 
 	@ManyToOne
 	@JoinColumn(name="tipo_despesa_id")
@@ -56,14 +60,20 @@ public class DespesaForecast extends AbstractEntity<Long> {
 	@JoinColumn(name="forecast_id")
 	private Forecast forecast;
 
-
 	private Boolean ativo;
 
 	private Double valor;
 
-	@OneToOne
-	@JoinColumn(name = "id")
+	@ManyToOne
+	@JoinColumn(name = "despesa_forecast_mes_id")
 	private DespesaForecastMes despesaMensalisada ;
+
+	private Double plm;
+
+	private Double ytd;
+
+	@Transient
+	private Double valorComprometido;
 
 	@ManyToOne
 	@JoinColumn(name="despesa_budget_id")
@@ -71,6 +81,8 @@ public class DespesaForecast extends AbstractEntity<Long> {
 
 	private String comentario;
 
+	@Transient
+	private boolean alterada;
 
 
 	public TipoDespesa getTipoDespesa() {
@@ -162,18 +174,11 @@ public class DespesaForecast extends AbstractEntity<Long> {
 	}
 
 
-	public Long getId()
-	{
-		return id;
-	}
-
-	public void setId(Long id)
-	{
-		this.id = id;
-	}
-
-
 	public DespesaForecastMes getDespesaMensalisada() {
+			if(despesaMensalisada==null)
+			{
+				despesaMensalisada = new DespesaForecastMes();
+			}
 		return despesaMensalisada;
 	}
 
@@ -181,6 +186,15 @@ public class DespesaForecast extends AbstractEntity<Long> {
 		this.despesaMensalisada = despesaMensalisada;
 	}
 
+	public DespesaForecastPK getDespesaPK() {
+			if(despesaPK ==null)
+				despesaPK = new DespesaForecastPK();
+		return despesaPK;
+	}
+
+	public void setDespesaPK(DespesaForecastPK despesaPK) {
+		this.despesaPK = despesaPK;
+	}
 
 	public Despesa getDespesaBudget() {
 		return despesaBudget;
@@ -188,6 +202,15 @@ public class DespesaForecast extends AbstractEntity<Long> {
 
 	public void setDespesaBudget(Despesa despesaBudget) {
 		this.despesaBudget = despesaBudget;
+	}
+
+
+	public boolean isAlterada() {
+		return alterada;
+	}
+
+	public void setAlterada(boolean alterada) {
+		this.alterada = alterada;
 	}
 
 	public void initLists(){
@@ -212,6 +235,30 @@ public class DespesaForecast extends AbstractEntity<Long> {
 			setValor(null);
 	}
 
+	public Double obterYTD(DespesaForecast despesaForecast , Integer mes)
+	{
+		Double[]  valores = new Double[]{despesaForecast.getDespesaMensalisada().getJaneiro(),
+									 despesaForecast.getDespesaMensalisada().getFevereiro(),
+									 despesaForecast.getDespesaMensalisada().getMarco(),
+									 despesaForecast.getDespesaMensalisada().getAbril(),
+									 despesaForecast.getDespesaMensalisada().getMaio(),
+									 despesaForecast.getDespesaMensalisada().getJunho(),
+									 despesaForecast.getDespesaMensalisada().getJulho(),
+									 despesaForecast.getDespesaMensalisada().getAgosto(),
+									 despesaForecast.getDespesaMensalisada().getSetembro(),
+									 despesaForecast.getDespesaMensalisada().getOutubro(),
+									 despesaForecast.getDespesaMensalisada().getNovembro(),
+									 despesaForecast.getDespesaMensalisada().getDezembro()
+					};
+
+		Double ytd= 0d;
+		for(int i=0; i<mes;i++)
+		{
+			ytd += valores[i] !=null ? valores[i] : 0d;
+		}
+		return ytd;
+	}
+
 
 	public DespesaForecast(TipoDespesa tipoDespesa, Cliente cliente,
 			Acao acao, Vendedor vendedor, Produto produto, Cultura cultura,
@@ -229,17 +276,49 @@ public class DespesaForecast extends AbstractEntity<Long> {
 		this.comentario = comentario;
 	}
 
+	public DespesaForecast(DespesaForecast despesaForecast, Integer mesSeguinte) {
+		this(despesaForecast.getTipoDespesa(),despesaForecast.getCliente(),despesaForecast.getAcao(),
+				despesaForecast.getVendedor(),despesaForecast.getProduto(),despesaForecast.getCultura(),despesaForecast.getDistrito(),true,
+				despesaForecast.getValor(),
+				despesaForecast.getComentario());
+		DespesaForecastPK pk  = new DespesaForecastPK(despesaForecast.getDespesaPK().getAno(),
+				Long.valueOf(mesSeguinte),despesaForecast.getDespesaPK().getId());
+		this.setDespesaPK(pk);
+		this.setYtd(obterYTD(despesaForecast, despesaForecast.getForecast().getMes()));
+		this.setPlm(obterYTD(despesaForecast, 12));
+		this.setDespesaBudget(despesaForecast.getDespesaBudget());
+		this.setForecast(despesaForecast.getForecast());
+		//XXX VERIFICAR SE PRECISA CRIAR UMA NOVA DESPESA MENSALIZADA
+		this.setDespesaMensalisada(despesaForecast.getDespesaMensalisada());
+	}
+
+
 	public static DespesaForecast createFromDespesa(Despesa despesa) {
 		DespesaForecast despesaForecast = new DespesaForecast(despesa.getTipoDespesa(),despesa.getCliente(),despesa.getAcao(),
 				despesa.getVendedor(),despesa.getProduto(),despesa.getCultura(),despesa.getDistrito(),true,despesa.getValor(),
 				despesa.getComentario());
-
 		return despesaForecast;
 	}
 
+	public Double getPlm() {
+		return plm;
+	}
 
+	public void setPlm(Double plm) {
+		this.plm = plm;
+	}
 
+	public Double getYtd() {
+		return ytd;
+	}
 
+	public void setYtd(Double ytd) {
+		this.ytd = ytd;
+	}
+
+	public Double getValorComprometido() {
+		return valorComprometido;
+	}
 
 }
 

@@ -34,6 +34,60 @@ import javax.persistence.TemporalType;
 })
 public class SolicitacaoPagamento extends AbstractEntity<Long> {
 
+	private static final StringBuilder BODY_QUERY_VALOR_COMPROMETIDO=new StringBuilder()
+			.append(" from solicitacao_pagamento solicitacao")
+			.append(" inner join")
+			.append("	despesa_solicitacao_pagamento despesa_solicitacao")
+			.append(" on ")
+			.append("	solicitacao.id = despesa_solicitacao.solicitacao_pagamento_id")
+			.append(" inner join ")
+			.append("	despesa_forecast")
+		    .append(" on")
+			.append("		despesa_solicitacao.produto_id = despesa_forecast.produto_id")
+			.append("    and")
+			.append("		despesa_solicitacao.acao_id = despesa_forecast.acao_id")
+			.append("	and")
+			.append("		despesa_solicitacao.tipo_despesa_id = despesa_forecast.tipo_despesa_id")
+			.append("	and")
+			.append("		despesa_solicitacao.cultura_id = despesa_forecast.cultura_id")
+			.append("    and")
+			.append("		despesa_solicitacao.distrito_id = despesa_forecast.distrito_id")
+			.append("    and")
+			.append("		despesa_solicitacao.cliente_id = despesa_forecast.cliente_id")
+			.append("    and")
+			.append("		despesa_solicitacao.vendedor_id = despesa_forecast.vendedor_id")
+			.append(" WHERE")
+			.append("	MONTH(solicitacao.data_pagamento) = :mes and YEAR(solicitacao.data_pagamento)=:ano")
+			.append(" and ")
+			.append("	(solicitacao.status='COMPROMETIDO' or solicitacao.status='PAGO'")
+			.append("		or solicitacao.status='PENDENTE_VALIDACAO')")
+			.append(" and")
+			.append("	despesa_solicitacao.centro_custo_id=:centro_custo_id")
+			.append(" and")
+		    .append("		despesa_solicitacao.produto_id = :produto_id")
+		    .append(" and")
+		    .append("		despesa_solicitacao.acao_id = :acao_id")
+		    .append(" and")
+		    .append("		despesa_solicitacao.tipo_despesa_id = :tipo_despesa_id")
+		    .append(" and")
+		    .append("		despesa_solicitacao.cultura_id = :cultura_id")
+		    .append(" and")
+		    .append("		despesa_solicitacao.distrito_id = :distrito_id")
+		    .append(" and")
+		    .append("		despesa_solicitacao.cliente_id = :cliente_id")
+		    .append(" and")
+		    .append("		despesa_solicitacao.vendedor_id = :vendedor_id");
+
+	public static final StringBuilder QUERY_SOMA_VALOR_COMPROMETIDO =
+			new StringBuilder().append(
+					"select sum(despesa_solicitacao.valor) ")
+				.append(BODY_QUERY_VALOR_COMPROMETIDO.toString());
+
+	public static final StringBuilder QUERY_DETALHE_VALOR_COMPROMETIDO =
+			new StringBuilder().append(
+					"select solicitacao.num_nota_fiscal , solicitacao.valor, solicitacao.status , solicitacao.data_pagamento_realizado ")
+				.append(BODY_QUERY_VALOR_COMPROMETIDO.toString());
+
 	private static final long serialVersionUID = 4098491678812403894L;
 
 	public static final String FIND_BY_FILTRO = "SolicitacaoPagamento.findByFiltro";
@@ -90,11 +144,11 @@ public class SolicitacaoPagamento extends AbstractEntity<Long> {
 		this.despesas.add(despesaSolicitacaoPagamento);
 		despesaSolicitacaoPagamento.setSolicitacaoPagamento(this);
 	}
-	
+
 	public void removeDespesaSolicitacaoPagamento(DespesaSolicitacaoPagamento despesaSolicitacaoPagamento) {
 		if( this.despesas == null )
 			return;
-		
+
 		this.despesas.remove(despesaSolicitacaoPagamento);
 		//despesaSolicitacaoPagamento.setSolicitacaoPagamento(null);
 	}

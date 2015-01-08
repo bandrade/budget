@@ -1,7 +1,9 @@
 package com.dupont.budget.web.actions;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Conversation;
@@ -13,6 +15,8 @@ import org.slf4j.Logger;
 
 import com.dupont.budget.dto.CentroDeCustoDTO;
 import com.dupont.budget.model.DespesaForecast;
+import com.dupont.budget.model.DespesaForecastPK;
+import com.dupont.budget.model.MesEnum;
 import com.dupont.budget.service.ForecastService;
 import com.dupont.budget.service.bpms.BPMSProcessService;
 import com.dupont.budget.service.bpms.BPMSTaskService;
@@ -42,7 +46,13 @@ public class ForecastAction implements Serializable {
 
 	protected String mes;
 
+	protected boolean incAltComSucesso=false;
+
 	protected String ano;
+
+	protected String tipoAcao;
+
+	protected boolean inclusao;
 
 	@Inject
 	protected Logger logger;
@@ -60,6 +70,9 @@ public class ForecastAction implements Serializable {
 
 	protected ForecastHelper helper;
 
+	protected Map<String, Object> params ;
+
+
 	@PostConstruct
 	private void init()
 	{
@@ -67,6 +80,8 @@ public class ForecastAction implements Serializable {
 		{
 			conversation.begin();
 			helper = new ForecastHelper();
+			params = new HashMap<>();
+
 		}
 
 	}
@@ -77,7 +92,8 @@ public class ForecastAction implements Serializable {
 		  centroDeCusto = (CentroDeCustoDTO)bpmsProcesso.obterVariavelProcesso(idInstanciaProcesso, "centroDeCusto");
 		  mes = (String)bpmsProcesso.obterVariavelProcesso(idInstanciaProcesso, "mes");
 		  ano = (String)bpmsProcesso.obterVariavelProcesso(idInstanciaProcesso, "ano");
-		  despesasNoDetalhe =  forecastService.obterDespesasForecast(mes, ano, centroDeCusto.getId());
+		  if(despesasNoDetalhe==null)
+			  despesasNoDetalhe =  forecastService.obterDespesasForecast(mes, ano, centroDeCusto.getId());
 
 		}
 	    catch(Exception e )
@@ -89,7 +105,84 @@ public class ForecastAction implements Serializable {
 
 	}
 
+	public void atualizarDetalhe()
+	{
+		try {
+			despesasNoDetalhe =  forecastService.obterDespesasForecast(mes, ano, centroDeCusto.getId());
+		} catch (Exception e) {
+			facesUtils.addErrorMessage("Erro ao obter detalhes da despesa");
+			logger.error("Erro ao obter detalhes da despesa",e);
+		}
+		calcularTotalForecast();
+	}
 
+	public void trataInclusao()
+	{
+		incAltComSucesso=false;
+		inclusao=true;
+		inicializarDespesa();
+	}
+	public void inicializarDespesa(){
+		despesa = new DespesaForecast();
+		despesa.init();
+		tipoAcao = ACAO_EXISTENTE;
+
+	}
+
+
+	public void adicionarDespesa()
+	{
+		MesEnum mesEnum = MesEnum.valueOf(mes.toUpperCase());
+		despesa.setDespesaPK(new DespesaForecastPK(ano, mesEnum.getId(), null));
+		if(despesasNoDetalhe !=null && despesasNoDetalhe.size()>0)
+		{
+			despesa.setForecast(despesasNoDetalhe.get(0).getForecast());
+		}
+		if(!despesa.getValor().equals(helper.calcularValorMensalisado(despesa)))
+		{
+			facesUtils.addErrorMessage("O valor mensalizado deve ser igual ao valor total da despesa");
+			return;
+		}
+
+		try
+		{
+			forecastService.incluirDespesaForecast(despesa);
+			incAltComSucesso=true;
+			inicializarDespesa();
+			facesUtils.addInfoMessage("Despesa adicionada com sucesso");
+			despesasNoDetalhe =  forecastService.obterDespesasForecast(mes, ano, centroDeCusto.getId());
+		}
+		catch(Exception e)
+		{
+			facesUtils.addErrorMessage("Erro ao incluir a despesa");
+			logger.error("Erro ao incluir a despesa",e);
+		}
+	}
+
+	public void alterarDespesa()
+	{
+		//TODO
+	}
+
+	public String concluir()
+	{
+		try {
+			bpmsTask.aprovarTarefa(facesUtils.getUserLogin(), idTarefa,params);
+			facesUtils.addInfoMessage("Tarefa concluida com sucesso");
+			conversation.end();
+		} catch (Exception e) {
+			facesUtils.addErrorMessage("Erro ao concluir tarefa");
+			logger.error("Erro ao concluir tarefa",e);		}
+		return "minhasTarefas";
+	}
+
+	public void despesaAlterada(DespesaForecast despesa, String mounth)
+	{
+		despesa.setAlterada(true);
+		despesa.setValor(helper.calcularValorMensalisado(despesa));
+		calcularValorColuna(mounth);
+		calcularTotalBudget();
+	}
 
 	public Double calcularValorColuna(String mounth)
 	{
@@ -107,6 +200,49 @@ public class ForecastAction implements Serializable {
 
 		return helper.exibirDespesa(mounth, mes);
 	}
+
+
+	public Double calcularTotalBudget()
+	{
+		Double valor = 0d;
+		for(DespesaForecast despesa : despesasNoDetalhe)
+		{
+			valor += despesa.getDespesaBudget() !=null ? despesa.getDespesaBudget().getValor() : 0d;
+		}
+		return valor;
+	}
+
+
+	public Double calcularTotalAno()
+	{
+		Double valor = 0d;
+		for(DespesaForecast despesa : despesasNoDetalhe)
+		{
+			valor += despesa.getValor();
+		}
+		return valor;
+	}
+
+	public Double calcularTotalYTD()
+	{
+		Double valor = 0d;
+		for(DespesaForecast despesa : despesasNoDetalhe)
+		{
+			valor += helper.getDouble(despesa.getYtd());
+		}
+		return valor;
+	}
+
+	public Double calcularTotalPLM()
+	{
+		Double valor = 0d;
+		for(DespesaForecast despesa : despesasNoDetalhe)
+		{
+			valor += helper.getDouble(despesa.getPlm());
+		}
+		return valor;
+	}
+
 
 	public void calcularTotalForecast()
 	{
@@ -186,6 +322,24 @@ public class ForecastAction implements Serializable {
 	}
 	public void setHelper(ForecastHelper helper) {
 		this.helper = helper;
+	}
+	public boolean isIncAltComSucesso() {
+		return incAltComSucesso;
+	}
+	public void setIncAltComSucesso(boolean incAltComSucesso) {
+		this.incAltComSucesso = incAltComSucesso;
+	}
+	public String getTipoAcao() {
+		return tipoAcao;
+	}
+	public void setTipoAcao(String tipoAcao) {
+		this.tipoAcao = tipoAcao;
+	}
+	public boolean isInclusao() {
+		return inclusao;
+	}
+	public void setInclusao(boolean inclusao) {
+		this.inclusao = inclusao;
 	}
 
 

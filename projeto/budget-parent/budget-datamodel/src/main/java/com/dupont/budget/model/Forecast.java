@@ -7,6 +7,8 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -33,7 +35,7 @@ import javax.persistence.TemporalType;
 	@NamedQuery(name="Forecast.findByBudgetId", query="select f from Forecast f where f.budget.id = :budgetId")
 })
 public class Forecast implements Serializable {
-	
+
 	private static final long serialVersionUID = 6795074865859720715L;
 
 	@Id
@@ -68,7 +70,10 @@ public class Forecast implements Serializable {
 	@OneToMany(fetch = FetchType.EAGER)
 	@JoinColumn(name = "forecast_id")
 	private Set<DespesaForecast> despesas;
-	
+
+	@Column(name="status")
+	@Enumerated(EnumType.STRING)
+	private StatusForecast statusForecast;
 
 	public Forecast() {}
 
@@ -144,6 +149,14 @@ public class Forecast implements Serializable {
 
 	public Usuario getUsuarioCriador() {
 		return usuarioCriador;
+	}
+
+	public StatusForecast getStatusForecast() {
+		return statusForecast;
+	}
+
+	public void setStatusForecast(StatusForecast statusForecast) {
+		this.statusForecast = statusForecast;
 	}
 
 

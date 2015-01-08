@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -37,19 +38,19 @@ import com.dupont.budget.service.event.UploadEvent;
 import com.dupont.budget.service.event.Uploaded;
 
 @Stateless
-public class DeliveryHandlerServiceBean implements DeliveryHandlerService {  
+public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
 
 	@Inject
 	private Logger logger;
-	
+
 	@Inject
 	private DomainService service;
-    
+
     private Sheet loadFileSheet(File file) {
     	Sheet sheet = null;
-    	
+
     	try (FileInputStream fis = new FileInputStream(file)) {
-    		
+
 			if (file.getName().contains("xlsx")) {
 				XSSFWorkbook workbook = new XSSFWorkbook(fis);
 				sheet = workbook.getSheetAt(0);
@@ -62,7 +63,7 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
     	}
     	return sheet;
     }
-    
+
     /*
      * (non-Javadoc)
      * @see com.dupont.budget.service.DeliveryHandlerService#onFornecedorUpload(com.dupont.budget.service.event.FileUploadEvent)
@@ -137,9 +138,9 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
 					try {
 						Row row = rowIterator.next();
 						valor = service.findValorComprometidoByFiltro(
-								row.getCell(0).getStringCellValue(), 
-								row.getCell(1).getStringCellValue(), 
-								row.getCell(2).getStringCellValue(), 
+								row.getCell(0).getStringCellValue(),
+								row.getCell(1).getStringCellValue(),
+								row.getCell(2).getStringCellValue(),
 								(int) row.getCell(4).getNumericCellValue());
 						if (valor != null) {
 							valor.setValor(row.getCell(5).getNumericCellValue());
@@ -176,7 +177,7 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
 			e.printStackTrace();
 		}
 	}
-    
+
     @Override
     @Asynchronous
 	public void onSolicitacaoPagamentoUpload(@Observes @Uploaded(SolicitacaoPagamento.class) UploadEvent event) {
@@ -188,10 +189,10 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
 
 		try {
 			SolicitacaoPagamento solicitacao = null;
-			
+
 			File csv = createFile();
 			try (BufferedWriter bw = new BufferedWriter(new FileWriter(csv))) {
-				line: 
+				line:
 				while (rowIterator.hasNext()) {
 					Row row = rowIterator.next();
 					try {
@@ -200,33 +201,38 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
 							writeLine("Número da Nota vazio.", bw, row);
 							continue;
 						}
-						
+
 						List<Fornecedor> list = service.findByName(new Fornecedor(row.getCell(6).getStringCellValue()));
 						if (list.isEmpty() || list.size() > 1) {
 							writeLine("Fornecedor não encontrado", bw, row);
 							continue;
 						}
-						
+
 						CentroCusto centroCusto = service.findCentroCustoByCodigo(row.getCell(8).getStringCellValue());
 						if (centroCusto == null) {
 							writeLine("Centro de custo não encontrado", bw, row);
 							continue;
 						}
-						
+
 						Double valor = row.getCell(16).getNumericCellValue();
 						solicitacao = service.findSolicitacaoByNumeroNota(row.getCell(7).getStringCellValue());
-						
+
 						if (solicitacao == null) {
 							SolicitacaoPagamento o = new SolicitacaoPagamento(StatusPagamento.PENDENTE_VALIDACAO);
 							o.setFornecedor(list.get(0));
 							o.setNumeroNotaFiscal(numeroNota);
 							o.setOrigem(OrigemSolicitacao.SAP);
+							o.setValor(valor);
+							o.setDataPagamento(new Date());
+							o.setCriacao(new Date());
+							service.create(o);
 							DespesaSolicitacaoPagamento d = new DespesaSolicitacaoPagamento();
 							d.setSolicitacaoPagamento(o);
 							d.setCentroCusto(centroCusto);
 							d.setValor(valor);
+							service.create(d);
 							o.getDespesas().add(d);
-							service.create(o);
+							service.update(o);
 							writeLine("PENDENTE_VALIDACAO", bw, row);
 							continue;
 						} else {
@@ -265,17 +271,17 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
 	private void writeLine(String message, BufferedWriter bw, Row row) throws IOException {
 		bw.write(String.format("%s;%s;%s;%.2f;%s\n", row.getCell(7).getStringCellValue(), row.getCell(8).getStringCellValue(), row.getCell(6).getStringCellValue(), row.getCell(16).getNumericCellValue(), message));
 	}
-    
+
     private File createFile() {
     	String tmpDir = System.getProperty("java.io.tmpdir");
 		final String name = DeliveryHandlerService.RELATORIO_SAP_TEMP_DIR;
 		tmpDir = tmpDir.endsWith(String.valueOf(File.separatorChar)) ? tmpDir.concat(name) : tmpDir.concat(String.valueOf(File.separatorChar)).concat(name);
-		
+
 		File dir = new File(tmpDir);
 		if (!dir.exists()) {
 			dir.mkdir();
 		}
-		
+
 		return new File(dir.getAbsolutePath().concat(String.valueOf(File.separatorChar)).concat(new BigInteger(130, new SecureRandom()).toString(32)));
     }
 }

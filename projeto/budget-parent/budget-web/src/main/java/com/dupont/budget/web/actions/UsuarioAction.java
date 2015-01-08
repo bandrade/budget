@@ -205,7 +205,7 @@ public class UsuarioAction extends GenericAction<Usuario> {
 	{
 
 		FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
-		return "minhasTarefas?faces-redirect=true";
+		return "minhasTarefas";
 
 	}
 	@Override

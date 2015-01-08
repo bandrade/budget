@@ -53,7 +53,7 @@ public class DespesaSolicitacaoPagamento extends AbstractEntity<Long> {
 	private Vendedor vendedor;
 
 	@ManyToOne
-	@JoinColumn(name = "solicitacao_id")
+	@JoinColumn(name = "solicitacao_pagamento_id")
 	private SolicitacaoPagamento solicitacaoPagamento;
 
 	private Double valor;

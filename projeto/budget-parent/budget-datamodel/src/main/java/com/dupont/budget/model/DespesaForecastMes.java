@@ -2,10 +2,17 @@ package com.dupont.budget.model;
 
 import java.io.Serializable;
 
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+
 
 /**
  * Divisao do valor da Despesa do Forecast por mes.
@@ -17,9 +24,9 @@ import javax.persistence.Transient;
 @Entity
 @Table(name = "despesa_forecast_mes")
 public class DespesaForecastMes implements Serializable {
-
 	@Id
-	private Long id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long  id;
 
 	private Double janeiro;
 
@@ -82,11 +89,29 @@ public class DespesaForecastMes implements Serializable {
 	@Transient
 	private Double despesaDezembro;
 
+	public Boolean isValorComprometidoMaiorQueForecast()
+	{
+		if( despesaJaneiro !=null && janeiro!=null && despesaJaneiro > janeiro ||
+			despesaFevereiro !=null && fevereiro!=null && despesaFevereiro> fevereiro ||
+			despesaMarco !=null &&   marco!=null && despesaMarco> marco ||
+			despesaAbril !=null && abril!=null && despesaAbril> abril ||
+			despesaMaio !=null && maio!=null && despesaMaio > maio ||
+			despesaJunho !=null && junho!=null && despesaJunho> junho ||
+			despesaJulho !=null && julho!=null && despesaJulho> julho ||
+			despesaAgosto !=null && agosto!=null && despesaAgosto> agosto ||
+			despesaSetembro !=null && setembro!=null && despesaSetembro> setembro ||
+			despesaOutubro !=null && outubro!=null && despesaOutubro> outubro ||
+			despesaNovembro !=null && novembro!=null && despesaNovembro> novembro ||
+			despesaDezembro !=null && dezembro!=null && despesaDezembro> dezembro
+		)
+		{
+			return true;
+		}
+		return false;
 
-	public DespesaForecastMes() {
 	}
 
-
+	public DespesaForecastMes(){}
 	public DespesaForecastMes( Double janeiro, Double fevereiro,
 			Double marco, Double abril, Double maio, Double junho,
 			Double julho, Double agosto, Double setembro, Double outubro,
@@ -113,13 +138,9 @@ public class DespesaForecastMes implements Serializable {
 
 		return forecastMes;
 	}
-	public Long getId() {
-		return id;
-	}
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+
+
 
 	public Double getJaneiro() {
 		return janeiro;
@@ -336,6 +357,8 @@ public class DespesaForecastMes implements Serializable {
 	public void setDespesaDezembro(Double despesaDezembro) {
 		this.despesaDezembro = despesaDezembro;
 	}
+
+
 
 
 

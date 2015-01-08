@@ -15,7 +15,7 @@
 		<version.org.apache.poi>3.9</version.org.apache.poi>
 		<maven.compiler.target>1.7</maven.compiler.target>
 		<maven.compiler.source>1.7</maven.compiler.source>
-		<version.com.dupont.budget>0.0.7-SNAPSHOT</version.com.dupont.budget>
+		<version.com.dupont.budget>0.0.9-SNAPSHOT</version.com.dupont.budget>
 		<deltaspike.version>1.2.1</deltaspike.version>
 	</properties>
 	<modules>

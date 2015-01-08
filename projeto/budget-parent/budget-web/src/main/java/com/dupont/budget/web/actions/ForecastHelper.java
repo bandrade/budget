@@ -42,9 +42,9 @@ public class ForecastHelper {
 		return valor;
 	}
 
-	public Double calcularValorDespesas(String mounth,List<DespesaForecast> despesasNoDetalhe)
+	public Double calcularValorDespesas(String month,List<DespesaForecast> despesasNoDetalhe)
 	{
-		MesEnum mesEnum = MesEnum.valueOf(mounth);
+		MesEnum mesEnum = MesEnum.valueOf(month);
 		Double valor = 0d;
 		if(despesasNoDetalhe == null)
 			return null;
@@ -109,9 +109,9 @@ public class ForecastHelper {
 		return valor;
 	}
 
-	public Double calcularValorColuna(String mounth,List<DespesaForecast> despesasNoDetalhe)
+	public Double calcularValorColuna(String month,List<DespesaForecast> despesasNoDetalhe)
 	{
-		MesEnum mesEnum = MesEnum.valueOf(mounth);
+		MesEnum mesEnum = MesEnum.valueOf(month);
 		Double valor = 0d;
 		if(despesasNoDetalhe == null)
 			return null;

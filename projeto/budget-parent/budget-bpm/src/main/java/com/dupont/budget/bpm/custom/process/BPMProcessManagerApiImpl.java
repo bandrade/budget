@@ -103,7 +103,7 @@ public class BPMProcessManagerApiImpl implements BPMProcessManagerApi {
 
 		try {
 			Map<String, Object> params = new HashMap<String, Object>();
-			params.put("url",System.getProperty("com.dupont.budget.url"));
+			params.put("urlAplicacao",System.getProperty("com.dupont.budget.url"));
 			params.put("centrosDeCustoArray", ceDtos);
 			params.put("mesForecast", mes);
 			params.put("anoForecast", ano);

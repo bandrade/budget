@@ -16,6 +16,15 @@
         <converter-for-class>java.lang.Enum</converter-for-class>
         <converter-class>javax.faces.convert.EnumConverter</converter-class>
     </converter>
+    
+	<navigation-rule>
+		<from-view-id>*</from-view-id>
+		<navigation-case>
+			<from-outcome>aprovarForecast</from-outcome>
+			<to-view-id>/pages/process/forecast/aprovarForecast.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+		
 	<navigation-rule>
 		<from-view-id>*</from-view-id>
 		<navigation-case>
@@ -58,6 +67,7 @@
 		<navigation-case>
 			<from-outcome>minhasTarefas</from-outcome>
 			<to-view-id>/pages/process/minhasTarefas.xhtml</to-view-id>
+			<redirect>true</redirect>
 		</navigation-case>
 	</navigation-rule>
 	<navigation-rule>
