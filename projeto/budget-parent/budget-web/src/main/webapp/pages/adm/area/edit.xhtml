@@ -27,7 +27,7 @@
 					
 					<h:outputLabel for="liderList" value="Lider" />
                     <p:selectOneMenu label="Lider" id="liderList" required="true" value="#{areaAction.lider}" converter="com.dupont.EntityConverter">
-                        <f:selectItem itemLabel="Selecione..." itemValue="" />
+                        <f:selectItem itemLabel="Selecione..." itemValue="${null}" />
                         <f:selectItems value="#{usuarioList}" itemValue="#{i}" itemLabel="#{i.nome}" var="i" />
                     </p:selectOneMenu>
                     <p:message for="liderList" />

@@ -1,5 +1,6 @@
 package com.dupont.budget.bpm.custom.user;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 
@@ -13,8 +14,10 @@ import javax.inject.Singleton;
  *
  */
 @Singleton
-public class UserGroupCallbackCacheManager {
+public class UserGroupCallbackCacheManager implements Serializable {
 
+	private static final long serialVersionUID = 8370614694101779746L;
+	
 	private HashMap<String,  List<String>> userGroupCache = new HashMap<String,  List<String>>();
 	private HashMap<String,  String> groupCache = new HashMap<String,  String>();
 	    
