@@ -154,3 +154,17 @@ body {
     margin-top: -9em; /*set to a negative number 1/2 of your height*/
     margin-left: -15em; /*set to a negative number 1/2 of your width*/
 }
+
+.pe-inputNumber
+{
+	width: 50px;
+}
+
+.input_valor input
+{
+	width: 30px;
+}
+
+
+
+
