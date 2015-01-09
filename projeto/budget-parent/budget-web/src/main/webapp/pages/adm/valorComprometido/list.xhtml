@@ -16,15 +16,26 @@
 				<h:panelGrid columns="3" border="0">
 				
 					<p:outputLabel value="Centro de Custo:" for="centroCustoInput"/>
-					<p:inputText id="centroCustoInput" value="#{valorComprometido.centroCusto.nome}"/>
+					<p:selectOneMenu id="centroCustoInput" label="Centro de custo" value="#{valorComprometido.centroCusto}" converter="com.dupont.EntityConverter">						
+						<f:selectItem itemLabel="Selecione um centro de custo" itemValue="#{null}" />
+						<f:selectItems value="#{centroCustos}" var="item" itemLabel="#{item.codigo}" itemValue="#{item}" />
+					</p:selectOneMenu>
+					
 					<p:message for="centroCustoInput"/>
 					
-					<p:outputLabel value="Tipo de Despesa:" for="tipoDespesaInput"/>
-                    <p:inputText id="tipoDespesaInput" value="#{valorComprometido.tipoDespesa.nome}"/>
+					<p:outputLabel value="Tipo de Despesa:" for="tipoDespesaInput"/>                    
+                    <p:selectOneMenu id="tipoDespesaInput" label="Tipo de Despesa" value="#{valorComprometido.tipoDespesa}" converter="com.dupont.EntityConverter">
+					
+						<f:selectItem itemLabel="Selecione um tipo de despesa" itemValue="#{null}" />
+						<f:selectItems value="#{tiposDespesa}" var="item" itemLabel="#{item.nome}" itemValue="#{item}"/>
+					</p:selectOneMenu>
                     <p:message for="tipoDespesaInput"/>
                     
                     <p:outputLabel value="Ação:" for="acaoInput"/>
-                    <p:inputText id="acaoInput" value="#{valorComprometido.acao.nome}"/>
+                    <p:selectOneMenu id="acaoInput" value="#{valorComprometido.acao}" converter="com.dupont.EntityConverter">
+						<f:selectItem itemLabel="Selecione uma ação" itemValue="#{null}" />
+						<f:selectItems value="#{acoes}" var="item" itemLabel="#{item.nome}" itemValue="#{item}"/>						
+					</p:selectOneMenu>
                     <p:message for="acaoInput"/>
 					
 					<p:commandButton value="Pesquisar" icon="ui-icon-search"   styleClass="button" action="#{valorComprometidoAction.find}" update="valorComprometidos"/>
