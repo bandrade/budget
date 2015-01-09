@@ -53,7 +53,7 @@
 				</h:panelGrid>
 				
 				<p:commandButton value="#{colaborador.id != null? 'Atualizar' : 'Salvar'}" process="@this" icon="ui-icon-check" action="#{usuarioAction.persist}" styleClass="button" ajax="false" />
-				<p:commandButton value="Cancelar"    icon="ui-icon-closethick" action="/pages/adm/colaborador/list.xhtml" styleClass="button" ajax="false" immediate="true" />
+				<p:commandButton value="Cancelar"    icon="ui-icon-closethick" action="#{usuarioAction.cancel}" styleClass="button" ajax="false" immediate="true" />
 				
 			</h:form>
 		

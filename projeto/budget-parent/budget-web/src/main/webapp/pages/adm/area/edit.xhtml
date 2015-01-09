@@ -35,7 +35,7 @@
 				</h:panelGrid>
 				
 				<p:commandButton value="#{area.id != null? 'Atualizar' : 'Salvar'}" process="@this" icon="ui-icon-check" action="#{areaAction.persist}" styleClass="button" ajax="false" />
-				<p:commandButton value="Cancelar"    icon="ui-icon-closethick" action="/pages/adm/area/list.xhtml" styleClass="button" ajax="false" immediate="true" />
+				<p:commandButton value="Cancelar"    icon="ui-icon-closethick" action="#{areaAction.cancel}" styleClass="button" ajax="false" immediate="true" />
 				
 			</h:form>
 		

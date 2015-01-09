@@ -27,7 +27,7 @@
 				</h:panelGrid>
 				
 				<p:commandButton value="#{not empty fornecedor.id? 'Atualizar' : 'Salvar'}" disabled="true" icon="ui-icon-check" styleClass="button" ajax="false" />
-				<p:commandButton value="Cancelar"    icon="ui-icon-closethick" action="/pages/adm/fornecedor/list.xhtml" styleClass="button" ajax="false" immediate="true" />
+				<p:commandButton value="Cancelar"    icon="ui-icon-closethick" action="#{fornecedorAction.cancel}" styleClass="button" ajax="false" immediate="true" />
 				
 			</h:form>
 		

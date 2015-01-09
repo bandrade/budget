@@ -23,21 +23,21 @@
 				
 					<p:outputLabel value="Centro de Custo:" for="centroCustoList"/>
 					<p:selectOneMenu label="Centro de Custo" id="centroCustoList" value="#{valorComprometido.centroCusto}" required="true" converter="com.dupont.EntityConverter">
-                        <f:selectItem itemLabel="Selecione..." itemValue="" />
+                        <f:selectItem itemLabel="Selecione..." itemValue="${null}" />
                         <f:selectItems value="#{centroCustoList}" itemValue="#{i}" itemLabel="#{i.nome}" var="i" />
                     </p:selectOneMenu>
                     <p:message for="centroCustoList"/>
                     
                     <p:outputLabel value="Tipo Despesa:" for="tipoDespesaList"/>
                     <p:selectOneMenu label="Tipo Despesa" id="tipoDespesaList" value="#{valorComprometido.tipoDespesa}" required="true" converter="com.dupont.EntityConverter" >
-                        <f:selectItem itemLabel="Selecione..." itemValue="" />
+                        <f:selectItem itemLabel="Selecione..." itemValue="${null}" />
                         <f:selectItems value="#{tipoDespesaList}" itemValue="#{i}" itemLabel="#{i.nome}" var="i" />
                     </p:selectOneMenu>
                     <p:message for="tipoDespesaList"/>
                     
                     <p:outputLabel value="Ação:" for="acaoList"/>
                     <p:selectOneMenu label="Ação" id="acaoList" value="#{valorComprometido.acao}" required="true" converter="com.dupont.EntityConverter">
-                        <f:selectItem itemLabel="Selecione..." itemValue="" />
+                        <f:selectItem itemLabel="Selecione..." itemValue="${null}" />
                         <f:selectItems value="#{acaoList}" itemValue="#{i}" itemLabel="#{i.nome}" var="i" />
                     </p:selectOneMenu>
                     <p:message for="acaoList"/>
@@ -53,7 +53,7 @@
 				</h:panelGrid>
 				
 				<p:commandButton value="#{valorComprometido.id != null? 'Atualizar' : 'Salvar'}" process="@this" icon="ui-icon-check" action="#{valorComprometidoAction.persist}" styleClass="button" ajax="false" />
-				<p:commandButton value="Cancelar"    icon="ui-icon-closethick" action="/pages/adm/valorComprometido/list.xhtml" styleClass="button" ajax="false" immediate="true" />
+				<p:commandButton value="Cancelar"    icon="ui-icon-closethick" action="#{valorComprometidoAction.cancel}" styleClass="button" ajax="false" immediate="true" />
 				
 			</h:form>
 		
