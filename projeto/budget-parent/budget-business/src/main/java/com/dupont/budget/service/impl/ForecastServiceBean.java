@@ -155,12 +155,13 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 		Budget budget = budgetService.findByAnoAndCentroDeCusto(ano, idCentroCusto);
 		Forecast forecast = em.createNamedQuery("Forecast.findByBudgetId", Forecast.class).setParameter("budgetId", budget.getId()).getResultList().get(0);
 		//TODO IMPLEMENTAR VALORES COMPROMETIDOS
-		/*
+
 		for(DespesaForecast despesa : forecast.getDespesas())
 		{
-			despesa.setValorComprometido(obterValorComprometido(despesa));
+			//despesa.setValorComprometido(obterValorComprometido(despesa));
+			despesa.setYtd(obterYtd(despesa));
 		}
-		*/
+
 		return new ArrayList<DespesaForecast>(forecast.getDespesas());
 	}
 
@@ -203,22 +204,51 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 
 	}
 
-	public Double obterValorComprometido(DespesaForecast despesaForecast)
+	public Double obterYtd(DespesaForecast despesaForecast)
+	{
+		Double valorComprometido = 0D;
+		String meses_ytd = "";
+		Integer mes_id = despesaForecast.getForecast().getMes();
+		for(int _mes = 0; _mes<mes_id ;_mes++ )
+		{
+			meses_ytd=""+(++_mes)+",";
+		}
+		meses_ytd = meses_ytd.substring(0, meses_ytd.length()-1);
+		try
+		{
+			Object result = em.createNativeQuery(SolicitacaoPagamento.QUERY_SOMA_YTD.toString())
+				.setParameter("ano", despesaForecast.getForecast().getBudget().getAno())
+			    .setParameter("meses",meses_ytd)
+			    .setParameter("mes_forecast",despesaForecast.getForecast().getMes())
+			    .setParameter("centro_custo_id",despesaForecast.getForecast().getBudget().getCentroCusto().getId())
+			  //  .setParameter("produto_id",despesaForecast.getProduto().getId())
+			    .setParameter("acao_id", despesaForecast.getAcao().getId())
+				.setParameter("tipo_despesa_id", despesaForecast.getTipoDespesa().getId()).getSingleResult();
+			//	.setParameter("cultura_id", despesaForecast.getCultura().getId())
+			//	.setParameter("distrito_id", despesaForecast.getDistrito().getId())
+			//	.setParameter("cliente_id", despesaForecast.getCliente().getId())
+			//	.setParameter("vendedor_id", despesaForecast.getVendedor().getId()).getSingleResult();
+			if(result !=null)
+				valorComprometido = Double.valueOf(result.toString());
+		}
+		catch(NoResultException e)
+		{
+		}
+		return valorComprometido;
+
+
+	}
+
+	public Double obterValoresComprometidos(DespesaForecast despesaForecast)
 	{
 		Double valorComprometido = 0D;
 		try
 		{
-			Object result = em.createNativeQuery(SolicitacaoPagamento.QUERY_SOMA_VALOR_COMPROMETIDO.toString())
+			Object result = em.createNativeQuery(SolicitacaoPagamento.QUERY_SOMA_YTD.toString())
 				.setParameter("ano", despesaForecast.getForecast().getBudget().getAno())
 			    .setParameter("mes", despesaForecast.getForecast().getMes())
-			    .setParameter("centro_custo_id",despesaForecast.getForecast().getBudget().getCentroCusto().getId())
-			    .setParameter("produto_id",despesaForecast.getProduto().getId())
 			    .setParameter("acao_id", despesaForecast.getAcao().getId())
-				.setParameter("tipo_despesa_id", despesaForecast.getTipoDespesa().getId())
-				.setParameter("cultura_id", despesaForecast.getCultura().getId())
-				.setParameter("distrito_id", despesaForecast.getDistrito().getId())
-				.setParameter("cliente_id", despesaForecast.getCliente().getId())
-				.setParameter("vendedor_id", despesaForecast.getVendedor().getId()).getSingleResult();
+				.setParameter("tipo_despesa_id", despesaForecast.getTipoDespesa().getId());
 			if(result !=null)
 				valorComprometido = Double.valueOf(result.toString());
 		}

@@ -194,7 +194,7 @@ public class Despesa extends AbstractEntity<Long> {
 	}
 	public boolean isPreeenchimentoCompleto()
 	{
-		if(acao==null || produto==null || cultura==null || cliente==null || distrito==null || vendedor==null || tipoDespesa==null )
+		if(acao==null || produto==null || cultura==null || distrito==null || tipoDespesa==null )
 		{
 			return false;
 		}
