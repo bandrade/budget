@@ -132,7 +132,7 @@ public class CentroCustoAction extends GenericAction<CentroCusto> {
 		userCallBackCache.removeGroupsFromCache(gestor.getLogin());
 		return super.update();
 	}
-	
+
 	private String createNomePapel(CentroCusto cc, int nivel) {
 		final String[] papel = {"RESPONSAVEL_", "GESTOR_","GERENTE_"};
 		StringBuilder nomePapel = new StringBuilder(papel[nivel - 1]);
@@ -149,8 +149,10 @@ public class CentroCustoAction extends GenericAction<CentroCusto> {
 			if (bpms.existeProcessoAtivo(Calendar.getInstance().get(Calendar.YEAR) + "")) {
 				facesUtils.addErrorMessage("Não é possível remover um Centro de Custo enquanto haja um processo de budget ativo");
 			} else {
-				userCallBackCache.removeGroupsFromCache(responsavel.getLogin());
-				userCallBackCache.removeGroupsFromCache(gestor.getLogin());
+				for(PapelUsuario papel:  t.getResponsaveis())
+				{
+					userCallBackCache.removeGroupsFromCache(papel.getUsuario().getLogin());
+				}
 				super.delete(t);
 			}
 		} catch(Exception e ) {
