@@ -39,7 +39,7 @@
                     <p:message for="acaoInput"/>
 					
 					<p:commandButton value="Pesquisar" icon="ui-icon-search"   styleClass="button" action="#{valorComprometidoAction.find}" update="valorComprometidos"/>
-					<p:commandButton value="Novo"      icon="ui-icon-document" styleClass="button" action="/pages/adm/valorComprometido/edit.xml"   />
+					<p:commandButton value="Novo"      icon="ui-icon-document" styleClass="button" action="#{valorComprometidoAction.newPage}"   />
 					<p:commandButton value="Carregar arquivo"  icon="ui-icon-arrowthickstop-1-n" styleClass="button" action="/pages/adm/valorComprometido/load.xhtml"   />
 				</h:panelGrid>
 				

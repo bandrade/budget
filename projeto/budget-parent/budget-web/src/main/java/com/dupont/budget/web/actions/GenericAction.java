@@ -173,13 +173,25 @@ public abstract class GenericAction<T extends AbstractEntity<?>>  implements Ser
 	/**
 	 * Reinicia a entidade criando uma nova instância.
 	 */
-	protected void clearInstance() {
+	public void clearInstance() {
 		try {
 			setEntidade((T) getClazz().newInstance());
 		} catch (InstantiationException | IllegalAccessException e) {
 			getLogger().error(String.format("Não foi possível criar uma nova instância do tipo: %s.", getEntidade().getClass().getSimpleName()));
 		}
 	}
+	
+	public String newPage(){
+		clearInstance();
+		return "edit.xhtml";
+	}
+	
+	public String cancel(){
+		clearInstance();
+		find();
+		return "list.xhtml";
+	}
+	
 	
 	@SuppressWarnings("unchecked")
 	protected Class<T> getClazz() {

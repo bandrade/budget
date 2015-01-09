@@ -55,12 +55,6 @@ public class AreaAction extends GenericAction<Area> {
 	}
 
 	@Override
-	protected void clearInstance() {
-		// TODO Auto-generated method stub
-		super.clearInstance();
-	}
-
-	@Override
 	public String persist() {
 
 		String result = null;
