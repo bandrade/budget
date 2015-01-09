@@ -55,12 +55,6 @@ public class AreaAction extends GenericAction<Area> {
 	}
 
 	@Override
-	protected void clearInstance() {
-		// TODO Auto-generated method stub
-		super.clearInstance();
-	}
-
-	@Override
 	public String persist() {
 
 		String result = null;
@@ -104,7 +98,7 @@ public class AreaAction extends GenericAction<Area> {
 		userCallBackCache.removeGroupsFromCache(entidade.getLider().getUsuario().getLogin());
 		return super.update();
 	}
-
+	
 	@Override
 	public String edit(Area t) {
 		this.setEntidade(t);
@@ -120,9 +114,9 @@ public class AreaAction extends GenericAction<Area> {
 	public void delete(Area t) {
 		try {
 			if (bpms.existeProcessoAtivo(Calendar.getInstance().get(Calendar.YEAR)+"")) {
-				facesUtils.addErrorMessage("Não é possível remover uma Área enquanto haja um processo de budget ativo");
+				facesUtils.addErrorMessage("Não é possível remover uma Área enquanto haja um processo de budget ativo"); 
 			} else {
-				userCallBackCache.removeGroupsFromCache(t.getLider().getUsuario().getLogin());
+				userCallBackCache.removeGroupsFromCache(entidade.getLider().getUsuario().getLogin());
 				super.delete(t);
 			}
 		} catch(Exception e) {
