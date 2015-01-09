@@ -10,6 +10,7 @@ import javax.persistence.PersistenceContext;
 
 import com.dupont.budget.dto.AreaDTO;
 import com.dupont.budget.dto.SolicitacaoPagamentoDTO;
+import com.dupont.budget.exception.DuplicateEntityException;
 import com.dupont.budget.model.DespesaSolicitacaoPagamento;
 import com.dupont.budget.model.OrigemSolicitacao;
 import com.dupont.budget.model.SolicitacaoPagamento;
@@ -33,7 +34,15 @@ public class SolicitacaoPagamentoServiceBean implements SolicitacaoPagamentoServ
 	protected EntityManager em;
 
 	@Override
-	public void startSolicitacaoPagamento( SolicitacaoPagamento solicitacaoPagamento) {
+	public void startSolicitacaoPagamento( SolicitacaoPagamento solicitacaoPagamento) throws DuplicateEntityException {
+		
+		// valida solicitacao pagamento com numero da nota fiscal igual
+		List <SolicitacaoPagamento> exists = em.createNamedQuery(SolicitacaoPagamento.FIND_BY_NUMERO_NOTA, SolicitacaoPagamento.class)
+												.setParameter("numeroNotaFiscal", solicitacaoPagamento.getNumeroNotaFiscal())
+												.getResultList();
+		
+		if( exists != null && !exists.isEmpty())
+			throw new DuplicateEntityException(solicitacaoPagamento);
 		
 		// Salva a entidade no banco
 		// Necessario salvar antes para que os IDs estejam populados

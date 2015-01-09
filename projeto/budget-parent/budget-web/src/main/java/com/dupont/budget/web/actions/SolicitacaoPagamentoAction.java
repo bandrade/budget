@@ -22,6 +22,7 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 
 import com.dupont.budget.dto.SolicitacaoPagamentoDTO;
+import com.dupont.budget.exception.DuplicateEntityException;
 import com.dupont.budget.model.Acao;
 import com.dupont.budget.model.Budget;
 import com.dupont.budget.model.Cultura;
@@ -277,7 +278,12 @@ public class SolicitacaoPagamentoAction implements Serializable {
 		}
 		
 		
-		solicitacaoPagamentoService.startSolicitacaoPagamento(solicitacaoPagamento);		
+		try {
+			solicitacaoPagamentoService.startSolicitacaoPagamento(solicitacaoPagamento);
+		} catch (DuplicateEntityException e) {
+			facesUtils.addErrorMessage("Já existe um registro com o mesmo número de nota fiscal cadastrado.");
+			return null;
+		}		
 		
 		conversation.end();
 		

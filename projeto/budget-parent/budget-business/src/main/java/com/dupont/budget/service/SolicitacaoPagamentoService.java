@@ -1,5 +1,6 @@
 package com.dupont.budget.service;
 
+import com.dupont.budget.exception.DuplicateEntityException;
 import com.dupont.budget.model.SolicitacaoPagamento;
 
 /**
@@ -14,8 +15,9 @@ public interface SolicitacaoPagamentoService {
 	/**
 	 * Inicia o processo de solicitação de pagamento
 	 * @param solicitacaoPagamento solicitaçao de pagamento
+	 * @throws DuplicateEntityException 
 	 */
-	public void startSolicitacaoPagamento(SolicitacaoPagamento solicitacaoPagamento);
+	public void startSolicitacaoPagamento(SolicitacaoPagamento solicitacaoPagamento) throws DuplicateEntityException;
 	
 	/**
 	 * Atualiza o procesos de solicitacao de pagamento
