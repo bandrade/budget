@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
@@ -18,6 +19,7 @@ import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.Metamodel;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
 
 import com.dupont.budget.exception.ExistingNameRuntimeException;
 import com.dupont.budget.model.AbstractEntity;
@@ -27,6 +29,9 @@ public abstract class GenericService {
 	
 	@PersistenceContext(unitName="budget-pu")
 	protected EntityManager em;
+	
+	@Inject
+	private Logger logger;
 	
 	/*
 	 * (non-Javadoc)
@@ -160,7 +165,8 @@ public abstract class GenericService {
 	 */
 	public <T extends AbstractEntity<?>> void delete(T t) {	
 		t = em.merge(t); // attaching the entity again
-		em.remove(t);
+		
+		em.remove(t);		
 	}
 
 	/*

@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 
 import com.dupont.budget.exception.ApplicationException;
@@ -160,7 +161,9 @@ public abstract class GenericAction<T extends AbstractEntity<?>>  implements Ser
 	private void handleException(Throwable e) {
 		if (e instanceof ApplicationException || e instanceof ApplicationRuntimeException) {
 			getFacesUtils().addErrorMessage(e.getLocalizedMessage());
-		} else {
+		} else if(ExceptionUtils.getRootCause(e).getClass().getName().contains("MySQLIntegrityConstraintViolationException")) {
+			getFacesUtils().addErrorMessage("Não é possível remover o registro: Existe referências ao registro gravado no sistema.");			
+		}else {
 			Throwable t = e.getCause();
 			int counter = 0;
 			while (t.getCause() != null && counter++ < ITERATION_LIMIT) {
