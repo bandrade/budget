@@ -68,7 +68,7 @@ public class ValorComprometidoAction extends AsyncFileUploadAction<ValorComprome
 	}
 	
 	@Override
-	protected void clearInstance() {
+	public void clearInstance() {
 		super.clearInstance();
 		entidade.setCentroCusto(new CentroCusto());
 		entidade.setAcao(new Acao());
