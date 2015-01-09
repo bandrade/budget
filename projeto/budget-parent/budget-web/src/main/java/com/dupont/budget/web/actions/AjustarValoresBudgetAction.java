@@ -78,7 +78,7 @@ public class AjustarValoresBudgetAction extends BudgetAction implements Serializ
 	{
 		if(!validarPreenchimentoDespesas())
 		{
-			facesUtils.addErrorMessage("Todas as despesas devem ser preenchidas por completo(Produto,Cultura,Acao,Cliente,Distrito e ERC)");
+			facesUtils.addErrorMessage("Todas as despesas devem ser preenchidas por completo(Produto,Cultura,Acao,Distrito,Valor e Comentario)");
 			return null;
 		}
 		if(!getValorTotalBudgetArea().equals(budgetEstipuladoAno.getValorAprovado()))

@@ -149,7 +149,7 @@
 				<h:form id="formDespesa">
 				<p:panel id="panelDespesa">
 				<p:panelGrid columns="2">
-					<p:outputLabel value="Tipo de Despesa:"></p:outputLabel>
+					<p:outputLabel value="* Tipo de Despesa:"></p:outputLabel>
 					<p:autoComplete id="cboTipoDespesa" dropdown="true" value="#{criarBudgetAction.despesa.tipoDespesa}" completeMethod="#{autocompleteAction.autocompleteTipoDespesa}" 
 					 var="_tipoDespesa" itemLabel="#{_tipoDespesa.nome}" itemValue="#{_tipoDespesa}" emptyMessage="NAO ENCONTRADO" effect="size"  required="true" 
 					 scrollHeight="300"
@@ -208,7 +208,7 @@
 					<p:outputLabel value="Comentário:"></p:outputLabel>
 					<p:inputTextarea value="#{criarBudgetAction.despesa.comentario}" />
 					
-					<p:outputLabel value="Valor:"></p:outputLabel>
+					<p:outputLabel value="* Valor(R$):"></p:outputLabel>
 					<pe:inputNumber  id="valor" value="#{criarBudgetAction.despesa.valor}" converter="javax.faces.Double" required="true"/>
 					<h:inputHidden value="#{criarBudgetAction.incAltComSucesso}" id="incAltSucesso" />
 				</p:panelGrid>

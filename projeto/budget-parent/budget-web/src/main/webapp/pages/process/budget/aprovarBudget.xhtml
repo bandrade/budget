@@ -92,7 +92,7 @@
 							</f:facet>
 							<h:outputText value="#{detalheDespesa.comentario}" />
 						</p:column>
-						<p:column footerText="Total:#{facesUtils.formatarDinheiro(aprovarBudgetAction.valorTotalDetalhe)}" style="text-align:center" >
+						<p:column width="150" footerText="Total Proposto:#{facesUtils.formatarDinheiro(aprovarBudgetAction.valorTotalDetalhe)} Total Aprovado:#{facesUtils.formatarDinheiro(aprovarBudgetAction.valorTotalAprovado)}" style="text-align:center" >
 							<f:facet name="header">
 								<h:outputText value="Valor Proposto" />
 							</f:facet>
@@ -105,7 +105,7 @@
 										<f:setPropertyActionListener target="#{aprovarBudgetAction.despesa}" value="#{detalheDespesa}"/>
 								</p:commandButton>
 						</p:column>
-						<p:column width="8%">
+						<p:column width="8%" headerText="Aprovado?">
 							<p:selectBooleanCheckbox value="#{detalheDespesa.aprovado}" disabled="#{aprovarBudgetAction.tipoAprovacao eq 'S'}">
 								<p:ajax listener="#{aprovarBudgetAction.calcularTotalBudget()}" process="@this" update=":form"></p:ajax>
 							</p:selectBooleanCheckbox>
@@ -129,7 +129,7 @@
 				<h:form id="formDespesa">
 				<p:panel id="panelDespesa">
 				<p:panelGrid columns="2">
-					<p:outputLabel value="Tipo de Despesa:"></p:outputLabel>
+					<p:outputLabel value="* Tipo de Despesa:"></p:outputLabel>
 					<p:autoComplete id="cboTipoDespesa" dropdown="true" value="#{aprovarBudgetAction.despesa.tipoDespesa}" completeMethod="#{autocompleteAction.autocompleteTipoDespesa}" 
 					 var="_tipoDespesa" itemLabel="#{_tipoDespesa.nome}" itemValue="#{_tipoDespesa}" emptyMessage="NAO ENCONTRADO" effect="size" maxResults="10" required="true" 
 					 styleClass="input"
@@ -188,7 +188,7 @@
 					<p:outputLabel value="Comentário:"></p:outputLabel>
 					<p:inputTextarea value="#{aprovarBudgetAction.despesa.comentario}" />
 					
-					<p:outputLabel value="Valor:"></p:outputLabel>
+					<p:outputLabel value="* Valor(R$):"></p:outputLabel>
 					<pe:inputNumber  id="valor" value="#{aprovarBudgetAction.despesa.valor}" converter="javax.faces.Double" required="true"/>
 					<h:inputHidden value="#{aprovarBudgetAction.incAltComSucesso}" id="incAltSucesso" />
 				</p:panelGrid>

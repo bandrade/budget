@@ -56,10 +56,20 @@ public class AprovarBudgetAction extends BudgetAction  implements Serializable{
 		valorTotalDetalhe = 0d;
 		for(Despesa despesa : despesasNoDetalhe)
 		{
-			if(despesa.getAprovado() !=null &&  despesa.getAprovado())
-				valorTotalDetalhe+=despesa.getValor();
+			valorTotalDetalhe+=despesa.getValor();
 
 		}
+	}
+
+	public Double getValorTotalAprovado() {
+		Double _valor = 0d;
+		for(Despesa despesa : despesasNoDetalhe)
+		{
+			if(despesa.getAprovado() !=null &&  despesa.getAprovado())
+				_valor+=despesa.getValor();
+
+		}
+		return _valor;
 	}
 
 
