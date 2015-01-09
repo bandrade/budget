@@ -201,17 +201,23 @@ public class SolicitacaoPagamentoAction implements Serializable {
 			if( despesa.getAprovado() == false )
 				continue;
 			
-			produtos.add(despesa.getProduto());
+			if(!produtos.contains(despesa.getProduto()))
+				produtos.add(despesa.getProduto());
 			
-			tiposDespesas.add(despesa.getTipoDespesa());
+			if(!tiposDespesas.contains(despesa.getTipoDespesa()))
+				tiposDespesas.add(despesa.getTipoDespesa());
 			
-			culturas.add(despesa.getCultura());
+			if(!culturas.contains(despesa.getCultura()))
+				culturas.add(despesa.getCultura());
 			
-			distritos.add(despesa.getDistrito());
+			if(!distritos.contains(despesa.getDistrito()))
+				distritos.add(despesa.getDistrito());
 			
-			vendedores.add(despesa.getVendedor());
+			if(!vendedores.contains(despesa.getVendedor()))
+				vendedores.add(despesa.getVendedor());
 			
-			acoes.add(despesa.getAcao());
+			if(!acoes.contains(despesa.getAcao()))
+				acoes.add(despesa.getAcao());
 		}
 		
 		// Popula combos a partir dos forecasts do budget
