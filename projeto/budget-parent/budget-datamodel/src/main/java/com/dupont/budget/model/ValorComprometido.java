@@ -10,7 +10,7 @@ import javax.persistence.UniqueConstraint;
 
 @Entity
 @Table(name = "valor_comprometido", uniqueConstraints = { @UniqueConstraint(columnNames = {
-		"centro_custo_id", "tipo_despesa_id", "acao_id", "mes" }) 
+		"centro_custo_id", "tipo_despesa_id", "acao_id", "mes" })
 })
 @NamedQueries({
 	@NamedQuery(name = ValorComprometido.FIND_BY_FILTRO, query = "select v from ValorComprometido v where lower(v.acao.nome) = :acao and lower(v.centroCusto.nome) = :centroCusto and lower(v.tipoDespesa.nome) = :tipoDespesa and v.mes = :mes")
@@ -18,7 +18,7 @@ import javax.persistence.UniqueConstraint;
 public class ValorComprometido extends AbstractEntity<Long> {
 
 	private static final long serialVersionUID = -8857965323037059577L;
-	
+
 	public static final String FIND_BY_FILTRO = "ValorCmprometido.findByFiltro";
 
 	@ManyToOne

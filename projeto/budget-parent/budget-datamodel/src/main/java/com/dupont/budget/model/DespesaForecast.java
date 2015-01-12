@@ -320,5 +320,9 @@ public class DespesaForecast {
 		return valorComprometido;
 	}
 
+	public void setValorComprometido(Double valorComprometido) {
+		this.valorComprometido = valorComprometido;
+	}
+
 }
 
