@@ -19,4 +19,8 @@ public interface ForecastService {
 
 	void atualizarDespesaForecast(DespesaForecast despesaForecast) throws Exception;
 
+    Double obterValoresComprometidosNotas(DespesaForecast despesaForecast);
+
+
+
 }

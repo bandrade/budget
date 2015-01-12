@@ -159,11 +159,6 @@ public class ForecastAction implements Serializable {
 		}
 	}
 
-	public void alterarDespesa()
-	{
-		//TODO
-	}
-
 	public String concluir()
 	{
 		try {

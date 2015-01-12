@@ -19,6 +19,7 @@ import javax.ws.rs.Path;
 
 import org.slf4j.Logger;
 
+import com.dupont.budget.dto.DetalheValoresComprometidosDTO;
 import com.dupont.budget.model.Budget;
 import com.dupont.budget.model.BudgetMes;
 import com.dupont.budget.model.Despesa;
@@ -29,7 +30,9 @@ import com.dupont.budget.model.Forecast;
 import com.dupont.budget.model.MesEnum;
 import com.dupont.budget.model.SolicitacaoPagamento;
 import com.dupont.budget.model.StatusForecast;
+import com.dupont.budget.model.ValorComprometido;
 import com.dupont.budget.service.BudgetService;
+import com.dupont.budget.service.DomainService;
 import com.dupont.budget.service.ForecastService;
 import com.dupont.budget.service.GenericService;
 
@@ -45,6 +48,9 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 
 	@Inject
 	private BudgetService budgetService;
+
+	@Inject
+	private DomainService domainServiceBean;
 
 	@Path("criar")
 	@POST
@@ -154,11 +160,17 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 	public List<DespesaForecast> obterDespesasForecast(String mes, String  ano, Long idCentroCusto) throws Exception{
 		Budget budget = budgetService.findByAnoAndCentroDeCusto(ano, idCentroCusto);
 		Forecast forecast = em.createNamedQuery("Forecast.findByBudgetId", Forecast.class).setParameter("budgetId", budget.getId()).getResultList().get(0);
-		//TODO IMPLEMENTAR VALORES COMPROMETIDOS
 
 		for(DespesaForecast despesa : forecast.getDespesas())
 		{
-			//despesa.setValorComprometido(obterValorComprometido(despesa));
+			Double valorTotal  = obterValoresComprometidosNotas(despesa);
+			ValorComprometido valorComprometido =domainServiceBean.findValorComprometidoByFiltro(forecast.getBudget().getCentroCusto().getNome(), despesa.getTipoDespesa().getNome(), despesa.getAcao().getNome(),
+					forecast.getMes());
+			if(valorComprometido!=null)
+			{
+				valorTotal +=  valorComprometido.getValor();
+			}
+			despesa.setValorComprometido(valorTotal);
 			despesa.setYtd(obterYtd(despesa));
 		}
 
@@ -221,13 +233,8 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 			    .setParameter("meses",meses_ytd)
 			    .setParameter("mes_forecast",despesaForecast.getForecast().getMes())
 			    .setParameter("centro_custo_id",despesaForecast.getForecast().getBudget().getCentroCusto().getId())
-			  //  .setParameter("produto_id",despesaForecast.getProduto().getId())
 			    .setParameter("acao_id", despesaForecast.getAcao().getId())
 				.setParameter("tipo_despesa_id", despesaForecast.getTipoDespesa().getId()).getSingleResult();
-			//	.setParameter("cultura_id", despesaForecast.getCultura().getId())
-			//	.setParameter("distrito_id", despesaForecast.getDistrito().getId())
-			//	.setParameter("cliente_id", despesaForecast.getCliente().getId())
-			//	.setParameter("vendedor_id", despesaForecast.getVendedor().getId()).getSingleResult();
 			if(result !=null)
 				valorComprometido = Double.valueOf(result.toString());
 		}
@@ -236,19 +243,20 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 		}
 		return valorComprometido;
 
-
 	}
 
-	public Double obterValoresComprometidos(DespesaForecast despesaForecast)
+	public Double obterValoresComprometidosNotas(DespesaForecast despesaForecast)
 	{
 		Double valorComprometido = 0D;
 		try
 		{
-			Object result = em.createNativeQuery(SolicitacaoPagamento.QUERY_SOMA_YTD.toString())
+			Object result = em.createNativeQuery(SolicitacaoPagamento.QUERY_SOMA_VALOR_COMPROMETIDO.toString())
 				.setParameter("ano", despesaForecast.getForecast().getBudget().getAno())
-			    .setParameter("mes", despesaForecast.getForecast().getMes())
+				.setParameter("centro_custo_id",despesaForecast.getForecast().getBudget().getCentroCusto().getId())
+				.setParameter("mes_forecast",despesaForecast.getForecast().getMes())
+			    .setParameter("mes_anterior", despesaForecast.getForecast().getMes()-1)
 			    .setParameter("acao_id", despesaForecast.getAcao().getId())
-				.setParameter("tipo_despesa_id", despesaForecast.getTipoDespesa().getId());
+				.setParameter("tipo_despesa_id", despesaForecast.getTipoDespesa().getId()).getSingleResult();
 			if(result !=null)
 				valorComprometido = Double.valueOf(result.toString());
 		}
@@ -256,13 +264,11 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 		{
 		}
 		return valorComprometido;
-
-
 	}
 
-	public void obterDetalhesNotas()
+	public List<DetalheValoresComprometidosDTO> obterDetalhesNotas()
 	{
-
+		return null;
 
 	}
 }
