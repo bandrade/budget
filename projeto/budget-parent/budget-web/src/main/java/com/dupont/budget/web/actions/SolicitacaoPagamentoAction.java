@@ -33,6 +33,7 @@ import com.dupont.budget.model.DespesaSolicitacaoPagamento;
 import com.dupont.budget.model.Distrito;
 import com.dupont.budget.model.Forecast;
 import com.dupont.budget.model.Fornecedor;
+import com.dupont.budget.model.OrigemSolicitacao;
 import com.dupont.budget.model.Produto;
 import com.dupont.budget.model.SolicitacaoPagamento;
 import com.dupont.budget.model.StatusPagamento;
@@ -554,16 +555,17 @@ public class SolicitacaoPagamentoAction implements Serializable {
 	public String save(){
 		
 		// Salvar a nova ação caso tenha sido pedido
-		if( getCheckAcao().equals("Criar Nova")){
-			Acao acao = new Acao(novaAcao);
-			
-			acao = domainService.create(acao);
-			
-			despesaSolicitacaoPagamento.setAcao(acao);
-		}
+//		if( getCheckAcao().equals("Criar Nova")){
+//			Acao acao = new Acao(novaAcao);
+//			
+//			acao = domainService.create(acao);
+//			
+//			despesaSolicitacaoPagamento.setAcao(acao);
+//		}
 		
 		solicitacaoPagamento.setCriacao(new Date());
 		solicitacaoPagamento.setStatus(StatusPagamento.COMPROMETIDO);
+		solicitacaoPagamento.setOrigem(OrigemSolicitacao.COVERSHEET);
 		
 		if( solicitacaoPagamento.getTipoSolicitacao() == TipoSolicitacao.CC ) {
 			despesaSolicitacaoPagamento.setValor(solicitacaoPagamento.getValor());
