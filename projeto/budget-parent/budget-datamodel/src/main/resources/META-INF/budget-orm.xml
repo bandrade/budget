@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings 
+  version="2.0"
+  xmlns="http://java.sun.com/xml/ns/persistence/orm"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm orm_2_0.xsd">
+    
+      <named-query name="Report.Budget.Orcado.TipoDespesa_Acao">
+          <query>				
+				select 
+					db.tipoDespesa.nome, db.acao.nome, sum(db.valor)
+				from 
+					Budget b
+				left join
+					b.despesas db					
+				where 
+					b.id = :budgetId
+				group by
+					db.tipoDespesa, db.acao			
+          </query>
+      </named-query>
+      
+      <named-query name="Report.Forecast.Utilizado.TipoDespesa_Acao">
+          <query>				
+				select 
+					df.tipoDespesa.nome, df.acao.nome, sum(df.valor)
+				from 
+					Forecast f
+				inner join
+					f.budget b
+				left join
+					f.despesas df					
+				where 
+					b.id = :budgetId
+				group by
+					df.tipoDespesa, df.acao			
+          </query>
+      </named-query>
+      
+       <named-query name="Report.Budget.Orcado.CentroCusto_Cultura">
+          <query>				
+				select 
+					b.centroCusto.nome, db.cultura.nome, sum(db.valor)
+				from 
+					Budget b
+				left join
+					b.despesas db					
+				where 
+					b.id in :budgetsIds
+				group by
+					b.centroCusto, db.cultura			
+          </query>
+      </named-query>
+      
+      <named-query name="Report.Forecast.Utilizado.CentroCusto_Cultura">
+          <query>				
+				select 
+					b.centroCusto.nome, df.cultura.nome, sum(df.valor)
+				from 
+					Forecast f
+				inner join
+					f.budget b
+				left join
+					f.despesas df					
+				where 
+					b.id in :budgetsIds
+				group by
+					b.centroCusto, df.cultura			
+          </query>
+      </named-query>
+      
+</entity-mappings>

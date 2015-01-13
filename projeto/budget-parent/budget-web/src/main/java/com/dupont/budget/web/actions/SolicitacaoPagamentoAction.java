@@ -443,6 +443,9 @@ public class SolicitacaoPagamentoAction implements Serializable {
 			if( !despesa.getAcao().equals(acao) )
 				continue;
 			
+			if( produtos.contains(despesa.getProduto()) )
+				continue;
+			
 			produtos.add(despesa.getProduto());
 		}
 		
@@ -463,7 +466,7 @@ public class SolicitacaoPagamentoAction implements Serializable {
 					if( !_despesa.getAcao().equals(acao) )
 						continue;
 					
-					if( produtos.contains(_despesa.getAcao()) )
+					if( produtos.contains(_despesa.getProduto()) )
 						continue;
 					
 					produtos.add(_despesa.getProduto());
@@ -611,6 +614,17 @@ public class SolicitacaoPagamentoAction implements Serializable {
 		FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
 		
 		return "edit.xhtml?faces-redirect=true";
+	}
+	
+	public void delete(SolicitacaoPagamento _solicitacaoPagamento) {
+		
+		domainService.delete(solicitacaoPagamento);
+		
+		getList().remove(solicitacaoPagamento);
+		
+		facesUtils.addInfoMessage(String.format("%s removido(a) com sucesso.", "Solicitação de Pagamento"));
+		
+		
 	}
 	
 	

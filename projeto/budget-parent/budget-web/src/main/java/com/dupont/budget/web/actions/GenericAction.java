@@ -105,7 +105,7 @@ public abstract class GenericAction<T extends AbstractEntity<?>>  implements Ser
 	 */
 	public void delete(T t) {
 		String tipo = getEntidade().getClass().getSimpleName();
-		getLogger().debug(String.format("Removendo entidade do tipo %s, com o id: ", tipo, t.getId()));
+		getLogger().debug(String.format("Removendo registro do tipo %s, com o id: ", tipo, t.getId()));
 
 		try {
 			// Remove a entidade do meio persistente

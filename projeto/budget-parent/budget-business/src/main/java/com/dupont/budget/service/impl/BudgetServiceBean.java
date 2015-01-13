@@ -1,7 +1,9 @@
 package com.dupont.budget.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -20,6 +22,8 @@ import com.dupont.budget.model.BudgetMes;
 import com.dupont.budget.model.Despesa;
 import com.dupont.budget.model.StatusBudget;
 import com.dupont.budget.model.TipoDespesa;
+import com.dupont.budget.report.model.ReportBudgetOrcadoUtilizadoDetail;
+import com.dupont.budget.report.model.ReportBudgetOrcadoUtilizadoMaster;
 import com.dupont.budget.service.BudgetService;
 import com.dupont.budget.service.GenericService;
 
@@ -269,4 +273,132 @@ public class BudgetServiceBean extends GenericService implements BudgetService {
 
 
 	}
+
+	
+	@Override
+	public List<ReportBudgetOrcadoUtilizadoMaster> getBudgetOrcadoUtilizadoTipoDespesaAcaoReport(String ano, Long centroCustoId) {
+		
+		Budget budget = findByAnoAndCentroDeCusto(ano, centroCustoId);
+		
+		List<Object[]> budgetQueryResult   = em.createNamedQuery("Report.Budget.Orcado.TipoDespesa_Acao", Object[].class)
+									           .setParameter("budgetId", budget.getId())
+									           .getResultList();
+		
+		List<Object[]> forecastQueryResult = em.createNamedQuery("Report.Forecast.Utilizado.TipoDespesa_Acao", Object[].class)
+									           .setParameter("budgetId", budget.getId())
+									           .getResultList();
+		
+		return createBudgetOrcadoUtilizadoReport(budgetQueryResult, forecastQueryResult);
+	}
+	
+	@Override
+	public List<ReportBudgetOrcadoUtilizadoMaster> getBudgetOrcadoUtilizadoCentroCustoCulturaReport(String ano, Long centroCustoId) {
+				
+		List<Long> budgetsIds = new ArrayList<Long>();
+		
+		if( centroCustoId != null ) {
+			Budget budget = findByAnoAndCentroDeCusto(ano, centroCustoId);
+			
+			if( budget != null )
+				budgetsIds.add(budget.getId());
+		} else {
+			List<Budget> budgets = findBudgetsByAno(ano);
+			
+			if( !budgets.isEmpty() ) {
+				for (Budget budget : budgets) {
+					budgetsIds.add(budget.getId());
+				}
+			}
+		}
+		
+		// Caso não possua budgets retornar nulo
+		if( budgetsIds.isEmpty() )
+			return null;
+		
+		List<Object[]> budgetQueryResult   = em.createNamedQuery("Report.Budget.Orcado.CentroCusto_Cultura", Object[].class)
+									           .setParameter("budgetsIds", budgetsIds)
+									           .getResultList();
+		
+		List<Object[]> forecastQueryResult = em.createNamedQuery("Report.Forecast.Utilizado.CentroCusto_Cultura", Object[].class)
+									           .setParameter("budgetsIds", budgetsIds)
+									           .getResultList();
+		
+		return createBudgetOrcadoUtilizadoReport(budgetQueryResult, forecastQueryResult);
+	}
+
+
+	protected List<ReportBudgetOrcadoUtilizadoMaster> createBudgetOrcadoUtilizadoReport( List<Object[]> budgetQueryResult, List<Object[]> forecastQueryResult) {
+		
+		List<ReportBudgetOrcadoUtilizadoMaster> result          = new ArrayList<ReportBudgetOrcadoUtilizadoMaster>();		
+		Map<String, ReportBudgetOrcadoUtilizadoMaster> cacheMap = new HashMap<String, ReportBudgetOrcadoUtilizadoMaster>();
+		
+		// Carrega os dados do BUDGET: ORÇADO
+		for ( Object[] line : budgetQueryResult ) {
+			
+			String master = (String) line[0];
+			String detail = (String) line[1];
+			Double orcado = (Double) line[2];
+			
+			ReportBudgetOrcadoUtilizadoMaster item = cacheMap.get(master);
+			
+			if( item == null ) {
+				item = new ReportBudgetOrcadoUtilizadoMaster(master, 0.0, 0.0);
+				result.add(item);
+			}
+			
+			ReportBudgetOrcadoUtilizadoDetail acaoReport = new ReportBudgetOrcadoUtilizadoDetail(detail, orcado, 0.0);
+			
+			item.addDetail(acaoReport);			
+			
+			
+			cacheMap.put(master, item);
+		}
+		
+		// Carrega os dados do FORECAST: UTILIZADO
+		for ( Object[] line : forecastQueryResult ) {
+			
+			String master    = (String) line[0];
+			String detail    = (String) line[1];
+			Double utilizado = (Double) line[2];
+			
+			ReportBudgetOrcadoUtilizadoMaster item = cacheMap.get(master);
+			
+			if( item == null ){
+				// Lançar erro
+				continue;
+			}
+			
+			// Adicona o valor utilizado total da despesa
+			item.setTotalUtilizado(item.getTotalUtilizado() + utilizado);
+			
+			ReportBudgetOrcadoUtilizadoDetail _acao = item.getAcao(detail);
+			
+			_acao.setUtilizado(utilizado);
+		}
+		
+		return result;
+	}
+
+	@Override
+	public List<String> getBudgetsAnos() {
+		
+		List<String> result = em.createQuery("select distinct b.ano from Budget b", String.class)
+								.getResultList();
+				
+		return result;
+	}
+
+
+	@Override
+	public List<Budget> findBudgetsByAno(String ano) {
+		
+		List<Budget> result = em.createNamedQuery("Budget.findByAno", Budget.class)
+								.setParameter("ano", ano)
+								.getResultList();
+		
+		return result;
+	}
+
+
+	
 }

@@ -15,7 +15,7 @@ import com.dupont.budget.web.util.FacesUtils;
 /**
  * Controller das telas de manutenção da entidade cultura
  * 
- * @author <a href="asouza@redhat.com">Ângelo Galvão</a>
+ * @author <a href="mailto:asouza@redhat.com">Ângelo Galvão</a>
  * @since 2014
  *
  */
