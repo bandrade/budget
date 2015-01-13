@@ -8,7 +8,7 @@
                 
 	<ui:define name="content">
 	
-		<p:panel id="content">
+		<p:panel id="content_">
 		
 			<h3> 
 				<h:outputText value="Atualizar Valor Comprometido" rendered="#{not empty valorComprometido.id}" />
@@ -23,6 +23,8 @@
 				
 					<p:outputLabel value="Centro de Custo:" for="centroCustoList"/>
 					<p:selectOneMenu label="Centro de Custo" id="centroCustoList" value="#{valorComprometido.centroCusto}" required="true" converter="com.dupont.EntityConverter">
+					
+						<p:ajax listener="#{valorComprometidoAction.doSelectCentroCusto}" update=":content_"/>
                         <f:selectItem itemLabel="Selecione um centro de custo..." itemValue="${null}" />
                         <f:selectItems value="#{centroCustoList}" itemValue="#{i}" itemLabel="#{i.nome}" var="i" />
                     </p:selectOneMenu>
@@ -30,15 +32,16 @@
                     
                     <p:outputLabel value="Tipo Despesa:" for="tipoDespesaList"/>
                     <p:selectOneMenu label="Tipo Despesa" id="tipoDespesaList" value="#{valorComprometido.tipoDespesa}" required="true" converter="com.dupont.EntityConverter" >
+                    	<p:ajax listener="#{valorComprometidoAction.doSelectTipoDespesa}" update=":content_"/>
                         <f:selectItem itemLabel="Selecione um tipo de despesa..." itemValue="${null}" />
-                        <f:selectItems value="#{tipoDespesaList}" itemValue="#{i}" itemLabel="#{i.nome}" var="i" />
+                        <f:selectItems value="#{valorComprometidoAction.tiposDespesas}" itemValue="#{i}" itemLabel="#{i.nome}" var="i" />
                     </p:selectOneMenu>
                     <p:message for="tipoDespesaList"/>
                     
                     <p:outputLabel value="Ação:" for="acaoList"/>
                     <p:selectOneMenu label="Ação" id="acaoList" value="#{valorComprometido.acao}" required="true" converter="com.dupont.EntityConverter">
                         <f:selectItem itemLabel="Selecione uma ação..." itemValue="${null}" />
-                        <f:selectItems value="#{acaoList}" itemValue="#{i}" itemLabel="#{i.nome}" var="i" />
+                        <f:selectItems value="#{valorComprometidoAction.acoes}" itemValue="#{i}" itemLabel="#{i.nome}" var="i" />
                     </p:selectOneMenu>
                     <p:message for="acaoList"/>
                     
