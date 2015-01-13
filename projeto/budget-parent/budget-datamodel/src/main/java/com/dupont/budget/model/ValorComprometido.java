@@ -34,6 +34,8 @@ public class ValorComprometido extends AbstractEntity<Long> {
 	private Acao acao;
 
 	private Integer mes;
+	
+	private Integer ano;
 
 	private Double valor;
 
@@ -85,6 +87,14 @@ public class ValorComprometido extends AbstractEntity<Long> {
 
 	public void setAtivo(Boolean ativo) {
 		this.ativo = ativo;
+	}
+
+	public Integer getAno() {
+		return ano;
+	}
+
+	public void setAno(Integer ano) {
+		this.ano = ano;
 	}
 
 }

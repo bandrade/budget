@@ -23,28 +23,50 @@
 				
 					<p:outputLabel value="Centro de Custo:" for="centroCustoList"/>
 					<p:selectOneMenu label="Centro de Custo" id="centroCustoList" value="#{valorComprometido.centroCusto}" required="true" converter="com.dupont.EntityConverter">
-                        <f:selectItem itemLabel="Selecione..." itemValue="${null}" />
+                        <f:selectItem itemLabel="Selecione um centro de custo..." itemValue="${null}" />
                         <f:selectItems value="#{centroCustoList}" itemValue="#{i}" itemLabel="#{i.nome}" var="i" />
                     </p:selectOneMenu>
                     <p:message for="centroCustoList"/>
                     
                     <p:outputLabel value="Tipo Despesa:" for="tipoDespesaList"/>
                     <p:selectOneMenu label="Tipo Despesa" id="tipoDespesaList" value="#{valorComprometido.tipoDespesa}" required="true" converter="com.dupont.EntityConverter" >
-                        <f:selectItem itemLabel="Selecione..." itemValue="${null}" />
+                        <f:selectItem itemLabel="Selecione um tipo de despesa..." itemValue="${null}" />
                         <f:selectItems value="#{tipoDespesaList}" itemValue="#{i}" itemLabel="#{i.nome}" var="i" />
                     </p:selectOneMenu>
                     <p:message for="tipoDespesaList"/>
                     
                     <p:outputLabel value="Ação:" for="acaoList"/>
                     <p:selectOneMenu label="Ação" id="acaoList" value="#{valorComprometido.acao}" required="true" converter="com.dupont.EntityConverter">
-                        <f:selectItem itemLabel="Selecione..." itemValue="${null}" />
+                        <f:selectItem itemLabel="Selecione uma ação..." itemValue="${null}" />
                         <f:selectItems value="#{acaoList}" itemValue="#{i}" itemLabel="#{i.nome}" var="i" />
                     </p:selectOneMenu>
                     <p:message for="acaoList"/>
                     
                     <p:outputLabel value="Mês:" for="mesInput" />
-                    <p:inputText label="Mês" id="mesInput" value="#{valorComprometido.mes}" required="true"/>
+                    <p:selectOneMenu label="Mês" id="mesInput" value="#{valorComprometido.mes}" required="true">
+                    	<f:selectItem itemLabel="Selecione um mês..." itemValue="${null}" />
+                    	<f:selectItem itemValue="1"  itemLabel="Janeiro"/>
+                    	<f:selectItem itemValue="2"  itemLabel="Fevereiro"/>
+                    	<f:selectItem itemValue="3"  itemLabel="Março"/>
+                    	<f:selectItem itemValue="4"  itemLabel="Abril"/>
+                    	<f:selectItem itemValue="5"  itemLabel="Maio"/>
+                    	<f:selectItem itemValue="6"  itemLabel="Junho"/>
+                    	<f:selectItem itemValue="7"  itemLabel="Julho"/>
+                    	<f:selectItem itemValue="8"  itemLabel="Agosto"/>
+                    	<f:selectItem itemValue="9"  itemLabel="Setembro"/>
+                    	<f:selectItem itemValue="10" itemLabel="Outubro"/>
+                    	<f:selectItem itemValue="11" itemLabel="Novembro"/>
+                    	<f:selectItem itemValue="12" itemLabel="Dezembro"/>
+                    </p:selectOneMenu>
                     <p:message for="mesInput" />
+                    
+                    <p:outputLabel value="Ano:" for="anoInput" />
+                    <p:selectOneMenu label="Ano" id="anoInput" value="#{valorComprometido.ano}" required="true">
+                    	<f:selectItem itemLabel="Selecione um ano..." itemValue="${null}" />
+                    	<f:selectItems value="#{anosFuturos}" var="ano" itemValue="#{ano}"/>
+                    </p:selectOneMenu>
+                    <p:message for="anoInput" />
+                    
                     
                     <p:outputLabel value="Valor:" for="valorInput" />
                     <pe:inputNumber label="Valor" id="valorInput" decimalSeparator="," decimalPlaces="2" symbol="R$ " value="#{valorComprometido.valor}" required="true" />

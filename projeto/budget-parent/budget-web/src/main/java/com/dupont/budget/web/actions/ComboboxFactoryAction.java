@@ -1,5 +1,7 @@
 package com.dupont.budget.web.actions;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.enterprise.inject.Model;
@@ -78,5 +80,19 @@ public class ComboboxFactoryAction {
 	@Produces @Named
 	public List<String> getAnos() {
 		return budgetService.getBudgetsAnos();
+	}
+	
+	@Produces @Named
+	public List<Integer> getAnosFuturos() {
+		// Retona o ano atual + 2 seguintes
+		List<Integer> result = new ArrayList<Integer>();
+		
+		Calendar now = Calendar.getInstance();
+		
+		result.add(now.get(Calendar.YEAR));
+		result.add(now.get(Calendar.YEAR) + 1);
+		result.add(now.get(Calendar.YEAR) + 2);
+		
+		return result;
 	}
 }
