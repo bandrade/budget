@@ -50,8 +50,8 @@
 				</h:panelGroup>
 				<h:outputText  value="" />
 				
-				<p:outputLabel value="Ação:"/>
-				<p:selectOneMenu id="acoesSelectOneMenu" value="#{incluirDespesaRateioAction.despesaSolicitacaoPagamento.acao}" converter="com.dupont.EntityConverter" required="true">								
+				<p:outputLabel value="Ação:" for="acoesSelectOneMenu"/>
+				<p:selectOneMenu id="acoesSelectOneMenu" label="Ação" value="#{incluirDespesaRateioAction.despesaSolicitacaoPagamento.acao}" converter="com.dupont.EntityConverter" required="true">								
 					<p:ajax listener="#{incluirDespesaRateioAction.doSelectAcao}" update="dadosCC"/>
 					<f:selectItem itemLabel="Selecione uma ação" itemValue="#{null}" />
 					<f:selectItems value="#{incluirDespesaRateioAction.acoes}" var="item" itemLabel="#{item.nome}" itemValue="#{item}"/>						
@@ -70,7 +70,7 @@
 				
 				
 				<p:outputLabel value="Cultura:" for="culturasSelecOneMenu"/>	
-				<p:selectOneMenu id="culturasSelecOneMenu" label="Cultura"  value="#{incluirDespesaRateioAction.despesaSolicitacaoPagamento.cultura}" converter="com.dupont.EntityConverter">
+				<p:selectOneMenu id="culturasSelecOneMenu" label="Cultura"  value="#{incluirDespesaRateioAction.despesaSolicitacaoPagamento.cultura}" converter="com.dupont.EntityConverter" required="true">
 					<p:ajax listener="#{incluirDespesaRateioAction.doSelectCultura}" update="dadosCC"/>
 					<f:selectItem itemLabel="Selecione uma cultura" itemValue="#{null}" />
 					<f:selectItems value="#{incluirDespesaRateioAction.culturas}" var="item" itemLabel="#{item.nome}" itemValue="#{item}"/>
@@ -105,8 +105,15 @@
 				<p:message for="clientesSelectOneMenu" />
 				
 				<p:outputLabel value="Valor:" for="valorTotalNotaInput"/>						
-					<pe:inputNumber id="valorTotalNotaInput" value="#{incluirDespesaRateioAction.despesaSolicitacaoPagamento.valor}" label="Valor" required="true" decimalSeparator="," thousandSeparator="." decimalPlaces="2">
+				<pe:inputNumber id="valorTotalNotaInput" value="#{incluirDespesaRateioAction.despesaSolicitacaoPagamento.valor}" label="Valor" required="true" decimalSeparator="," thousandSeparator="." decimalPlaces="2">
 				</pe:inputNumber>
+				<p:message for="valorTotalNotaInput" />
+				
+				
+				<h:outputText  value="" />
+				<h:outputText  value="" />
+				<h:outputText  value="" />
+				
 				
 				
 			</p:panelGrid>

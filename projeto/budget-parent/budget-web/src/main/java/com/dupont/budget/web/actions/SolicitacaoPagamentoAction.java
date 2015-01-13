@@ -538,12 +538,6 @@ public class SolicitacaoPagamentoAction implements Serializable {
 					if(!tiposDespesas.contains(_despesa.getTipoDespesa()))
 						tiposDespesas.add(_despesa.getTipoDespesa());
 					
-					
-//					if(!distritos.contains(_despesa.getDistrito()))
-//						distritos.add(_despesa.getDistrito());
-//					
-//					if(!vendedores.contains(_despesa.getVendedor()))
-//						vendedores.add(_despesa.getVendedor());
 				}
 			}
 		}
@@ -593,13 +587,13 @@ public class SolicitacaoPagamentoAction implements Serializable {
 	
 	public String update(){
 		// Salvar a nova ação caso tenha sido pedido
-		if( getCheckAcao().equals("Criar Nova")){
-			Acao acao = new Acao(novaAcao);
-			
-			acao = domainService.create(acao);
-			
-			despesaSolicitacaoPagamento.setAcao(acao);
-		}
+//		if( getCheckAcao().equals("Criar Nova")){
+//			Acao acao = new Acao(novaAcao);
+//			
+//			acao = domainService.create(acao);
+//			
+//			despesaSolicitacaoPagamento.setAcao(acao);
+//		}
 		
 		solicitacaoPagamento.setStatus(StatusPagamento.COMPROMETIDO);
 		
