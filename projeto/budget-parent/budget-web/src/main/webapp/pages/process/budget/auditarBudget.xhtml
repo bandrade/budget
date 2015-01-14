@@ -15,9 +15,8 @@
 
 	<ui:define name="content">
 		<h:form id="form"> 
-			<p:panelGrid columns="1" styleClass="body-content">
-				<p:fieldset value="Auditar Budget" legend="Auditar Budget">
-				<p:panel>
+			<p:panel id="content">
+				<h3>Auditar Budget</h3>
 					<p:panelGrid columns="2">
 						<p:outputLabel value="Ano:"></p:outputLabel>
 						<p:outputLabel styleClass="bold-label" value="#{auditarBudgetAction.ano}"></p:outputLabel>
@@ -101,10 +100,7 @@
 							<p:confirm header="Confirmação" message="Confirma a conclusão da Auditoria do Budget?" icon="ui-icon-alert"/>
 						</p:commandButton>
 					</p:panelGrid>
-					</p:panel>
-				</p:fieldset>
-			
-			</p:panelGrid>
+			</p:panel>
 			
 			</h:form>
 			

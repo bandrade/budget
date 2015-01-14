@@ -6,85 +6,79 @@
                 template="/WEB-INF/templates/default.xhtml">
                 
 	<ui:define name="content">
-	<p:panelGrid columns="1" styleClass="body-content">
-		<p:fieldset value="Pesquisa de Colaboradores" legend="Pesquisa de Produtos">
-	
-			<h3></h3>
+		<h3>Pesquisa de Colaboradores</h3>
+		
+		<h:form id="form" prependId="false">
+		
+			<h:panelGrid columns="3" border="0">
 			
-			<h:form id="form" prependId="false">
-			
-				<h:panelGrid columns="3" border="0">
+				<p:outputLabel value="Número da Nota:" for="numeroNotaInput"/>
+                   <p:inputText id="numeroNotaInput" value="#{solicitacaoPagamento.numeroNotaFiscal}"/>
+                   <p:message for="numeroNotaInput"/>
+                   
+                   <p:outputLabel value="Fornecedor:" for="fornecedorInput"/>
+                   <p:inputText id="fornecedorInput" value="#{solicitacaoPagamento.fornecedor.nome}"/>
+                   <p:message for="fornecedorInput"/>
+                   
+                   <h:outputLabel for="tipoSolicitacaoList" value="Tipo:" />
+                   <p:selectOneMenu label="Tipo" id="tipoSolicitacaoList" value="#{solicitacaoPagamento.tipoSolicitacao}">
+                       <f:selectItem itemLabel="Selecione..." itemValue="" />
+                       <f:selectItems value="#{tipoSolicitacaoPagamentoList}" itemValue="#{i}" itemLabel="#{i.toString()}" var="i" />
+                   </p:selectOneMenu>
+                   <p:message for="tipoSolicitacaoList" />
+                   
+                   <h:outputLabel for="statusList" value="Status:" />
+                   <p:selectOneMenu label="Status" id="statusList" value="#{solicitacaoPagamento.status}">
+                       <f:selectItem itemLabel="Selecione..." itemValue="" />
+                       <f:selectItems value="#{statusSolicitacaoPagamentoList}" itemValue="#{i}" itemLabel="#{i.toString()}" var="i" />
+                   </p:selectOneMenu>
+                   <p:message for="statusList" />
 				
-					<p:outputLabel value="Número da Nota:" for="numeroNotaInput"/>
-                    <p:inputText id="numeroNotaInput" value="#{solicitacaoPagamento.numeroNotaFiscal}"/>
-                    <p:message for="numeroNotaInput"/>
-                    
-                    <p:outputLabel value="Fornecedor:" for="fornecedorInput"/>
-                    <p:inputText id="fornecedorInput" value="#{solicitacaoPagamento.fornecedor.nome}"/>
-                    <p:message for="fornecedorInput"/>
-                    
-                    <h:outputLabel for="tipoSolicitacaoList" value="Tipo:" />
-                    <p:selectOneMenu label="Tipo" id="tipoSolicitacaoList" value="#{solicitacaoPagamento.tipoSolicitacao}">
-                        <f:selectItem itemLabel="Selecione..." itemValue="" />
-                        <f:selectItems value="#{tipoSolicitacaoPagamentoList}" itemValue="#{i}" itemLabel="#{i.toString()}" var="i" />
-                    </p:selectOneMenu>
-                    <p:message for="tipoSolicitacaoList" />
-                    
-                    <h:outputLabel for="statusList" value="Status:" />
-                    <p:selectOneMenu label="Status" id="statusList" value="#{solicitacaoPagamento.status}">
-                        <f:selectItem itemLabel="Selecione..." itemValue="" />
-                        <f:selectItems value="#{statusSolicitacaoPagamentoList}" itemValue="#{i}" itemLabel="#{i.toString()}" var="i" />
-                    </p:selectOneMenu>
-                    <p:message for="statusList" />
+				<p:commandButton value="Pesquisar" icon="ui-icon-search"   styleClass="button" action="#{solicitacaoPagamentoAction.find}" update="solicitacaoPagamentos" process="@this,numeroNotaInput,fornecedorInput,tipoSolicitacaoList,statusList"/>
+				<p:commandButton value="Novo"      icon="ui-icon-document" styleClass="button" action="/pages/adm/solicitacaoPagamento/edit.xml"   />
+			</h:panelGrid>
+			
+			<p:separator />
+			
+			<p:dataTable id="solicitacaoPagamentos" var="item" value="#{solicitacaoPagamentoAction.list}" emptyMessage="Nenhum registro encontrado."
+					paginator="true"
+					paginatorPosition="bottom"
+					rows="10">
+				<f:facet name="header">
+					Solicitações de Pagamento
+				</f:facet>
+				<p:column headerText="N. Nota Fiscal" sortBy="#{item.numeroNotaFiscal}" >
+					#{item.numeroNotaFiscal}
+				</p:column>
+                   <p:column headerText="Fornecedor" sortBy="#{item.fornecedor.nome}" >
+                       #{item.fornecedor.nome}
+                   </p:column>
+                   <p:column headerText="Valor(R$)" sortBy="#{item.valor}" >
+                       #{item.valor}
+                   </p:column>
+                   <p:column headerText="Tipo" sortBy="#{item.tipoSolicitacao}" >
+                       #{item.tipoSolicitacao}
+                   </p:column>
+                   <p:column headerText="Status" sortBy="#{item.status}" >
+                       #{item.status}
+                   </p:column>
+				
+				<p:column headerText="Ações" width="10%">
 					
-					<p:commandButton value="Pesquisar" icon="ui-icon-search"   styleClass="button" action="#{solicitacaoPagamentoAction.find}" update="solicitacaoPagamentos" process="@this,numeroNotaInput,fornecedorInput,tipoSolicitacaoList,statusList"/>
-					<p:commandButton value="Novo"      icon="ui-icon-document" styleClass="button" action="/pages/adm/solicitacaoPagamento/edit.xml"   />
-				</h:panelGrid>
-				
-				<p:separator />
-				
-				<p:dataTable id="solicitacaoPagamentos" var="item" value="#{solicitacaoPagamentoAction.list}" emptyMessage="Nenhum registro encontrado."
-						paginator="true"
-						paginatorPosition="bottom"
-						rows="10">
-					<f:facet name="header">
-						Solicitações de Pagamento
-					</f:facet>
-					<p:column headerText="N. Nota Fiscal" sortBy="#{item.numeroNotaFiscal}" >
-						#{item.numeroNotaFiscal}
-					</p:column>
-                    <p:column headerText="Fornecedor" sortBy="#{item.fornecedor.nome}" >
-                        #{item.fornecedor.nome}
-                    </p:column>
-                    <p:column headerText="Valor(R$)" sortBy="#{item.valor}" >
-                        #{item.valor}
-                    </p:column>
-                    <p:column headerText="Tipo" sortBy="#{item.tipoSolicitacao}" >
-                        #{item.tipoSolicitacao}
-                    </p:column>
-                    <p:column headerText="Status" sortBy="#{item.status}" >
-                        #{item.status}
-                    </p:column>
+					<p:commandButton icon="ui-icon-pencil" action="#{solicitacaoPagamentoAction.edit(item)}"   update="solicitacaoPagamentos" immediate="true"/>
+					<p:commandButton icon="ui-icon-trash"  action="#{solicitacaoPagamentoAction.delete(item)}" update="solicitacaoPagamentos" immediate="true">
+						<p:confirm header="Confirmação" message="Deseja realmente remover o dado?" icon="ui-icon-alert" />
+					</p:commandButton>
 					
-					<p:column headerText="Ações" width="10%">
-						
-						<p:commandButton icon="ui-icon-pencil" action="#{solicitacaoPagamentoAction.edit(item)}"   update="solicitacaoPagamentos" immediate="true"/>
-						<p:commandButton icon="ui-icon-trash"  action="#{solicitacaoPagamentoAction.delete(item)}" update="solicitacaoPagamentos" immediate="true">
-							<p:confirm header="Confirmação" message="Deseja realmente remover o dado?" icon="ui-icon-alert" />
-						</p:commandButton>
-						
-					</p:column>
-				
-				</p:dataTable>
-				
-				<p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
-			        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
-			        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no"  icon="ui-icon-close" />
-			    </p:confirmDialog>
-			</h:form>
+				</p:column>
 			
-		</p:fieldset>
-		</p:panelGrid>		
+			</p:dataTable>
+			
+			<p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+		        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+		        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no"  icon="ui-icon-close" />
+		    </p:confirmDialog>
+		</h:form>
 	</ui:define>
 	
 </ui:composition>

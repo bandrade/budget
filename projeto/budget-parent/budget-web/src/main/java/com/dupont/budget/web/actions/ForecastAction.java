@@ -200,6 +200,7 @@ public class ForecastAction implements Serializable {
 	public Double calcularTotalBudget()
 	{
 		Double valor = 0d;
+		if (despesasNoDetalhe != null)
 		for(DespesaForecast despesa : despesasNoDetalhe)
 		{
 			valor += despesa.getDespesaBudget() !=null ? despesa.getDespesaBudget().getValor() : 0d;
@@ -211,6 +212,7 @@ public class ForecastAction implements Serializable {
 	public Double calcularTotalAno()
 	{
 		Double valor = 0d;
+		if (despesasNoDetalhe != null)
 		for(DespesaForecast despesa : despesasNoDetalhe)
 		{
 			valor += despesa.getValor();
@@ -221,6 +223,7 @@ public class ForecastAction implements Serializable {
 	public Double calcularTotalYTD()
 	{
 		Double valor = 0d;
+		if (despesasNoDetalhe != null)
 		for(DespesaForecast despesa : despesasNoDetalhe)
 		{
 			valor += helper.getDouble(despesa.getYtd());
@@ -231,6 +234,7 @@ public class ForecastAction implements Serializable {
 	public Double calcularTotalPLM()
 	{
 		Double valor = 0d;
+		if (despesasNoDetalhe != null)
 		for(DespesaForecast despesa : despesasNoDetalhe)
 		{
 			valor += helper.getDouble(despesa.getPlm());
@@ -242,6 +246,7 @@ public class ForecastAction implements Serializable {
 	public void calcularTotalForecast()
 	{
 		valorTotalDetalhe=0d;
+		if (despesasNoDetalhe != null)
 		for(DespesaForecast despesa : despesasNoDetalhe)
 		{
 			valorTotalDetalhe +=despesa.getValor();

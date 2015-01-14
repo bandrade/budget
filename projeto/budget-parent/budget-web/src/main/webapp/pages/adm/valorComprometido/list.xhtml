@@ -6,84 +6,78 @@
                 template="/WEB-INF/templates/default.xhtml">
                 
 	<ui:define name="content">
-	<p:panelGrid columns="1" styleClass="body-content">
-		<p:fieldset value="Pesquisa de Valores Comprometidos" legend="Pesquisa de Valores Comprometidos">
-	
-			<h3></h3>
+		<h3>Pesquisa de Valores Comprometidos</h3>
+		
+		<h:form id="form" prependId="false">
+		
+			<h:panelGrid columns="3" border="0">
 			
-			<h:form id="form" prependId="false">
+				<p:outputLabel value="Centro de Custo:" for="centroCustoInput"/>
+				<p:selectOneMenu id="centroCustoInput" label="Centro de custo" value="#{valorComprometido.centroCusto}" converter="com.dupont.EntityConverter">						
+					<f:selectItem itemLabel="Selecione um centro de custo" itemValue="#{null}" />
+					<f:selectItems value="#{centroCustos}" var="item" itemLabel="#{item.codigo}" itemValue="#{item}" />
+				</p:selectOneMenu>
+				
+				<p:message for="centroCustoInput"/>
+				
+				<p:outputLabel value="Tipo de Despesa:" for="tipoDespesaInput"/>                    
+                   <p:selectOneMenu id="tipoDespesaInput" label="Tipo de Despesa" value="#{valorComprometido.tipoDespesa}" converter="com.dupont.EntityConverter">
+				
+					<f:selectItem itemLabel="Selecione um tipo de despesa" itemValue="#{null}" />
+					<f:selectItems value="#{tiposDespesa}" var="item" itemLabel="#{item.nome}" itemValue="#{item}"/>
+				</p:selectOneMenu>
+                   <p:message for="tipoDespesaInput"/>
+                   
+                   <p:outputLabel value="Ação:" for="acaoInput"/>
+                   <p:selectOneMenu id="acaoInput" value="#{valorComprometido.acao}" converter="com.dupont.EntityConverter">
+					<f:selectItem itemLabel="Selecione uma ação" itemValue="#{null}" />
+					<f:selectItems value="#{acoes}" var="item" itemLabel="#{item.nome}" itemValue="#{item}"/>						
+				</p:selectOneMenu>
+                   <p:message for="acaoInput"/>
+				
+				<p:commandButton value="Pesquisar" icon="ui-icon-search"   styleClass="button" action="#{valorComprometidoAction.find}" update="valorComprometidos"/>
+				<p:commandButton value="Novo"      icon="ui-icon-document" styleClass="button" action="#{valorComprometidoAction.newPage}"   />
+				<p:commandButton value="Carregar arquivo"  icon="ui-icon-arrowthickstop-1-n" styleClass="button" action="/pages/adm/valorComprometido/load.xhtml"   />
+			</h:panelGrid>
 			
-				<h:panelGrid columns="3" border="0">
-				
-					<p:outputLabel value="Centro de Custo:" for="centroCustoInput"/>
-					<p:selectOneMenu id="centroCustoInput" label="Centro de custo" value="#{valorComprometido.centroCusto}" converter="com.dupont.EntityConverter">						
-						<f:selectItem itemLabel="Selecione um centro de custo" itemValue="#{null}" />
-						<f:selectItems value="#{centroCustos}" var="item" itemLabel="#{item.codigo}" itemValue="#{item}" />
-					</p:selectOneMenu>
-					
-					<p:message for="centroCustoInput"/>
-					
-					<p:outputLabel value="Tipo de Despesa:" for="tipoDespesaInput"/>                    
-                    <p:selectOneMenu id="tipoDespesaInput" label="Tipo de Despesa" value="#{valorComprometido.tipoDespesa}" converter="com.dupont.EntityConverter">
-					
-						<f:selectItem itemLabel="Selecione um tipo de despesa" itemValue="#{null}" />
-						<f:selectItems value="#{tiposDespesa}" var="item" itemLabel="#{item.nome}" itemValue="#{item}"/>
-					</p:selectOneMenu>
-                    <p:message for="tipoDespesaInput"/>
-                    
-                    <p:outputLabel value="Ação:" for="acaoInput"/>
-                    <p:selectOneMenu id="acaoInput" value="#{valorComprometido.acao}" converter="com.dupont.EntityConverter">
-						<f:selectItem itemLabel="Selecione uma ação" itemValue="#{null}" />
-						<f:selectItems value="#{acoes}" var="item" itemLabel="#{item.nome}" itemValue="#{item}"/>						
-					</p:selectOneMenu>
-                    <p:message for="acaoInput"/>
-					
-					<p:commandButton value="Pesquisar" icon="ui-icon-search"   styleClass="button" action="#{valorComprometidoAction.find}" update="valorComprometidos"/>
-					<p:commandButton value="Novo"      icon="ui-icon-document" styleClass="button" action="#{valorComprometidoAction.newPage}"   />
-					<p:commandButton value="Carregar arquivo"  icon="ui-icon-arrowthickstop-1-n" styleClass="button" action="/pages/adm/valorComprometido/load.xhtml"   />
-				</h:panelGrid>
-				
-				<p:separator />
-				
-				<p:dataTable id="valorComprometidos" var="item" value="#{valorComprometidoAction.list}" emptyMessage="Nenhum registro encontrado."
-						paginator="true"
-						paginatorPosition="bottom"
-						rows="10">
-					<f:facet name="header">
-						Valores Comprometidos
-					</f:facet>
-					<p:column headerText="Centro de Custo" sortBy="#{item.centroCusto.nome}" >
-						#{item.centroCusto.nome}
-					</p:column>
-					<p:column headerText="Tipo de Despesa" sortBy="#{item.tipoDespesa.nome}" >
-                        #{item.tipoDespesa.nome}
-                    </p:column>
-                    <p:column headerText="Ação" sortBy="#{item.acao.nome}" >
-                        #{item.acao.nome}
-                    </p:column>
-                    <p:column headerText="Mês" sortBy="#{item.mes}" >
-                        #{item.mes}
-                    </p:column>
-					
-					<p:column headerText="Ações" width="10%">
-						
-						<p:commandButton icon="ui-icon-pencil" action="#{valorComprometidoAction.edit(item)}"   update="valorComprometidos" immediate="true"/>
-						<p:commandButton icon="ui-icon-trash"  action="#{valorComprometidoAction.delete(item)}" update="valorComprometidos" immediate="true">
-							<p:confirm header="Confirmação" message="Deseja realmente remover o dado?" icon="ui-icon-alert" />
-						</p:commandButton>
-						
-					</p:column>
-				
-				</p:dataTable>
-				
-				<p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
-			        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
-			        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no"  icon="ui-icon-close" />
-			    </p:confirmDialog>
-			</h:form>
+			<p:separator />
 			
-		</p:fieldset>
-		</p:panelGrid>		
+			<p:dataTable id="valorComprometidos" var="item" value="#{valorComprometidoAction.list}" emptyMessage="Nenhum registro encontrado."
+					paginator="true"
+					paginatorPosition="bottom"
+					rows="10">
+				<f:facet name="header">
+					Valores Comprometidos
+				</f:facet>
+				<p:column headerText="Centro de Custo" sortBy="#{item.centroCusto.nome}" >
+					#{item.centroCusto.nome}
+				</p:column>
+				<p:column headerText="Tipo de Despesa" sortBy="#{item.tipoDespesa.nome}" >
+                       #{item.tipoDespesa.nome}
+                   </p:column>
+                   <p:column headerText="Ação" sortBy="#{item.acao.nome}" >
+                       #{item.acao.nome}
+                   </p:column>
+                   <p:column headerText="Mês" sortBy="#{item.mes}" >
+                       #{item.mes}
+                   </p:column>
+				
+				<p:column headerText="Ações" width="10%">
+					
+					<p:commandButton icon="ui-icon-pencil" action="#{valorComprometidoAction.edit(item)}"   update="valorComprometidos" immediate="true"/>
+					<p:commandButton icon="ui-icon-trash"  action="#{valorComprometidoAction.delete(item)}" update="valorComprometidos" immediate="true">
+						<p:confirm header="Confirmação" message="Deseja realmente remover o dado?" icon="ui-icon-alert" />
+					</p:commandButton>
+					
+				</p:column>
+			
+			</p:dataTable>
+			
+			<p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+		        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+		        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no"  icon="ui-icon-close" />
+		    </p:confirmDialog>
+		</h:form>
 	</ui:define>
 	
 </ui:composition>

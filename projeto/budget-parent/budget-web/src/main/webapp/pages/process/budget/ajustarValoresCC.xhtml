@@ -15,8 +15,8 @@
 
 	<ui:define name="content">
 		<h:form id="form"> 
-			<p:panelGrid columns="1" styleClass="body-content">
-				<p:fieldset value="Ajustar o Budget aprovado por Centro de Custo" legend="Ajustar o Budget aprovado por Centro de Custo">
+			<p:panel id="content">
+				<h3>Ajustar o Budget aprovado por Centro de Custo</h3>
 				<p:panel>
 					<p:panelGrid columns="2">
 						<p:outputLabel value="Ano:"></p:outputLabel>
@@ -156,8 +156,7 @@
 							<p:confirm header="Confirmação" message="Confirma a conclusão da tarefa Ajustar o Budget aprovado por Centro de Custo?" icon="ui-icon-alert"/>
 						</p:commandButton>
 					</p:panelGrid>
-			</p:fieldset>
-			</p:panelGrid>
+			</p:panel>
 			</h:form>
 				<p:dialog header="#{not ajustarValoresBudgetAction.inclusao? 'Alterar Despesa' : 'Incluir Despesa'}  " id="criarDespesaPanel" widgetVar="criarDespesa" height="400"
 				resizable="false" draggable="false"

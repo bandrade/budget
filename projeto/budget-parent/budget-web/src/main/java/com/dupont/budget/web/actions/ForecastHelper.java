@@ -179,6 +179,7 @@ public class ForecastHelper {
 
 	public Boolean exibirColuna(String mounth,String mes)
 	{
+		if (mes != null) {
 		MesEnum mesEnum = MesEnum.valueOf(mounth);
 		MesEnum mesForecast = MesEnum.valueOf(mes.toUpperCase());
 
@@ -188,7 +189,7 @@ public class ForecastHelper {
 
 		if(mesForecast.getId() <= mesEnum.getId() )
 			return true;
-
+		}
 		return false;
 
 

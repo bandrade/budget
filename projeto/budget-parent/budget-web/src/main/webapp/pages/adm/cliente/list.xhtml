@@ -6,56 +6,50 @@
                 template="/WEB-INF/templates/default.xhtml">
                 
 	<ui:define name="content">
-	
-		<p:panel id="content">
-	
-			<h3>Pesquisa de Clientes</h3>
+		<h3>Pesquisa de Clientes</h3>
+		
+		<h:form id="form" prependId="false">
+		
+			<h:panelGrid columns="3" border="0">
 			
-			<h:form id="form" prependId="false">
-			
-				<h:panelGrid columns="3" border="0">
+				<p:outputLabel value="Nome:" for="nomeInput"/>
+				<p:inputText id="nomeInput" value="#{cliente.nome}"/>
+				<p:message for="nomeInput"/>
 				
-					<p:outputLabel value="Nome:" for="nomeInput"/>
-					<p:inputText id="nomeInput" value="#{cliente.nome}"/>
-					<p:message for="nomeInput"/>
+				<p:commandButton value="Pesquisar" icon="ui-icon-search"   styleClass="button" action="#{clienteAction.find}" update="clientes"/>
+				<p:commandButton value="Novo"      icon="ui-icon-document" styleClass="button" action="#{clienteAction.newPage}"   />
+			</h:panelGrid>
+			
+			<p:separator />
+			
+			<p:dataTable id="clientes" var="item" value="#{clienteAction.list}" emptyMessage="Nenhum registro encontrado."
+					paginator="true"
+					paginatorPosition="bottom"
+					rows="10"
+					>
+				<f:facet name="header">
+       				Clientes
+  						 </f:facet>
+				<p:column headerText="Nome" sortBy="#{item.nome}" >
+					#{item.nome}
+				</p:column>
+				
+				<p:column headerText="Ações" style="width:15%">
 					
-					<p:commandButton value="Pesquisar" icon="ui-icon-search"   styleClass="button" action="#{clienteAction.find}" update="clientes"/>
-					<p:commandButton value="Novo"      icon="ui-icon-document" styleClass="button" action="#{clienteAction.newPage}"   />
-				</h:panelGrid>
-				
-				<p:separator />
-				
-				<p:dataTable id="clientes" var="item" value="#{clienteAction.list}" emptyMessage="Nenhum registro encontrado."
-						paginator="true"
-						paginatorPosition="bottom"
-						rows="10"
-						>
-					<f:facet name="header">
-        				Clientes
-   						 </f:facet>
-					<p:column headerText="Nome" sortBy="#{item.nome}" >
-						#{item.nome}
-					</p:column>
+					<p:commandButton icon="ui-icon-pencil" action="#{clienteAction.edit(item)}"   update="clientes" immediate="true"/>
+					<p:commandButton icon="ui-icon-trash"  action="#{clienteAction.delete(item)}" update="clientes" immediate="true">
+						<p:confirm header="Confirmação" message="Deseja realmente remover o dado?" icon="ui-icon-alert" />
+					</p:commandButton>
 					
-					<p:column headerText="Ações" style="width:15%">
-						
-						<p:commandButton icon="ui-icon-pencil" action="#{clienteAction.edit(item)}"   update="clientes" immediate="true"/>
-						<p:commandButton icon="ui-icon-trash"  action="#{clienteAction.delete(item)}" update="clientes" immediate="true">
-							<p:confirm header="Confirmação" message="Deseja realmente remover o dado?" icon="ui-icon-alert" />
-						</p:commandButton>
-						
-					</p:column>
-				
-				</p:dataTable>
-				
-				<p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
-			        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
-			        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no"  icon="ui-icon-close" />
-			    </p:confirmDialog>
-			</h:form>
+				</p:column>
 			
-		</p:panel>
+			</p:dataTable>
 			
+			<p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+		        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+		        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no"  icon="ui-icon-close" />
+		    </p:confirmDialog>
+		</h:form>
 	</ui:define>
 	
 </ui:composition>

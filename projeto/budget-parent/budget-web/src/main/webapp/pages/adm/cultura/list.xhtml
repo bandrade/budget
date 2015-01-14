@@ -6,52 +6,48 @@
                 template="/WEB-INF/templates/default.xhtml">
                 
 	<ui:define name="content">
-		<p:panelGrid columns="1" styleClass="body-content">
-		<p:fieldset value="Pesquisa de Culturas" legend="Pesquisa de Culturas">
-			<h:form id="form" prependId="false">
+	    <h3>Pesquisa de Culturas</h3>
+		<h:form id="form" prependId="false">
+		
+			<h:panelGrid columns="3" border="0">
 			
-				<h:panelGrid columns="3" border="0">
+				<p:outputLabel value="Nome:" for="nomeInput"/>
+				<p:inputText id="nomeInput" value="#{cultura.nome}"/>
+				<p:message for="nomeInput"/>
 				
-					<p:outputLabel value="Nome:" for="nomeInput"/>
-					<p:inputText id="nomeInput" value="#{cultura.nome}"/>
-					<p:message for="nomeInput"/>
-					
-					<p:commandButton value="Pesquisar" icon="ui-icon-search"   styleClass="button" action="#{culturaAction.find}" update="culturas"/>
-					<p:commandButton value="Novo"      icon="ui-icon-document" styleClass="button" action="#{culturaAction.newPage}"   />
-				</h:panelGrid>
-				
-				<p:separator />
-				
-				<p:dataTable id="culturas" var="item" value="#{culturaAction.list}" emptyMessage="Nenhum registro encontrado."
-						paginator="true"
-						paginatorPosition="bottom"
-						rows="10">
-					<f:facet name="header">
-						Cultura
-					</f:facet>
-					<p:column headerText="Nome" sortBy="#{item.nome}" >
-						#{item.nome}
-					</p:column> 
-					
-					<p:column headerText="Ações" style="width:10%" >
-						
-						<p:commandButton icon="ui-icon-pencil" action="#{culturaAction.edit(item)}"   update="culturas" />
-						<p:commandButton icon="ui-icon-trash"  action="#{culturaAction.delete(item)}" update="culturas" >
-							<p:confirm header="Confirmação" message="Deseja realmente remover o dado?" icon="ui-icon-alert" />
-						</p:commandButton>
-						
-					</p:column>
-				
-				</p:dataTable>
-				
-				<p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
-			        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
-			        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no"  icon="ui-icon-close" />
-			    </p:confirmDialog>
-			</h:form>
-			</p:fieldset>
-			</p:panelGrid>
+				<p:commandButton value="Pesquisar" icon="ui-icon-search"   styleClass="button" action="#{culturaAction.find}" update="culturas"/>
+				<p:commandButton value="Novo"      icon="ui-icon-document" styleClass="button" action="#{culturaAction.newPage}"   />
+			</h:panelGrid>
 			
+			<p:separator />
+			
+			<p:dataTable id="culturas" var="item" value="#{culturaAction.list}" emptyMessage="Nenhum registro encontrado."
+					paginator="true"
+					paginatorPosition="bottom"
+					rows="10">
+				<f:facet name="header">
+					Cultura
+				</f:facet>
+				<p:column headerText="Nome" sortBy="#{item.nome}" >
+					#{item.nome}
+				</p:column> 
+				
+				<p:column headerText="Ações" style="width:10%" >
+					
+					<p:commandButton icon="ui-icon-pencil" action="#{culturaAction.edit(item)}"   update="culturas" />
+					<p:commandButton icon="ui-icon-trash"  action="#{culturaAction.delete(item)}" update="culturas" >
+						<p:confirm header="Confirmação" message="Deseja realmente remover o dado?" icon="ui-icon-alert" />
+					</p:commandButton>
+					
+				</p:column>
+			
+			</p:dataTable>
+			
+			<p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+		        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+		        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no"  icon="ui-icon-close" />
+		    </p:confirmDialog>
+		</h:form>
 	</ui:define>
 	
 </ui:composition>

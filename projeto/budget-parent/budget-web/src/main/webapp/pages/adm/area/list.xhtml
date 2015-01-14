@@ -6,56 +6,50 @@
                 template="/WEB-INF/templates/default.xhtml">
                 
 	<ui:define name="content">
-		<p:panelGrid columns="1" styleClass="body-content">
-		<p:fieldset value="Criar Pesquisa de Áreas" legend="Pesquisa de Áreas">
-			
-			
-			<h:form id="form" prependId="false">
-			
-				<h:panelGrid columns="3" border="0">
-				
-					<p:outputLabel value="Nome:" for="nomeInput"/>
-					<p:inputText id="nomeInput" value="#{area.nome}"/>
-					<p:message for="nomeInput"/>
-					
-					<p:commandButton value="Pesquisar" icon="ui-icon-search"   styleClass="button" action="#{areaAction.find}" update="areas"/>
-					<p:commandButton value="Novo"      icon="ui-icon-document" styleClass="button" action="#{areaAction.newPage}"   />
-				</h:panelGrid>
-				
-				<p:separator />
-				
-				<p:dataTable id="areas" var="item" value="#{areaAction.list}" emptyMessage="Nenhum registro encontrado."
-						paginator="true"
-						paginatorPosition="bottom"
-						rows="10">
-				
-					<f:facet name="header">
-						Área
-					</f:facet>
-					<p:column headerText="Nome" sortBy="#{item.nome}" >
-						#{item.nome}
-					</p:column>
-					
-					<p:column headerText="Ações" style="width:15%">
-						
-						<p:commandButton icon="ui-icon-pencil" action="#{areaAction.edit(item)}"   update="areas" immediate="true"/>
-						<p:commandButton icon="ui-icon-trash"  action="#{areaAction.delete(item)}" update="areas" immediate="true">
-							<p:confirm header="Confirmação" message="Deseja realmente remover o dado?" icon="ui-icon-alert" />
-						</p:commandButton>
-						
-					</p:column>
-				
-				</p:dataTable>
-				
-				<p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
-			        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
-			        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no"  icon="ui-icon-close" />
-			    </p:confirmDialog>
-			</h:form>
-			
+	    <h3>Pesquisa de Áreas</h3>
 		
-		</p:fieldset>
-		</p:panelGrid>
+		<h:form id="form" prependId="false">
+		
+			<h:panelGrid columns="3" border="0">
+			
+				<p:outputLabel value="Nome:" for="nomeInput"/>
+				<p:inputText id="nomeInput" value="#{area.nome}"/>
+				<p:message for="nomeInput"/>
+				
+				<p:commandButton value="Pesquisar" icon="ui-icon-search"   styleClass="button" action="#{areaAction.find}" update="areas"/>
+				<p:commandButton value="Novo"      icon="ui-icon-document" styleClass="button" action="#{areaAction.newPage}"   />
+			</h:panelGrid>
+			
+			<p:separator />
+			
+			<p:dataTable id="areas" var="item" value="#{areaAction.list}" emptyMessage="Nenhum registro encontrado."
+					paginator="true"
+					paginatorPosition="bottom"
+					rows="10">
+			
+				<f:facet name="header">
+					Área
+				</f:facet>
+				<p:column headerText="Nome" sortBy="#{item.nome}" >
+					#{item.nome}
+				</p:column>
+				
+				<p:column headerText="Ações" style="width:15%">
+					
+					<p:commandButton icon="ui-icon-pencil" action="#{areaAction.edit(item)}"   update="areas" immediate="true"/>
+					<p:commandButton icon="ui-icon-trash"  action="#{areaAction.delete(item)}" update="areas" immediate="true">
+						<p:confirm header="Confirmação" message="Deseja realmente remover o dado?" icon="ui-icon-alert" />
+					</p:commandButton>
+					
+				</p:column>
+			
+			</p:dataTable>
+			
+			<p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+		        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+		        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no"  icon="ui-icon-close" />
+		    </p:confirmDialog>
+		</h:form>
 	</ui:define>
 	
 </ui:composition>

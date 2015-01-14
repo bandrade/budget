@@ -658,9 +658,9 @@ public class SolicitacaoPagamentoAction implements Serializable {
 		
 		Map<String,Object> options = new HashMap<String, Object>();
 		options.put("modal", true);
-		options.put("draggable", false);
+		options.put("draggable", true);
 		options.put("resizable", false);
-		// options.put("contentHeight", 320);
+		//options.put("height", 265);
 		options.put("contentWidth", 800);
 		
 		RequestContext.getCurrentInstance().openDialog("rateio-dialog", options, null);

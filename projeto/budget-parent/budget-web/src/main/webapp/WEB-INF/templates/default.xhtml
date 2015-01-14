@@ -6,108 +6,136 @@
     
 	<h:head>
 	    <title>${artifactId}</title>
-	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />	
-	    
-	    <h:outputStylesheet library="css" name="default.css" />
-	    
-	    
+	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/css/default.css"/>
+	    <!--[if lt IE 9]>
+		<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
 	</h:head>
 	
 	<h:body>
-	
-		<p:layout styleClass="main" fullPage="true">
-			
-			<p:layoutUnit styleClass="layoutUnit sidebar" position="west" gutter="0" resizable="false" collapsible="false"  size="15%">
-				<ul class="menu">
-					<li><p:link  outcome="/pages/process/minhasTarefas.xhtml" value="Minhas tarefas"/>  </li>
-					<li> Lançar Despesa 
-						<ul>
-							<li> <p:link  outcome="/pages/process/pagamento/edit.xhtml" value="Iniciar Lançamento de Despesas"/>  </li>
-						
-						</ul>
-					
-					</li>
-					
-					
-					<h:panelGroup rendered="#{request.isUserInRole('ADMINISTRADOR')}">				
-					<li> 
-						Administração						
-						<ul>
-							<li> <p:link  outcome="/pages/adm/area/list.xhtml" value="Área"/> </li>
-							<li> <p:link  outcome="/pages/adm/cultura/list.xhtml" value="Cultura"/> </li>
-							<li> <p:link  outcome="/pages/adm/colaborador/list.xhtml" value="Colaborador"/> </li>
-							<li> <p:link  outcome="/pages/adm/produto/list.xhtml" value="Produto"/> </li>
-							<li> <p:link  outcome="/pages/adm/tipoDespesa/list.xhtml" value="Tipo de Despesa"/> </li>
-							<li> <p:link  outcome="/pages/adm/cliente/list.xhtml" value="Cliente"/> </li>
-							<li> <p:link  outcome="/pages/adm/papel/list.xhtml" value="Papel"/> </li>
-							<li> <p:link  outcome="/pages/adm/centroCusto/list.xhtml" value="Centro de Custo"/> </li>
-							<li> <p:link  outcome="/pages/adm/vendedor/list.xhtml" value="Vendedor"/> </li>
-							<li> <p:link  outcome="/pages/adm/fornecedor/list.xhtml" value="Fornecedor"/> </li>
-							<li> <p:link  outcome="/pages/adm/valorComprometido/list.xhtml" value="Valor Comprometido"/> </li>
-							<li> <p:link  outcome="/pages/adm/nota/list.xhtml" value="Upload Relatório SAP"/> </li>
-							<li> <p:link  outcome="/pages/adm/pagamento/list.xhtml" value="Pagamento"/> </li>
-						</ul>					
-					</li>
-					<li> 
-						Planning						
-						<ul>
-							<li> <p:link  outcome="/pages/adm/planning/iniciarProcessoBudget.xhtml" value="Iniciar Processo Budget"/> </li>
-							<li> <p:link  outcome="/pages/adm/planning/iniciarProcessoForecast.xhtml" value="Iniciar Processo Forecast"/> </li>
-						</ul>					
-					</li>
-					</h:panelGroup>
-				
-				</ul>
-			
-			</p:layoutUnit>
-			
-			<p:layoutUnit styleClass="layoutUnit" position="center" gutter="0" collapsible="false" closable="false" resizable="false" size="100%" >
-			
-			
-				<p:layout>
-				
-					<p:layoutUnit collapsible="false" resizable="false" gutter="0" styleClass="layoutUnit header"  position="north">
-					
-						<!-- Propriedade criada no classeLoggedUserAction -->
-						<h:panelGrid columns="1" style="text-align:right" width="100%">
-						<h:panelGrid columns="2" style="float:right;text-align:right" width="40%">
-						<p:column style="text-align:right" width="10%">
-							<h:outputText value="Bem-vindo #{loggedUsername} ao sistema de Budget da Dupont" style="color:white"/>
-						</p:column>
-						<p:column  width="5%"> 
-						<h:form><p:commandButton value="Logout" action="#{usuarioAction.logout()}" ajax="false" /></h:form>
-						</p:column>
-						
-						<h:panelGroup></h:panelGroup>
-						<p>Versão:0.0.8</p>
-						</h:panelGrid>
-						</h:panelGrid>
-					</p:layoutUnit>
-					
-					<p:layoutUnit resizable="false" styleClass="layoutUnit main" gutter="0" position="center" >
-					
-						<p:messages id="messages" showDetail="true" showSummary="false" autoUpdate="true" closable="true" globalOnly="true"/>
-	        	
-						<ui:insert name="content">
+	    <section class="top">
+	        <div class="ui-grid ui-grid-responsive">
+	            <div class="ui-grid-row">
+	                <div class="ui-grid-col-12"><a href="#"><span class="ui-icon ui-icon-arrow-1-w"></span>VOLTAR</a></div>
+	            </div>
+	       </div>
+	    </section>
+	    <section class="header">
+	        <div class="ui-grid ui-grid-responsive">
+	            <div class="ui-grid-row">
+	                <div class="ui-grid-col-4 header-back" style="padding-top:10px;">
+		                <div class="ui-grid ui-grid-responsive">
+	                        <div class="ui-grid-row">
+            	                <div class="ui-grid-col-12"><h:graphicImage library="images" name="logo.png" height="30" /></div>
+	                        </div>
+	                        <div class="ui-grid-row">
+	                           <div class="ui-grid-col-12"><h2>BUDGET</h2></div>
+	                        </div>
+	                    </div>
+	                </div>
+	                <div class="ui-grid-col-8 search">
+	                    <secion>
+	                        <div class="ui-grid ui-grid-responsive">
+	                            <div class="ui-grid-row">
+	                                <div class="ui-grid-col-12">
+	        	                       <span style="color:#ccc;">Bem vindo </span>#{loggedUsername} <span style="color:#ccc;">Versão:0.0.8</span>
+	        	                    </div>
+	                            </div>
+	                            <div class="ui-grid-row">
+	                                <div class="ui-grid-col-12">
+	        	                       <input type="text" placeholder="Pesquisar..." style="width:80%;" />
+	        	                    </div>
+	                            </div>
+	                        </div>
+                        </secion>
+	                </div>
+                </div>
+	       </div>
+	    </section>
+	    <section class="menu">
+	        <div class="ui-grid ui-grid-responsive">
+	            <div class="ui-grid-row">
+	                <div class="ui-grid-col-12">
+	                    <nav>
+	                        <ul class="menu-container">
+                                <li><p:link  outcome="/pages/process/minhasTarefas.xhtml" value="Minhas tarefas"/>  </li>
+			                    <li><a href="#">Lançar Despesa</a> 
+			                        <ul>
+			                            <li> <p:link  outcome="/pages/process/pagamento/edit.xhtml" value="Iniciar Lançamento de Despesas"/>  </li>
+			                        </ul>
+			                    </li>
+			                     
+			                    <h:panelGroup rendered="#{request.isUserInRole('ADMINISTRADOR')}">              
+			                    <li><a ref="#">Administração</a>                       
+			                        <ul>
+			                            <li> <p:link  outcome="/pages/adm/area/list.xhtml" value="Área"/> </li>
+			                            <li> <p:link  outcome="/pages/adm/cultura/list.xhtml" value="Cultura"/> </li>
+			                            <li> <p:link  outcome="/pages/adm/colaborador/list.xhtml" value="Colaborador"/> </li>
+			                            <li> <p:link  outcome="/pages/adm/produto/list.xhtml" value="Produto"/> </li>
+			                            <li> <p:link  outcome="/pages/adm/tipoDespesa/list.xhtml" value="Tipo de Despesa"/> </li>
+			                            <li> <p:link  outcome="/pages/adm/cliente/list.xhtml" value="Cliente"/> </li>
+			                            <li> <p:link  outcome="/pages/adm/papel/list.xhtml" value="Papel"/> </li>
+			                            <li> <p:link  outcome="/pages/adm/centroCusto/list.xhtml" value="Centro de Custo"/> </li>
+			                            <li> <p:link  outcome="/pages/adm/vendedor/list.xhtml" value="Vendedor"/> </li>
+			                            <li> <p:link  outcome="/pages/adm/fornecedor/list.xhtml" value="Fornecedor"/> </li>
+			                            <li> <p:link  outcome="/pages/adm/valorComprometido/list.xhtml" value="Valor Comprometido"/> </li>
+			                            <li> <p:link  outcome="/pages/adm/nota/list.xhtml" value="Upload Relatório SAP"/> </li>
+			                            <li> <p:link  outcome="/pages/adm/pagamento/list.xhtml" value="Pagamento"/> </li>
+			                        </ul>                   
+			                    </li>
+			                    <li><a href="#">Planning</a>                        
+			                        <ul>
+			                            <li> <p:link  outcome="/pages/adm/planning/iniciarProcessoBudget.xhtml" value="Iniciar Processo Budget"/> </li>
+			                            <li> <p:link  outcome="/pages/adm/planning/iniciarProcessoForecast.xhtml" value="Iniciar Processo Forecast"/> </li>
+			                        </ul>                   
+			                    </li>
+			                    </h:panelGroup>
+			                    <li><h:form><p:commandLink value="Logout" action="#{usuarioAction.logout()}" ajax="false" /></h:form></li>               
+	                        </ul>
+	                    </nav>
+	                </div>
+	            </div>
+	       </div>
+	    </section>
+	    <section class="content">
+	        <div class="ui-grid ui-grid-responsive">
+	            <div class="ui-grid-row">
+                    <div class="ui-grid-col-12">
+    		            <p:messages id="messages" showDetail="true" showSummary="false" autoUpdate="true" closable="true" globalOnly="true"/>
+                    </div>
+                </div>
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12">	    
+			            <ui:insert name="content">
 			                    [Template content will be inserted here]
-						</ui:insert>
-					
-					</p:layoutUnit>
-				
-				</p:layout>
-			
-			
-			</p:layoutUnit>
-		
-		</p:layout>
-			<p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false" style="background-color:white">
-    						<p:graphicImage value="/resources/images/ajaxloadingbar.gif" />
-		   </p:dialog>
+			            </ui:insert>
+	                </div>
+                </div>
+            </div>
+	    </section>
+		<p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false" style="background-color:white">
+			<p:graphicImage value="/resources/images/ajaxloadingbar.gif" />
+	    </p:dialog>
  
 		<p:confirmDialog global="true" showEffect="fade" hideEffect="slide" style="background-color:white">
-			        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
-			        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no"  icon="ui-icon-close" />
-			    </p:confirmDialog>
+	        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+	        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no"  icon="ui-icon-close" />
+	    </p:confirmDialog>
+	    <p:layout fullPage="false">
+	       <p:layoutUnit visible="false" position="center" id="teste">holder</p:layoutUnit>
+	    </p:layout>
+	    <script type="text/javascript">
+	        $("#slideshow > div:gt(0)").hide();
+	    
+	        setInterval(function() { 
+	          $('#slideshow > div:first')
+	            .fadeOut(3000)
+	            .next()
+	            .fadeIn(3000)
+	            .end()
+	            .appendTo('#slideshow');
+	        },  3000);
+	    </script>
 	</h:body>
-	
 </html>

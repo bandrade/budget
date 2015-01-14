@@ -15,206 +15,201 @@
 
 	<ui:define name="content">
 		<h:form id="form"> 
-			<p:panelGrid columns="1" styleClass="body-content">
-				<p:fieldset value="Atualizar Forecast" legend="Atualizar Forecast">
-				<p:panel>
-					<p:panelGrid columns="2">
-						<p:outputLabel value="Centro de Custo:"></p:outputLabel>
-						<p:outputLabel styleClass="bold-label" value="#{atualizarForecastAction.centroDeCusto.nome}"></p:outputLabel>
-						<p:outputLabel value="Ano:"></p:outputLabel>
-						<p:outputLabel styleClass="bold-label" value="#{atualizarForecastAction.ano}"></p:outputLabel>
-						<p:outputLabel value="Mes:"></p:outputLabel>
-						<p:outputLabel styleClass="bold-label" value="#{atualizarForecastAction.mes}"></p:outputLabel>
-						
-					</p:panelGrid>
-					<p:panelGrid columns="1" styleClass="painel-botoes">
-						<p:commandButton value="Incluir Despesa"
-							oncomplete="PF('criarDespesa').show();" action="#{atualizarForecastAction.trataInclusao()}" update=":criarDespesaPanel,:formDespesa"/>
-					</p:panelGrid>
-					<p:panelGrid id="panelDetalhe" columns="1">
-					<p:dataTable 
-						id="tblDespesa"
-						emptyMessage="Não existem despesas cadastradas" 
-						value="#{atualizarForecastAction.despesasNoDetalhe}"
-						selection="#{atualizarForecastAction.despesaDetalheSelecionada}"
-						var="detalheDespesa"
-						paginator="true"
-						paginatorPosition="bottom"
-						rows="20" style="margin-left:-10px"
-						scrollable="true"
-						scrollWidth="600"
-						frozenColumns="5">
+			<p:panel id="content">
+			    <h3>Atualizar Forecast</h3>
+				<p:panelGrid columns="2">
+					<p:outputLabel value="Centro de Custo:"></p:outputLabel>
+					<p:outputLabel styleClass="bold-label" value="#{atualizarForecastAction.centroDeCusto.nome}"></p:outputLabel>
+					<p:outputLabel value="Ano:"></p:outputLabel>
+					<p:outputLabel styleClass="bold-label" value="#{atualizarForecastAction.ano}"></p:outputLabel>
+					<p:outputLabel value="Mes:"></p:outputLabel>
+					<p:outputLabel styleClass="bold-label" value="#{atualizarForecastAction.mes}"></p:outputLabel>
+				</p:panelGrid>
+				<p:panelGrid columns="1" styleClass="painel-botoes">
+					<p:commandButton value="Incluir Despesa"
+						oncomplete="PF('criarDespesa').show();" action="#{atualizarForecastAction.trataInclusao()}" update=":criarDespesaPanel,:formDespesa"/>
+				</p:panelGrid>
+				<p:panelGrid id="panelDetalhe" columns="1">
+				<p:dataTable 
+					id="tblDespesa"
+					emptyMessage="Não existem despesas cadastradas" 
+					value="#{atualizarForecastAction.despesasNoDetalhe}"
+					selection="#{atualizarForecastAction.despesaDetalheSelecionada}"
+					var="detalheDespesa"
+					paginator="true"
+					paginatorPosition="bottom"
+					rows="20" style="margin-left:-10px"
+					scrollable="true"
+					scrollWidth="600"
+					frozenColumns="5">
+					<f:facet name="header">
+       				 Despesa
+  						 </f:facet>
+  						 <p:column width="50" >
 						<f:facet name="header">
-        				 Despesa
-   						 </f:facet>
-   						 <p:column width="50" >
-							<f:facet name="header">
-								<h:outputText value="Tipo Despesa" />
-							</f:facet>
-							<h:outputText value="#{detalheDespesa.tipoDespesa.nome}" />
-						</p:column>
-						<p:column width="50" >
-							<f:facet name="header">
-								<h:outputText value="Ação" />
-							</f:facet>
-							<h:outputText value="#{detalheDespesa.acao.nome}"/>
-						</p:column>
-						<p:column width="50" footerText="#{facesUtils.formatarDinheiro(atualizarForecastAction.calcularTotalYTD())}" style="text-align:center"  >
-							<f:facet name="header">
-								<h:outputText value="YTD" />
-							</f:facet>
-							<h:outputText value="#{detalheDespesa.ytd}" >
-								<f:convertNumber type="currency"/>
-							</h:outputText>
-						</p:column> 
-						<p:column width="50" footerText="#{facesUtils.formatarDinheiro(atualizarForecastAction.calcularTotalBudget())}" style="text-align:center" >
-							<f:facet name="header" rowspan="2">
-								<h:outputText value="Budget Ano" />
-							</f:facet>
-							<h:outputText value="#{detalheDespesa.despesaBudget.valor}" >
-								<f:convertNumber type="currency"/>
-							</h:outputText>
-						</p:column> 
-						<p:column width="100" footerText="#{facesUtils.formatarDinheiro(atualizarForecastAction.calcularTotalPLM())}" style="text-align:center" >
-							<f:facet name="header">
-								<h:outputText value="PLM Forecast" />
-							</f:facet>
-							<h:outputText value="#{detalheDespesa.plm}" >
-								<f:convertNumber type="currency"/>
-							</h:outputText>
-						</p:column> 
-						
-						<p:column rendered="#{atualizarForecastAction.exibirColuna('JANEIRO')}" style="text-align:center"
-								 width="#{atualizarForecastAction.exibirDespesa('JANEIRO')? 200 :100}" footerText="#{facesUtils.formatarDinheiro(atualizarForecastAction.calcularValorColuna('JANEIRO'))}" >
-							<f:facet name="header">
-								<h:outputText value="Jan." />
-							</f:facet>
-							<pe:inputNumber  id="valorJan" value="#{detalheDespesa.despesaMensalisada.janeiro}" converter="javax.faces.Double" >
-								<p:ajax   listener="#{atualizarForecastAction.despesaAlterada(detalheDespesa,'JANEIRO')}" update=":form" process="@this"></p:ajax>
-							</pe:inputNumber>
-							<h:outputText rendered="#{atualizarForecastAction.exibirDespesa('JANEIRO')}" value="/#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaJaneiro)}" />
-						</p:column> 
-						<p:column rendered="#{atualizarForecastAction.exibirColuna('FEVEREIRO')}" style="text-align:center"
-								 width="#{atualizarForecastAction.exibirDespesa('FEVEREIRO')? 200 :100}" footerText="#{facesUtils.formatarDinheiro(atualizarForecastAction.calcularValorColuna('FEVEREIRO'))}" >
-							<f:facet name="header">
-								<h:outputText value="Fev." />
-							</f:facet>
-							<pe:inputNumber  id="valorFev" value="#{detalheDespesa.despesaMensalisada.fevereiro}" converter="javax.faces.Double" >
-								<p:ajax   listener="#{atualizarForecastAction.despesaAlterada(detalheDespesa,'FEVEREIRO')}" update=":form" process="@this"></p:ajax>
-							</pe:inputNumber>
-							<h:outputText rendered="#{atualizarForecastAction.exibirDespesa('FEVEREIRO')}" value="/#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaFevereiro)}" />
-						</p:column> 
-						<p:column rendered="#{atualizarForecastAction.exibirColuna('MARCO')}" style="text-align:center"
-								 width="#{atualizarForecastAction.exibirDespesa('MARCO')? 200 :100}" footerText="#{facesUtils.formatarDinheiro(atualizarForecastAction.calcularValorColuna('MARCO'))}" >
-							<f:facet name="header">
-								<h:outputText value="Mar." />
-							</f:facet>
-							<pe:inputNumber  id="valorMar" value="#{detalheDespesa.despesaMensalisada.marco}" converter="javax.faces.Double" >
-								<p:ajax   listener="#{atualizarForecastAction.despesaAlterada(detalheDespesa,'MARCO')}" update=":form" process="@this"></p:ajax>
-							</pe:inputNumber>
-							<h:outputText rendered="#{atualizarForecastAction.exibirDespesa('MARCO')}" value="/#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaMarco)}" />
-						</p:column> 
-						<p:column rendered="#{atualizarForecastAction.exibirColuna('MAIO')}" style="text-align:center"
-								 width="#{atualizarForecastAction.exibirDespesa('MAIO')? 200 :100}" footerText="#{facesUtils.formatarDinheiro(atualizarForecastAction.calcularValorColuna('MAIO'))}" >
-							<f:facet name="header">
-								<h:outputText value="Mai." />
-							</f:facet>
-							<pe:inputNumber  id="valorMai" value="#{detalheDespesa.despesaMensalisada.maio}" converter="javax.faces.Double" >
-								<p:ajax   listener="#{atualizarForecastAction.despesaAlterada(detalheDespesa,'MAIO')}" update=":form" process="@this"></p:ajax>
-							</pe:inputNumber>
-							<h:outputText rendered="#{atualizarForecastAction.exibirDespesa('MAIO')}" value="/#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaMaio)}" />
-						</p:column> 
-						<p:column rendered="#{atualizarForecastAction.exibirColuna('JUNHO')}" style="text-align:center"
-								 width="#{atualizarForecastAction.exibirDespesa('JUNHO')? 200 :100}" footerText="#{facesUtils.formatarDinheiro(atualizarForecastAction.calcularValorColuna('JUNHO'))}" >
-							<f:facet name="header">
-								<h:outputText value="Jun." />
-							</f:facet>
-							<pe:inputNumber  id="valorJun" value="#{detalheDespesa.despesaMensalisada.junho}" converter="javax.faces.Double" >
-								<p:ajax   listener="#{atualizarForecastAction.despesaAlterada(detalheDespesa,'JUNHO')}" update=":form" process="@this"></p:ajax>
-							</pe:inputNumber>
-							<h:outputText rendered="#{atualizarForecastAction.exibirDespesa('JUNHO')}" value="/#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaJunho)}" />
-						</p:column> 
-						<p:column rendered="#{atualizarForecastAction.exibirColuna('JULHO')}" style="text-align:center"
-								 width="#{atualizarForecastAction.exibirDespesa('JULHO')? 200 :100}" footerText="#{facesUtils.formatarDinheiro(atualizarForecastAction.calcularValorColuna('JULHO'))}" >
-							<f:facet name="header">
-								<h:outputText value="Jul." />
-							</f:facet>
-							<pe:inputNumber  id="valorJul" value="#{detalheDespesa.despesaMensalisada.julho}" converter="javax.faces.Double" >
-								<p:ajax   listener="#{atualizarForecastAction.despesaAlterada(detalheDespesa,'JULHO')}" update=":form" process="@this"></p:ajax>
-							</pe:inputNumber>
-							<h:outputText rendered="#{atualizarForecastAction.exibirDespesa('JULHO')}" value="/#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaJulho)}" />
-						</p:column> 
-						<p:column rendered="#{atualizarForecastAction.exibirColuna('AGOSTO')}" style="text-align:center"
-								 width="#{atualizarForecastAction.exibirDespesa('AGOSTO')? 200 :100}" footerText="#{facesUtils.formatarDinheiro(atualizarForecastAction.calcularValorColuna('AGOSTO'))}" >
-							<f:facet name="header">
-								<h:outputText value="Ago." />
-							</f:facet>
-							<pe:inputNumber  id="valorAgo" value="#{detalheDespesa.despesaMensalisada.agosto}" converter="javax.faces.Double" >
-								<p:ajax   listener="#{atualizarForecastAction.despesaAlterada(detalheDespesa,'AGOSTO')}" update=":form" process="@this"></p:ajax>
-							</pe:inputNumber>
-							<h:outputText rendered="#{atualizarForecastAction.exibirDespesa('AGOSTO')}" value="/#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaAgosto)}" />
-						</p:column> 
-						<p:column rendered="#{atualizarForecastAction.exibirColuna('SETEMBRO')}" style="text-align:center"
-								 width="#{atualizarForecastAction.exibirDespesa('SETEMBRO')? 200 :100}" footerText="#{facesUtils.formatarDinheiro(atualizarForecastAction.calcularValorColuna('SETEMBRO'))}" >
-							<f:facet name="header">
-								<h:outputText value="Set." />
-							</f:facet>
-							<pe:inputNumber  id="valorSet" value="#{detalheDespesa.despesaMensalisada.setembro}" converter="javax.faces.Double" >
-								<p:ajax   listener="#{atualizarForecastAction.despesaAlterada(detalheDespesa,'SETEMBRO')}" update=":form" process="@this"></p:ajax>
-							</pe:inputNumber>
-							<h:outputText rendered="#{atualizarForecastAction.exibirDespesa('SETEMBRO')}" value="/#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaSetembro)}" />
-						</p:column> 
-						<p:column rendered="#{atualizarForecastAction.exibirColuna('OUTUBRO')}" style="text-align:center"
-								 width="#{atualizarForecastAction.exibirDespesa('OUTUBRO')? 200 :100}" footerText="#{facesUtils.formatarDinheiro(atualizarForecastAction.calcularValorColuna('OUTUBRO'))}" >
-							<f:facet name="header">
-								<h:outputText value="Out." />
-							</f:facet>
-							<pe:inputNumber  id="valorOut" value="#{detalheDespesa.despesaMensalisada.outubro}" converter="javax.faces.Double" >
-								<p:ajax   listener="#{atualizarForecastAction.despesaAlterada(detalheDespesa,'OUTUBRO')}" update=":form" process="@this"></p:ajax>
-							</pe:inputNumber>
-							<h:outputText rendered="#{atualizarForecastAction.exibirDespesa('OUTUBRO')}" value="/#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaOutubro)}" />
-						</p:column> 
-						<p:column rendered="#{atualizarForecastAction.exibirColuna('NOVEMBRO')}" style="text-align:center"
-								 width="#{atualizarForecastAction.exibirDespesa('NOVEMBRO')? 200 :100}" footerText="#{facesUtils.formatarDinheiro(atualizarForecastAction.calcularValorColuna('NOVEMBRO'))}" >
-							<f:facet name="header">
-								<h:outputText value="Nov." />
-							</f:facet>
-							<pe:inputNumber  id="valorNov" value="#{detalheDespesa.despesaMensalisada.novembro}" converter="javax.faces.Double" >
-								<p:ajax   listener="#{atualizarForecastAction.despesaAlterada(detalheDespesa,'NOVEMBRO')}" update=":form" process="@this"></p:ajax>
-							</pe:inputNumber>
-							<h:outputText rendered="#{atualizarForecastAction.exibirDespesa('NOVEMBRO')}" value="/#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaNovembro)}" />
-						</p:column> 
-						<p:column rendered="#{atualizarForecastAction.exibirColuna('DEZEMBRO')}" style="text-align:center"
-								 width="#{atualizarForecastAction.exibirDespesa('DEZEMBRO')? 200 :100}" footerText="#{facesUtils.formatarDinheiro(atualizarForecastAction.calcularValorColuna('DEZEMBRO'))}" >
-							<f:facet name="header">
-								<h:outputText value="Dez." />
-							</f:facet>
-							<pe:inputNumber  id="valorDez" value="#{detalheDespesa.despesaMensalisada.dezembro}" converter="javax.faces.Double" >
-								<p:ajax   listener="#{atualizarForecastAction.despesaAlterada(detalheDespesa,'DEZEMBRO')}" update=":form" process="@this"></p:ajax>
-							</pe:inputNumber>
-							<h:outputText rendered="#{atualizarForecastAction.exibirDespesa('DEZEMBRO')}" value="/#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaDezembro)}" />
-						</p:column> 
-						<p:column width="100" footerText="#{facesUtils.formatarDinheiro(atualizarForecastAction.calcularTotalAno())}" style="text-align:center" >
-							<f:facet name="header">
-								<h:outputText value="Total ano" />
-							</f:facet>
-							<h:outputText value="#{detalheDespesa.valor}" >
-								<f:convertNumber type="currency"/>
-							</h:outputText>
-				     	</p:column> 
-					</p:dataTable>
+							<h:outputText value="Tipo Despesa" />
+						</f:facet>
+						<h:outputText value="#{detalheDespesa.tipoDespesa.nome}" />
+					</p:column>
+					<p:column width="50" >
+						<f:facet name="header">
+							<h:outputText value="Ação" />
+						</f:facet>
+						<h:outputText value="#{detalheDespesa.acao.nome}"/>
+					</p:column>
+					<p:column width="50" footerText="#{facesUtils.formatarDinheiro(atualizarForecastAction.calcularTotalYTD())}" style="text-align:center"  >
+						<f:facet name="header">
+							<h:outputText value="YTD" />
+						</f:facet>
+						<h:outputText value="#{detalheDespesa.ytd}" >
+							<f:convertNumber type="currency"/>
+						</h:outputText>
+					</p:column> 
+					<p:column width="50" footerText="#{facesUtils.formatarDinheiro(atualizarForecastAction.calcularTotalBudget())}" style="text-align:center" >
+						<f:facet name="header" rowspan="2">
+							<h:outputText value="Budget Ano" />
+						</f:facet>
+						<h:outputText value="#{detalheDespesa.despesaBudget.valor}" >
+							<f:convertNumber type="currency"/>
+						</h:outputText>
+					</p:column> 
+					<p:column width="100" footerText="#{facesUtils.formatarDinheiro(atualizarForecastAction.calcularTotalPLM())}" style="text-align:center" >
+						<f:facet name="header">
+							<h:outputText value="PLM Forecast" />
+						</f:facet>
+						<h:outputText value="#{detalheDespesa.plm}" >
+							<f:convertNumber type="currency"/>
+						</h:outputText>
+					</p:column> 
 					
-					
-					</p:panelGrid>
-						<p:panelGrid columns="1" styleClass="painel-botoes">
-						<p:commandButton value="Concluir"  action="#{atualizarForecastAction.concluir()}" onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()">
-							<p:confirm header="Confirmação" message="Confirma a conclusão da Aprovação do Budget?" icon="ui-icon-alert"/>
-						</p:commandButton>
-					</p:panelGrid>
-					</p:panel>
-				</p:fieldset>
-			
-			</p:panelGrid>
+					<p:column rendered="#{atualizarForecastAction.exibirColuna('JANEIRO')}" style="text-align:center"
+							 width="#{atualizarForecastAction.exibirDespesa('JANEIRO')? 200 :100}" footerText="#{facesUtils.formatarDinheiro(atualizarForecastAction.calcularValorColuna('JANEIRO'))}" >
+						<f:facet name="header">
+							<h:outputText value="Jan." />
+						</f:facet>
+						<pe:inputNumber  id="valorJan" value="#{detalheDespesa.despesaMensalisada.janeiro}" converter="javax.faces.Double" >
+							<p:ajax   listener="#{atualizarForecastAction.despesaAlterada(detalheDespesa,'JANEIRO')}" update=":form" process="@this"></p:ajax>
+						</pe:inputNumber>
+						<h:outputText rendered="#{atualizarForecastAction.exibirDespesa('JANEIRO')}" value="/#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaJaneiro)}" />
+					</p:column> 
+					<p:column rendered="#{atualizarForecastAction.exibirColuna('FEVEREIRO')}" style="text-align:center"
+							 width="#{atualizarForecastAction.exibirDespesa('FEVEREIRO')? 200 :100}" footerText="#{facesUtils.formatarDinheiro(atualizarForecastAction.calcularValorColuna('FEVEREIRO'))}" >
+						<f:facet name="header">
+							<h:outputText value="Fev." />
+						</f:facet>
+						<pe:inputNumber  id="valorFev" value="#{detalheDespesa.despesaMensalisada.fevereiro}" converter="javax.faces.Double" >
+							<p:ajax   listener="#{atualizarForecastAction.despesaAlterada(detalheDespesa,'FEVEREIRO')}" update=":form" process="@this"></p:ajax>
+						</pe:inputNumber>
+						<h:outputText rendered="#{atualizarForecastAction.exibirDespesa('FEVEREIRO')}" value="/#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaFevereiro)}" />
+					</p:column> 
+					<p:column rendered="#{atualizarForecastAction.exibirColuna('MARCO')}" style="text-align:center"
+							 width="#{atualizarForecastAction.exibirDespesa('MARCO')? 200 :100}" footerText="#{facesUtils.formatarDinheiro(atualizarForecastAction.calcularValorColuna('MARCO'))}" >
+						<f:facet name="header">
+							<h:outputText value="Mar." />
+						</f:facet>
+						<pe:inputNumber  id="valorMar" value="#{detalheDespesa.despesaMensalisada.marco}" converter="javax.faces.Double" >
+							<p:ajax   listener="#{atualizarForecastAction.despesaAlterada(detalheDespesa,'MARCO')}" update=":form" process="@this"></p:ajax>
+						</pe:inputNumber>
+						<h:outputText rendered="#{atualizarForecastAction.exibirDespesa('MARCO')}" value="/#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaMarco)}" />
+					</p:column> 
+					<p:column rendered="#{atualizarForecastAction.exibirColuna('MAIO')}" style="text-align:center"
+							 width="#{atualizarForecastAction.exibirDespesa('MAIO')? 200 :100}" footerText="#{facesUtils.formatarDinheiro(atualizarForecastAction.calcularValorColuna('MAIO'))}" >
+						<f:facet name="header">
+							<h:outputText value="Mai." />
+						</f:facet>
+						<pe:inputNumber  id="valorMai" value="#{detalheDespesa.despesaMensalisada.maio}" converter="javax.faces.Double" >
+							<p:ajax   listener="#{atualizarForecastAction.despesaAlterada(detalheDespesa,'MAIO')}" update=":form" process="@this"></p:ajax>
+						</pe:inputNumber>
+						<h:outputText rendered="#{atualizarForecastAction.exibirDespesa('MAIO')}" value="/#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaMaio)}" />
+					</p:column> 
+					<p:column rendered="#{atualizarForecastAction.exibirColuna('JUNHO')}" style="text-align:center"
+							 width="#{atualizarForecastAction.exibirDespesa('JUNHO')? 200 :100}" footerText="#{facesUtils.formatarDinheiro(atualizarForecastAction.calcularValorColuna('JUNHO'))}" >
+						<f:facet name="header">
+							<h:outputText value="Jun." />
+						</f:facet>
+						<pe:inputNumber  id="valorJun" value="#{detalheDespesa.despesaMensalisada.junho}" converter="javax.faces.Double" >
+							<p:ajax   listener="#{atualizarForecastAction.despesaAlterada(detalheDespesa,'JUNHO')}" update=":form" process="@this"></p:ajax>
+						</pe:inputNumber>
+						<h:outputText rendered="#{atualizarForecastAction.exibirDespesa('JUNHO')}" value="/#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaJunho)}" />
+					</p:column> 
+					<p:column rendered="#{atualizarForecastAction.exibirColuna('JULHO')}" style="text-align:center"
+							 width="#{atualizarForecastAction.exibirDespesa('JULHO')? 200 :100}" footerText="#{facesUtils.formatarDinheiro(atualizarForecastAction.calcularValorColuna('JULHO'))}" >
+						<f:facet name="header">
+							<h:outputText value="Jul." />
+						</f:facet>
+						<pe:inputNumber  id="valorJul" value="#{detalheDespesa.despesaMensalisada.julho}" converter="javax.faces.Double" >
+							<p:ajax   listener="#{atualizarForecastAction.despesaAlterada(detalheDespesa,'JULHO')}" update=":form" process="@this"></p:ajax>
+						</pe:inputNumber>
+						<h:outputText rendered="#{atualizarForecastAction.exibirDespesa('JULHO')}" value="/#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaJulho)}" />
+					</p:column> 
+					<p:column rendered="#{atualizarForecastAction.exibirColuna('AGOSTO')}" style="text-align:center"
+							 width="#{atualizarForecastAction.exibirDespesa('AGOSTO')? 200 :100}" footerText="#{facesUtils.formatarDinheiro(atualizarForecastAction.calcularValorColuna('AGOSTO'))}" >
+						<f:facet name="header">
+							<h:outputText value="Ago." />
+						</f:facet>
+						<pe:inputNumber  id="valorAgo" value="#{detalheDespesa.despesaMensalisada.agosto}" converter="javax.faces.Double" >
+							<p:ajax   listener="#{atualizarForecastAction.despesaAlterada(detalheDespesa,'AGOSTO')}" update=":form" process="@this"></p:ajax>
+						</pe:inputNumber>
+						<h:outputText rendered="#{atualizarForecastAction.exibirDespesa('AGOSTO')}" value="/#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaAgosto)}" />
+					</p:column> 
+					<p:column rendered="#{atualizarForecastAction.exibirColuna('SETEMBRO')}" style="text-align:center"
+							 width="#{atualizarForecastAction.exibirDespesa('SETEMBRO')? 200 :100}" footerText="#{facesUtils.formatarDinheiro(atualizarForecastAction.calcularValorColuna('SETEMBRO'))}" >
+						<f:facet name="header">
+							<h:outputText value="Set." />
+						</f:facet>
+						<pe:inputNumber  id="valorSet" value="#{detalheDespesa.despesaMensalisada.setembro}" converter="javax.faces.Double" >
+							<p:ajax   listener="#{atualizarForecastAction.despesaAlterada(detalheDespesa,'SETEMBRO')}" update=":form" process="@this"></p:ajax>
+						</pe:inputNumber>
+						<h:outputText rendered="#{atualizarForecastAction.exibirDespesa('SETEMBRO')}" value="/#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaSetembro)}" />
+					</p:column> 
+					<p:column rendered="#{atualizarForecastAction.exibirColuna('OUTUBRO')}" style="text-align:center"
+							 width="#{atualizarForecastAction.exibirDespesa('OUTUBRO')? 200 :100}" footerText="#{facesUtils.formatarDinheiro(atualizarForecastAction.calcularValorColuna('OUTUBRO'))}" >
+						<f:facet name="header">
+							<h:outputText value="Out." />
+						</f:facet>
+						<pe:inputNumber  id="valorOut" value="#{detalheDespesa.despesaMensalisada.outubro}" converter="javax.faces.Double" >
+							<p:ajax   listener="#{atualizarForecastAction.despesaAlterada(detalheDespesa,'OUTUBRO')}" update=":form" process="@this"></p:ajax>
+						</pe:inputNumber>
+						<h:outputText rendered="#{atualizarForecastAction.exibirDespesa('OUTUBRO')}" value="/#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaOutubro)}" />
+					</p:column> 
+					<p:column rendered="#{atualizarForecastAction.exibirColuna('NOVEMBRO')}" style="text-align:center"
+							 width="#{atualizarForecastAction.exibirDespesa('NOVEMBRO')? 200 :100}" footerText="#{facesUtils.formatarDinheiro(atualizarForecastAction.calcularValorColuna('NOVEMBRO'))}" >
+						<f:facet name="header">
+							<h:outputText value="Nov." />
+						</f:facet>
+						<pe:inputNumber  id="valorNov" value="#{detalheDespesa.despesaMensalisada.novembro}" converter="javax.faces.Double" >
+							<p:ajax   listener="#{atualizarForecastAction.despesaAlterada(detalheDespesa,'NOVEMBRO')}" update=":form" process="@this"></p:ajax>
+						</pe:inputNumber>
+						<h:outputText rendered="#{atualizarForecastAction.exibirDespesa('NOVEMBRO')}" value="/#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaNovembro)}" />
+					</p:column> 
+					<p:column rendered="#{atualizarForecastAction.exibirColuna('DEZEMBRO')}" style="text-align:center"
+							 width="#{atualizarForecastAction.exibirDespesa('DEZEMBRO')? 200 :100}" footerText="#{facesUtils.formatarDinheiro(atualizarForecastAction.calcularValorColuna('DEZEMBRO'))}" >
+						<f:facet name="header">
+							<h:outputText value="Dez." />
+						</f:facet>
+						<pe:inputNumber  id="valorDez" value="#{detalheDespesa.despesaMensalisada.dezembro}" converter="javax.faces.Double" >
+							<p:ajax   listener="#{atualizarForecastAction.despesaAlterada(detalheDespesa,'DEZEMBRO')}" update=":form" process="@this"></p:ajax>
+						</pe:inputNumber>
+						<h:outputText rendered="#{atualizarForecastAction.exibirDespesa('DEZEMBRO')}" value="/#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaDezembro)}" />
+					</p:column> 
+					<p:column width="100" footerText="#{facesUtils.formatarDinheiro(atualizarForecastAction.calcularTotalAno())}" style="text-align:center" >
+						<f:facet name="header">
+							<h:outputText value="Total ano" />
+						</f:facet>
+						<h:outputText value="#{detalheDespesa.valor}" >
+							<f:convertNumber type="currency"/>
+						</h:outputText>
+			     	</p:column> 
+				</p:dataTable>
+				
+				
+				</p:panelGrid>
+					<p:panelGrid columns="1" styleClass="painel-botoes">
+					<p:commandButton value="Concluir"  action="#{atualizarForecastAction.concluir()}" onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()">
+						<p:confirm header="Confirmação" message="Confirma a conclusão da Aprovação do Budget?" icon="ui-icon-alert"/>
+					</p:commandButton>
+				</p:panelGrid>
+			</p:panel>
 			
 			</h:form>
 				<p:dialog header="#{not atualizarForecastAction.inclusao? 'Alterar Despesa' : 'Incluir Despesa'}  " id="criarDespesaPanel" widgetVar="criarDespesa" height="600"

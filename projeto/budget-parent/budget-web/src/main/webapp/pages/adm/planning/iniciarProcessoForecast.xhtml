@@ -8,29 +8,27 @@
 	<ui:param name="pageTitle" value="Human Tasks" />
 
 	<ui:define name="content">
-		<h:form id="form">
-			<p:panelGrid columns="1" styleClass="body-content">
-				<p:fieldset legend="Iniciar processo de Forecast">
-					<p:panelGrid columns="2">
-						<p:outputLabel value="Ano:" />
-						<p:outputLabel value="#{processoAction.ano}"
-							styleClass="bold-label" />
-						<p:outputLabel value="Mes:" />		
-						<p:selectOneMenu id="mes" value="#{processoAction.mes}" required="true">
-							<f:selectItem itemLabel="SELECIONE" itemValue="" />
-							<f:selectItems value="#{processoAction.meses}" var="mes" itemLabel="#{mes.mes}" itemValue="#{mes.mes}"/>
-						</p:selectOneMenu>
-							
-					</p:panelGrid>
-				
-					<p:panelGrid columns="1" styleClass="painel-botoes" >
-						<p:commandButton
-							onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"
-							action="#{processoAction.iniciarProcessoForecast()}"
-							value="Iniciar Processo" update=":form"/>
-					</p:panelGrid>
-				</p:fieldset>
-			</p:panelGrid>
-		</h:form>
+		<p:panel id="content">
+			<h3>Iniciar processo de Forecast</h3>
+			<h:form id="form">
+				<p:panelGrid columns="2">
+					<p:outputLabel value="Ano:" />
+					<p:outputLabel value="#{processoAction.ano}"
+						styleClass="bold-label" />
+					<p:outputLabel value="Mes:" />		
+					<p:selectOneMenu id="mes" value="#{processoAction.mes}" required="true">
+						<f:selectItem itemLabel="SELECIONE" itemValue="" />
+						<f:selectItems value="#{processoAction.meses}" var="mes" itemLabel="#{mes.mes}" itemValue="#{mes.mes}"/>
+					</p:selectOneMenu>
+				</p:panelGrid>
+			
+				<p:panelGrid columns="1" styleClass="painel-botoes" >
+					<p:commandButton
+						onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"
+						action="#{processoAction.iniciarProcessoForecast()}"
+						value="Iniciar Processo" update=":form"/>
+				</p:panelGrid>
+			</h:form>
+		</p:panel>
 	</ui:define>
 </ui:composition>
