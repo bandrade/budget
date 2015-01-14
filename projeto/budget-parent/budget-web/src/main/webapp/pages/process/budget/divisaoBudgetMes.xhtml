@@ -15,8 +15,8 @@
     
     <ui:define name="head">
         <style type="text/css">
-            .ui-datatable {
-                overflow-x: scroll !important; 
+            .ui-datatable-scrollable-header-box th, .ui-datatable-scrollable-footer-box td {
+                height: 30px !important;
             }
         </style>
     </ui:define>
@@ -40,12 +40,10 @@
 						paginatorPosition="bottom"
 						rows="20" style="overflow:visible;"
 						scrollable="true"
-						scrollWidth="49%"
+						scrollWidth="48.7%"
 						frozenColumns="4">
-						<f:facet name="header">
-	       				 Despesas por mes
-	  						 </f:facet>
-	  						 <p:column width="40">
+						<f:facet name="header">Despesas por mes</f:facet>
+ 						<p:column width="40">
 							<f:facet name="header">
 								<h:outputText value="Tipo Despesa" />
 							</f:facet>
