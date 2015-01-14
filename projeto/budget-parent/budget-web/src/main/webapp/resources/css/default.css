@@ -255,8 +255,17 @@ legend, h3 {
 }
 
 .pendencias, .pendencias li, .pendencias ul {
-	background-color: #fafafa;
+	background-color: #fafafa !important;
 	color: #707070;
+}
+
+.ui-datalist-content, .ui-datalist-empty-message {
+	background-color: #fafafa !important;
+	padding-left: 0 !important;
+}
+
+.ui-datatable tbody td {
+	border-color: #d8dcdf;
 }
 
 .pendencias a {
@@ -264,7 +273,7 @@ legend, h3 {
 	color: #707070;
 }
 
-.pendencias li, .pendencias ul {
+.pendencias li, .pendencias ul, .pendencias {
 	list-style: none;
 	padding-left: 0;
 }
