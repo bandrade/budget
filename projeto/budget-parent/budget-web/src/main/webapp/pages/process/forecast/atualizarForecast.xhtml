@@ -35,16 +35,12 @@
 					value="#{atualizarForecastAction.despesasNoDetalhe}"
 					selection="#{atualizarForecastAction.despesaDetalheSelecionada}"
 					var="detalheDespesa"
-					paginator="true"
+					paginator="true" 
 					paginatorPosition="bottom"
-					rows="20" style="margin-left:-10px"
-					scrollable="true"
-					scrollWidth="600"
+					rows="20"
 					frozenColumns="5">
-					<f:facet name="header">
-       				 Despesa
-  						 </f:facet>
-  						 <p:column width="50" >
+					<f:facet name="header">Despesa</f:facet>
+  				    <p:column width="50" >
 						<f:facet name="header">
 							<h:outputText value="Tipo Despesa" />
 						</f:facet>
