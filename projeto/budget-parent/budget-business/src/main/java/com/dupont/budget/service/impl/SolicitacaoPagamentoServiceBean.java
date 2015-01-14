@@ -85,6 +85,8 @@ public class SolicitacaoPagamentoServiceBean implements SolicitacaoPagamentoServ
 			_area.setId(despesa.getAcao().getId());
 			_area.setNome(despesa.getAcao().getNome());
 			
+			_solicitacao.setArea(_area);
+			
 			_solicitacoes.add(_solicitacao);			
 		}
 		

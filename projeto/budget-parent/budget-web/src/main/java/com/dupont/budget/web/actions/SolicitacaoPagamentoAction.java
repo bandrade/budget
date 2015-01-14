@@ -33,6 +33,7 @@ import com.dupont.budget.model.DespesaSolicitacaoPagamento;
 import com.dupont.budget.model.Distrito;
 import com.dupont.budget.model.Forecast;
 import com.dupont.budget.model.Fornecedor;
+import com.dupont.budget.model.OrigemSolicitacao;
 import com.dupont.budget.model.Produto;
 import com.dupont.budget.model.SolicitacaoPagamento;
 import com.dupont.budget.model.StatusPagamento;
@@ -442,6 +443,9 @@ public class SolicitacaoPagamentoAction implements Serializable {
 			if( !despesa.getAcao().equals(acao) )
 				continue;
 			
+			if( produtos.contains(despesa.getProduto()) )
+				continue;
+			
 			produtos.add(despesa.getProduto());
 		}
 		
@@ -462,7 +466,7 @@ public class SolicitacaoPagamentoAction implements Serializable {
 					if( !_despesa.getAcao().equals(acao) )
 						continue;
 					
-					if( produtos.contains(_despesa.getAcao()) )
+					if( produtos.contains(_despesa.getProduto()) )
 						continue;
 					
 					produtos.add(_despesa.getProduto());
@@ -534,12 +538,6 @@ public class SolicitacaoPagamentoAction implements Serializable {
 					if(!tiposDespesas.contains(_despesa.getTipoDespesa()))
 						tiposDespesas.add(_despesa.getTipoDespesa());
 					
-					
-//					if(!distritos.contains(_despesa.getDistrito()))
-//						distritos.add(_despesa.getDistrito());
-//					
-//					if(!vendedores.contains(_despesa.getVendedor()))
-//						vendedores.add(_despesa.getVendedor());
 				}
 			}
 		}
@@ -554,16 +552,17 @@ public class SolicitacaoPagamentoAction implements Serializable {
 	public String save(){
 		
 		// Salvar a nova ação caso tenha sido pedido
-		if( getCheckAcao().equals("Criar Nova")){
-			Acao acao = new Acao(novaAcao);
-			
-			acao = domainService.create(acao);
-			
-			despesaSolicitacaoPagamento.setAcao(acao);
-		}
+//		if( getCheckAcao().equals("Criar Nova")){
+//			Acao acao = new Acao(novaAcao);
+//			
+//			acao = domainService.create(acao);
+//			
+//			despesaSolicitacaoPagamento.setAcao(acao);
+//		}
 		
 		solicitacaoPagamento.setCriacao(new Date());
 		solicitacaoPagamento.setStatus(StatusPagamento.COMPROMETIDO);
+		solicitacaoPagamento.setOrigem(OrigemSolicitacao.COVERSHEET);
 		
 		if( solicitacaoPagamento.getTipoSolicitacao() == TipoSolicitacao.CC ) {
 			despesaSolicitacaoPagamento.setValor(solicitacaoPagamento.getValor());
@@ -588,13 +587,13 @@ public class SolicitacaoPagamentoAction implements Serializable {
 	
 	public String update(){
 		// Salvar a nova ação caso tenha sido pedido
-		if( getCheckAcao().equals("Criar Nova")){
-			Acao acao = new Acao(novaAcao);
-			
-			acao = domainService.create(acao);
-			
-			despesaSolicitacaoPagamento.setAcao(acao);
-		}
+//		if( getCheckAcao().equals("Criar Nova")){
+//			Acao acao = new Acao(novaAcao);
+//			
+//			acao = domainService.create(acao);
+//			
+//			despesaSolicitacaoPagamento.setAcao(acao);
+//		}
 		
 		solicitacaoPagamento.setStatus(StatusPagamento.COMPROMETIDO);
 		
@@ -609,6 +608,17 @@ public class SolicitacaoPagamentoAction implements Serializable {
 		FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
 		
 		return "edit.xhtml?faces-redirect=true";
+	}
+	
+	public void delete(SolicitacaoPagamento _solicitacaoPagamento) {
+		
+		domainService.delete(solicitacaoPagamento);
+		
+		getList().remove(solicitacaoPagamento);
+		
+		facesUtils.addInfoMessage(String.format("%s removido(a) com sucesso.", "Solicitação de Pagamento"));
+		
+		
 	}
 	
 	

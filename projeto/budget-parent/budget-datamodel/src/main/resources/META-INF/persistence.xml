@@ -3,6 +3,8 @@
 
 	<persistence-unit name="budget-pu">
 		<jta-data-source>java:jboss/datasources/BudgetDS</jta-data-source>
+		<mapping-file>META-INF/budget-orm.xml</mapping-file>
+		
 		<properties>
          <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>
          <property name="hibernate.hbm2ddl.auto" value="update" />

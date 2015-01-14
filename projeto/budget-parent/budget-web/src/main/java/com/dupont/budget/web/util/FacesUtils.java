@@ -16,7 +16,7 @@ import com.dupont.budget.model.NamedAbstractEntity;
 /**
  * Classe utilitária para adicionar mensagens no contexto JSF.
  *
- * @author <a href="asouza@redhat.com">Ângelo Galvão</a>
+ * @author <a href="mailto:asouza@redhat.com">Ângelo Galvão</a>
  * @since 2014
  *
  */

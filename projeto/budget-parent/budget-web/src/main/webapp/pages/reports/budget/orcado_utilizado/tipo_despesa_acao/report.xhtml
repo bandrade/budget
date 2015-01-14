@@ -1,0 +1,122 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                template="/WEB-INF/templates/default.xhtml">
+                
+	<ui:define name="content">
+	
+		<f:event listener="#{solicitacaoPagamentoAction.initConversation}" type="preRenderView" />
+		
+	
+		<p:panel id="content">
+		
+			<h3> 
+				Relatório BUDGET x UTILIZADO: Tipo de Despesas / Ação
+			</h3>
+			
+			<h:form id="form"> 
+			
+				<p:panelGrid columns="3">
+					<p:outputLabel value="Ano:" for="anoSelectOneMenu"/>
+					<p:selectOneMenu id="anoSelectOneMenu" label="Ano" value="#{reportBudgetOrcadoUtilizadoTipoDespesaAcaoAction.ano}" required="true">
+						<f:selectItem itemLabel="Selecione um ano" itemValue="#{null}" />
+						<f:selectItems value="#{anos}" var="item" itemValue="#{item}"/>
+					</p:selectOneMenu> 
+					<p:message for="anoSelectOneMenu" />
+					
+					<p:outputLabel value="Centro de custo:" for="ccSelectOneMenu"/>
+					<p:selectOneMenu id="ccSelectOneMenu" value="#{reportBudgetOrcadoUtilizadoTipoDespesaAcaoAction.centroCusto}" required="true" converter="com.dupont.EntityConverter">
+						<f:selectItem itemLabel="Selecione um centro de custo" itemValue="#{null}" />
+						<f:selectItems value="#{centroCustos}" var="item" itemValue="#{item}" itemLabel="#{item.codigo}"/>
+					</p:selectOneMenu> 
+					<p:message for="ccSelectOneMenu" />
+				</p:panelGrid>
+						
+				<p:commandButton id="doReportBtn" value="Executar Relatório" icon="ui-icon-check" action="#{reportBudgetOrcadoUtilizadoTipoDespesaAcaoAction.doReport}" styleClass="button" ajax="false"/>
+
+
+				<p:separator />
+				
+				
+				<p:dataTable id="report" value="#{reportBudgetOrcadoUtilizadoTipoDespesaAcaoAction.report}" var="item" rendered="#{not empty reportBudgetOrcadoUtilizadoTipoDespesaAcaoAction.report}">
+				
+					
+					<p:subTable value="#{item.details}" var="a">
+						<f:facet name="header">
+			                Tipo de despesa: #{item.master}
+			            </f:facet>
+			            
+			            <p:columnGroup type="header">
+			            	<p:row>
+			                    <p:column headerText="Ação"/>
+			                    <p:column headerText="Total Ano Budget" />
+			                    <p:column headerText="Total do valor utilizado" />
+			                </p:row>
+			            </p:columnGroup>
+			            
+			            <p:column headerText="Ação">
+							#{a.detail}
+						</p:column>
+						
+						<p:column>
+							#{reportBudgetOrcadoUtilizadoAction.addTotalAnoOrcado(a.orcado)}
+							<h:outputText value="#{a.orcado}">
+								<f:convertNumber type="currency" />
+							</h:outputText>
+						</p:column>
+						
+						<p:column>
+							#{reportBudgetOrcadoUtilizadoAction.addTotalAnoUtilizado(a.utilizado)}
+							<h:outputText value="#{a.utilizado}">
+								<f:convertNumber type="currency" />
+							</h:outputText>
+						</p:column>
+						<p:columnGroup type="footer">
+							<p:row>
+			                    <p:column footerText="Total: " style="text-align:right"/>
+			                    <p:column>
+			                    	<f:facet name="footer">
+			                    		<h:outputText value="#{item.totalOrcado}">
+			                    			<f:convertNumber type="currency" />
+			                    		</h:outputText>
+			                    	</f:facet>
+			                    </p:column>
+			                    <p:column>
+			                    	<f:facet name="footer">
+			                    		<h:outputText value="#{item.totalUtilizado}">
+			                    			<f:convertNumber type="currency" />
+			                    		</h:outputText>
+			                    	</f:facet>
+			                    </p:column>
+			                </p:row>
+						</p:columnGroup>
+					</p:subTable>
+					
+					
+					
+					<p:summaryRow>
+						<p:column style="text-align:right">
+			                <h:outputText value="Total:" />
+			            </p:column>
+			            <p:column>
+			                <h:outputText value="#{reportBudgetOrcadoUtilizadoTipoDespesaAcaoAction.totalAnoOrcado}">
+			                    <f:convertNumber type="currency" />
+			                </h:outputText>
+			            </p:column>
+						<p:column>
+			                <h:outputText value="#{reportBudgetOrcadoUtilizadoTipoDespesaAcaoAction.totalAnoUtilizado}">
+			                    <f:convertNumber type="currency" />
+			                </h:outputText>
+			            </p:column>
+					</p:summaryRow>
+				</p:dataTable>
+			</h:form>
+		
+		</p:panel>		
+		
+	</ui:define>
+	
+</ui:composition>

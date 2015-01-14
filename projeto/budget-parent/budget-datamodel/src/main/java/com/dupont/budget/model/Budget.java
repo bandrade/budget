@@ -25,7 +25,7 @@ import javax.persistence.Transient;
 /**
  * Entidade que representa o dudget do ano.
  *
- * @author <a href="asouza@redhat.com">Ângelo Galvão</a>
+ * @author <a href="mailto:asouza@redhat.com">Ângelo Galvão</a>
  * @since 2014
  *
  */
@@ -33,8 +33,9 @@ import javax.persistence.Transient;
 @Table(name = "budget")
 @NamedQueries({
 		@NamedQuery(name = "Budget.findByAnoAndCentroDeCusto", query = "select b from Budget b where b.centroCusto.id=:centroDeCustoId and b.ano like :ano"),
-		@NamedQuery(name = "Budget.findByAnoAndArea", query = "select b from Budget b where b.centroCusto.area.id=:area_id and b.ano like :ano")
-		})
+		@NamedQuery(name = "Budget.findByAnoAndArea", query = "select b from Budget b where b.centroCusto.area.id=:area_id and b.ano like :ano"),
+		@NamedQuery(name = "Budget.findByAno" , query = "select b from Budget b where b.ano like :ano")
+})
 public class Budget {
 
 	@Id
