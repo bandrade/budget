@@ -30,9 +30,7 @@
 					<p:commandButton value="Incluir Despesa"
 						oncomplete="PF('criarDespesa').show();" action="#{atualizarForecastAction.trataInclusao()}" update=":criarDespesaPanel,:formDespesa"/>
 				</p:panelGrid>
-				<p:panelGrid id="panelDetalhe" columns="1">
-				<p:dataTable 
-					id="tblDespesa"
+				<p:dataTable id="tblDespesa"
 					emptyMessage="Não existem despesas cadastradas" 
 					value="#{atualizarForecastAction.despesasNoDetalhe}"
 					selection="#{atualizarForecastAction.despesaDetalheSelecionada}"
@@ -203,9 +201,7 @@
 			     	</p:column> 
 				</p:dataTable>
 				
-				
-				</p:panelGrid>
-					<p:panelGrid columns="1" styleClass="painel-botoes">
+				<p:panelGrid columns="1" styleClass="painel-botoes">
 					<p:commandButton value="Concluir"  action="#{atualizarForecastAction.concluir()}" onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()">
 						<p:confirm header="Confirmação" message="Confirma a conclusão da Aprovação do Budget?" icon="ui-icon-alert"/>
 					</p:commandButton>
