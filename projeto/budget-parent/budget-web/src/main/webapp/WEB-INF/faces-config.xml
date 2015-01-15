@@ -11,6 +11,10 @@
 			<default-locale>pt_BR</default-locale>
 			<message-bundle>com.dupont.budget.web.message.JSFMessages_pt_BR</message-bundle>
 		</locale-config>
+        <resource-bundle>
+            <base-name>messages</base-name>
+            <var>msg</var>
+        </resource-bundle>
 	</application>
 	<converter>
         <converter-for-class>java.lang.Enum</converter-for-class>
