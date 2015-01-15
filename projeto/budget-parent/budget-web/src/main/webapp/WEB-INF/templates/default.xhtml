@@ -11,13 +11,14 @@
         <!--[if lt IE 9]>
         <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
+        <ui:insert name="head"></ui:insert> 
     </h:head>
     
     <h:body>
         <section class="top">
             <div class="ui-grid ui-grid-responsive">
                 <div class="ui-grid-row">
-                    <div class="ui-grid-col-12"><a href="#"><span class="ui-icon ui-icon-arrow-1-w"></span>VOLTAR</a></div>
+                    <div class="ui-grid-col-12"><a href="javascript:history.back()"><span class="ui-icon ui-icon-arrow-1-w"></span>VOLTAR</a></div>
                 </div>
            </div>
         </section>
@@ -39,12 +40,7 @@
                             <div class="ui-grid ui-grid-responsive">
                                 <div class="ui-grid-row">
                                     <div class="ui-grid-col-12">
-                                       <span style="color:#ccc;">Bem vindo </span>#{loggedUsername} <span style="color:#ccc;">Versão:0.0.10</span>
-                                    </div>
-                                </div>
-                                <div class="ui-grid-row">
-                                    <div class="ui-grid-col-12">
-                                       <input type="text" placeholder="Pesquisar..." style="width:80%;" />
+                                       <span style="color:#ccc;">Bem vindo </span>#{loggedUsername} <span style="color:#ccc;">Versao #{msg['versao']}</span>
                                     </div>
                                 </div>
                             </div>
