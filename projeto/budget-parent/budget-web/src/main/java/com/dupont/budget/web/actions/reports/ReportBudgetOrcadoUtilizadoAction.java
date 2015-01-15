@@ -32,8 +32,16 @@ public abstract class ReportBudgetOrcadoUtilizadoAction {
 	public void doReport(){
 		report = getReportResult();
 		
-		if( report == null || report.isEmpty() )
+		if( report == null || report.isEmpty() ) {
 			facesUtils.addInfoMessage("Não existe relatório disponível para o ANO e CENTRO DE CUSTO informados.");
+			return;
+		}
+		
+		for (ReportBudgetOrcadoUtilizadoMaster reportBudgetOrcadoUtilizadoMaster : report) {				
+			addTotalAnoOrcado(reportBudgetOrcadoUtilizadoMaster.getTotalOrcado());
+			addTotalAnoUtilizado(reportBudgetOrcadoUtilizadoMaster.getTotalUtilizado());		
+		}
+		
 	}
 
 	protected abstract List<ReportBudgetOrcadoUtilizadoMaster> getReportResult();

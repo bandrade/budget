@@ -6,46 +6,42 @@
                 xmlns:pe="http://primefaces.org/ui/extensions"
                 template="/WEB-INF/templates/default.xhtml">
                 
-	<ui:define name="content">
+	<ui:define name="content">		
 	
 		<p:panel id="content">
 		
 			<h3> 
-				Relatório BUDGET x UTILIZADO: Centro de Custo / Cultura
+				Relatório BUDGET x UTILIZADO: Produto / Ação
 			</h3>
 			
 			<h:form id="form"> 
 			
 				<p:panelGrid columns="3">
 					<p:outputLabel value="Ano:" for="anoSelectOneMenu"/>
-					<p:selectOneMenu id="anoSelectOneMenu" label="Ano" value="#{reportBudgetOrcadoUtilizadoCentroCustoCulturaAction.ano}" required="true">
-						<f:selectItem itemLabel="Selecione um ano" itemValue="#{null}" />
+					<p:selectOneMenu id="anoSelectOneMenu" label="Ano" value="#{reportBudgetOrcadoUtilizadoProdutoAcaoAction.ano}" required="true">
+						<f:selectItem itemLabel="Selecione um ano..." itemValue="#{null}" />
 						<f:selectItems value="#{anos}" var="item" itemValue="#{item}"/>
 					</p:selectOneMenu> 
 					<p:message for="anoSelectOneMenu" />
 					
 					<p:outputLabel value="Centro de custo:" for="ccSelectOneMenu"/>
-					<p:selectOneMenu id="ccSelectOneMenu" value="#{reportBudgetOrcadoUtilizadoCentroCustoCulturaAction.centroCusto}" converter="com.dupont.EntityConverter">
-						<f:selectItem itemLabel="Todos os centros de custos" itemValue="#{null}" />
+					<p:selectOneMenu id="ccSelectOneMenu" value="#{reportBudgetOrcadoUtilizadoProdutoAcaoAction.centroCusto}" required="true" converter="com.dupont.EntityConverter">
+						<f:selectItem itemLabel="Selecone um centro de custo..." itemValue="#{null}" />
 						<f:selectItems value="#{centroCustos}" var="item" itemValue="#{item}" itemLabel="#{item.codigo}"/>
 					</p:selectOneMenu> 
 					<p:message for="ccSelectOneMenu" />
 				</p:panelGrid>
 			
+				<p:commandButton id="doReportBtn" value="Executar Relatório" icon="ui-icon-check" action="#{reportBudgetOrcadoUtilizadoProdutoAcaoAction.doReport}" styleClass="button" ajax="false"/>
 				
-			
-				<p:commandButton id="doReportBtn" value="Executar Relatório" icon="ui-icon-check" action="#{reportBudgetOrcadoUtilizadoCentroCustoCulturaAction.doReport}" styleClass="button" ajax="false"/>
-
-
 				<p:separator />
 				
-				
-				<p:dataTable id="report" value="#{reportBudgetOrcadoUtilizadoCentroCustoCulturaAction.report}" var="item" rendered="#{not empty reportBudgetOrcadoUtilizadoCentroCustoCulturaAction.report}">
+				<p:dataTable id="report" value="#{reportBudgetOrcadoUtilizadoProdutoAcaoAction.report}" var="item" rendered="#{not empty reportBudgetOrcadoUtilizadoProdutoAcaoAction.report}">
 				
 					
 					<p:subTable value="#{item.details}" var="a">
 						<f:facet name="header">
-			                Tipo de despesa: #{item.master}
+			                Produto: #{item.master}
 			            </f:facet>
 			            
 			            <p:columnGroup type="header">
@@ -66,7 +62,7 @@
 							</h:outputText>
 						</p:column>
 						
-						<p:column>							
+						<p:column>
 							<h:outputText value="#{a.utilizado}">
 								<f:convertNumber type="currency" />
 							</h:outputText>
@@ -92,21 +88,19 @@
 						</p:columnGroup>
 					</p:subTable>
 					
-					
-					
 					<p:columnGroup type="footer">
 					
 							<p:column style="text-align: right" footerText="Total Relatório:" />
 				            <p:column style="text-align: left" >
 				            	<f:facet name="footer">
-					                <h:outputText value="#{reportBudgetOrcadoUtilizadoCentroCustoCulturaAction.totalAnoOrcado}">
+					                <h:outputText value="#{reportBudgetOrcadoUtilizadoProdutoAcaoAction.totalAnoOrcado}">
 					                    <f:convertNumber type="currency" />
 					                </h:outputText>
 					            </f:facet>
 				            </p:column>
 							<p:column style="text-align: left">
 								<f:facet name="footer">
-					                <h:outputText value="#{reportBudgetOrcadoUtilizadoCentroCustoCulturaAction.totalAnoUtilizado}">
+					                <h:outputText value="#{reportBudgetOrcadoUtilizadoProdutoAcaoAction.totalAnoUtilizado}">
 					                    <f:convertNumber type="currency" />
 					                </h:outputText>
 					            </f:facet>

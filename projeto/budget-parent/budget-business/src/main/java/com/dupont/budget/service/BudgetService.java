@@ -8,6 +8,8 @@ import com.dupont.budget.dto.DespesasAgrupadasDTO;
 import com.dupont.budget.model.Budget;
 import com.dupont.budget.model.BudgetEstipuladoAno;
 import com.dupont.budget.model.Despesa;
+import com.dupont.budget.report.model.ReportBudgetOrcadoUtilizadoDistribuicaoDetail;
+import com.dupont.budget.report.model.ReportBudgetOrcadoUtilizadoDistribuicaoMaster;
 import com.dupont.budget.report.model.ReportBudgetOrcadoUtilizadoMaster;
 
 public interface BudgetService {
@@ -37,12 +39,29 @@ public interface BudgetService {
 	public List<ReportBudgetOrcadoUtilizadoMaster> getBudgetOrcadoUtilizadoTipoDespesaAcaoReport(String ano, Long centroCustoId);
 	
 	/**
+	 * Retorna o relatório de budget orçado e utilizado: tipo de despesa / acao
+	 * @param ano Ano do BUDGET
+	 * @param centroCustoId id do centro de custo
+	 * @return lista com os valores por tipoDespesa e acao.
+	 */
+	public List<ReportBudgetOrcadoUtilizadoDistribuicaoMaster> getBudgetOrcadoUtilizadoTipoDespesaAcaoDistribuicaoReport(String ano, Long centroCustoId);
+	
+	/**
 	 * Retorna o relatório de budget orçado e utilizado: centro de custo / cultura
 	 * @param ano Ano do BUDGET
 	 * @param centroCustoId  id do centro de custo
 	 * @return lista com os valores por centro de custo e cultura
 	 */
 	public List<ReportBudgetOrcadoUtilizadoMaster> getBudgetOrcadoUtilizadoCentroCustoCulturaReport(String ano, Long centroCustoId);
+	
+	
+	/**
+	 * Retorna o relatório de budget orçado e utilizado: Produto / Acao
+	 * @param ano Ano do BUDGET
+	 * @param centroCustoId  id do centro de custo
+	 * @return lista com os valores por centro de custo e cultura
+	 */
+	public List<ReportBudgetOrcadoUtilizadoMaster> getBudgetOrcadoUtilizadoProdutoAcaoReport(String ano, Long centroCustoId);
 	
 	/**
 	 * Retorna todos os anos que possuem budgets cadastrados

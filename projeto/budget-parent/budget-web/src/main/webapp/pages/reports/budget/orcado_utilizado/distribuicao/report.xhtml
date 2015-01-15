@@ -11,48 +11,48 @@
 		<p:panel id="content">
 		
 			<h3> 
-				Relatório BUDGET x UTILIZADO: Centro de Custo / Cultura
+				Relatório de Distribuição
 			</h3>
 			
 			<h:form id="form"> 
 			
 				<p:panelGrid columns="3">
 					<p:outputLabel value="Ano:" for="anoSelectOneMenu"/>
-					<p:selectOneMenu id="anoSelectOneMenu" label="Ano" value="#{reportBudgetOrcadoUtilizadoCentroCustoCulturaAction.ano}" required="true">
+					<p:selectOneMenu id="anoSelectOneMenu" label="Ano" value="#{reportDistribuicaoAction.ano}" required="true">
 						<f:selectItem itemLabel="Selecione um ano" itemValue="#{null}" />
 						<f:selectItems value="#{anos}" var="item" itemValue="#{item}"/>
 					</p:selectOneMenu> 
 					<p:message for="anoSelectOneMenu" />
 					
 					<p:outputLabel value="Centro de custo:" for="ccSelectOneMenu"/>
-					<p:selectOneMenu id="ccSelectOneMenu" value="#{reportBudgetOrcadoUtilizadoCentroCustoCulturaAction.centroCusto}" converter="com.dupont.EntityConverter">
-						<f:selectItem itemLabel="Todos os centros de custos" itemValue="#{null}" />
+					<p:selectOneMenu id="ccSelectOneMenu" value="#{reportDistribuicaoAction.centroCusto}" required="true" converter="com.dupont.EntityConverter">
+						<f:selectItem itemLabel="Selecione um centro de custo" itemValue="#{null}" />
 						<f:selectItems value="#{centroCustos}" var="item" itemValue="#{item}" itemLabel="#{item.codigo}"/>
 					</p:selectOneMenu> 
 					<p:message for="ccSelectOneMenu" />
 				</p:panelGrid>
-			
-				
-			
-				<p:commandButton id="doReportBtn" value="Executar Relatório" icon="ui-icon-check" action="#{reportBudgetOrcadoUtilizadoCentroCustoCulturaAction.doReport}" styleClass="button" ajax="false"/>
+						
+				<p:commandButton id="doReportBtn" value="Executar Relatório" icon="ui-icon-check" action="#{reportDistribuicaoAction.doReport}" styleClass="button" ajax="false"/>
 
 
 				<p:separator />
 				
 				
-				<p:dataTable id="report" value="#{reportBudgetOrcadoUtilizadoCentroCustoCulturaAction.report}" var="item" rendered="#{not empty reportBudgetOrcadoUtilizadoCentroCustoCulturaAction.report}">
+				<p:dataTable id="report" value="#{reportDistribuicaoAction.reportDistribuicao}" var="item" rendered="#{not empty reportDistribuicaoAction.reportDistribuicao}" >
 				
 					
-					<p:subTable value="#{item.details}" var="a">
+					<p:subTable value="#{item.distribuicaoDetails}" var="a">
 						<f:facet name="header">
 			                Tipo de despesa: #{item.master}
 			            </f:facet>
 			            
 			            <p:columnGroup type="header">
-			            	<p:row>
+			  				<p:row>
 			                    <p:column headerText="Ação"/>
 			                    <p:column headerText="Total Ano Budget" />
+			                    <p:column headerText="Total Ano Forecast" />
 			                    <p:column headerText="Total do valor utilizado" />
+			                    <p:column headerText="% do valor utilizado" />
 			                </p:row>
 			            </p:columnGroup>
 			            
@@ -66,11 +66,24 @@
 							</h:outputText>
 						</p:column>
 						
-						<p:column>							
+						<p:column>
+							<h:outputText value="#{a.forecast}">
+								<f:convertNumber type="currency" />
+							</h:outputText>
+						</p:column>
+						
+						<p:column>
 							<h:outputText value="#{a.utilizado}">
 								<f:convertNumber type="currency" />
 							</h:outputText>
 						</p:column>
+						
+						<p:column>
+							<h:outputText value="#{a.porcentagemUtilizado}">
+								<f:convertNumber type="percent" />
+							</h:outputText>
+						</p:column>
+						
 						<p:columnGroup type="footer">
 							<p:row>
 			                    <p:column footerText="Total: " style="text-align:right"/>
@@ -83,8 +96,23 @@
 			                    </p:column>
 			                    <p:column>
 			                    	<f:facet name="footer">
+			                    		<h:outputText value="#{item.totalForecast}">
+			                    			<f:convertNumber type="currency" />
+			                    		</h:outputText>
+			                    	</f:facet>
+			                    </p:column>
+			                    <p:column>
+			                    	<f:facet name="footer">
 			                    		<h:outputText value="#{item.totalUtilizado}">
 			                    			<f:convertNumber type="currency" />
+			                    		</h:outputText>
+			                    	</f:facet>
+			                    </p:column>
+			                    
+			                    <p:column>
+			                    	<f:facet name="footer">
+			                    		<h:outputText value="#{item.porcentagemTotalUtilizado}">
+			                    			<f:convertNumber type="percent" />
 			                    		</h:outputText>
 			                    	</f:facet>
 			                    </p:column>
@@ -99,15 +127,30 @@
 							<p:column style="text-align: right" footerText="Total Relatório:" />
 				            <p:column style="text-align: left" >
 				            	<f:facet name="footer">
-					                <h:outputText value="#{reportBudgetOrcadoUtilizadoCentroCustoCulturaAction.totalAnoOrcado}">
+					                <h:outputText value="#{reportDistribuicaoAction.totalAnoOrcado}">
 					                    <f:convertNumber type="currency" />
 					                </h:outputText>
 					            </f:facet>
 				            </p:column>
+				            <p:column style="text-align: left">
+								<f:facet name="footer">
+					                <h:outputText value="#{reportDistribuicaoAction.totalAnoForecast}">
+					                    <f:convertNumber type="currency" />
+					                </h:outputText>
+					            </f:facet>
+				            </p:column>	
 							<p:column style="text-align: left">
 								<f:facet name="footer">
-					                <h:outputText value="#{reportBudgetOrcadoUtilizadoCentroCustoCulturaAction.totalAnoUtilizado}">
+					                <h:outputText value="#{reportDistribuicaoAction.totalAnoUtilizado}">
 					                    <f:convertNumber type="currency" />
+					                </h:outputText>
+					            </f:facet>
+				            </p:column>	
+				            
+				            <p:column style="text-align: left">
+								<f:facet name="footer">
+					                <h:outputText value="#{reportDistribuicaoAction.totalPercentagemAnoUtilizado}">
+					                    <f:convertNumber type="percent" />
 					                </h:outputText>
 					            </f:facet>
 				            </p:column>	

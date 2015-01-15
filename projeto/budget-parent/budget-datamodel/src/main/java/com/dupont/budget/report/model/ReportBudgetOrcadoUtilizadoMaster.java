@@ -38,7 +38,7 @@ public class ReportBudgetOrcadoUtilizadoMaster implements Serializable {
 		this.totalOrcado += detail.getOrcado();
 	}
 	
-	public ReportBudgetOrcadoUtilizadoDetail getAcao(String detailName){
+	public ReportBudgetOrcadoUtilizadoDetail getDetail(String detailName){
 		if( details == null )
 			return null;
 		

@@ -9,6 +9,6 @@ package com.dupont.budget.model;
  *
  */
 public enum Perfil {
-	USUARIO, ADMINISTRADOR;
+	USUARIO, RELATORIO, ADMINISTRADOR;
 	
 }

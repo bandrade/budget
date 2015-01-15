@@ -24,8 +24,5 @@ public class ReportBudgetOrcadoUtilizadoTipoDespesaAcaoAction extends ReportBudg
 	@Override
 	protected List<ReportBudgetOrcadoUtilizadoMaster> getReportResult() {
 		return budgetService.getBudgetOrcadoUtilizadoTipoDespesaAcaoReport(ano, centroCusto.getId());
-	}
-	
-	
-	
+	}	
 }

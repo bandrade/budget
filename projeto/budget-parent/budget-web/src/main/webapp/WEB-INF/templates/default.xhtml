@@ -60,12 +60,24 @@
                         <nav>
                             <ul class="menu-container">
                                 <li><p:link  outcome="/pages/process/minhasTarefas.xhtml" value="Minhas tarefas"/>  </li>
-                                <li><a href="#">Lançar Despesa</a> 
+                                <li><a href="#">Despesa</a> 
                                     <ul>
-                                        <li> <p:link  outcome="/pages/process/pagamento/edit.xhtml" value="Iniciar Lançamento de Despesas"/>  </li>
+                                        <li> <p:link  outcome="/pages/process/pagamento/edit.xhtml" value="Solicitação de Pagamento"/>  </li>
                                     </ul>
                                 </li>
-                                 
+                                <h:panelGroup rendered="#{request.isUserInRole('RELATORIO')}">     
+                                
+	                                <li><a href="#">Relatórios</a>                        
+	                                    <ul>
+	                                    	<li> <p:link  outcome="/pages/reports/budget/orcado_utilizado/tipo_despesa_acao/report.xhtml"    value="Budget x Utilizado - Ação"/> </li>
+	                                    	<li> <p:link  outcome="/pages/reports/budget/orcado_utilizado/centro_custo_cultura/report.xhtml" value="Budget x Utilizado - Cultura"/> </li>
+	                                    	<li> <p:link  outcome="/pages/reports/budget/orcado_utilizado/produto_acao/report.xhtml" value="Budget x Utilizado - Produto"/> </li>
+	                                    	<li> <p:link  outcome="/pages/reports/budget/orcado_utilizado/distribuicao/report.xhtml" value="Distribuição"/> </li>
+	                                        
+	                                    </ul>                   
+	                                </li>
+                                </h:panelGroup> 
+                                
                                 <h:panelGroup rendered="#{request.isUserInRole('ADMINISTRADOR')}">              
                                 <li><a ref="#">Administração</a>                       
                                     <ul>

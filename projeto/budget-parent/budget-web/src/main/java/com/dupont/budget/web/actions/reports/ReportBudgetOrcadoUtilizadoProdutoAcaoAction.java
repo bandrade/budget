@@ -9,22 +9,21 @@ import com.dupont.budget.report.model.ReportBudgetOrcadoUtilizadoMaster;
 import com.dupont.budget.service.BudgetService;
 
 /**
- * Relatório de BUDGET Orçado x Utilizado: CENTRO DE CUSTO / CULTURA
+ * Relatório de BUDGET Orçado x Utilizado: Produto / Ação
  * 
  * @author <a href="mailto:asouza@redhat.com">Ângelo Galvão</a>
  * @since 2015
  *
  */
 @Model
-public class ReportBudgetOrcadoUtilizadoCentroCustoCulturaAction extends ReportBudgetOrcadoUtilizadoAction {
+public class ReportBudgetOrcadoUtilizadoProdutoAcaoAction extends ReportBudgetOrcadoUtilizadoAction {
 	
 	@Inject
 	private BudgetService budgetService;
 
 	@Override
 	protected List<ReportBudgetOrcadoUtilizadoMaster> getReportResult() {
-		
-		return budgetService.getBudgetOrcadoUtilizadoCentroCustoCulturaReport(ano, centroCusto == null ? null : centroCusto.getId());
+		return budgetService.getBudgetOrcadoUtilizadoProdutoAcaoReport(ano, centroCusto.getId());
 	}
 
 }

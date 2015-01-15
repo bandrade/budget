@@ -8,9 +8,6 @@
                 
 	<ui:define name="content">
 	
-		<f:event listener="#{solicitacaoPagamentoAction.initConversation}" type="preRenderView" />
-		
-	
 		<p:panel id="content">
 		
 			<h3> 
@@ -50,7 +47,7 @@
 			            </f:facet>
 			            
 			            <p:columnGroup type="header">
-			            	<p:row>
+			  				<p:row>
 			                    <p:column headerText="Ação"/>
 			                    <p:column headerText="Total Ano Budget" />
 			                    <p:column headerText="Total do valor utilizado" />
@@ -62,14 +59,12 @@
 						</p:column>
 						
 						<p:column>
-							#{reportBudgetOrcadoUtilizadoAction.addTotalAnoOrcado(a.orcado)}
 							<h:outputText value="#{a.orcado}">
 								<f:convertNumber type="currency" />
 							</h:outputText>
 						</p:column>
 						
 						<p:column>
-							#{reportBudgetOrcadoUtilizadoAction.addTotalAnoUtilizado(a.utilizado)}
 							<h:outputText value="#{a.utilizado}">
 								<f:convertNumber type="currency" />
 							</h:outputText>
@@ -97,21 +92,25 @@
 					
 					
 					
-					<p:summaryRow>
-						<p:column style="text-align:right">
-			                <h:outputText value="Total:" />
-			            </p:column>
-			            <p:column>
-			                <h:outputText value="#{reportBudgetOrcadoUtilizadoTipoDespesaAcaoAction.totalAnoOrcado}">
-			                    <f:convertNumber type="currency" />
-			                </h:outputText>
-			            </p:column>
-						<p:column>
-			                <h:outputText value="#{reportBudgetOrcadoUtilizadoTipoDespesaAcaoAction.totalAnoUtilizado}">
-			                    <f:convertNumber type="currency" />
-			                </h:outputText>
-			            </p:column>
-					</p:summaryRow>
+					<p:columnGroup type="footer">
+					
+							<p:column style="text-align: right" footerText="Total Relatório:" />
+				            <p:column style="text-align: left" >
+				            	<f:facet name="footer">
+					                <h:outputText value="#{reportBudgetOrcadoUtilizadoTipoDespesaAcaoAction.totalAnoOrcado}">
+					                    <f:convertNumber type="currency" />
+					                </h:outputText>
+					            </f:facet>
+				            </p:column>
+							<p:column style="text-align: left">
+								<f:facet name="footer">
+					                <h:outputText value="#{reportBudgetOrcadoUtilizadoTipoDespesaAcaoAction.totalAnoUtilizado}">
+					                    <f:convertNumber type="currency" />
+					                </h:outputText>
+					            </f:facet>
+				            </p:column>	
+					
+					</p:columnGroup>
 				</p:dataTable>
 			</h:form>
 		

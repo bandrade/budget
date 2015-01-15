@@ -20,7 +20,7 @@
           </query>
       </named-query>
       
-      <named-query name="Report.Forecast.Utilizado.TipoDespesa_Acao">
+      <named-query name="Report.Forecast.TipoDespesa_Acao">
           <query>				
 				select 
 					df.tipoDespesa.nome, df.acao.nome, sum(df.valor)
@@ -34,6 +34,22 @@
 					b.id = :budgetId
 				group by
 					df.tipoDespesa, df.acao			
+          </query>
+      </named-query>
+      
+      <named-query name="Report.SolicPag.Utilizado.TipoDespesa_Acao">
+          <query>				
+				select 
+					dsp.tipoDespesa.nome, dsp.acao.nome, sum(dsp.valor)
+				from 
+					SolicitacaoPagamento sp
+				left join
+					sp.despesas dsp					
+				where 
+					YEAR(sp.criacao)       = :ano
+					and dsp.centroCusto.id = :centroCustoId 
+				group by
+					dsp.tipoDespesa, dsp.acao			
           </query>
       </named-query>
       
@@ -52,20 +68,54 @@
           </query>
       </named-query>
       
-      <named-query name="Report.Forecast.Utilizado.CentroCusto_Cultura">
+      <named-query name="Report.SolicPag.Utilizado.CentroCusto_Cultura">
           <query>				
 				select 
-					b.centroCusto.nome, df.cultura.nome, sum(df.valor)
+					cc.nome, cul.nome, sum(dsp.valor)
 				from 
-					Forecast f
-				inner join
-					f.budget b
+					SolicitacaoPagamento sp
 				left join
-					f.despesas df					
+					sp.despesas dsp					
+				inner join
+					dsp.centroCusto cc				
+				inner join 
+					dsp.cultura cul				
 				where 
-					b.id in :budgetsIds
+					YEAR(sp.criacao)       = :ano
+					and ( :centroCustoId is null or dsp.centroCusto.id = :centroCustoId)  
 				group by
-					b.centroCusto, df.cultura			
+					dsp.centroCusto, dsp.cultura			
+          </query>
+      </named-query>
+      
+      <named-query name="Report.Budget.Orcado.Produto_Acao">
+          <query>				
+				select 
+					db.produto.nome, db.acao.nome, sum(db.valor)
+				from 
+					Budget b
+				left join
+					b.despesas db					
+				where 
+					b.id = :budgetId
+				group by
+					db.produto, db.acao			
+          </query>
+      </named-query>
+      
+      <named-query name="Report.SolicPag.Utilizado.Produto_Acao">
+          <query>				
+				select 
+					dsp.produto.nome, dsp.acao.nome, sum(dsp.valor)
+				from 
+					SolicitacaoPagamento sp
+				left join
+					sp.despesas dsp						
+				where 
+					YEAR(sp.criacao)       = :ano
+					and dsp.centroCusto.id = :centroCustoId 
+				group by
+					dsp.produto, dsp.acao			
           </query>
       </named-query>
       

@@ -3,10 +3,10 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
 
-    <context-param>
-        <param-name>primefaces.THEME</param-name>
-        <param-value>blitzer</param-value>
-    </context-param>
+	<context-param>
+		<param-name>primefaces.THEME</param-name>
+		<param-value>blitzer</param-value>
+	</context-param>
 	<context-param>
 		<param-name>javax.faces.INTERPRET_EMPTY_STRING_SUBMITTED_VALUES_AS_NULL</param-name>
 		<param-value>true</param-value>
@@ -63,6 +63,19 @@
             <transport-guarantee>NONE</transport-guarantee>
         </user-data-constraint>
 	</security-constraint>
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>relatorio</web-resource-name>
+			<url-pattern>/pages/report/*</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>RELATORIO</role-name>
+			<role-name>ADMINISTRADOR</role-name>	
+		</auth-constraint>		
+		<user-data-constraint>
+            <transport-guarantee>NONE</transport-guarantee>
+        </user-data-constraint>
+	</security-constraint>
 	
 	 <login-config>
         <auth-method>FORM</auth-method>
@@ -81,19 +94,11 @@
 		<description>Usurios administradores</description>
 		<role-name>ADMINISTRADOR</role-name>		
 	</security-role>
-
-	<mime-mapping>
-		<extension>otf</extension>
-		<mime-type>font/opentype</mime-type>
-	</mime-mapping>
-	<mime-mapping>
-		<extension>ttf</extension>
-		<mime-type>application/x-font-ttf</mime-type>
-	</mime-mapping>
-	<mime-mapping>
-		<extension>woff</extension>
-		<mime-type>application/x-font-woff</mime-type>
-	</mime-mapping>
+	
+	<security-role>
+		<description>Usurios com permissao de acessar relatorios</description>
+		<role-name>RELATORIO</role-name>		
+	</security-role>
 	
 	<error-page>
 		<error-code>403</error-code>
