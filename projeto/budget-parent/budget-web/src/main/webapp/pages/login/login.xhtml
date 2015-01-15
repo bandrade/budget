@@ -16,7 +16,7 @@
     <section class="top">
 		<div class="ui-grid ui-grid-responsive">
 		    <div class="ui-grid-row">
-		        <div class="ui-grid-col-12"><a href="#"><span class="ui-icon ui-icon-arrow-1-w"></span>VOLTAR</a></div>
+		        <div class="ui-grid-col-12"><a href="javascript:history.back()"><span class="ui-icon ui-icon-arrow-1-w"></span>VOLTAR</a></div>
 		    </div>
 	   </div>
 	</section>
@@ -37,12 +37,7 @@
                         <div class="ui-grid ui-grid-responsive">
                             <div class="ui-grid-row">
                                 <div class="ui-grid-col-12">
-                                   <span style="color:#ccc;">Bem vindo ao sistema de Budget da Dupont. Versão:0.0.8</span>
-                                </div>
-                            </div>
-                            <div class="ui-grid-row">
-                                <div class="ui-grid-col-12">
-                                   <input type="text" placeholder="Pesquisar..." />
+                                   <span style="color:#ccc;">Bem vindo ao sistema de Budget da Dupont. Versão: #{msg['versao']}</span>
                                 </div>
                             </div>
                         </div>
@@ -56,7 +51,7 @@
                 <div class="ui-grid-col-12">
                     <nav>
                         <ul class="menu-container">
-                            <li><a href="#">Login</a></li>              
+                            <li><a href="#{request.contextPath}/">Login</a></li>              
                         </ul>
 					</nav>
                 </div>
@@ -65,13 +60,6 @@
     </section>
     <section>
         <div class="ui-grid ui-grid-responsive">
-            <div class="ui-grid-row">
-                <div class="ui-grid-col-11">
-                </div>
-                <div class="ui-grid-col-1" style="text-align:right; margin: 5px 0;">
-                    <span class="ui-icon ui-icon-signal-diag" style="color:red;float:left;vertical-align: middle;"></span>Sugestões
-                </div>
-            </div>
             <div class="ui-grid-row">
                 <div class="ui-grid-col-12">
 	                <div id="login">
@@ -85,7 +73,7 @@
 			                </h:panelGrid>
 			                <br clear="all" />
 			                <div style="float:right;">
-			                    <p:commandButton id="submit" value="Login" ajax="false" />
+			                    <p:commandButton styleClass="ui-icon-check" id="submit" value="Login" ajax="false" />
 			                </div>
 			                </p:panel>
 			            </h:form>

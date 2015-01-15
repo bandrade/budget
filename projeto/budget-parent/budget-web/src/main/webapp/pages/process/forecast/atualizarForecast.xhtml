@@ -30,23 +30,17 @@
 					<p:commandButton value="Incluir Despesa"
 						oncomplete="PF('criarDespesa').show();" action="#{atualizarForecastAction.trataInclusao()}" update=":criarDespesaPanel,:formDespesa"/>
 				</p:panelGrid>
-				<p:panelGrid id="panelDetalhe" columns="1">
-				<p:dataTable 
-					id="tblDespesa"
+				<p:dataTable id="tblDespesa"
 					emptyMessage="Não existem despesas cadastradas" 
 					value="#{atualizarForecastAction.despesasNoDetalhe}"
 					selection="#{atualizarForecastAction.despesaDetalheSelecionada}"
 					var="detalheDespesa"
-					paginator="true"
+					paginator="true" 
 					paginatorPosition="bottom"
-					rows="20" style="margin-left:-10px"
-					scrollable="true"
-					scrollWidth="600"
+					rows="20"
 					frozenColumns="5">
-					<f:facet name="header">
-       				 Despesa
-  						 </f:facet>
-  						 <p:column width="50" >
+					<f:facet name="header">Despesa</f:facet>
+  				    <p:column width="50" >
 						<f:facet name="header">
 							<h:outputText value="Tipo Despesa" />
 						</f:facet>
@@ -203,9 +197,7 @@
 			     	</p:column> 
 				</p:dataTable>
 				
-				
-				</p:panelGrid>
-					<p:panelGrid columns="1" styleClass="painel-botoes">
+				<p:panelGrid columns="1" styleClass="painel-botoes">
 					<p:commandButton value="Concluir"  action="#{atualizarForecastAction.concluir()}" onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()">
 						<p:confirm header="Confirmação" message="Confirma a conclusão da Aprovação do Budget?" icon="ui-icon-alert"/>
 					</p:commandButton>
