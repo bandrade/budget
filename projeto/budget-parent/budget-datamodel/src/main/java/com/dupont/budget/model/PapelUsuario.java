@@ -32,7 +32,7 @@ public class PapelUsuario extends AbstractEntity<Long> {
 	@JoinColumn(name="centro_custo_id")
 	private CentroCusto centroCusto;
 	
-	@OneToOne(cascade = CascadeType.PERSIST)
+	@OneToOne(cascade = { CascadeType.PERSIST} )
 	@JoinColumn(name="papel_id")
 	private Papel papel;
 	

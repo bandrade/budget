@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Map.Entry;
 
 import javax.ejb.Stateless;
@@ -200,5 +201,24 @@ public class DomainServiceBean extends GenericService implements DomainService {
 			return null;		
 
 		return em.createNamedQuery(namedQuery, clazz).getResultList();
+	}
+
+	@Override
+	public Usuario createUsuario(Usuario usuario) {
+		
+		Set<PapelUsuario> papeis = usuario.getPapeis();
+		
+		if( papeis != null ){
+			for (PapelUsuario papelUsuario : papeis) {
+				
+				Papel p = papelUsuario.getPapel();
+			
+				papelUsuario.setPapel(findById(p));
+				
+			}
+		}
+		
+		
+		return create(usuario);
 	}
 }

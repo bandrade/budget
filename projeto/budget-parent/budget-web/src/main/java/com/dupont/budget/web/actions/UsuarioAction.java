@@ -186,6 +186,7 @@ public class UsuarioAction extends GenericAction<Usuario> {
 			entidade.getPapeis().clear();
 		} else {
 			for (Papel p: papelList.getTarget()) {
+				
 				entidade.getPapeis().add(new PapelUsuario(p, entidade));
 			}
 		}
@@ -197,7 +198,26 @@ public class UsuarioAction extends GenericAction<Usuario> {
 		}
 
 		userCallBackCache.removeGroupsFromCache(entidade.getLogin());
+		
+		
 		return super.persist();
+	}
+	
+	/* hack para o erro de detached entity. Encontrar melhor solução */
+	@Override
+	public String create() {
+		String tipo = getEntidade().getClass().getSimpleName();
+		getLogger().debug(String.format("Criando uma nova entidade do tipo: %s", tipo));
+		
+		try {
+			setEntidade(getService().update(getEntidade()));
+			
+			getFacesUtils().addInfoMessage(String.format("%s criado(a) com sucesso.", tipo));
+		} catch (Exception e) {
+			handleException(e);
+		}
+
+		return "list";
 	}
 
 
@@ -221,7 +241,7 @@ public class UsuarioAction extends GenericAction<Usuario> {
 
 	@Override
 	public void delete(Usuario t) {
-		userCallBackCache.removeGroupsFromCache(entidade.getLogin());
+		userCallBackCache.removeGroupsFromCache(t.getLogin());
 		super.delete(t);
 	}
 

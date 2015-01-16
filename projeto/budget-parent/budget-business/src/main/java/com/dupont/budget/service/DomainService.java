@@ -158,4 +158,7 @@ public interface DomainService {
 	 */
 	List<SolicitacaoPagamento> listSolicitacaoByFiltro(String numeroNotaFiscal,
 			TipoSolicitacao tipo, StatusPagamento status, String fornecedor);
+	
+	
+	public Usuario createUsuario(Usuario usuario);
 }

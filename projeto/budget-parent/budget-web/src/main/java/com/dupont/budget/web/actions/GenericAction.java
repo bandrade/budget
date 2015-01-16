@@ -158,7 +158,7 @@ public abstract class GenericAction<T extends AbstractEntity<?>>  implements Ser
 	 * 
 	 * @param e exceção
 	 */
-	private void handleException(Throwable e) {
+	protected void handleException(Throwable e) {
 		if (e instanceof ApplicationException || e instanceof ApplicationRuntimeException) {
 			getFacesUtils().addErrorMessage(e.getLocalizedMessage());
 		} else if(ExceptionUtils.getRootCause(e).getClass().getName().contains("MySQLIntegrityConstraintViolationException")) {
