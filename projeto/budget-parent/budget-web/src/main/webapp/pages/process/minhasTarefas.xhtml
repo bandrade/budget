@@ -28,7 +28,7 @@
 	                </div>
 	            </div>
 	            <div class="ui-grid-row" style="padding:10px 0;">
-                    <div class="ui-grid-col-3 line-top">
+                    <div class="ui-grid-col-10 line-top">
                         <h3>Minhas Tarefas</h3>
                         <p:dataList styleClass="pendencias" value="#{tarefaAction.tarefas}" var="_item" emptyMessage="Você não possui tarefas pendentes">
 					        <p:link value="#{_item.name}" outcome="#{navegacaoAction.obterOutcome(_item.name)}" title="#{_item.description}" >
@@ -40,7 +40,7 @@
                     </div>
                     <div class="ui-grid-col-1">
                     </div>
-                    <div class="ui-grid-col-8 line-top">
+                    <div class="ui-grid-col-5 line-top">
                         <h3>Relatórios</h3>
                     </div>
                 </div>

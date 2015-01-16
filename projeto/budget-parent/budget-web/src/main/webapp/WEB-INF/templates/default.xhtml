@@ -61,7 +61,7 @@
                                         <li> <p:link  outcome="/pages/process/pagamento/edit.xhtml" value="Solicitação de Pagamento"/>  </li>
                                     </ul>
                                 </li>
-                                <h:panelGroup rendered="#{request.isUserInRole('RELATORIO')}">     
+                                <h:panelGroup rendered="#{request.isUserInRole('RELATORIO') || request.isUserInRole('ADMINISTRADOR')}">     
                                 
 	                                <li><a href="#">Relatórios</a>                        
 	                                    <ul>

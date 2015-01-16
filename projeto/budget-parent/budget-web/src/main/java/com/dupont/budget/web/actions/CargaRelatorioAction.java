@@ -50,7 +50,7 @@ public class CargaRelatorioAction implements Serializable {
 	private FacesUtils facesUtils;
 
 	@Inject
-	private EventDispatcherService eventDispatcher;
+	private EventDispatcherService  eventDispatcher;
 	
 	private List<ResultadoCargaDTO> list = new LinkedList<ResultadoCargaDTO>();
 	

@@ -7,6 +7,7 @@ import javax.inject.Inject;
 
 import com.dupont.budget.model.CentroCusto;
 import com.dupont.budget.model.PapelUsuario;
+import com.dupont.budget.model.Perfil;
 import com.dupont.budget.model.Usuario;
 import com.dupont.budget.report.model.ReportBudgetOrcadoUtilizadoMaster;
 import com.dupont.budget.web.actions.LoggedUserAction;
@@ -65,6 +66,14 @@ public abstract class ReportBudgetOrcadoUtilizadoAction {
 		Usuario usuario = loggedUserAction.getLoggedUser();
 		
 		Set<PapelUsuario> papeis = usuario.getPapeis();
+		
+		Set<Perfil> perfis = usuario.getPerfis();
+		
+		for (Perfil perfil : perfis) {
+			
+			if( perfil == Perfil.ADMINISTRADOR )
+				valid = true;
+		}
 		
 		for (PapelUsuario papelUsuario : papeis) {
 			
