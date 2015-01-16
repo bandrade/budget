@@ -36,6 +36,10 @@ public class LoggedUserAction implements Serializable {
 		
 		return loggedUser.getNome();
 	}
+	
+	public Usuario getLoggedUser() {
+		return loggedUser;
+	}
 
 	/**
 	 * Retorna o usuario logado

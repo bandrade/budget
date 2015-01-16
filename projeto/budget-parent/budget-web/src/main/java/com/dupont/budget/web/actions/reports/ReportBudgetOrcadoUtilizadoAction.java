@@ -1,11 +1,15 @@
 package com.dupont.budget.web.actions.reports;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 
 import com.dupont.budget.model.CentroCusto;
+import com.dupont.budget.model.PapelUsuario;
+import com.dupont.budget.model.Usuario;
 import com.dupont.budget.report.model.ReportBudgetOrcadoUtilizadoMaster;
+import com.dupont.budget.web.actions.LoggedUserAction;
 import com.dupont.budget.web.util.FacesUtils;
 
 /**
@@ -19,6 +23,9 @@ public abstract class ReportBudgetOrcadoUtilizadoAction {
 
 	@Inject
 	protected FacesUtils facesUtils;
+	
+	@Inject
+	protected LoggedUserAction loggedUserAction;
 
 	// FILTROS DA TELA
 	protected String ano;
@@ -30,6 +37,13 @@ public abstract class ReportBudgetOrcadoUtilizadoAction {
 	private Double totalAnoUtilizado = 0.0;
 
 	public void doReport(){
+		
+		// confere se o usuario possui permissao para o centro de custo.
+		if(! validateUser() ){
+			facesUtils.addErrorMessage("Você não possui permissão para acessar relatórios desse centro de custo.");
+			return;
+		}
+		
 		report = getReportResult();
 		
 		if( report == null || report.isEmpty() ) {
@@ -42,6 +56,29 @@ public abstract class ReportBudgetOrcadoUtilizadoAction {
 			addTotalAnoUtilizado(reportBudgetOrcadoUtilizadoMaster.getTotalUtilizado());		
 		}
 		
+	}
+
+	private boolean validateUser() {
+		
+		boolean valid = false;
+
+		Usuario usuario = loggedUserAction.getLoggedUser();
+		
+		Set<PapelUsuario> papeis = usuario.getPapeis();
+		
+		for (PapelUsuario papelUsuario : papeis) {
+			
+			if(  papelUsuario.getCentroCusto() != null 
+					&& papelUsuario.getCentroCusto().getId().equals(centroCusto.getId())
+					&& papelUsuario.getPapel().getNome().contains(papelUsuario.getCentroCusto().getCodigo())){
+				
+				valid = true;
+				break;
+			}
+			
+		}
+		
+		return valid;
 	}
 
 	protected abstract List<ReportBudgetOrcadoUtilizadoMaster> getReportResult();
