@@ -247,7 +247,7 @@
 					 scrollHeight="300"
 					converter="com.dupont.EntityConverter"
 					 var="_vendedor" itemLabel="#{_vendedor.nome}" itemValue="#{_vendedor}" emptyMessage="NAO ENCONTRADO" effect="size"
-					 required="true"/>
+					 />
 					
 					<p:outputLabel value="Cliente:"></p:outputLabel>
 					<p:autoComplete id="cboCliente" dropdown="true" value="#{atualizarForecastAction.despesa.cliente}" completeMethod="#{autocompleteAction.autocompleteCliente}" 
@@ -255,7 +255,7 @@
 				     scrollHeight="300"
 				      styleClass="input"
 					 var="_cliente" itemLabel="#{_cliente.nome}" itemValue="#{_cliente}" emptyMessage="NAO ENCONTRADO" effect="size"
-					 required="true" />
+					  />
 					<p:outputLabel value="Ação:"></p:outputLabel>
 					 <p:panelGrid columns="3" id="painel">
 					<p:selectOneRadio value="#{atualizarForecastAction.tipoAcao}" >

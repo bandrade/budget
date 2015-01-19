@@ -20,6 +20,8 @@
 						<f:selectItem itemLabel="SELECIONE" itemValue="" />
 						<f:selectItems value="#{processoAction.meses}" var="mes" itemLabel="#{mes.mes}" itemValue="#{mes.mes}"/>
 					</p:selectOneMenu>
+					<p:outputLabel value="Prazo:"/>
+					<p:calendar value="#{processoAction.dataExpiracao}" required="true" locale="pt_BR"></p:calendar>
 				</p:panelGrid>
 			
 				<p:panelGrid columns="1" styleClass="painel-botoes" >

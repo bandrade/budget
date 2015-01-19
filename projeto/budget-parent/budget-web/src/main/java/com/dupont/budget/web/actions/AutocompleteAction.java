@@ -6,6 +6,7 @@ import javax.enterprise.inject.Model;
 import javax.inject.Inject;
 
 import com.dupont.budget.model.Acao;
+import com.dupont.budget.model.CentroCusto;
 import com.dupont.budget.model.Cliente;
 import com.dupont.budget.model.Cultura;
 import com.dupont.budget.model.Distrito;
@@ -37,6 +38,9 @@ public class AutocompleteAction {
 
 	@Inject
 	private TipoDespesaAction tipoDespesaAction;
+	
+	@Inject
+	private CentroCustoAction centroCustoAction;
 
 
 	@Inject
@@ -86,5 +90,9 @@ public class AutocompleteAction {
 		return facesUtils.autoComplete(acaoAction.getList(),input);
 	}
 
+	public List<CentroCusto> autoCompleteCentroCusto(String input)
+	{
+		return facesUtils.autoComplete(centroCustoAction.getList(),input);
+	}
 
 }
