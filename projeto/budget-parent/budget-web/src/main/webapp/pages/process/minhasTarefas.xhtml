@@ -24,25 +24,26 @@
 	                       <div>
 	                         <img src="#{request.contextPath}/resources/images/slideshow/NationalGeographic_Protection_1166372_Firefighter_1100x290.jpeg" />
 	                       </div>
-	                    </div>
+	                    </div> 
 	                </div>
 	            </div>
 	            <div class="ui-grid-row" style="padding:10px 0;">
-                    <div class="ui-grid-col-10 line-top">
+                    <div class="line-top" style="width: 100%">
                         <h3>Minhas Tarefas</h3>
                         <p:dataList styleClass="pendencias" value="#{tarefaAction.tarefas}" var="_item" emptyMessage="Você não possui tarefas pendentes">
 					        <p:link value="#{_item.name}" outcome="#{navegacaoAction.obterOutcome(_item.name)}" title="#{_item.description}" >
 		                        <f:param name="taskId" value="#{_item.id}" />
 		                        <f:param name="processInstanceId" value="#{_item.processInstanceId}" />
 		                    </p:link>
-		                    (<h:outputText id="processInstanceId" value="#{_item.createdOn}" converter="javax.faces.DateTime"/>)
+		                     - <h:outputText id="subject" value="#{_item.description}"/>
+		                    (<h:outputText id="processInstanceId" value="#{_item.prazo}" converter="javax.faces.DateTime"/>)
 					    </p:dataList>
                     </div>
-                    <div class="ui-grid-col-1">
+<!--                     <div class="ui-grid-col-1">
                     </div>
                     <div class="ui-grid-col-5 line-top">
                         <h3>Relatórios</h3>
-                    </div>
+                    </div> -->
                 </div>
 	         </div>
        </h:form>
