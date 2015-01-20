@@ -16,6 +16,7 @@
 
 package com.dupont.budget.bpm.custom.process;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -69,7 +70,7 @@ public class BPMProcessManagerApiImpl implements BPMProcessManagerApi {
 				.registerWorkItemHandler("Rest", new RESTWorkItemHandler());
 	}
 
-	public long startBudgetProcess(CentroDeCustoDTO[] ceDtos, AreaDTO[] areas, String ano) throws Exception {
+	public long startBudgetProcess(CentroDeCustoDTO[] ceDtos, AreaDTO[] areas, String ano, Date prazo) throws Exception {
 		RuntimeEngine runtime = singletonManager.getRuntimeEngine(EmptyContext
 				.get());
 
@@ -83,6 +84,7 @@ public class BPMProcessManagerApiImpl implements BPMProcessManagerApi {
 			params.put("centrosDeCustoArray", ceDtos);
 			params.put("areasArray", areas);
 			params.put("anoBudget", ano);
+			params.put("prazo", prazo);
 			ProcessInstance processInstance = ksession.startProcess(
 			"com.dupont.bpm.criarbudget", params);
 			processInstanceId = processInstance.getId();
@@ -93,7 +95,7 @@ public class BPMProcessManagerApiImpl implements BPMProcessManagerApi {
 		return processInstanceId;
 	}
 
-	public long startForecastProcess(CentroDeCustoDTO[] ceDtos, String ano, String mes) throws Exception {
+	public long startForecastProcess(CentroDeCustoDTO[] ceDtos, String ano, String mes,Date prazo) throws Exception {
 		RuntimeEngine runtime = singletonManager.getRuntimeEngine(EmptyContext
 				.get());
 
@@ -107,6 +109,7 @@ public class BPMProcessManagerApiImpl implements BPMProcessManagerApi {
 			params.put("centrosDeCustoArray", ceDtos);
 			params.put("mesForecast", mes);
 			params.put("anoForecast", ano);
+			params.put("prazo", prazo);
 			ProcessInstance processInstance = ksession.startProcess(
 			"com.dupont.bpm.atualizarforecast", params);
 			processInstanceId = processInstance.getId();

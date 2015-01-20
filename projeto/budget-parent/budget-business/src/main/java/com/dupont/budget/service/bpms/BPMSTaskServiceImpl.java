@@ -1,6 +1,7 @@
 package com.dupont.budget.service.bpms;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -11,7 +12,8 @@ import org.apache.commons.lang3.NotImplementedException;
 import org.kie.api.task.model.TaskSummary;
 
 import com.dupont.budget.bpm.custom.exception.BPMException;
-import com.dupont.budget.bpm.custom.task.BPMTaskManagerApiImpl;
+import com.dupont.budget.bpm.custom.process.BPMProcessManagerApi;
+import com.dupont.budget.bpm.custom.task.BPMTaskManagerApi;
 import com.dupont.budget.dto.StatusTarefaEnum;
 import com.dupont.budget.dto.TarefaDTO;
 
@@ -19,7 +21,10 @@ import com.dupont.budget.dto.TarefaDTO;
 public class BPMSTaskServiceImpl implements BPMSTaskService {
 
 	@Inject
-	private BPMTaskManagerApiImpl taskApi;
+	private BPMTaskManagerApi taskApi;
+	
+	@Inject
+	private BPMProcessManagerApi processApi;
 
 	public List<TarefaDTO> obterTarefas(String user) throws Exception {
 		List<TaskSummary> tasks = taskApi.retrieveTaskList(user);
@@ -45,6 +50,7 @@ public class BPMSTaskServiceImpl implements BPMSTaskService {
 
 	private TarefaDTO parseTaskToTarefa(TaskSummary task) throws BPMException
 	{
+		Map<String, Object> conteudoTarefa = taskApi.getTaskContent(task.getId());
 		TarefaDTO tarefaDTO = new TarefaDTO();
 		tarefaDTO.setActivationTime(task.getActivationTime());
 		tarefaDTO.setActualOwner(task.getActualOwner() != null ? task
@@ -52,7 +58,12 @@ public class BPMSTaskServiceImpl implements BPMSTaskService {
 		tarefaDTO.setCreatedBy(task.getCreatedBy() != null ? task
 				.getCreatedBy().getId() : null);
 		tarefaDTO.setCreatedOn(task.getCreatedOn());
-		String subject = String.valueOf(taskApi.getTaskContent(task.getId()).get("Subject"));
+		String subject = String.valueOf(conteudoTarefa.get("Subject"));
+		Object data = processApi.getProcessVariable(task.getProcessInstanceId(), "prazo");
+		if(data !=null)
+		{
+			tarefaDTO.setPrazo((Date) data);
+		}
 		tarefaDTO.setDescription(subject ==null? "":subject);
 		tarefaDTO.setExpirationTime(task.getExpirationTime());
 		tarefaDTO.setId(task.getId());

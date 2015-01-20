@@ -1,6 +1,7 @@
 package com.dupont.budget.service.bpms;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.enterprise.inject.Model;
@@ -27,7 +28,7 @@ public class BPMSProcessServiceImpl implements BPMSProcessService{
 	@Inject
 	private DomainService domainService;
 
-	public long iniciarProcessoBudget(String ano) throws Exception {
+	public long iniciarProcessoBudget(String ano,Date prazo) throws Exception {
 		CentroDeCustoDTO [] ceDtos = ccService.obterCentrosDeCusto();
 		List<AreaDTO> areasListDto =  new ArrayList<>();
 		List<Area> areas = domainService.findAll(Area.class);
@@ -45,15 +46,15 @@ public class BPMSProcessServiceImpl implements BPMSProcessService{
 			}
 		}
 		AreaDTO [] areaArray = areasListDto.toArray(new AreaDTO[areasListDto.size()]);
-		return processApi.startBudgetProcess(ceDtos,areaArray,ano);
+		return processApi.startBudgetProcess(ceDtos,areaArray,ano,prazo);
 	}
 
 
 	@Override
-	public long iniciarProcessoForecast(String ano, String mes)
+	public long iniciarProcessoForecast(String ano, String mes,Date prazo)
 			throws Exception {
 		CentroDeCustoDTO [] ceDtos = ccService.obterCentrosDeCusto();
-		return processApi.startForecastProcess(ceDtos, ano, mes);
+		return processApi.startForecastProcess(ceDtos, ano, mes,prazo);
 	}
 
 	@Override

@@ -181,6 +181,11 @@ public class BudgetServiceBean extends GenericService implements BudgetService {
  			Budget budget = em.find(Budget.class,Long.valueOf(budgetId));
 			budget.setStatus(StatusBudget.SUBMETIDO);
 			em.merge(budget);
+			for(Despesa despesa : budget.getDespesas())
+			{
+				despesa.setValorProposto(despesa.getValor());
+				em.merge(despesa);
+			}
 	}
 
 
@@ -194,7 +199,7 @@ public class BudgetServiceBean extends GenericService implements BudgetService {
 			.append(	" where budget.ano=:ano and despesa.aprovacao=1")
 			.append(	" group by area.id");
 
-		List<Object[]> result = em.createNativeQuery(query.toString(), Object[].class)
+		List<Object[]> result = em.createNativeQuery(query.toString())
 									  .setParameter("ano", ano)
 									  .getResultList();
 
@@ -262,6 +267,8 @@ public class BudgetServiceBean extends GenericService implements BudgetService {
 		{
 			budget.setValorTotalBudget(em.createNamedQuery("Despesa.obterSomaDespesa",Double.class)
 			.setParameter("budgetId",budget.getId()).getSingleResult());
+			budget.setValorTotalProposto(em.createNamedQuery("Despesa.obterSomaValorPropostoDespesa",Double.class)
+					.setParameter("budgetId",budget.getId()).getSingleResult());
 
 		}
 		return budgets;

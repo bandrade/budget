@@ -37,6 +37,7 @@ public class TarefaDTO  implements Serializable{
 
 	private int processSessionId;
 
+	private Date prazo;
 
 	private List<String> potentialOwners;
 
@@ -172,4 +173,14 @@ public class TarefaDTO  implements Serializable{
 	public void setPotentialOwners(List<String> potentialOwners) {
 		this.potentialOwners = potentialOwners;
 	}
+
+	public Date getPrazo() {
+		return prazo;
+	}
+
+	public void setPrazo(Date prazo) {
+		this.prazo = prazo;
+	}
+
+	
 }

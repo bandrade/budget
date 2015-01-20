@@ -172,7 +172,7 @@
 						<f:selectItem itemValue="S"  itemLabel="Existente"/>
 						<f:selectItem itemValue="N" itemLabel="Nova"/>
 					</p:selectOneRadio>					
-					<p:autoComplete id="cboAcao" dropdown="true" value="#{aprovarBudgetAction.despesa.acao}" completeMethod="#{autocompleteAction.autocompleteAcao}" 
+					<p:autoComplete id="cboAcao" dropdown="true" value="#{aprovarBudgetAction.despesa.acao}" completeMethod="#{aprovarBudgetAction.autocompleteAcao}" 
 				     converter="com.dupont.EntityConverter"
 				      styleClass="input"
 				      scrollHeight="300"

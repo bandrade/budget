@@ -1,6 +1,7 @@
 package com.dupont.budget.web.actions;
 
 import java.util.Calendar;
+import java.util.Date;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.inject.Model;
@@ -26,24 +27,71 @@ public class ProcessoAction {
 	private FacesUtils facesUtils;
 
 	private String mes;
+	
+	private Date dataExpiracao;
 
+	private Calendar calendar;
 
 	@PostConstruct
 	public void init()
 	{
-		ano = Calendar.getInstance().get(Calendar.YEAR)+"";
+		calendar = Calendar.getInstance();  
+		ano = calendar.get(Calendar.YEAR)+"";
 	}
 
+	private boolean validarPrazoBudget()
+	{
+		boolean isPrazoOk= true;
+		if(dataExpiracao.before(new Date()))
+		{
+			facesUtils.addErrorMessage("O prazo deve ser uma data futura");
+			isPrazoOk=false;
+		}
+		
+		if(dataExpiracao.before(new Date()))
+		{
+			facesUtils.addErrorMessage("O prazo deve ser uma data futura");
+			isPrazoOk=false;
+		}
+		return isPrazoOk;
+		
+	}
+	private boolean validarPrazoForecast()
+	{
+		calendar.setTime(dataExpiracao);
+		boolean isPrazoOk= true;
+				if(dataExpiracao.before(new Date()))
+		{
+			facesUtils.addErrorMessage("O prazo deve ser uma data futura");
+			isPrazoOk=false;
+		}
+				
+		MesEnum mesPrazo = MesEnum.values()[calendar.get(Calendar.MONTH)];
+		MesEnum mesForecast = MesEnum.valueOf(mes.toUpperCase());
+		if(mesForecast.getId()>mesPrazo.getId())
+		{
+			facesUtils.addErrorMessage("O prazo não pode ter uma data inferior ao mes do Forecast");
+			isPrazoOk=false;
+		}
+		return isPrazoOk;
+	}
+
+	
 	public void iniciarProcessoBudget()
 	{
+		if(!validarPrazoBudget())
+		{
+			return;
+		}
 		try {
+			
 			if(bpms.existeProcessoAtivo(ano))
 			{
 				facesUtils.addErrorMessage("Ja existe um processo de budget para o ano vigente");
 			}
 			else
 			{
-				bpms.iniciarProcessoBudget(ano);
+				bpms.iniciarProcessoBudget(ano,dataExpiracao);
 				facesUtils.addInfoMessage("Processo de budget iniciado com sucesso");
 			}
 		} catch (Exception e) {
@@ -53,15 +101,19 @@ public class ProcessoAction {
 	}
 	public void iniciarProcessoForecast()
 	{
+		if(!validarPrazoForecast())
+		{
+			return;
+		}	
 		try {
-
+			
 			if(bpms.existeProcessoForecastAtivo(mes, ano))
 			{
 				facesUtils.addErrorMessage("Ja existe um processo de forecast para o ano "+ano +" e mes de "+mes);
 			}
 			else
 			{
-				bpms.iniciarProcessoForecast(ano, mes);
+				bpms.iniciarProcessoForecast(ano, mes,dataExpiracao);
 				facesUtils.addInfoMessage("Processo de Forecast iniciado com sucesso");
 			}
 		} catch (Exception e) {
@@ -91,6 +143,14 @@ public class ProcessoAction {
 		return MesEnum.values();
 	}
 
+	public Date getDataExpiracao() {
+		return dataExpiracao;
+	}
 
+	public void setDataExpiracao(Date dataExpiracao) {
+		this.dataExpiracao = dataExpiracao;
+	}
+
+	
 
 }

@@ -146,8 +146,9 @@ public class UsuarioAction extends GenericAction<Usuario> {
 				return null;
 			}
 		}
-
 		if (!mustCreate()) {
+			entidade.setPapeis(service.findById(entidade).getPapeis());
+			/*
 			for (PapelUsuario p : service.findById(entidade).getPapeis()) {
 				if (!papelList.getTarget().contains(p.getPapel())) {
 					if (p.getCentroCusto() != null) {
@@ -160,9 +161,9 @@ public class UsuarioAction extends GenericAction<Usuario> {
 						return null;
 					}
 				}
-			}
+			}*/
 		}
-
+		/*
 		List<PapelUsuario> references = service.listPapelReferences(papelList.getTarget());
 		if (!references.isEmpty()) {
 			for (PapelUsuario p: references) {
@@ -181,7 +182,7 @@ public class UsuarioAction extends GenericAction<Usuario> {
 				}
 			}
 		}
-
+	
 		if (papelList.getTarget().isEmpty()) {
 			entidade.getPapeis().clear();
 		} else {
@@ -190,13 +191,13 @@ public class UsuarioAction extends GenericAction<Usuario> {
 				entidade.getPapeis().add(new PapelUsuario(p, entidade));
 			}
 		}
-
+		 */
+		 
 		entidade.getPerfis().clear();
 
 		for (Object s : perfilList.getTarget()) {
 			entidade.getPerfis().add(Perfil.valueOf(s.toString()));
 		}
-
 		userCallBackCache.removeGroupsFromCache(entidade.getLogin());
 		
 		

@@ -46,10 +46,11 @@
                     <h:outputLabel for="perfilList" value="Perfil:" />
                     <p:pickList id="perfilList" value="#{usuarioAction.perfilList}" var="p" itemLabel="#{p.toString()}" itemValue="#{p}" />
                     <p:message for="perfilList" />
-                    
+                    <!-- 
                     <h:outputLabel for="papelList" value="Papéis" />
                     <p:pickList id="papelList" value="#{usuarioAction.papelList}" var="p" itemLabel="#{p.nome}" itemValue="#{p}" converter="com.dupont.EntityConverter" />
                     <p:message for="papelList" />
+                     -->
 				</h:panelGrid>
 				
 				<p:commandButton value="#{colaborador.id != null? 'Atualizar' : 'Salvar'}" process="@this" icon="ui-icon-check" action="#{usuarioAction.persist}" styleClass="button" ajax="false" />

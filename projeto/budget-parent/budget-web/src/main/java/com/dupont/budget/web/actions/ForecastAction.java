@@ -138,11 +138,7 @@ public class ForecastAction implements Serializable {
 		{
 			despesa.setForecast(despesasNoDetalhe.get(0).getForecast());
 		}
-		if(!despesa.getValor().equals(helper.calcularValorMensalisado(despesa)))
-		{
-			facesUtils.addErrorMessage("O valor mensalizado deve ser igual ao valor total da despesa");
-			return;
-		}
+		despesa.setValor(helper.calcularValorMensalisado(despesa));
 
 		try
 		{

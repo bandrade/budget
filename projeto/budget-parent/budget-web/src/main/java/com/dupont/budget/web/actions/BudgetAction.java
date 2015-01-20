@@ -15,6 +15,7 @@ import javax.inject.Named;
 import org.slf4j.Logger;
 
 import com.dupont.budget.dto.CentroDeCustoDTO;
+import com.dupont.budget.model.Acao;
 import com.dupont.budget.model.Budget;
 import com.dupont.budget.model.CentroCusto;
 import com.dupont.budget.model.Despesa;
@@ -28,6 +29,7 @@ import com.dupont.budget.web.util.FacesUtils;
 @ConversationScoped
 @Named
 public class BudgetAction implements Serializable{
+
 	protected CentroDeCustoDTO centroDeCusto;
 	protected Budget budget;
 	protected Long idInstanciaProcesso;
@@ -72,6 +74,9 @@ public class BudgetAction implements Serializable{
 	protected List<Despesa> despesasNoDetalhe;
 
 	protected boolean possuiBudgetSalvo;
+	
+	protected List<Acao> acoes;
+	
 
 	public void obterDadosBudget() throws Exception{
 			if(conversation.isTransient())
@@ -253,6 +258,7 @@ public class BudgetAction implements Serializable{
 		else
 		{
 			despesa.getAcao().setId(null);
+			despesa.getAcao().setBudget(budget);;
 			domainService.create(despesa.getAcao());
 		}
 	}
@@ -274,7 +280,8 @@ public class BudgetAction implements Serializable{
 			logger.error("Erro ao alterar despesa", e);
 		}
 	}
-
+	
+	
 	protected <T extends NamedAbstractEntity<Long>> T validarCamposDespesa(T entidade)
 	{
 
@@ -293,6 +300,18 @@ public class BudgetAction implements Serializable{
 		}
 		return null;
 	}
+	
+	public List<Acao> autocompleteAcao(String input)
+	{
+
+		return facesUtils.autoComplete(obterAcoesPorBudget(),input);
+	}
+	
+	public List<Acao> obterAcoesPorBudget()
+	{
+		return domainService.findAcaoByBudget(budget.getId());
+	}
+	
 	public CentroDeCustoDTO getCentroDeCusto() {
 		return centroDeCusto;
 	}
@@ -388,6 +407,9 @@ public class BudgetAction implements Serializable{
 	public void setDespesaDetalheSelecionada(Despesa despesaDetalheSelecionada) {
 		this.despesaDetalheSelecionada = despesaDetalheSelecionada;
 	}
+
+
+	
 
 
 }

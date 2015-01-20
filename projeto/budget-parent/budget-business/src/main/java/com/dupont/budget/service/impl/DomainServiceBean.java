@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.ejb.Stateless;
 import javax.persistence.NoResultException;
@@ -13,6 +13,7 @@ import javax.persistence.Query;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.dupont.budget.model.Acao;
 import com.dupont.budget.model.CentroCusto;
 import com.dupont.budget.model.NamedAbstractEntity;
 import com.dupont.budget.model.Papel;
@@ -220,5 +221,16 @@ public class DomainServiceBean extends GenericService implements DomainService {
 		
 		
 		return create(usuario);
+	}
+
+	@Override
+	public List<Acao> findAcaoByBudget(Long budgetId) {
+		try {
+			return em.createNamedQuery(Acao.FIND_ACAO_BY_BUDGET, Acao.class)
+						.setParameter("budgetId", budgetId)
+						.getResultList();
+		} catch (NoResultException e) {
+			return null;
+		}
 	}
 }

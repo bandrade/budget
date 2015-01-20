@@ -1,6 +1,7 @@
 package com.dupont.budget.model;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -57,6 +58,9 @@ public class Budget {
 	@Transient
 	private Double valorTotalBudget;
 
+	@Transient
+	private Double valorTotalProposto;
+	
 	@Column(name = "data_criacao")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date cricao;
@@ -71,6 +75,12 @@ public class Budget {
 
 	@Enumerated(EnumType.STRING)
 	private StatusBudget status;
+	
+	//bi-directional many-to-one association to Acao
+	@OneToMany(mappedBy="budget")
+	private List<Acao> acoes;
+	
+	
 
 
 	public Long getId() {
@@ -153,5 +163,21 @@ public class Budget {
 		this.valorTotalBudget = valorTotalBudget;
 	}
 
+	public List<Acao> getAcoes() {
+		return acoes;
+	}
 
+	public void setAcoes(List<Acao> acoes) {
+		this.acoes = acoes;
+	}
+
+	public Double getValorTotalProposto() {
+		return valorTotalProposto;
+	}
+
+	public void setValorTotalProposto(Double valorTotalProposto) {
+		this.valorTotalProposto = valorTotalProposto;
+	}
+
+	
 }
