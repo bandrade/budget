@@ -3,6 +3,7 @@ package com.dupont.budget.service;
 import java.util.List;
 
 import com.dupont.budget.model.AbstractEntity;
+import com.dupont.budget.model.Acao;
 import com.dupont.budget.model.CentroCusto;
 import com.dupont.budget.model.NamedAbstractEntity;
 import com.dupont.budget.model.Papel;
@@ -161,4 +162,8 @@ public interface DomainService {
 	
 	
 	public Usuario createUsuario(Usuario usuario);
+	
+	public <T extends NamedAbstractEntity<?>> List<T> findByNamePaging(T t) ;
+	
+	public List<Acao> findAcaoByBudget(Long budgetId);
 }

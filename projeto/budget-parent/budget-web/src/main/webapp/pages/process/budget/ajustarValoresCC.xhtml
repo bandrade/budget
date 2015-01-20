@@ -52,9 +52,15 @@
 							</f:facet>
 							<h:outputText value="#{budget.centroCusto.codigo}" />
 						</p:column>
+						 <p:column footerText="#{facesUtils.formatarDinheiro(ajustarValoresBudgetAction.valorTotalPropostoBudgetArea)}" style="text-align:center">
+							<f:facet name="header">
+								<h:outputText value="Valor Proposto" />
+							</f:facet>							
+							<h:outputText value="#{facesUtils.formatarDinheiro(budget.valorTotalProposto)}" />
+						</p:column>
 						 <p:column footerText="#{facesUtils.formatarDinheiro(ajustarValoresBudgetAction.valorTotalBudgetArea)}" style="text-align:center">
 							<f:facet name="header">
-								<h:outputText value="Valor" />
+								<h:outputText value="Valor Submetido" />
 							</f:facet>							
 							<h:outputText value="#{facesUtils.formatarDinheiro(budget.valorTotalBudget)}" />
 						</p:column>
@@ -131,9 +137,17 @@
 							</f:facet>
 							<h:outputText value="#{detalheDespesa.comentario}" />
 						</p:column>
-						<p:column footerText="Total:#{facesUtils.formatarDinheiro(ajustarValoresBudgetAction.valorTotalDetalhe)}" style="text-align:center" >
+						<p:column footerText="Total:#{facesUtils.formatarDinheiro(ajustarValoresBudgetAction.calcularTotalValorProposto())}" style="text-align:center" >
 							<f:facet name="header">
 								<h:outputText value="Valor Proposto" />
+							</f:facet>
+							<h:outputText value="#{detalheDespesa.valorProposto}" >
+								<f:convertNumber type="currency"/>
+							</h:outputText>
+						</p:column> 
+						<p:column footerText="Total:#{facesUtils.formatarDinheiro(ajustarValoresBudgetAction.valorTotalDetalhe)}" style="text-align:center" >
+							<f:facet name="header">
+								<h:outputText value="Valor Submetido" />
 							</f:facet>
 							<h:outputText value="#{detalheDespesa.valor}" >
 								<f:convertNumber type="currency"/>
@@ -215,8 +229,8 @@
 						<f:selectItem itemValue="S"  itemLabel="Existente"/>
 						<f:selectItem itemValue="N" itemLabel="Nova"/>
 					</p:selectOneRadio>					
-					<p:autoComplete id="cboAcao" dropdown="true" value="#{ajustarValoresBudgetAction.despesa.acao}" completeMethod="#{autocompleteAction.autocompleteAcao}" 
-				     converter="com.dupont.EntityConverter"
+					<p:autoComplete id="cboAcao" dropdown="true" value="#{ajustarValoresBudgetAction.despesa.acao}" completeMethod="#{ajustarValoresBudgetAction.autocompleteAcao}" 
+				      converter="com.dupont.EntityConverter"
 				      styleClass="input"
 				      scrollHeight="300"
 					 var="_acao" itemLabel="#{_acao.nome}" itemValue="#{_acao}" emptyMessage="NAO ENCONTRADO" effect="size"

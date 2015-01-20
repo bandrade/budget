@@ -26,6 +26,7 @@ import javax.persistence.Table;
 	@NamedQuery(name="Despesa.agruparPorTipoDeDespesa", query="select c.tipoDespesa, sum(c.valor) from Despesa c where c.budget.id = :id group by c.tipoDespesa"),
 	@NamedQuery(name="Despesa.obterDespesaNoDetalhe", query="select c from Despesa c where c.budget.id = :budgetId and c.tipoDespesa.id=:id"),
 	@NamedQuery(name="Despesa.obterSomaDespesa", query="select sum(c.valor) from Despesa c where c.budget.id = :budgetId"),
+	@NamedQuery(name="Despesa.obterSomaValorPropostoDespesa", query="select sum(c.valorProposto) from Despesa c where c.budget.id = :budgetId"),
 	@NamedQuery(name="Despesa.obterDespesaNoDetalheBudget", query="select c from Despesa c where c.budget.id = :budgetId order by c.tipoDespesa.id"),
 	@NamedQuery(name="Despesa.aprovarDespesasBudget", query="update Despesa c  set c.aprovado=true where c.budget.id = :budgetId")
 })
@@ -69,6 +70,9 @@ public class Despesa extends AbstractEntity<Long> {
 	private Boolean aprovado;
 
 	private Double valor;
+	
+	@Column(name="valor_proposto")	
+	private Double valorProposto;
 
 	private String comentario;
 
@@ -206,7 +210,15 @@ public class Despesa extends AbstractEntity<Long> {
 			setValor(null);
 	}
 
+	public Double getValorProposto() {
+		return valorProposto;
+	}
+
+	public void setValorProposto(Double valorProposto) {
+		this.valorProposto = valorProposto;
+	}
 
 
+	
 }
 

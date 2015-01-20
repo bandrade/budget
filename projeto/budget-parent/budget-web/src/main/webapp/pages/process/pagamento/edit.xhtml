@@ -30,11 +30,17 @@
 					
 				<p:panelGrid columns="6">
 					<p:outputLabel value="Fornecedor:" for="fornecedoresSelectOneMenu"  />
-					<p:selectOneMenu id="fornecedoresSelectOneMenu" label="Fornecedor" value="#{solicitacaoPagamento.fornecedor}"  converter="com.dupont.EntityConverter" required="true">
+					<p:autoComplete id="fornecedoresSelectOneMenu" 
+								dropdown="true" value="#{solicitacaoPagamento.fornecedor}" 
+								completeMethod="#{autocompleteAction.autoCompleteFornecedor}" 
+					 			scrollHeight="300"
+								converter="com.dupont.EntityConverter"
+					 			var="_fornecedor"
+					 			itemLabel="#{_fornecedor.nome}"
+					 			itemValue="#{_fornecedor}"
+					 			emptyMessage="NAO ENCONTRADO" effect="size" 
+					 			required="true"/>
 					
-						<f:selectItem itemLabel="Selecione um fornecedor" itemValue="#{null}" />
-						<f:selectItems value="#{fornecedores}" var="item" itemLabel="#{item.nome}" itemValue="#{item}" />
-					</p:selectOneMenu>
 					<p:message for="fornecedoresSelectOneMenu" />
 					
 					<p:outputLabel value="Nr. Nota Fiscal: " for="notaFiscalInput"/>
@@ -75,7 +81,7 @@
 					 			var="_centroCusto" itemLabel="#{_centroCusto.codigo}" itemValue="#{_centroCusto}"
 					 			emptyMessage="NAO ENCONTRADO" effect="size" 
 					 			required="true">
-					 			<p:ajax event="blur" listener="#{solicitacaoPagamentoAction.doSelectCentroCusto}" update="dadosCC"/>
+					 			<p:ajax event="itemSelect" listener="#{solicitacaoPagamentoAction.doSelectCentroCusto}" update="dadosCC" process="@this"/>
 					 	</p:autoComplete>
 						<p:message for="centroCustosSelectOneMenu" />
 						

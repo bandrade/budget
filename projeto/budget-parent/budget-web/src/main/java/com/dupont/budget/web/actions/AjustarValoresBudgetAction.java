@@ -65,6 +65,19 @@ public class AjustarValoresBudgetAction extends BudgetAction implements Serializ
 			logger.error("Erro ao obter informações do budget",e);
 		}
 	}
+	
+	public Double calcularTotalValorProposto()
+	{
+		Double valor =0d;
+		if(despesasNoDetalhe!=null)
+		{
+			for(Despesa despesa: despesasNoDetalhe)
+			{
+				valor+=despesa.getValorProposto();
+			}
+		}
+		return valor;
+	}
 
 	@Override
 	public void adicionarDespesa() {
@@ -130,8 +143,21 @@ public class AjustarValoresBudgetAction extends BudgetAction implements Serializ
 		return valor;
 	}
 
+	public Double getValorTotalPropostoBudgetArea()
+	{
+		Double valor = 0d;
+		if(budgets !=null)
+		{
+			for(Budget budget : budgets)
+			{
+				valor+= budget.getValorTotalProposto();
+			}
+		}
+		return valor;
+	}
+
 	public AreaDTO getArea() {
-		return area;
+		return area; 
 	}
 	public void setArea(AreaDTO area) {
 		this.area = area;

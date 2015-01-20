@@ -24,7 +24,7 @@
 	                       <div>
 	                         <img src="#{request.contextPath}/resources/images/slideshow/NationalGeographic_Protection_1166372_Firefighter_1100x290.jpeg" />
 	                       </div>
-	                    </div>
+	                    </div> 
 	                </div>
 	            </div>
 	            <div class="ui-grid-row" style="padding:10px 0;">
@@ -35,6 +35,7 @@
 		                        <f:param name="taskId" value="#{_item.id}" />
 		                        <f:param name="processInstanceId" value="#{_item.processInstanceId}" />
 		                    </p:link>
+		                     - <h:outputText id="subject" value="#{_item.description}"/>
 		                    (<h:outputText id="processInstanceId" value="#{_item.prazo}" converter="javax.faces.DateTime"/>)
 					    </p:dataList>
                     </div>

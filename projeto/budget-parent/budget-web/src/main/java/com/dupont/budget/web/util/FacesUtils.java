@@ -11,6 +11,7 @@ import javax.faces.bean.ApplicationScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
 
+import com.dupont.budget.model.CentroCusto;
 import com.dupont.budget.model.NamedAbstractEntity;
 
 /**
@@ -67,6 +68,18 @@ public class FacesUtils implements Serializable{
 		for(T t : lista)
 		{
 			if(t.getNome().toUpperCase().contains(input.toUpperCase()))
+			{
+				result.add(t);
+			}
+		}
+		return result;
+	}
+	public List<CentroCusto> autoCompleteCC(List<CentroCusto> lista,String input)
+	{
+		List<CentroCusto> result =  new ArrayList<CentroCusto>();
+		for(CentroCusto t : lista)
+		{
+			if(t.getCodigo().toUpperCase().contains(input.toUpperCase()))
 			{
 				result.add(t);
 			}
