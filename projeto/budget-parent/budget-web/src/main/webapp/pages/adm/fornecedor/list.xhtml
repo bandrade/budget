@@ -18,7 +18,7 @@
 				
 				<p:commandButton value="Pesquisar" icon="ui-icon-search"   styleClass="button" action="#{fornecedorAction.find}" update="fornecedors"/>
 				<p:commandButton value="Novo"      icon="ui-icon-document" styleClass="button" action="#{fornecedorAction.newPage}" disabled="true"  />
-				<p:commandButton value="Carregar arquivo"  icon="ui-icon-arrowthickstop-1-n" styleClass="button" action="/pages/adm/fornecedor/load.xhtml"   />
+				<p:commandButton value="Carregar arquivo"  icon="ui-icon-arrowthickstop-1-n" styleClass="button" action="/pages/adm/fornecedor/load.xhtml" ajax="false"  />
 			</h:panelGrid>
 			
 			<p:separator />

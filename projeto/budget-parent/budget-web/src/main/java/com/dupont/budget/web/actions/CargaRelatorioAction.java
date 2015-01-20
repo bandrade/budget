@@ -72,6 +72,7 @@ public class CargaRelatorioAction implements Serializable {
 		logger.debug("Arquivo recebido, iniciando processamento!");
 
 		UploadEvent evt = new UploadEvent(SolicitacaoPagamento.class);
+		
 		try {
 			String name = file.getFileName();
 			File tmp = File.createTempFile("dupont_", name.substring(name.lastIndexOf(".")));

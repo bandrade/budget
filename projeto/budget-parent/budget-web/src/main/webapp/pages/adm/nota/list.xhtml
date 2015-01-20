@@ -10,8 +10,10 @@
 		
 		<h:form id="form" prependId="false">
 		
+			<p:poll interval="3" listener="#{cargaRelatorioAction.updateList}" update="cargaRelatorios" />
+		
 			<h:panelGrid columns="1" border="0">
-				<p:commandButton value="Carregar arquivo"  icon="ui-icon-arrowthickstop-1-n" styleClass="button" action="/pages/adm/nota/load.xml"   />
+				<p:commandButton value="Carregar arquivo"  icon="ui-icon-arrowthickstop-1-n" styleClass="button" action="/pages/adm/nota/load.xml" ajax="false"  />
 			</h:panelGrid>
 			
 			<p:separator />
@@ -43,7 +45,7 @@
                    </f:facet>
 			</p:dataTable>
 			
-               <p:poll interval="3" listener="#{cargaRelatorioAction.updateList}" update="cargaRelatorios" />
+               
 		</h:form>
 	</ui:define>
 	
