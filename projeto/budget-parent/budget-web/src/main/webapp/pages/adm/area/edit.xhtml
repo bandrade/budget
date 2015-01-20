@@ -31,7 +31,13 @@
                         <f:selectItems value="#{usuarioList}" itemValue="#{i}" itemLabel="#{i.nome}" var="i" />
                     </p:selectOneMenu>
                     <p:message for="liderList" />
-					
+                    
+					<h:outputLabel for="responsavelList" value="Responsável Lançamento Notas" />
+                    <p:selectOneMenu label="Lider" id="responsavelList" required="true" value="#{areaAction.responsavelNotas}" converter="com.dupont.EntityConverter">
+                        <f:selectItem itemLabel="Selecione..." itemValue="${null}" />
+                        <f:selectItems value="#{usuarioList}" itemValue="#{i}" itemLabel="#{i.nome}" var="i" />
+                    </p:selectOneMenu>
+                    <p:message for="responsavelList" />
 				</h:panelGrid>
 				
 				<p:commandButton value="#{area.id != null? 'Atualizar' : 'Salvar'}" process="@this" icon="ui-icon-check" action="#{areaAction.persist}" styleClass="button" ajax="false" />

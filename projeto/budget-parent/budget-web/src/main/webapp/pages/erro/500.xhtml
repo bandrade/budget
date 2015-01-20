@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<title>Não autorizado</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link rel="stylesheet" type="text/css"
+		href="#{request.contextPath}/resources/css/default.css" />
+	<!--[if lt IE 9]>
+	    <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	    <![endif]-->
+</h:head>
+
+<h:body>
+	<section class="top">
+		<div class="ui-grid ui-grid-responsive">
+			<div class="ui-grid-row">
+				<div class="ui-grid-col-12">
+					<a href="javascript:history.back()"><span
+						class="ui-icon ui-icon-arrow-1-w"></span>VOLTAR</a>
+				</div>
+			</div>
+		</div>
+	</section>
+	<section class="header">
+		<div class="ui-grid ui-grid-responsive">
+			<div class="ui-grid-row">
+				<div class="ui-grid-col-4 header-back" style="padding-top: 10px;">
+					<div class="ui-grid ui-grid-responsive">
+						<div class="ui-grid-row">
+							<div class="ui-grid-col-12">
+								<h:graphicImage library="images" name="logo.png" height="30" />
+							</div>
+						</div>
+						<div class="ui-grid-row">
+							<div class="ui-grid-col-12">
+								<h2>BUDGET</h2>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="ui-grid-col-8 search">
+					<div class="ui-grid ui-grid-responsive">
+						<div class="ui-grid-row">
+							<div class="ui-grid-col-12">
+								<span style="color: #ccc;">Bem vindo ao sistema de Budget
+									da Dupont. Versão: #{msg['versao']}</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<section class="menu">
+		<div class="ui-grid ui-grid-responsive">
+			<div class="ui-grid-row">
+				<div class="ui-grid-col-12">
+					<nav>
+						<ul class="menu-container">
+							<li><a href="#{request.contextPath}/">Login</a></li>
+						</ul>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</section>
+	<section>
+		<div class="ui-grid ui-grid-responsive">
+			<p:ajaxExceptionHandler
+				type="javax.faces.application.ViewExpiredException"
+				update="exceptionDialog" onexception="PF('exceptionDialog').show();" />
+
+			<p:ajaxExceptionHandler type="java.lang.NullPointerException"
+				update="exceptionDialog" onexception="PF('exceptionDialog').show();" />
+
+			<p:dialog id="exceptionDialog"
+				header="Exception '#{pfExceptionHandler.type}' occured!"
+				widgetVar="exceptionDialog" height="500px">
+        Message: #{pfExceptionHandler.message} <br />
+        StackTrace: <h:outputText
+					value="#{pfExceptionHandler.formattedStackTrace}" escape="false" />
+				<br />
+
+				<p:button onclick="document.location.href = document.location.href;"
+					value="Reload!"
+					rendered="#{pfExceptionHandler.type == 'java.lang.Exception'}" />
+			</p:dialog>
+
+			<div class="ui-grid-row">
+				<div class="ui-grid-col-12">
+					<h3>Erro!</h3>
+				</div>
+			</div>
+			<div class="ui-grid-row">
+				<div class="ui-grid-col-12">
+					<h2>Erro no sistema, por favor contate o administrador.</h2>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<p:layout fullPage="false">
+		<p:layoutUnit visible="false" position="center" id="teste">holder</p:layoutUnit>
+	</p:layout>
+
+</h:body>
+
+</html>

@@ -99,9 +99,12 @@
 		<description>Usurios com permissao de acessar relatorios</description>
 		<role-name>RELATORIO</role-name>		
 	</security-role>
-	
+	<error-page>
+		<error-code>500</error-code>
+		<location>/pages/erro/500.xhtml</location>
+	</error-page>
 	<error-page>
 		<error-code>403</error-code>
-		<location>/pages/erro/403.xhtml</location>
+		<location>/pages/erro/500.xhtml</location>
 	</error-page>
 </web-app>

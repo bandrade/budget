@@ -18,6 +18,8 @@ import com.dupont.budget.model.Usuario;
 import com.dupont.budget.service.DomainService;
 import com.dupont.budget.service.bpms.BPMSProcessService;
 import com.dupont.budget.web.util.FacesUtils;
+
+import java.util.List;
 /**
  * Controller das telas de manutenção da entidade produto
  *
@@ -41,6 +43,8 @@ public class AreaAction extends GenericAction<Area> {
 	private FacesUtils facesUtils;
 
 	private Usuario lider;
+	
+	private Usuario responsavelNotas;
 
 	@Inject
     private BPMSProcessService bpms;
@@ -60,7 +64,10 @@ public class AreaAction extends GenericAction<Area> {
 		String result = null;
 
 		if (mustCreate()) {
-			entidade.setLider(new PapelUsuario(new Papel(createNomePapel(entidade)), lider, entidade));
+			PapelUsuario papelLider =new PapelUsuario(new Papel(createNomePapel(entidade)), lider, entidade);
+			PapelUsuario papelResponsavelNotas =  new PapelUsuario(new Papel(createNomePapelNotas(entidade)), responsavelNotas, entidade);
+			entidade.getPapeis().add(papelLider);
+			entidade.getPapeis().add(papelResponsavelNotas);
 			result = create();
 			try {
 				if (bpms.existeProcessoAtivo(Calendar.getInstance().get(Calendar.YEAR)+"")) {
@@ -70,15 +77,40 @@ public class AreaAction extends GenericAction<Area> {
 				facesUtils.addErrorMessage("Erro inserir a Area");
 				logger.error("Erro ao inserir a area",e);
 			}
+			
 		} else {
 			Area tmp = service.findById(entidade);
 			entidade.setLider(tmp.getLider());
 			entidade.getLider().setUsuario(lider);
-			userCallBackCache.removeGroupsFromCache(lider.getLogin());
+			if(tmp.getResponsavelNotas() !=null)
+			{
+				entidade.setResponsavelNotas(tmp.getResponsavelNotas()) ;
+				userCallBackCache.removeGroupsFromCache(tmp.getResponsavelNotas().getUsuario().getLogin());
+			}
+			else
+			{
+				Papel papel = new Papel(createNomePapelNotas(entidade));
+				List<Papel> papeis = service.findByName(papel);
+				if(papeis !=null && papeis.size()>0)
+				{
+					papel = papeis.get(0);
+				}
+				else
+				{
+					service.create(papel);
+				}
+				entidade.setResponsavelNotas(new PapelUsuario(papel, responsavelNotas, entidade) ) ;
+			}
+			entidade.getResponsavelNotas().setUsuario(responsavelNotas);
+			
+			userCallBackCache.removeGroupsFromCache(tmp.getLider().getUsuario().getLogin());
+			
 			result = update();
 		}
-
-		userCallBackCache.removeGroupsFromCache(entidade.getLider().getUsuario().getLogin());
+		for(PapelUsuario papelUsuario : entidade.getPapeis())
+		{
+			userCallBackCache.removeGroupsFromCache(papelUsuario.getUsuario().getLogin());
+		}
 		clearInstance();
 
 		return result;
@@ -92,10 +124,22 @@ public class AreaAction extends GenericAction<Area> {
 		return nomePapel.toString();
 	}
 
+	private String createNomePapelNotas(Area area) {
+		StringBuilder nomePapel = new StringBuilder("NOTAS_");
+		String nomeArea = area.getNome();
+		nomeArea = nomeArea.trim().replaceAll(" ", "_");
+		nomePapel.append(nomeArea.toUpperCase());
+		return nomePapel.toString();
+	}
+
 
 	@Override
 	public String update() {
 		userCallBackCache.removeGroupsFromCache(entidade.getLider().getUsuario().getLogin());
+		if(entidade.getResponsavelNotas() !=null)
+		{
+			userCallBackCache.removeGroupsFromCache(entidade.getResponsavelNotas().getUsuario().getLogin());
+		}
 		return super.update();
 	}
 
@@ -107,9 +151,18 @@ public class AreaAction extends GenericAction<Area> {
 			lider = t.getLider().getUsuario();
 		}
 
+	    if (t.getResponsavelNotas() != null) {
+			responsavelNotas = t.getResponsavelNotas().getUsuario();
+		}
 		return "edit";
 	}
-
+	
+	@Override
+	public String newPage() {
+		setLider(new Usuario());
+		setResponsavelNotas(new Usuario());
+		return super.newPage();
+	}
 	@Override
 	public void delete(Area t) {
 		try {
@@ -125,9 +178,6 @@ public class AreaAction extends GenericAction<Area> {
 		}
 	}
 
-	/**
-	 * Buscar as culturas a partir do filtro.
-	 */
 	public void find() {
 		list = service.findByName(entidade);
 	}
@@ -154,4 +204,13 @@ public class AreaAction extends GenericAction<Area> {
 	public void setLider(Usuario lider) {
 		this.lider = lider;
 	}
+
+	public Usuario getResponsavelNotas() {
+		return responsavelNotas;
+	}
+
+	public void setResponsavelNotas(Usuario responsavelNotas) {
+		this.responsavelNotas = responsavelNotas;
+	}
+	
 }

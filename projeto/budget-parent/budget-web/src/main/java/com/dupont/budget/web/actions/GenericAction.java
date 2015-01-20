@@ -178,6 +178,7 @@ public abstract class GenericAction<T extends AbstractEntity<?>>  implements Ser
 	 */
 	public void clearInstance() {
 		try {
+			setList(null);
 			setEntidade((T) getClazz().newInstance());
 		} catch (InstantiationException | IllegalAccessException e) {
 			getLogger().error(String.format("Não foi possível criar uma nova instância do tipo: %s.", getEntidade().getClass().getSimpleName()));

@@ -1,8 +1,13 @@
 package com.dupont.budget.model;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.OneToOne;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -17,16 +22,49 @@ import javax.persistence.Table;
 public class Area extends NamedAbstractEntity<Long> {
 
 	private static final long serialVersionUID = 8630905655777582547L;
+	
+	@OneToMany(fetch=FetchType.EAGER,mappedBy = "area", orphanRemoval = true, cascade = CascadeType.ALL)
+	private Set<PapelUsuario> papeis;
 
-	@OneToOne(mappedBy = "area", orphanRemoval = true, cascade = CascadeType.ALL)
-	private PapelUsuario lider;
-
-	public PapelUsuario getLider() {
-		return lider;
+	public Set<PapelUsuario> getPapeis() { 
+		if(papeis == null)
+			papeis = new HashSet<PapelUsuario>();
+		return papeis;
 	}
-
-	public void setLider(PapelUsuario lider) {
-		this.lider = lider;
+	public void setPapeis(Set<PapelUsuario> papeis) { 
+		this.papeis = papeis;
 	}
-
+	public PapelUsuario getLider()
+	{
+		for(PapelUsuario papel : papeis)
+		{
+			if(papel.getPapel().getNome().contains("LIDER_"))
+			{
+				return papel;
+			}
+		}
+		return null;
+	}
+	public PapelUsuario getResponsavelNotas()
+	{
+		for(PapelUsuario papel : papeis)
+		{
+			if(papel.getPapel().getNome().contains("NOTAS_"))
+			{
+				return papel;
+			}
+		}
+		return null;
+	}	
+	
+	public void setResponsavelNotas(PapelUsuario papelUsuario)
+	{
+		papeis.add(papelUsuario);
+		
+	}
+	public void setLider(PapelUsuario papelUsuario)
+	{
+		papeis.add(papelUsuario);
+		
+	}
 }

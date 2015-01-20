@@ -6,6 +6,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -40,9 +41,10 @@ public class PapelUsuario extends AbstractEntity<Long> {
 	@JoinColumn(name = "usuario_id")
 	private Usuario usuario;
 	
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name="area_id")
 	private Area area;
+	
 	
 	private Integer nivel;
 		
@@ -126,7 +128,6 @@ public class PapelUsuario extends AbstractEntity<Long> {
 				+ ((centroCusto == null) ? 0 : centroCusto.hashCode());
 		result = prime * result + ((nivel == null) ? 0 : nivel.hashCode());
 		result = prime * result + ((papel == null) ? 0 : papel.hashCode());
-		result = prime * result + ((usuario == null) ? 0 : usuario.hashCode());
 		return result;
 	}
 
@@ -159,13 +160,10 @@ public class PapelUsuario extends AbstractEntity<Long> {
 				return false;
 		} else if (!papel.equals(other.papel))
 			return false;
-		if (usuario == null) {
-			if (other.usuario != null)
-				return false;
-		} else if (!usuario.equals(other.usuario))
-			return false;
 		return true;
 	}
+	
+	
 	
 	
 	
