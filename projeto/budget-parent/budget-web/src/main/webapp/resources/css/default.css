@@ -57,7 +57,7 @@ h2 {
 
 .ui-grid {
 	margin: 0 auto;
-	max-width: 960px;
+	max-width: 1200px;
 }
 
 .layoutUnit {
@@ -216,7 +216,7 @@ input#search {
 #slideshow {
 	position: relative;
 	width: 100%;
-	height: 240px;
+	height: 180px;
 	text-align: center;
 	margin: 0;
 	padding: 0;
@@ -232,6 +232,7 @@ input#search {
 
 #slideshow>div>img {
 	width: 100%;
+	height: 180px;
 }
 
 .ui-widget-content {
