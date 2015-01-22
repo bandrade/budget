@@ -10,17 +10,20 @@ public class ForecastHelper {
 	{
 
 		Double valor = 0d;
-		valor+= getDouble(despesa.getDespesaMensalisada().getJaneiro());
-		valor+= getDouble(despesa.getDespesaMensalisada().getFevereiro());
-		valor+= getDouble(despesa.getDespesaMensalisada().getMarco());
-		valor+= getDouble(despesa.getDespesaMensalisada().getAbril());
-		valor+= getDouble(despesa.getDespesaMensalisada().getMaio());
-		valor+= getDouble(despesa.getDespesaMensalisada().getJunho());
-		valor+= getDouble(despesa.getDespesaMensalisada().getAgosto());
-		valor+= getDouble(despesa.getDespesaMensalisada().getSetembro());
-		valor+= getDouble(despesa.getDespesaMensalisada().getOutubro());
-		valor+= getDouble(despesa.getDespesaMensalisada().getNovembro());
-		valor+= getDouble(despesa.getDespesaMensalisada().getDezembro());
+		if(despesa!=null)
+		{
+			valor+= getDouble(despesa.getDespesaMensalisada().getJaneiro());
+			valor+= getDouble(despesa.getDespesaMensalisada().getFevereiro());
+			valor+= getDouble(despesa.getDespesaMensalisada().getMarco());
+			valor+= getDouble(despesa.getDespesaMensalisada().getAbril());
+			valor+= getDouble(despesa.getDespesaMensalisada().getMaio());
+			valor+= getDouble(despesa.getDespesaMensalisada().getJunho());
+			valor+= getDouble(despesa.getDespesaMensalisada().getAgosto());
+			valor+= getDouble(despesa.getDespesaMensalisada().getSetembro());
+			valor+= getDouble(despesa.getDespesaMensalisada().getOutubro());
+			valor+= getDouble(despesa.getDespesaMensalisada().getNovembro());
+			valor+= getDouble(despesa.getDespesaMensalisada().getDezembro());
+		}
 		return valor;
 	}
 
@@ -199,7 +202,7 @@ public class ForecastHelper {
 		MesEnum mesEnum = MesEnum.valueOf(mounth);
 		MesEnum mesForecast = MesEnum.valueOf(mes.toUpperCase());
 
-		if(mesForecast.getId() == mesEnum.getId() )
+		if(mesForecast.getId() <= mesEnum.getId() )
 			return true;
 		return false;
 

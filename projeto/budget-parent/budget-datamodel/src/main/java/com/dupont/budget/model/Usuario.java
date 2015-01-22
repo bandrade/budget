@@ -1,6 +1,8 @@
 package com.dupont.budget.model;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -97,4 +99,19 @@ public class Usuario extends NamedAbstractEntity<Long> {
 	public void setPapeis(Set<PapelUsuario> papeis) {
 		this.papeis = papeis;
 	}
+	
+	public List<String> getPapeisAsString()
+	{
+		List<String> _papeis =  new ArrayList<>();
+		if(papeis !=null)
+		{
+			for(PapelUsuario papelUsuario : papeis)
+			{
+				_papeis.add(papelUsuario.getPapel().getNome());
+			}
+		}
+		return _papeis;
+		
+	}
+
 }

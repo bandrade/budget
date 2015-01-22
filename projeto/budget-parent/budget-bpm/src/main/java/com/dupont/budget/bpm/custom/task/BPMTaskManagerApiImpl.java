@@ -37,11 +37,11 @@ public class BPMTaskManagerApiImpl implements BPMTaskManagerApi {
 	@Inject
 	TaskService taskService;
 
-	public List<TaskSummary> retrieveTaskList(String actorId)
+	public List<TaskSummary> retrieveTaskList(String actorId,List<String> grupos)
 			throws BPMException {
 		try {
-			return taskService.getTasksAssignedAsPotentialOwner(actorId,
-					"en-UK");
+			
+			return taskService.getTasksAssignedAsPotentialOwner(actorId,grupos,"en-UK",0,100);
 		} catch (Exception e) {
 			throw new BPMException("Erro ao obter a tarefas", e);
 		}

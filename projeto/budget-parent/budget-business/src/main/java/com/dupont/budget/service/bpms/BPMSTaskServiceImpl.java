@@ -16,6 +16,8 @@ import com.dupont.budget.bpm.custom.process.BPMProcessManagerApi;
 import com.dupont.budget.bpm.custom.task.BPMTaskManagerApi;
 import com.dupont.budget.dto.StatusTarefaEnum;
 import com.dupont.budget.dto.TarefaDTO;
+import com.dupont.budget.model.Usuario;
+import com.dupont.budget.service.DomainService;
 
 @Stateless
 public class BPMSTaskServiceImpl implements BPMSTaskService {
@@ -25,9 +27,15 @@ public class BPMSTaskServiceImpl implements BPMSTaskService {
 	
 	@Inject
 	private BPMProcessManagerApi processApi;
+	
+	@Inject
+	private DomainService domainService;
 
 	public List<TarefaDTO> obterTarefas(String user) throws Exception {
-		List<TaskSummary> tasks = taskApi.retrieveTaskList(user);
+		
+		Usuario usuario = domainService.getUsuarioByLogin(user);
+		
+		List<TaskSummary> tasks = taskApi.retrieveTaskList(user,usuario.getPapeisAsString());
 		List<TarefaDTO> tarefas = new ArrayList<TarefaDTO>();
 		for (TaskSummary task : tasks) {
 			TarefaDTO tarefaDTO = parseTaskToTarefa(task);

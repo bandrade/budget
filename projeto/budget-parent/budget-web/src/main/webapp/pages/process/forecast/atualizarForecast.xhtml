@@ -88,7 +88,7 @@
 						<pe:inputNumber  id="valorJan" value="#{detalheDespesa.despesaMensalisada.janeiro}" converter="javax.faces.Double" >
 							<p:ajax   listener="#{atualizarForecastAction.despesaAlterada(detalheDespesa,'JANEIRO')}" update=":form" process="@this"></p:ajax>
 						</pe:inputNumber>
-						<h:outputText rendered="#{atualizarForecastAction.exibirDespesa('JANEIRO')}" value="/#{facesUtils.formatarDinheiro(detalheDespesa.valorComprometido)}" />
+						<h:outputText rendered="#{atualizarForecastAction.exibirDespesa('JANEIRO')}" value="/#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaJaneiro)}" />
 					</p:column> 
 					<p:column rendered="#{atualizarForecastAction.exibirColuna('FEVEREIRO')}" style="text-align:center"
 							 width="#{atualizarForecastAction.exibirDespesa('FEVEREIRO')? 100 :75}" footerText="#{facesUtils.formatarDinheiro(atualizarForecastAction.calcularValorColuna('FEVEREIRO'))}" >
@@ -278,45 +278,71 @@
 					<p:outputLabel value="Comentário:"></p:outputLabel>
 					<p:inputTextarea value="#{atualizarForecastAction.despesa.comentario}" required="true"/>
 					
-					<p:outputLabel value="Valor:"></p:outputLabel>
-					<pe:inputNumber  id="valor" value="#{atualizarForecastAction.despesa.valor}" converter="javax.faces.Double" required="true"/>
+					
 					
 					<p:outputLabel value="Janeiro:"></p:outputLabel>
-					<pe:inputNumber  id="valorJaneiro" value="#{atualizarForecastAction.despesa.despesaMensalisada.janeiro}" converter="javax.faces.Double" />
+					<pe:inputNumber  id="valorJaneiro" value="#{atualizarForecastAction.despesa.despesaMensalisada.janeiro}" converter="javax.faces.Double" >
+						<p:ajax update=":formDespesa:panelDespesa" process="@this"></p:ajax>
+					</pe:inputNumber>
 				
 					<p:outputLabel value="Fevereiro:"></p:outputLabel>
-					<pe:inputNumber  id="valorFevereiro" value="#{atualizarForecastAction.despesa.despesaMensalisada.fevereiro}" converter="javax.faces.Double" />
+					<pe:inputNumber  id="valorFevereiro" value="#{atualizarForecastAction.despesa.despesaMensalisada.fevereiro}" converter="javax.faces.Double" >
+						<p:ajax update=":formDespesa:panelDespesa" process="@this"></p:ajax>
+					</pe:inputNumber>
 					
 					<p:outputLabel value="Março:"></p:outputLabel>
-					<pe:inputNumber  id="valorMarco" value="#{atualizarForecastAction.despesa.despesaMensalisada.marco}" converter="javax.faces.Double" />
+					<pe:inputNumber  id="valorMarco" value="#{atualizarForecastAction.despesa.despesaMensalisada.marco}" converter="javax.faces.Double" >
+						<p:ajax update=":formDespesa:panelDespesa" process="@this"></p:ajax>
+					</pe:inputNumber>
 					
 					<p:outputLabel value="Abril:"></p:outputLabel>
-					<pe:inputNumber  id="valorAbril" value="#{atualizarForecastAction.despesa.despesaMensalisada.abril}" converter="javax.faces.Double" />
+					<pe:inputNumber  id="valorAbril" value="#{atualizarForecastAction.despesa.despesaMensalisada.abril}" converter="javax.faces.Double" >
+						<p:ajax update=":formDespesa:panelDespesa" process="@this"></p:ajax>
+					</pe:inputNumber>
 					
 					<p:outputLabel value="Maio:"></p:outputLabel>
-					<pe:inputNumber  id="valorMaio" value="#{atualizarForecastAction.despesa.despesaMensalisada.maio}" converter="javax.faces.Double" />
+					<pe:inputNumber  id="valorMaio" value="#{atualizarForecastAction.despesa.despesaMensalisada.maio}" converter="javax.faces.Double" >
+						<p:ajax update=":formDespesa:panelDespesa" process="@this"></p:ajax>
+					</pe:inputNumber>
 					
 					<p:outputLabel value="Junho:"></p:outputLabel>
-					<pe:inputNumber  id="valorJunho" value="#{atualizarForecastAction.despesa.despesaMensalisada.junho}" converter="javax.faces.Double" />
+					<pe:inputNumber  id="valorJunho" value="#{atualizarForecastAction.despesa.despesaMensalisada.junho}" converter="javax.faces.Double" >
+						<p:ajax update=":formDespesa:panelDespesa" process="@this"></p:ajax>
+					</pe:inputNumber>
 					
 					<p:outputLabel value="Julho:"></p:outputLabel>
-					<pe:inputNumber  id="valorJulho" value="#{atualizarForecastAction.despesa.despesaMensalisada.julho}" converter="javax.faces.Double" />
+					<pe:inputNumber  id="valorJulho" value="#{atualizarForecastAction.despesa.despesaMensalisada.julho}" converter="javax.faces.Double" >
+						<p:ajax update=":formDespesa:panelDespesa" process="@this"></p:ajax>
+					</pe:inputNumber>
 					
 					<p:outputLabel value="Agosto:"></p:outputLabel>
-					<pe:inputNumber  id="valorAgosto" value="#{atualizarForecastAction.despesa.despesaMensalisada.agosto}" converter="javax.faces.Double" />
+					<pe:inputNumber  id="valorAgosto" value="#{atualizarForecastAction.despesa.despesaMensalisada.agosto}" converter="javax.faces.Double" >
+						<p:ajax update=":formDespesa:panelDespesa" process="@this"></p:ajax>
+					</pe:inputNumber>
 					
 					<p:outputLabel value="Setembro:"></p:outputLabel>
-					<pe:inputNumber  id="valorSetembro" value="#{atualizarForecastAction.despesa.despesaMensalisada.setembro}" converter="javax.faces.Double" />
+					<pe:inputNumber  id="valorSetembro" value="#{atualizarForecastAction.despesa.despesaMensalisada.setembro}" converter="javax.faces.Double" >
+						<p:ajax update=":formDespesa:panelDespesa" process="@this"></p:ajax>
+					</pe:inputNumber>
 					
 					<p:outputLabel value="Outubro:"></p:outputLabel>
-					<pe:inputNumber  id="valorOutubro" value="#{atualizarForecastAction.despesa.despesaMensalisada.outubro}" converter="javax.faces.Double" />
+					<pe:inputNumber  id="valorOutubro" value="#{atualizarForecastAction.despesa.despesaMensalisada.outubro}" converter="javax.faces.Double" >
+						<p:ajax update=":formDespesa:panelDespesa" process="@this"></p:ajax>
+					</pe:inputNumber>
 					
 					<p:outputLabel value="Novembro:"></p:outputLabel>
-					<pe:inputNumber  id="valorNovembro" value="#{atualizarForecastAction.despesa.despesaMensalisada.novembro}" converter="javax.faces.Double" />
+					<pe:inputNumber  id="valorNovembro" value="#{atualizarForecastAction.despesa.despesaMensalisada.novembro}" converter="javax.faces.Double" >
+					<p:ajax update=":formDespesa:panelDespesa" process="@this"></p:ajax>
+					</pe:inputNumber>
 					
 					<p:outputLabel value="Dezembro:"></p:outputLabel>
-					<pe:inputNumber  id="valorDezembro" value="#{atualizarForecastAction.despesa.despesaMensalisada.dezembro}" converter="javax.faces.Double" />
+					<pe:inputNumber  id="valorDezembro" value="#{atualizarForecastAction.despesa.despesaMensalisada.dezembro}" converter="javax.faces.Double" >
+						<p:ajax update=":formDespesa:panelDespesa" process="@this"></p:ajax>
+					</pe:inputNumber>
 					<h:inputHidden value="#{atualizarForecastAction.incAltComSucesso}" id="incAltSucesso" />
+					<h:panelGroup></h:panelGroup>
+					<p:outputLabel value="Valor:"></p:outputLabel>
+					<h:outputText id="valor" value="#{atualizarForecastAction.calcularValorMensalisado()}" converter="javax.faces.Double"/>
 				</p:panelGrid>
 				<p:panelGrid styleClass="painel-botoes" columns="1">				
 						<p:commandButton value="Incluir Despesa" action="#{atualizarForecastAction.adicionarDespesa()}"  

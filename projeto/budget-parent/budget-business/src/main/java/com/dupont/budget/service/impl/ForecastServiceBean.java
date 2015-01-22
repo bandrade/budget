@@ -174,10 +174,9 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 
 		for(DespesaForecast despesa : forecast.getDespesas())
 		{
-			
-			
-			despesa.setValorComprometido(valorTotal);
-			despesa.setYtd(obterYtd(despesa));
+			obterValorComprometidoDespesa(forecast, despesa, mes);
+			//despesa.setValorComprometido(valorTotal);
+			//despesa.setYtd(obterYtd(despesa));
 		}
 
 		return new ArrayList<DespesaForecast>(forecast.getDespesas());
@@ -352,7 +351,7 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 		{
 			meses_ytd=""+(++_mes)+",";
 		}
-		meses_ytd = meses_ytd.substring(0, meses_ytd.length()-1);
+		/*meses_ytd = meses_ytd.substring(0, meses_ytd.length()-1);
 		try
 		{
 			Object result = em.createNativeQuery(SolicitacaoPagamento.QUERY_SOMA_YTD.toString())
@@ -368,7 +367,7 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 		}
 		catch(NoResultException e)
 		{
-		}
+		}*/
 		return valorComprometido;
 
 	}
