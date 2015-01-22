@@ -55,7 +55,7 @@ public class DespesaSolicitacaoPagamento extends AbstractEntity<Long> {
 	@ManyToOne(cascade=CascadeType.PERSIST)
 	@JoinColumn(name = "solicitacao_pagamento_id")
 	private SolicitacaoPagamento solicitacaoPagamento;
-
+	
 	private Double valor;
 
 	public CentroCusto getCentroCusto() {
@@ -137,6 +137,7 @@ public class DespesaSolicitacaoPagamento extends AbstractEntity<Long> {
 	public void setValor(Double valor) {
 		this.valor = valor;
 	}
+
 
 
 }

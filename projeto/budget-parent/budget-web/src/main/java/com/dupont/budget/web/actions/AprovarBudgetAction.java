@@ -19,8 +19,6 @@ public class AprovarBudgetAction extends BudgetAction  implements Serializable{
 	}
 	public void obterDadosBudget() {
 		try {
-
-
 			super.obterDadosBudget();
 			if(despesasNoDetalhe == null)
 				obterDespesaNoDetalhe(budget.getId());
@@ -31,11 +29,18 @@ public class AprovarBudgetAction extends BudgetAction  implements Serializable{
 		}
 	}
 
-	public void adicionarDepesa()
+	public void adicionarDespesa()
 	{
-		despesa.setAprovado(true);
-		super.adicionarDespesa();
+		try {
+			despesa.setAprovado(true);
+			super.adicionarDespesa();
+			budgetService.atualizarDespesas(despesasNoDetalhe);
+		} catch (Exception e) {
+			logger.error("Erro ao incluir a despesa",e);
+			facesUtils.addErrorMessage("Erro ao concluir a tarefa de Aprovacao de Budget");
+		}
 		obterDespesaNoDetalhe(budget.getId());
+		validarAprovacao();
 	}
 
 	public void validarAprovacao()
@@ -43,10 +48,6 @@ public class AprovarBudgetAction extends BudgetAction  implements Serializable{
 		if(tipoAprovacao.equals("S"))
 		{
 			aprovarReprovarLista(true);
-		}
-		else
-		{
-			aprovarReprovarLista(false);
 		}
 		calcularTotalBudget();
 
@@ -90,9 +91,17 @@ public class AprovarBudgetAction extends BudgetAction  implements Serializable{
 		}
 	}
 	public void alterarDespesa(){
-
-		super.alterarDespesa();
-		obterDespesaNoDetalhe(budget.getId());
+		try
+		{
+			super.alterarDespesa();
+			budgetService.atualizarDespesas(despesasNoDetalhe);
+			obterDespesaNoDetalhe(budget.getId());
+			validarAprovacao();
+		}	
+		catch (Exception e) {
+			logger.error("Erro ao incluir a despesa",e);
+			facesUtils.addErrorMessage("Erro ao concluir a tarefa de Aprovacao de Budget");
+		}
 
 	}
 	public String concluir()

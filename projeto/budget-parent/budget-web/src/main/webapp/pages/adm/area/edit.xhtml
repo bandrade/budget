@@ -25,14 +25,14 @@
 					<p:inputText label="Nome" id="nomeInput" value="#{area.nome}" required="true" disabled="#{not empty area.id}" />
 					<p:message for="nomeInput" />
 					
-					<h:outputLabel for="liderList" value="Lider" />
+					<h:outputLabel for="liderList" value="Lider:*" />
                     <p:selectOneMenu label="Lider" id="liderList" required="true" value="#{areaAction.lider}" converter="com.dupont.EntityConverter">
                         <f:selectItem itemLabel="Selecione..." itemValue="${null}" />
                         <f:selectItems value="#{usuarioList}" itemValue="#{i}" itemLabel="#{i.nome}" var="i" />
                     </p:selectOneMenu>
                     <p:message for="liderList" />
                     
-					<h:outputLabel for="responsavelList" value="Responsável Lançamento Notas" />
+					<h:outputLabel for="responsavelList" value="Responsável Lançamento Notas:*" />
                     <p:selectOneMenu label="Lider" id="responsavelList" required="true" value="#{areaAction.responsavelNotas}" converter="com.dupont.EntityConverter">
                         <f:selectItem itemLabel="Selecione..." itemValue="${null}" />
                         <f:selectItems value="#{usuarioList}" itemValue="#{i}" itemLabel="#{i.nome}" var="i" />

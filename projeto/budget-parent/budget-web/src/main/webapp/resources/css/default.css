@@ -57,7 +57,7 @@ h2 {
 
 .ui-grid {
 	margin: 0 auto;
-	max-width: 1200px;
+	max-width: 1350px;
 }
 
 .layoutUnit {
@@ -242,7 +242,10 @@ input#search {
 .ui-panelgrid .ui-panelgrid-cell {
 	border: none;
 }
-
+.pe-inputNumber
+{
+	width: 80px;
+}
 
 legend, h3 {
 	text-transform: uppercase;

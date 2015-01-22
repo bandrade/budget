@@ -40,7 +40,7 @@ public class ValorComprometido extends AbstractEntity<Long> {
 	private Double valor;
 
 	private Boolean ativo;
-
+	
 	public CentroCusto getCentroCusto() {
 		return centroCusto;
 	}
@@ -96,5 +96,6 @@ public class ValorComprometido extends AbstractEntity<Long> {
 	public void setAno(Integer ano) {
 		this.ano = ano;
 	}
+
 
 }

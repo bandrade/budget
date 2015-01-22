@@ -27,7 +27,7 @@ import javax.persistence.Table;
 @NamedQueries({
 	@NamedQuery(name="CentroCusto.findAll"   , query="select c from CentroCusto c"),
 	@NamedQuery(name="CentroCusto.findByArea"   , query="select c from CentroCusto c where c.area.id=:area_id"),
-	@NamedQuery(name = CentroCusto.FIND_BY_CODIGO, query="select c from CentroCusto c where c.codigo = :codigo")
+	@NamedQuery(name = CentroCusto.FIND_BY_CODIGO, query="select c from CentroCusto c where lower(c.codigo) like lower(:codigo)")
 })
 public class CentroCusto extends NamedAbstractEntity<Long> {
 

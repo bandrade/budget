@@ -162,8 +162,13 @@ public class PapelUsuario extends AbstractEntity<Long> {
 			return false;
 		return true;
 	}
-	
-	
+
+	@Override
+	public String toString() {
+		return "PapelUsuario [centroCusto=" + centroCusto + ", papel=" + papel
+				+ ", usuario=" + usuario + ", area=" + area + ", nivel="
+				+ nivel + "]";
+	}
 	
 	
 	

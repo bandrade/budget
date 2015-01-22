@@ -11,6 +11,6 @@ public interface BPMSProcessService {
     long iniciarProcessoForecast(String ano, String mes,Date prazo) throws Exception;
 	Object obterVariavelProcesso(Long idProcesso,String variavel) throws Exception;
 	boolean existeProcessoAtivo(String ano) throws Exception;
-	boolean existeProcessoForecastAtivo(String mes,String ano) throws Exception;
+	boolean existeProcessoForecastAtivo(String ano) throws Exception;
 
 }

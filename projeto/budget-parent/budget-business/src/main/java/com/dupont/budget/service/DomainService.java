@@ -54,6 +54,8 @@ public interface DomainService {
 	 */
 	<T extends NamedAbstractEntity<?>>List<T> findByName(T t);
 	
+	<T extends NamedAbstractEntity<?>>List<T> findByNameEqual(T t);
+	
 	
 	/**
 	 * Remove a entidade do meio persistente.
@@ -121,7 +123,7 @@ public interface DomainService {
 	 * @return o valor comprometido ou <code>null</code> caso não encontre
 	 */
 	ValorComprometido findValorComprometidoByFiltro(String centroCusto,
-			String tipoDespesa, String acao, Integer mes);
+			String tipoDespesa, String acao, Long mes);
 	
 	/**
 	 * Retorna uma solicitação de pagamento com base no numero da nota.
@@ -166,4 +168,6 @@ public interface DomainService {
 	public <T extends NamedAbstractEntity<?>> List<T> findByNamePaging(T t) ;
 	
 	public List<Acao> findAcaoByBudget(Long budgetId);
+	
+	public Acao findAcaoByForecastOrBudget(Long budgetId,Long forecastId, String nomeAcao);
 }

@@ -1,7 +1,6 @@
 package com.dupont.budget.service.impl;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -20,6 +19,7 @@ import javax.ws.rs.Path;
 import org.slf4j.Logger;
 
 import com.dupont.budget.dto.DetalheValoresComprometidosDTO;
+import com.dupont.budget.model.Acao;
 import com.dupont.budget.model.Budget;
 import com.dupont.budget.model.BudgetMes;
 import com.dupont.budget.model.Despesa;
@@ -27,9 +27,12 @@ import com.dupont.budget.model.DespesaForecast;
 import com.dupont.budget.model.DespesaForecastMes;
 import com.dupont.budget.model.DespesaForecastPK;
 import com.dupont.budget.model.Forecast;
+import com.dupont.budget.model.ForecastMensalisado;
+import com.dupont.budget.model.ForecastMensalisadoPK;
 import com.dupont.budget.model.MesEnum;
 import com.dupont.budget.model.SolicitacaoPagamento;
-import com.dupont.budget.model.StatusForecast;
+import com.dupont.budget.model.StatusForecastEnum;
+import com.dupont.budget.model.TipoDespesa;
 import com.dupont.budget.model.ValorComprometido;
 import com.dupont.budget.service.BudgetService;
 import com.dupont.budget.service.DomainService;
@@ -57,12 +60,23 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 	public void criarPrimeiroForecast(String budgetId) throws Exception {
 		try
 		{
+			//CRIANDO FORECAST
 			tx.begin();
 			Budget budget =em.find(Budget.class, Long.valueOf(budgetId));
-			Forecast forecast = new Forecast(1, budget.getUsuarioCriador(),budget.getCricao(),budget);
-			forecast.setStatusForecast(StatusForecast.EM_ANDAMENTO);
+			budgetService.encerrarBudget(budget);
+			Forecast forecast = new Forecast(budget.getUsuarioCriador(),budget.getCricao(),budget,budget.getCentroCusto(),budget.getAno());
 			em.persist(forecast);
 			tx.commit();
+		
+			for(long i=1;i<=12;i++)
+			{
+				tx.begin();
+				ForecastMensalisado statusForecast= 
+						new ForecastMensalisado(new ForecastMensalisadoPK(forecast.getId(), i),StatusForecastEnum.NAO_INICIADO,forecast);
+				em.persist(statusForecast);
+				tx.commit();
+				forecast.getStatusForecasts().add(statusForecast);
+			}
 			Set<DespesaForecast> despesas = new HashSet<>();
 			for(Despesa despesa : budget.getDespesas())
 			{
@@ -111,7 +125,8 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 		{
 			tx.begin();
 			Forecast forecast = em.find(Forecast.class, Long.valueOf(idForecast));
-			Integer mesSeguinte = forecast.getMes()+1;
+			//XXX
+			Integer mesSeguinte = 0;
 
 			//mes de dezembro eh o ultimo mes do ano
 			if(mesSeguinte > MesEnum.DEZEMBRO.getId())
@@ -119,7 +134,6 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 				return ;
 			}
 
-			Forecast forecastMesSeguinte = new Forecast(mesSeguinte, forecast.getUsuarioCriador(),new Date(),forecast.getBudget());
 			Set<DespesaForecast> despesasForecastMesSeguinte = new HashSet<>();
 			for(DespesaForecast despesaForecast : forecast.getDespesas())
 			{
@@ -127,11 +141,8 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 				em.persist(despesaMesSeguinte);
 				despesasForecastMesSeguinte.add(despesaMesSeguinte);
 			}
-			forecastMesSeguinte.setDespesas(despesasForecastMesSeguinte);
-			forecastMesSeguinte.setStatusForecast(StatusForecast.EM_ANDAMENTO);
-			em.persist(forecastMesSeguinte);
-			forecast.setStatusForecast(StatusForecast.FINALIZADO);
-			em.merge(forecastMesSeguinte);
+			forecast.getDespesas().addAll(despesasForecastMesSeguinte);
+			em.merge(forecast);
 			tx.commit();
 		}
 		catch(Exception e)
@@ -163,18 +174,134 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 
 		for(DespesaForecast despesa : forecast.getDespesas())
 		{
-			Double valorTotal  = obterValoresComprometidosNotas(despesa);
-			ValorComprometido valorComprometido =domainServiceBean.findValorComprometidoByFiltro(forecast.getBudget().getCentroCusto().getNome(), despesa.getTipoDespesa().getNome(), despesa.getAcao().getNome(),
-					forecast.getMes());
-			if(valorComprometido!=null)
-			{
-				valorTotal +=  valorComprometido.getValor();
-			}
+			
+			
 			despesa.setValorComprometido(valorTotal);
 			despesa.setYtd(obterYtd(despesa));
 		}
 
 		return new ArrayList<DespesaForecast>(forecast.getDespesas());
+	}
+	
+	public void obterValorComprometidoDespesa(Forecast forecast, DespesaForecast despesa,String mes)
+	{
+		
+		MesEnum mesEnum = MesEnum.valueOf(mes.toUpperCase());
+		
+		for(long _mes = mesEnum.getId() ; _mes<=MesEnum.DEZEMBRO.getId();_mes++)
+		{
+			ValorComprometido valorComprometido =domainServiceBean.findValorComprometidoByFiltro(forecast.getBudget().getCentroCusto().getNome(), despesa.getTipoDespesa().getNome(), despesa.getAcao().getNome(),
+					_mes);
+			
+			Double valorTotal  = obterValoresComprometidosNotas(despesa);
+			Double valorD=0d;
+			if(valorComprometido!=null)
+			{
+				switch (mesEnum) {
+				case JANEIRO:
+					
+					valorD=  despesa.getDespesaMensalisada().getDespesaJaneiro();
+					if(valorD==null)
+						despesa.getDespesaMensalisada().setDespesaJaneiro(valorComprometido.getValor());
+					else
+						despesa.getDespesaMensalisada().setDespesaJaneiro(valorD+valorComprometido.getValor());
+					break;
+				case FEVEREIRO:
+					valorD=  despesa.getDespesaMensalisada().getDespesaFevereiro();
+					if(valorD==null)
+						despesa.getDespesaMensalisada().setDespesaJaneiro(valorComprometido.getValor());
+					else
+						despesa.getDespesaMensalisada().setDespesaJaneiro(valorD+valorComprometido.getValor());
+					break;
+
+				case MARCO:
+					valorD=  despesa.getDespesaMensalisada().getDespesaMarco();
+					if(valorD==null)
+						despesa.getDespesaMensalisada().setDespesaJaneiro(valorComprometido.getValor());
+					else
+						despesa.getDespesaMensalisada().setDespesaJaneiro(valorD+valorComprometido.getValor());
+					break;
+
+				case ABRIL:
+					valorD=  despesa.getDespesaMensalisada().getDespesaAbril();
+					if(valorD==null)
+						despesa.getDespesaMensalisada().setDespesaAbril(valorComprometido.getValor());
+					else
+						despesa.getDespesaMensalisada().setDespesaJaneiro(valorD+valorComprometido.getValor());
+					
+					break;
+					
+				case MAIO:
+					valorD=  despesa.getDespesaMensalisada().getDespesaMaio();
+					if(valorD==null)
+						despesa.getDespesaMensalisada().setDespesaMaio(valorComprometido.getValor());
+					else
+						despesa.getDespesaMensalisada().setDespesaMaio(valorD+valorComprometido.getValor());
+					
+					break;
+				
+				case JUNHO:
+					valorD=  despesa.getDespesaMensalisada().getDespesaJunho();
+					if(valorD==null)
+						despesa.getDespesaMensalisada().setDespesaJunho(valorComprometido.getValor());
+					else
+						despesa.getDespesaMensalisada().setDespesaJunho(valorD+valorComprometido.getValor());
+					
+					break;
+
+				case JULHO:
+					valorD=  despesa.getDespesaMensalisada().getDespesaJulho();
+					if(valorD==null)
+						despesa.getDespesaMensalisada().setDespesaJulho(valorComprometido.getValor());
+					else
+						despesa.getDespesaMensalisada().setDespesaJulho(valorD+valorComprometido.getValor());
+					
+					break;
+
+				case AGOSTO:
+					valorD=  despesa.getDespesaMensalisada().getDespesaAgosto();
+					if(valorD==null)
+						despesa.getDespesaMensalisada().setDespesaAgosto(valorComprometido.getValor());
+					else
+						despesa.getDespesaMensalisada().setDespesaAgosto(valorD+valorComprometido.getValor());
+					break;
+				
+				case SETEMBRO:
+					valorD=  despesa.getDespesaMensalisada().getDespesaSetembro();
+					if(valorD==null)
+						despesa.getDespesaMensalisada().setDespesaSetembro(valorComprometido.getValor());
+					else
+						despesa.getDespesaMensalisada().setDespesaSetembro(valorD+valorComprometido.getValor());
+					break;
+			
+				case OUTUBRO:
+					valorD=  despesa.getDespesaMensalisada().getDespesaOutubro();
+					if(valorD==null)
+						despesa.getDespesaMensalisada().setDespesaOutubro(valorComprometido.getValor());
+					else
+						despesa.getDespesaMensalisada().setDespesaOutubro(valorD+valorComprometido.getValor());
+					break;
+			
+				case NOVEMBRO:
+					valorD=  despesa.getDespesaMensalisada().getDespesaNovembro();
+					if(valorD==null)
+						despesa.getDespesaMensalisada().setDespesaNovembro(valorComprometido.getValor());
+					else
+						despesa.getDespesaMensalisada().setDespesaNovembro(valorD+valorComprometido.getValor());
+					break;
+			
+				case DEZEMBRO:
+					valorD=  despesa.getDespesaMensalisada().getDespesaDezembro();
+					if(valorD==null)
+						despesa.getDespesaMensalisada().setDespesaDezembro(valorComprometido.getValor());
+					else
+						despesa.getDespesaMensalisada().setDespesaDezembro(valorD+valorComprometido.getValor());
+					break;
+			
+				}
+				valorTotal +=  valorComprometido.getValor();
+			}
+		}
 	}
 
 	public void incluirDespesaForecast(DespesaForecast despesaForecast) throws Exception
@@ -220,8 +347,8 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 	{
 		Double valorComprometido = 0D;
 		String meses_ytd = "";
-		Integer mes_id = despesaForecast.getForecast().getMes();
-		for(int _mes = 0; _mes<mes_id ;_mes++ )
+		Long mes_id = despesaForecast.getDespesaPK().getMes();
+		for(long _mes = 0; _mes<mes_id ;_mes++ )
 		{
 			meses_ytd=""+(++_mes)+",";
 		}
@@ -231,7 +358,8 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 			Object result = em.createNativeQuery(SolicitacaoPagamento.QUERY_SOMA_YTD.toString())
 				.setParameter("ano", despesaForecast.getForecast().getBudget().getAno())
 			    .setParameter("meses",meses_ytd)
-			    .setParameter("mes_forecast",despesaForecast.getForecast().getMes())
+			    //XXX
+			   // .setParameter("mes_forecast",despesaForecast.getForecast().getMes())
 			    .setParameter("centro_custo_id",despesaForecast.getForecast().getBudget().getCentroCusto().getId())
 			    .setParameter("acao_id", despesaForecast.getAcao().getId())
 				.setParameter("tipo_despesa_id", despesaForecast.getTipoDespesa().getId()).getSingleResult();
@@ -253,8 +381,8 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 			Object result = em.createNativeQuery(SolicitacaoPagamento.QUERY_SOMA_VALOR_COMPROMETIDO.toString())
 				.setParameter("ano", despesaForecast.getForecast().getBudget().getAno())
 				.setParameter("centro_custo_id",despesaForecast.getForecast().getBudget().getCentroCusto().getId())
-				.setParameter("mes_forecast",despesaForecast.getForecast().getMes())
-			    .setParameter("mes_anterior", despesaForecast.getForecast().getMes()-1)
+				.setParameter("mes_forecast",despesaForecast.getDespesaPK().getMes())
+			    .setParameter("mes_anterior",despesaForecast.getDespesaPK().getMes()-1)
 			    .setParameter("acao_id", despesaForecast.getAcao().getId())
 				.setParameter("tipo_despesa_id", despesaForecast.getTipoDespesa().getId()).getSingleResult();
 			if(result !=null)
@@ -271,4 +399,82 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 		return null;
 
 	}
+
+	@Override
+	public boolean isForecastMensalisado(Long mes, String ano) {
+		Forecast forecast = em.createNamedQuery("Forecast.findByAno", Forecast.class)
+		.setParameter("ano", ano)
+		.setMaxResults(1).getSingleResult();
+		 
+		ForecastMensalisado forecastMensalisado = 
+				em.createNamedQuery("ForecastMensalisado.findByForecastMes",ForecastMensalisado.class)
+				.setParameter("mes", mes)
+				.setParameter("forecast_id", forecast.getId())
+				.setMaxResults(1)
+				.getSingleResult();
+		
+		return forecastMensalisado.getStatusForecast().equals(StatusForecastEnum.NAO_INICIADO);
+	}
+
+	@Override
+	public void alterarForecastMensalisado(Long mes, String ano) throws Exception{
+		List<Forecast> forecasts = em.createNamedQuery("Forecast.findByAno", Forecast.class)
+				.setParameter("ano", ano)
+				.getResultList();
+		tx.begin();
+		for(Forecast forecast : forecasts)
+		{
+			ForecastMensalisado forecastMensalisado = 
+					em.createNamedQuery("ForecastMensalisado.findByForecastMes",ForecastMensalisado.class)
+					.setParameter("mes", mes)
+					.setParameter("forecast_id", forecast.getId())
+					.setMaxResults(1)
+					.getSingleResult();
+			forecastMensalisado.setStatusForecast(StatusForecastEnum.EM_ANDAMENTO);
+			em.merge(forecastMensalisado);
+		}
+		tx.commit();
+	}
+	
+
+	@Override
+	public Forecast findForecastByCCAndAno(String ano, Long centroCustoId) {
+		Forecast forecast;
+		try
+		{
+			 forecast = em.createNamedQuery("Forecast.findByAnoAndCC", Forecast.class)
+					.setParameter("ano", ano)
+					.setParameter("centroCustoId", centroCustoId)
+					.getSingleResult();
+			 
+		}
+		catch(NoResultException e)
+		{
+				return null;
+		}
+		
+		return forecast;
+	}
+
+	@Override
+	public DespesaForecast obterDespesaForecast(Forecast forecast,
+			TipoDespesa tipoDespesa, Acao acao) throws Exception {
+		DespesaForecast despesaForecast = null;
+		try
+		{
+			despesaForecast =em.createNamedQuery("DespesaForecast.findByForecastTipoDespesaAndAcao", DespesaForecast.class)
+			.setParameter("forecastId", forecast.getId())
+			.setParameter("tipoDespesaId",tipoDespesa.getId())
+			.setParameter("acaoId",acao.getId())
+			.getSingleResult();
+		}
+		catch(NoResultException e)
+		{
+				return null;
+		}
+		
+		return despesaForecast;
+	}
+
+
 }

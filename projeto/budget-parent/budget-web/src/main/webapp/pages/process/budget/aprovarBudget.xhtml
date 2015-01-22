@@ -91,7 +91,7 @@
 						</f:facet>
 						<h:outputText value="#{detalheDespesa.comentario}" />
 					</p:column>
-					<p:column width="150" footerText="Total Proposto:#{facesUtils.formatarDinheiro(aprovarBudgetAction.valorTotalDetalhe)} Total Aprovado:#{facesUtils.formatarDinheiro(aprovarBudgetAction.valorTotalAprovado)}" style="text-align:center" >
+					<p:column width="150" footerText="Total Proposto:#{facesUtils.formatarDinheiro(aprovarBudgetAction.valorTotalDetalhe)}" style="text-align:center" >
 						<f:facet name="header">
 							<h:outputText value="Valor Proposto" />
 						</f:facet>
@@ -104,9 +104,9 @@
 									<f:setPropertyActionListener target="#{aprovarBudgetAction.despesa}" value="#{detalheDespesa}"/>
 							</p:commandButton>
 					</p:column>
-					<p:column width="8%" headerText="Aprovado?">
+					<p:column width="8%" headerText="Aprovado?" footerText="Total Aprovado:#{facesUtils.formatarDinheiro(aprovarBudgetAction.valorTotalAprovado)}">
 						<p:selectBooleanCheckbox value="#{detalheDespesa.aprovado}" disabled="#{aprovarBudgetAction.tipoAprovacao eq 'S'}">
-							<p:ajax listener="#{aprovarBudgetAction.calcularTotalBudget()}" process="@this" update=":form"></p:ajax>
+							<p:ajax listener="#{aprovarBudgetAction.calcularTotalBudget()}" event="change" update=":form"></p:ajax>
 						</p:selectBooleanCheckbox>
 					</p:column>
 				</p:dataTable>
@@ -120,8 +120,8 @@
 			</p:panel>
 			
 			</h:form>
-			<p:dialog header="#{not aprovarBudgetAction.inclusao? 'Alterar Despesa' : 'Incluir Despesa'}  " id="criarDespesaPanel" widgetVar="criarDespesa" height="400"
-				width="500" resizable="false" draggable="false">
+			<p:dialog header="#{not aprovarBudgetAction.inclusao? 'Alterar Despesa' : 'Incluir Despesa'}  " id="criarDespesaPanel" widgetVar="criarDespesa" height="500"
+				width="550" resizable="false" draggable="false">
 				<h:form id="formDespesa">
 				<p:panel id="panelDespesa">
 				<p:panelGrid columns="2">

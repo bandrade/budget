@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -24,16 +25,22 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 
 import com.dupont.budget.model.Acao;
+import com.dupont.budget.model.Budget;
 import com.dupont.budget.model.CentroCusto;
+import com.dupont.budget.model.DespesaForecast;
+import com.dupont.budget.model.DespesaForecastPK;
 import com.dupont.budget.model.DespesaSolicitacaoPagamento;
+import com.dupont.budget.model.Forecast;
 import com.dupont.budget.model.Fornecedor;
 import com.dupont.budget.model.OrigemSolicitacao;
 import com.dupont.budget.model.SolicitacaoPagamento;
 import com.dupont.budget.model.StatusPagamento;
 import com.dupont.budget.model.TipoDespesa;
 import com.dupont.budget.model.ValorComprometido;
+import com.dupont.budget.service.BudgetService;
 import com.dupont.budget.service.DeliveryHandlerService;
 import com.dupont.budget.service.DomainService;
+import com.dupont.budget.service.ForecastService;
 import com.dupont.budget.service.event.UploadEvent;
 import com.dupont.budget.service.event.Uploaded;
 
@@ -45,6 +52,12 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
 
 	@Inject
 	private DomainService service;
+	
+	@Inject
+	private ForecastService forecastService;
+	
+	@Inject
+	private BudgetService budgetService;
 
     private Sheet loadFileSheet(File file) {
     	Sheet sheet = null;
@@ -71,7 +84,8 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
     @Override
     @Asynchronous
     public void onFornecedorUpload(@Observes @Uploaded(Fornecedor.class) UploadEvent event) {
-		logger.debug("Evento de cadastro de fornecedores sendo processado pelo serviço.");
+	
+    	logger.debug("Evento de cadastro de fornecedores sendo processado pelo serviço.");
 
 		File file = new File(event.getPath());
 
@@ -125,7 +139,7 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
     @Asynchronous
 	public void onValorComprometidoUpload(@Observes @Uploaded(ValorComprometido.class) UploadEvent event) {
 		logger.debug("Evento de cadastro de valores comprometidos sendo processado pelo serviço.");
-
+		Integer ano = Calendar.getInstance().get(Calendar.YEAR);
 		File file = new File(event.getPath());
 
 		try {
@@ -137,34 +151,70 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
 				while (rowIterator.hasNext()) {
 					try {
 						Row row = rowIterator.next();
+						String centroDeCustoRow = row.getCell(0).getStringCellValue();
+						String tipoDespesaRow = row.getCell(1).getStringCellValue();
+						String acaoRow = row.getCell(2).getStringCellValue();
+						long mesRow= (long) row.getCell(3).getNumericCellValue();
+						Double valorRow = row.getCell(4).getNumericCellValue();
 						valor = service.findValorComprometidoByFiltro(
-								row.getCell(0).getStringCellValue(),
-								row.getCell(1).getStringCellValue(),
-								row.getCell(2).getStringCellValue(),
-								(int) row.getCell(4).getNumericCellValue());
+								centroDeCustoRow,
+								tipoDespesaRow,
+								acaoRow,
+								mesRow);
 						if (valor != null) {
-							valor.setValor(row.getCell(5).getNumericCellValue());
+							valor.setValor(valorRow);
 							service.update(valor);
 						} else {
 							valor = new ValorComprometido();
-							List<CentroCusto> centrosCusto = service.findByName(new CentroCusto(row.getCell(0).getStringCellValue()));
-							if (centrosCusto.isEmpty() || centrosCusto.size() > 1) {
+							CentroCusto centroCusto = service.findCentroCustoByCodigo(centroDeCustoRow);
+							if (centroCusto ==null) {
 								continue;
 							}
-							valor.setCentroCusto(centrosCusto.get(0));
-							List<TipoDespesa> tiposDespesa = service.findByName(new TipoDespesa(row.getCell(1).getStringCellValue()));
+							valor.setCentroCusto(centroCusto);
+							List<TipoDespesa> tiposDespesa = service.findByNameEqual(new TipoDespesa(tipoDespesaRow.toLowerCase()));
 							if (tiposDespesa.isEmpty() || tiposDespesa.size() > 1) {
 								continue;
 							}
-							valor.setTipoDespesa(tiposDespesa.get(0));
-							List<Acao> acoes = service.findByName(new Acao(row.getCell(2).getStringCellValue()));
-							if (acoes.isEmpty() || acoes.size() > 1) {
+							TipoDespesa tipoDespesa = tiposDespesa.get(0);
+							valor.setTipoDespesa(tipoDespesa);
+							
+							Budget budget = budgetService.findByAnoAndCentroDeCusto(ano+"", centroCusto.getId());
+							boolean possuiBudget = budget !=null;
+							Forecast forecast = forecastService.findForecastByCCAndAno(ano+"", centroCusto.getId());
+							if(forecast ==null)
 								continue;
+							
+							Acao acao = service.findAcaoByForecastOrBudget(possuiBudget? budget.getId():null ,forecast.getId(),acaoRow.toLowerCase()) ;
+							if (acao == null) {
+								acao = new Acao(acaoRow);
+								if(possuiBudget)
+								{
+									acao.setBudget(budget);
+								}
+								else
+								{
+									acao.setForecast(forecast);
+								}
+								service.create(acao);
 							}
-							valor.setAcao(acoes.get(0));
+							DespesaForecast despesaForecast = forecastService.obterDespesaForecast(forecast,tipoDespesa , acao);
+							if(despesaForecast == null)
+							{
+								despesaForecast = new DespesaForecast();
+								despesaForecast.setForecast(forecast);
+								despesaForecast.setAcao(acao);
+								despesaForecast.setAtivo(true);
+								despesaForecast.setTipoDespesa(tipoDespesa);
+								despesaForecast.setValor(0D);
+								despesaForecast.setDespesaPK(new DespesaForecastPK(ano+"", mesRow, null));
+								forecastService.incluirDespesaForecast(despesaForecast);
+								
+							}
+							valor.setAcao(acao);
 							valor.setAtivo(true);
-							valor.setMes((int) row.getCell(4).getNumericCellValue());
-							valor.setValor(row.getCell(5).getNumericCellValue());
+							valor.setMes(Integer.valueOf(mesRow+""));
+							valor.setValor(valorRow);
+							valor.setAno(ano);
 							service.create(valor);
 						}
 						counter++;

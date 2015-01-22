@@ -16,17 +16,21 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "acao")
 @NamedQueries({
-	@NamedQuery(name = Acao.FIND_ACAO_BY_BUDGET, query = "select a from Acao a where a.budget.id =:budgetId")
+	@NamedQuery(name = Acao.FIND_ACAO_BY_BUDGET, query = "select a from Acao a where a.budget.id =:budgetId"),
+	@NamedQuery(name = Acao.FIND_ACAO_BY_BUDGET_OR_FORECAST, query = "select a from Acao a where a.budget.id =:budgetId or a.forecast.id =:forecastId and lower(a.nome) like :nomeAcao")
 })
 public class Acao extends NamedAbstractEntity<Long> {
 	
 	public static final String FIND_ACAO_BY_BUDGET="Acao.findAcaoByBudget";
+	public static final String FIND_ACAO_BY_BUDGET_OR_FORECAST="Acao.findAcaoByBudgetAndForecast";
 	private static final long serialVersionUID = -1359075483819011154L;
 	
 	//bi-directional many-to-one association to Budget
 	@ManyToOne
 	private Budget budget;
 
+	@ManyToOne
+	private Forecast forecast;
 	public Acao() {
 		this(null);
 	}
@@ -41,6 +45,14 @@ public class Acao extends NamedAbstractEntity<Long> {
 
 	public void setBudget(Budget budget) {
 		this.budget = budget;
+	}
+
+	public Forecast getForecast() {
+		return forecast;
+	}
+
+	public void setForecast(Forecast forecast) {
+		this.forecast = forecast;
 	}
 	
 

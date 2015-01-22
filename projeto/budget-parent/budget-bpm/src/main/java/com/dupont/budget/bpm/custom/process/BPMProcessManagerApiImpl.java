@@ -162,7 +162,7 @@ public class BPMProcessManagerApiImpl implements BPMProcessManagerApi {
 
 	}
 
-	public boolean isProcessForecastAlreadyStarted(String ano,String mes) {
+	public boolean isProcessForecastAlreadyStarted(String ano) {
 		RuntimeEngine runtime = singletonManager.getRuntimeEngine(EmptyContext
 				.get());
 		KieSession ksession = runtime.getKieSession();
@@ -175,7 +175,7 @@ public class BPMProcessManagerApiImpl implements BPMProcessManagerApi {
 				WorkflowProcessInstance work = (WorkflowProcessInstance) ksession.getProcessInstance(id);
 			    String anoProcesso =  (String)work.getVariable("anoForecast");
 			    String mesProcesso =  (String)work.getVariable("mesForecast");
-			    if(ano.equals(anoProcesso) && mes.equals(mesProcesso))
+			    if(ano.equals(anoProcesso) )
 			    	return true;
 		}
 		return false;

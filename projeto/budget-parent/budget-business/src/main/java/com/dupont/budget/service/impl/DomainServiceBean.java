@@ -88,7 +88,7 @@ public class DomainServiceBean extends GenericService implements DomainService {
 	}
 	
 	@Override
-	public ValorComprometido findValorComprometidoByFiltro(String centroCusto, String tipoDespesa, String acao, Integer mes) {
+	public ValorComprometido findValorComprometidoByFiltro(String centroCusto, String tipoDespesa, String acao, Long mes) {
 		if (centroCusto == null || tipoDespesa == null || acao == null || mes == null) {
 			return null;
 		}
@@ -98,7 +98,7 @@ public class DomainServiceBean extends GenericService implements DomainService {
 						.setParameter("centroCusto", centroCusto.toLowerCase())
 						.setParameter("tipoDespesa", tipoDespesa.toLowerCase())
 						.setParameter("acao", acao.toLowerCase())
-						.setParameter("mes", mes)
+						.setParameter("mes", Integer.valueOf(mes+""))
 						.getSingleResult();
 		} catch (NoResultException e) {
 			return null;
@@ -232,5 +232,20 @@ public class DomainServiceBean extends GenericService implements DomainService {
 		} catch (NoResultException e) {
 			return null;
 		}
+	}
+	
+	public Acao findAcaoByForecastOrBudget(Long budgetId,Long forecastId, String nomeAcao){
+		Acao acao =null;
+		try
+		{
+			acao = em.createNamedQuery(Acao.FIND_ACAO_BY_BUDGET_OR_FORECAST, Acao.class)
+			.setParameter("budgetId", budgetId)
+			.setParameter("forecastId", forecastId)
+			.setParameter("nomeAcao",nomeAcao)
+			.getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+		return acao;
 	}
 }

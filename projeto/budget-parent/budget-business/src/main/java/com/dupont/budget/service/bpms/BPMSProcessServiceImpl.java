@@ -75,10 +75,10 @@ public class BPMSProcessServiceImpl implements BPMSProcessService{
 
 
 	@Override
-	public boolean existeProcessoForecastAtivo(String mes, String ano)
+	public boolean existeProcessoForecastAtivo(String ano)
 			throws Exception {
 
-		return processApi.isProcessForecastAlreadyStarted(ano, mes);
+		return processApi.isProcessForecastAlreadyStarted(ano);
 	}
 
 

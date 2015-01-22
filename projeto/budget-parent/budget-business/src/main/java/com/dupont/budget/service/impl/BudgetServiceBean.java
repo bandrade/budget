@@ -506,6 +506,13 @@ public class BudgetServiceBean extends GenericService implements BudgetService {
 	}
 
 
+	@Override
+	public void encerrarBudget(Budget budget) {
+		budget.setStatus(StatusBudget.FINALIZADO);
+		em.merge(budget);
+	}
+
+
 
 
 	

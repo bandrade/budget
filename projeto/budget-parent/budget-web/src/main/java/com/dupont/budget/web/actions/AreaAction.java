@@ -154,6 +154,10 @@ public class AreaAction extends GenericAction<Area> {
 	    if (t.getResponsavelNotas() != null) {
 			responsavelNotas = t.getResponsavelNotas().getUsuario();
 		}
+	    else 
+	    {
+	    	responsavelNotas = null;
+	    }
 		return "edit";
 	}
 	

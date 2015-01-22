@@ -29,6 +29,7 @@ public interface BudgetService {
 	public List<DespesaMesDTO> obterDespesaNoDetalheBudgetAsDTO(Long budgetId) throws Exception ;
 	public void mensalisarBudget(List<DespesaMesDTO> despesas) throws Exception;
 	public void aprovarDespesasBudget(String budgetId);
+	public void encerrarBudget(Budget budget);
 	
 	/**
 	 * Retorna o relatório de budget orçado e utilizado: tipo de despesa / acao

@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -18,6 +19,8 @@ import javax.persistence.Transient;
 @Entity
 @Table(name="despesa_forecast")
 @NamedQueries({
+	@NamedQuery(name="DespesaForecast.findByForecastTipoDespesaAndAcao", 
+			query="select d from DespesaForecast d where d.forecast.id=:forecastId and d.tipoDespesa.id=:tipoDespesaId and d.acao.id=:acaoId")
 })
 public class DespesaForecast {
 
@@ -235,7 +238,7 @@ public class DespesaForecast {
 			setValor(null);
 	}
 
-	public Double obterYTD(DespesaForecast despesaForecast , Integer mes)
+	public Double obterPLM(DespesaForecast despesaForecast , Long mes)
 	{
 		Double[]  valores = new Double[]{despesaForecast.getDespesaMensalisada().getJaneiro(),
 									 despesaForecast.getDespesaMensalisada().getFevereiro(),
@@ -284,8 +287,8 @@ public class DespesaForecast {
 		DespesaForecastPK pk  = new DespesaForecastPK(despesaForecast.getDespesaPK().getAno(),
 				Long.valueOf(mesSeguinte),despesaForecast.getDespesaPK().getId());
 		this.setDespesaPK(pk);
-		this.setYtd(obterYTD(despesaForecast, despesaForecast.getForecast().getMes()));
-		this.setPlm(obterYTD(despesaForecast, 12));
+		this.setYtd(obterPLM(despesaForecast, despesaForecast.getDespesaPK().getMes()));
+		this.setPlm(obterPLM(despesaForecast, 12L));
 		this.setDespesaBudget(despesaForecast.getDespesaBudget());
 		this.setForecast(despesaForecast.getForecast());
 		//XXX VERIFICAR SE PRECISA CRIAR UMA NOVA DESPESA MENSALIZADA

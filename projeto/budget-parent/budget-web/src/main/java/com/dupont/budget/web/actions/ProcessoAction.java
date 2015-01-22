@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 
 import com.dupont.budget.model.MesEnum;
+import com.dupont.budget.service.ForecastService;
 import com.dupont.budget.service.bpms.BPMSProcessService;
 import com.dupont.budget.web.util.FacesUtils;
 
@@ -31,6 +32,9 @@ public class ProcessoAction {
 	private Date dataExpiracao;
 
 	private Calendar calendar;
+	
+	@Inject
+	private ForecastService forecastService;
 
 	@PostConstruct
 	public void init()
@@ -59,11 +63,10 @@ public class ProcessoAction {
 	private boolean validarPrazoForecast()
 	{
 		calendar.setTime(dataExpiracao);
-		boolean isPrazoOk= true;
-				if(dataExpiracao.before(new Date()))
+		if(dataExpiracao.before(new Date()))
 		{
 			facesUtils.addErrorMessage("O prazo deve ser uma data futura");
-			isPrazoOk=false;
+			return false;
 		}
 				
 		MesEnum mesPrazo = MesEnum.values()[calendar.get(Calendar.MONTH)];
@@ -71,9 +74,15 @@ public class ProcessoAction {
 		if(mesForecast.getId()>mesPrazo.getId())
 		{
 			facesUtils.addErrorMessage("O prazo não pode ter uma data inferior ao mes do Forecast");
-			isPrazoOk=false;
+			return false;
 		}
-		return isPrazoOk;
+		if(!(forecastService.isForecastMensalisado(mesForecast.getId(), ano)))
+		{
+			facesUtils.addErrorMessage("Ja existe um processo de processo completo/em andamento para o mes de "+mes);
+			return false;
+		}
+		
+		return true;
 	}
 
 	
@@ -107,13 +116,15 @@ public class ProcessoAction {
 		}	
 		try {
 			
-			if(bpms.existeProcessoForecastAtivo(mes, ano))
+			if(bpms.existeProcessoForecastAtivo(ano))
 			{
-				facesUtils.addErrorMessage("Ja existe um processo de forecast para o ano "+ano +" e mes de "+mes);
+				facesUtils.addErrorMessage("Ja existe um processo de forecast ativo");
 			}
 			else
 			{
 				bpms.iniciarProcessoForecast(ano, mes,dataExpiracao);
+				MesEnum mesForecast = MesEnum.valueOf(mes.toUpperCase());
+				forecastService.alterarForecastMensalisado((Long)(mesForecast.getId()), ano);
 				facesUtils.addInfoMessage("Processo de Forecast iniciado com sucesso");
 			}
 		} catch (Exception e) {

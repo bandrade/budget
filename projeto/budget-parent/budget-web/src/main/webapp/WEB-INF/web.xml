@@ -57,6 +57,7 @@
 		</web-resource-collection>
 		<auth-constraint>
 			<role-name>USUARIO</role-name>
+			<role-name>RELATORIO</role-name>
 			<role-name>ADMINISTRADOR</role-name>	
 		</auth-constraint>		
 		<user-data-constraint>
@@ -104,7 +105,12 @@
 		<location>/pages/erro/500.xhtml</location>
 	</error-page>
 	<error-page>
+  		<exception-type>javax.faces.application.ViewExpiredException</exception-type>
+  		<location>/pages/login/login.xhtml</location>
+ 	</error-page>
+	
+	<error-page>
 		<error-code>403</error-code>
-		<location>/pages/erro/500.xhtml</location>
+		<location>/pages/erro/403.xhtml</location>
 	</error-page>
 </web-app>

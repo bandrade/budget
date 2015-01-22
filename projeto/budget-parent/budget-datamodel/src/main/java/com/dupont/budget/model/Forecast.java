@@ -3,12 +3,11 @@ package com.dupont.budget.model;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -32,7 +31,9 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "forecast")
 @NamedQueries({
-	@NamedQuery(name="Forecast.findByBudgetId", query="select f from Forecast f where f.budget.id = :budgetId")
+	@NamedQuery(name="Forecast.findByBudgetId", query="select f from Forecast f where f.budget.id = :budgetId"),
+	@NamedQuery(name="Forecast.findByAno", query="select f from Forecast f where f.ano=:ano"),
+	@NamedQuery(name="Forecast.findByAnoAndCC", query="select f from Forecast f where f.ano=:ano and f.centroCusto.id=:centroCustoId")
 })
 public class Forecast implements Serializable {
 
@@ -42,11 +43,6 @@ public class Forecast implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-
-	@Column(name = "mes")
-	private Integer mes;
-
-
 	@ManyToOne
 	@JoinColumn(name = "budget_id")
 	private Budget budget;
@@ -54,10 +50,6 @@ public class Forecast implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "usuario_id")
 	private Usuario usuarioCriador;
-
-	@Column(name = "process_instance_id")
-	private Long processInstanceId;
-
 
 	@Column(name = "data_criacao")
 	@Temporal(TemporalType.TIMESTAMP)
@@ -71,18 +63,34 @@ public class Forecast implements Serializable {
 	@JoinColumn(name = "forecast_id")
 	private Set<DespesaForecast> despesas;
 
-	@Column(name="status")
-	@Enumerated(EnumType.STRING)
-	private StatusForecast statusForecast;
+	//bi-directional many-to-one association to Acao
+	@OneToMany(mappedBy="forecast")
+	private List<Acao> acoes;
+	
+	private String ano;
+	
+	//bi-directional many-to-one association to StatusForecast
+	@OneToMany(mappedBy="forecast",fetch = FetchType.EAGER)
+	private Set<ForecastMensalisado> statusForecasts;
+	
+	@ManyToOne
+	@JoinColumn(name = "centro_custo_id")
+	private CentroCusto centroCusto;
 
 	public Forecast() {}
 
-	public Forecast(Integer mes, Usuario usuarioCriador, Date cricao, Budget budget) {
+	public Forecast(Long id) {
 		super();
-		this.mes = mes;
+		this.id = id;
+	}
+
+	public Forecast(Usuario usuarioCriador, Date cricao, Budget budget,CentroCusto centroCusto,String ano) {
+		super();
 		this.usuarioCriador = usuarioCriador;
 		this.cricao = cricao;
 		this.budget =budget;
+		this.centroCusto= centroCusto;
+		this.ano= ano;
 	}
 
 	public Long getId() {
@@ -96,14 +104,6 @@ public class Forecast implements Serializable {
 
 	public void setUsuarioCriador(Usuario usuarioCriador) {
 		this.usuarioCriador = usuarioCriador;
-	}
-
-	public Long getProcessInstanceId() {
-		return processInstanceId;
-	}
-
-	public void setProcessInstanceId(Long processInstanceId) {
-		this.processInstanceId = processInstanceId;
 	}
 
 
@@ -123,13 +123,6 @@ public class Forecast implements Serializable {
 		this.ultimaAtualizacao = ultimaAtualizacao;
 	}
 
-	public Integer getMes() {
-		return mes;
-	}
-
-	public void setMes(Integer mes) {
-		this.mes = mes;
-	}
 
 	public Budget getBudget() {
 		return budget;
@@ -151,13 +144,31 @@ public class Forecast implements Serializable {
 		return usuarioCriador;
 	}
 
-	public StatusForecast getStatusForecast() {
-		return statusForecast;
+	public String getAno() {
+		return ano;
 	}
 
-	public void setStatusForecast(StatusForecast statusForecast) {
-		this.statusForecast = statusForecast;
+	public void setAno(String ano) {
+		this.ano = ano;
 	}
 
+	public Set<ForecastMensalisado> getStatusForecasts() {
+		if(statusForecasts == null)
+			statusForecasts = new HashSet<>();
+			
+		return statusForecasts;
+	}
+
+	public void setStatusForecasts(Set<ForecastMensalisado> statusForecasts) {
+		this.statusForecasts = statusForecasts;
+	}
+
+	public CentroCusto getCentroCusto() {
+		return centroCusto;
+	}
+
+	public void setCentroCusto(CentroCusto centroCusto) {
+		this.centroCusto = centroCusto;
+	}
 
 }

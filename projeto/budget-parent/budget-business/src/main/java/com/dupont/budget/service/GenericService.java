@@ -76,6 +76,21 @@ public abstract class GenericService {
 		return result;
 	}
 	
+	
+	@SuppressWarnings("unchecked")
+	public <T extends NamedAbstractEntity<?>> List<T> findByNameEqual(T t) {
+		String name = t != null ? t.getNome() : "";
+		if (StringUtils.isBlank(name)) {
+			return (List<T>) findAll(t.getClass());
+		}
+
+		List<T> result = (List<T>) em.createQuery(
+					String.format("select o from %s o where lower(o.nome) like :nome order by nome", t.getClass().getSimpleName())
+				).setParameter("nome", name.trim().toLowerCase()).getResultList();
+
+		return result;
+	}
+	
 	@SuppressWarnings("unchecked")
 	public <T extends NamedAbstractEntity<?>> List<T> findByNamePaging(T t) {
 		String name = t != null ? t.getNome() : "";

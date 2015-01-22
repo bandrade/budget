@@ -17,6 +17,10 @@ import javax.persistence.Table;
  * @since 2014
  *
  */
+/**
+ * @author bandrade
+ *
+ */
 @Entity
 @Table(name = "area")
 public class Area extends NamedAbstractEntity<Long> {
@@ -67,4 +71,5 @@ public class Area extends NamedAbstractEntity<Long> {
 		papeis.add(papelUsuario);
 		
 	}
+	
 }
