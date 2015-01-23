@@ -27,7 +27,7 @@ public interface ForecastService {
 	void atualizarDespesaForecast(DespesaForecast despesaForecast)
 			throws Exception;
 
-	Double obterValoresComprometidosNotas(DespesaForecast despesaForecast);
+	Double obterValoresComprometidosNotas(DespesaForecast despesaForecast,int mes);
 
 	boolean isForecastMensalisado(Long mes, String ano);
 

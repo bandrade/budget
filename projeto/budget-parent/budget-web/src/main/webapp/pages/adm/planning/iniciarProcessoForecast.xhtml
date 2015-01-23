@@ -3,6 +3,7 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
 	template="/WEB-INF/templates/default.xhtml">
 
 	<ui:param name="pageTitle" value="Human Tasks" />
@@ -22,14 +23,10 @@
 					</p:selectOneMenu>
 					<p:outputLabel value="Prazo:"/>
 					<p:calendar value="#{processoAction.dataExpiracao}" required="true" locale="pt_BR"></p:calendar>
+					
+					
 				</p:panelGrid>
-			
-				<p:panelGrid columns="1" styleClass="painel-botoes" >
-					<p:commandButton
-						onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"
-						action="#{processoAction.iniciarProcessoForecast()}"
-						value="Iniciar Processo" update=":form"/>
-				</p:panelGrid>
+				
 			</h:form>
 		</p:panel>
 	</ui:define>
