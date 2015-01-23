@@ -35,7 +35,8 @@ import javax.persistence.Transient;
 @NamedQueries({
 		@NamedQuery(name = "Budget.findByAnoAndCentroDeCusto", query = "select b from Budget b where b.centroCusto.id=:centroDeCustoId and b.ano like :ano"),
 		@NamedQuery(name = "Budget.findByAnoAndArea", query = "select b from Budget b where b.centroCusto.area.id=:area_id and b.ano like :ano"),
-		@NamedQuery(name = "Budget.findByAno" , query = "select b from Budget b where b.ano like :ano")
+		@NamedQuery(name = "Budget.findByAno" , query = "select b from Budget b where b.ano like :ano"),
+		@NamedQuery(name = "Budget.findAll", query = "select b from Budget b" )
 })
 public class Budget {
 

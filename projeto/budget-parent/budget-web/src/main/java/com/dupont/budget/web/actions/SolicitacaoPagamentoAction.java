@@ -44,7 +44,6 @@ import com.dupont.budget.service.BudgetService;
 import com.dupont.budget.service.DomainService;
 import com.dupont.budget.service.ForecastService;
 import com.dupont.budget.service.SolicitacaoPagamentoService;
-import com.dupont.budget.service.bpms.BPMSProcessService;
 import com.dupont.budget.service.bpms.BPMSTaskService;
 import com.dupont.budget.web.util.FacesUtils;
 
@@ -82,7 +81,7 @@ public class SolicitacaoPagamentoAction implements Serializable {
 	private BPMSTaskService taskService;
 	
 	@Inject
-	private BPMSProcessService processService;
+	private LoggedUserAction loggedUserAction;
 	
 	private SolicitacaoPagamento solicitacaoPagamento               = new SolicitacaoPagamento();	
 	
@@ -104,7 +103,7 @@ public class SolicitacaoPagamentoAction implements Serializable {
 	public void load() {
 		try {
 			DespesaSolicitacaoPagamento despesa = new DespesaSolicitacaoPagamento();
-			SolicitacaoPagamentoDTO dto = (SolicitacaoPagamentoDTO) processService.obterVariavelProcesso(processInstanceId, "solicitacaoAtual");
+			SolicitacaoPagamentoDTO dto = (SolicitacaoPagamentoDTO) taskService.obterConteudoTarefa(tarefa).get("solicitacaoAtual");
 			despesa.setId(dto.getIdDespesa());
 			despesa = domainService.findById(despesa);
 			this.solicitacaoPagamento = despesa.getSolicitacaoPagamento();
@@ -563,6 +562,7 @@ public class SolicitacaoPagamentoAction implements Serializable {
 		solicitacaoPagamento.setCriacao(new Date());
 		solicitacaoPagamento.setStatus(StatusPagamento.COMPROMETIDO);
 		solicitacaoPagamento.setOrigem(OrigemSolicitacao.COVERSHEET);
+		solicitacaoPagamento.setUsuarioCriador(loggedUserAction.getLoggedUser());
 		
 		if( solicitacaoPagamento.getTipoSolicitacao() == TipoSolicitacao.CC ) {
 			despesaSolicitacaoPagamento.setValor(solicitacaoPagamento.getValor());

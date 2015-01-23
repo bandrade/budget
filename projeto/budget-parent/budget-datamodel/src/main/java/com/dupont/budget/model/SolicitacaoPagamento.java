@@ -32,6 +32,7 @@ import javax.persistence.TemporalType;
 @NamedQueries({
 	@NamedQuery(name = SolicitacaoPagamento.FIND_BY_FILTRO, query = "select o from SolicitacaoPagamento o where o.numeroNotaFiscal = :numeroNotaFiscal and lower(o.fornecedor.nome) like :fornecedor and o.tipoSolicitacao = :tipoSolicitacao and o.status = :status"),
 	@NamedQuery(name = SolicitacaoPagamento.FIND_BY_NUMERO_NOTA, query = "select o from SolicitacaoPagamento o where lower(o.numeroNotaFiscal) = :numeroNotaFiscal"),
+	@NamedQuery(name = "SolicitacaoPagamento.findAll", query = "select p from SolicitacaoPagamento p" )
 })
 public class SolicitacaoPagamento extends AbstractEntity<Long> {
 

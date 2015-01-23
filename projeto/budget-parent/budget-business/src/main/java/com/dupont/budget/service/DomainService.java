@@ -170,4 +170,7 @@ public interface DomainService {
 	public List<Acao> findAcaoByBudget(Long budgetId);
 	
 	public Acao findAcaoByForecastOrBudget(Long budgetId,Long forecastId, String nomeAcao);
+	
+	public void insertAcao(Acao acao);
+	
 }

@@ -1,0 +1,64 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                template="/WEB-INF/templates/default.xhtml">
+                
+	<ui:define name="content">
+	
+		<p:panel id="content">
+		
+			<h3> 
+				Exportação da Base
+			</h3>
+			
+			<p:dialog modal="true" widgetVar="statusDialog" header="Status" draggable="false" closable="false" resizable="false">
+    			<p:graphicImage name="ajaxloadingbar.gif" />
+			</p:dialog>
+			
+			<h:form id="form"> 
+			
+<!-- 				<p:panelGrid columns="3">
+					<p:outputLabel value="Ano:" for="anoSelectOneMenu"/>
+					<p:selectOneMenu id="anoSelectOneMenu" label="Ano" value="#{reportBudgetOrcadoUtilizadoCentroCustoCulturaAction.ano}" required="true">
+						<f:selectItem itemLabel="Selecione um ano" itemValue="#{null}" />
+						<f:selectItems value="#{anos}" var="item" itemValue="#{item}"/>
+					</p:selectOneMenu> 
+					<p:message for="anoSelectOneMenu" />
+					
+					<p:outputLabel value="Centro de custo:" for="ccSelectOneMenu"/>
+					<p:selectOneMenu id="ccSelectOneMenu" value="#{reportBudgetOrcadoUtilizadoCentroCustoCulturaAction.centroCusto}" converter="com.dupont.EntityConverter">
+						<f:selectItem itemLabel="Todos os centros de custos" itemValue="#{null}" />
+						<f:selectItems value="#{centroCustos}" var="item" itemValue="#{item}" itemLabel="#{item.codigo}"/>
+					</p:selectOneMenu> 
+					<p:message for="ccSelectOneMenu" />
+				</p:panelGrid>
+			 -->
+				
+			
+				<p:commandButton id="doReportBtn" value="Extrair Base" icon="ui-icon-arrowthick-1-s" styleClass="button" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);">
+					<p:fileDownload value="#{exportDatabaseAction.file}" />				
+				</p:commandButton>	
+
+
+				<p:separator />
+				
+			</h:form>
+			
+			<script type="text/javascript">
+				function start() {
+				    PF('statusDialog').show();
+				}
+				 
+				function stop() {
+				    PF('statusDialog').hide();
+				}
+			</script>
+		
+		</p:panel>		
+		
+	</ui:define>
+	
+</ui:composition>

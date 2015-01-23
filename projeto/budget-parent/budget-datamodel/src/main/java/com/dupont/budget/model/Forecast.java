@@ -33,7 +33,8 @@ import javax.persistence.TemporalType;
 @NamedQueries({
 	@NamedQuery(name="Forecast.findByBudgetId", query="select f from Forecast f where f.budget.id = :budgetId"),
 	@NamedQuery(name="Forecast.findByAno", query="select f from Forecast f where f.ano=:ano"),
-	@NamedQuery(name="Forecast.findByAnoAndCC", query="select f from Forecast f where f.ano=:ano and f.centroCusto.id=:centroCustoId")
+	@NamedQuery(name="Forecast.findByAnoAndCC", query="select f from Forecast f where f.ano=:ano and f.centroCusto.id=:centroCustoId"),
+	@NamedQuery(name="Forecast.findAll", query="select f from Forecast f")
 })
 public class Forecast implements Serializable {
 
