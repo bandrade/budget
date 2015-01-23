@@ -82,7 +82,7 @@ public class SolicitacaoPagamentoAction implements Serializable {
 	
 	@Inject
 	private LoggedUserAction loggedUserAction;
-	
+
 	private SolicitacaoPagamento solicitacaoPagamento               = new SolicitacaoPagamento();	
 	
 	private DespesaSolicitacaoPagamento despesaSolicitacaoPagamento = new DespesaSolicitacaoPagamento();

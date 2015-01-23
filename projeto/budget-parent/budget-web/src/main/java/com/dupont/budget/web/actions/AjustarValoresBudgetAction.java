@@ -73,18 +73,29 @@ public class AjustarValoresBudgetAction extends BudgetAction implements Serializ
 		{
 			for(Despesa despesa: despesasNoDetalhe)
 			{
-				valor+=despesa.getValorProposto();
+				Double valorProposto = despesa.getValorProposto()==null ? despesa.getValor(): despesa.getValorProposto();
+				despesa.setValorProposto(valorProposto);
+				valor+=valorProposto;
 			}
 		}
 		return valor;
 	}
 
 	@Override
-	public void adicionarDespesa() {
+	public boolean adicionarDespesa() {
 		despesa.setAprovado(true);
 		possuiBudgetSalvo=true;
 		setBudget(budgetSelecionado);
-		super.adicionarDespesa();
+		despesa.setValorProposto(despesa.getValor());
+		if(super.adicionarDespesa())
+		{
+			obterBudgetNoDetalhe();
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 	public String concluir()
@@ -119,9 +130,17 @@ public class AjustarValoresBudgetAction extends BudgetAction implements Serializ
 
 	}
 	@Override
-	protected void alterarDespesa() {
+	protected boolean alterarDespesa() {
 		setBudget(budgetSelecionado);
-		super.alterarDespesa();
+		if(super.alterarDespesa())
+		{
+			obterBudgetNoDetalhe();
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 	public void removerDespesa()

@@ -76,4 +76,10 @@ public interface BudgetService {
 	 * @return
 	 */
 	public List<Budget> findBudgetsByAno(String ano);
+	
+	
+	public boolean isDespesaExistente(Despesa despesa);
+	
+	public Despesa obterDespesaPorTipoEAcao(Despesa despesa);
+	
 }

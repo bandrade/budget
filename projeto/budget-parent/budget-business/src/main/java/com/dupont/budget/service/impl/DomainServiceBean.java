@@ -248,4 +248,9 @@ public class DomainServiceBean extends GenericService implements DomainService {
 		}
 		return acao;
 	}
+
+	@Override
+	public void insertAcao(Acao acao) {
+			em.persist(acao);
+	}
 }

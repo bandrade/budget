@@ -8,6 +8,8 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.slf4j.Logger;
+
 import com.dupont.budget.dto.AreaDTO;
 import com.dupont.budget.dto.SolicitacaoPagamentoDTO;
 import com.dupont.budget.exception.DuplicateEntityException;
@@ -32,6 +34,9 @@ public class SolicitacaoPagamentoServiceBean implements SolicitacaoPagamentoServ
 
 	@PersistenceContext(unitName="budget-pu")
 	protected EntityManager em;
+	
+	@Inject
+	private Logger logger;
 
 	@Override
 	public void startSolicitacaoPagamento( SolicitacaoPagamento solicitacaoPagamento) throws DuplicateEntityException {
@@ -82,8 +87,8 @@ public class SolicitacaoPagamentoServiceBean implements SolicitacaoPagamentoServ
 			_solicitacao.setNumeroNota(solicitacaoPagamento.getNumeroNotaFiscal());
 			
 			AreaDTO _area = new AreaDTO();
-			_area.setId(despesa.getAcao().getId());
-			_area.setNome(despesa.getAcao().getNome());
+			_area.setId(despesa.getCentroCusto().getArea().getId());
+			_area.setNome(despesa.getCentroCusto().getArea().getNome());
 			
 			_solicitacao.setArea(_area);
 			
@@ -95,6 +100,7 @@ public class SolicitacaoPagamentoServiceBean implements SolicitacaoPagamentoServ
 		try {
 			processInstanceId = processService.iniciarProcessoSolicitacaoPagamento(_solicitacoes.toArray(new SolicitacaoPagamentoDTO[_solicitacoes.size()]));
 		} catch (Exception e) {
+			logger.error("Erro ao iniciar processo BPM",e);
 		}
 
 		solicitacaoPagamento.setProcessInstanceId(processInstanceId);

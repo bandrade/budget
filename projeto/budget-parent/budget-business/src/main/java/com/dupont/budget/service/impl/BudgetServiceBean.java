@@ -513,7 +513,31 @@ public class BudgetServiceBean extends GenericService implements BudgetService {
 	}
 
 
+	public boolean isDespesaExistente(Despesa despesa)
+	{
+	
+		return obterDespesaPorTipoEAcao(despesa)!=null;
+	}
 
+
+	@Override
+	public Despesa obterDespesaPorTipoEAcao(Despesa despesa) {
+		Despesa despesaRetorno = null;
+		try
+		{
+			despesaRetorno =	em.createNamedQuery("Despesa.obterDespesaPorTipoEAcao", Despesa.class)
+				.setParameter("budgetId", despesa.getBudget().getId())
+				.setParameter("tipoDespesaId", despesa.getTipoDespesa().getId())
+				.setParameter("acaoId", despesa.getAcao().getId())
+				.getSingleResult();
+		}
+		catch(NoResultException e)
+		{
+			return null;
+		}
+
+		return despesaRetorno;
+	}
 
 	
 

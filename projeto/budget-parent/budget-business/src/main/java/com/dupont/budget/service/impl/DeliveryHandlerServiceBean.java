@@ -246,7 +246,9 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
 				while (rowIterator.hasNext()) {
 					Row row = rowIterator.next();
 					try {
-						String numeroNota = row.getCell(7).getStringCellValue();
+						String numeroNota = null;
+						row.getCell(7).setCellType(Cell.CELL_TYPE_STRING);
+						numeroNota= row.getCell(7).getStringCellValue();
 						if (numeroNota == null || numeroNota.trim().isEmpty()) {
 							writeLine("Número da Nota vazio.", bw, row);
 							continue;
@@ -289,23 +291,31 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
 							List<DespesaSolicitacaoPagamento> despesas = solicitacao.getDespesas();
 							for (Iterator<DespesaSolicitacaoPagamento> iterator = despesas.iterator(); iterator.hasNext();) {
 								DespesaSolicitacaoPagamento d = iterator.next();
-								if (d.getValor().equals(valor)) {
+								
 									if (!d.getCentroCusto().equals(centroCusto)) {
 										writeLine("Centro de Custo divergente entre Cover Sheet e Relatório SAP", bw, row);
 										continue line;
-									} else if (solicitacao.getFornecedor().equals(list.get(0))) {
+									} else if (!(solicitacao.getFornecedor().equals(list.get(0)))) {
 										writeLine("Fornecedor divergente entre Cover Sheet e Relatório SAP", bw, row);
 										continue line;
 									}
-								} else {
-									if (d.getCentroCusto().equals(centroCusto) && solicitacao.getFornecedor().equals(list.get(0))) {
+									else if (!(d.getValor().equals(valor))) {
+										writeLine("Valor divergente entre Cover Sheet e Relatório SAP", bw, row);
+										continue line;
+									} 
+									else {
+										solicitacao.setDataPagamento(new Date());
+										solicitacao.setStatus(StatusPagamento.PAGO);
+										service.update(solicitacao);
+										writeLine("SUCESSO.", bw, row);
+									/*if (d.getCentroCusto().equals(centroCusto) && solicitacao.getFornecedor().equals(list.get(0))) {
 										writeLine("Não foi possível tratar o registro. Existe mais de uma despesa com o mesmo fornecedor e centro de custo.", bw, row);
 										continue line;
-									}
+									}*/
 								}
 							}
 						}
-						writeLine("Valor não processado.", bw, row);
+						
 					} catch (Exception e) {
 						bw.write(String.format("%s;%s;%s;%s;Erro durante a leitura\n", row.getCell(7).getStringCellValue(), row.getCell(8).getStringCellValue(), row.getCell(6).getStringCellValue(), row.getCell(16).getStringCellValue().replace(",", ".")));
 					}

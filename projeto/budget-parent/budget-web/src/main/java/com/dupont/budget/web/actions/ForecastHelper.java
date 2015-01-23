@@ -27,24 +27,6 @@ public class ForecastHelper {
 		return valor;
 	}
 
-	public Double calcularValorMensalisadoDespesa(DespesaForecast despesa)
-	{
-
-		Double valor = 0d;
-		valor+= getDouble(despesa.getDespesaMensalisada().getDespesaJaneiro());
-		valor+= getDouble(despesa.getDespesaMensalisada().getDespesaFevereiro());
-		valor+= getDouble(despesa.getDespesaMensalisada().getDespesaMarco());
-		valor+= getDouble(despesa.getDespesaMensalisada().getDespesaAbril());
-		valor+= getDouble(despesa.getDespesaMensalisada().getDespesaMaio());
-		valor+= getDouble(despesa.getDespesaMensalisada().getDespesaJunho());
-		valor+= getDouble(despesa.getDespesaMensalisada().getDespesaAgosto());
-		valor+= getDouble(despesa.getDespesaMensalisada().getDespesaSetembro());
-		valor+= getDouble(despesa.getDespesaMensalisada().getDespesaOutubro());
-		valor+= getDouble(despesa.getDespesaMensalisada().getDespesaNovembro());
-		valor+= getDouble(despesa.getDespesaMensalisada().getDespesaDezembro());
-		return valor;
-	}
-
 	public Double calcularValorDespesas(String month,List<DespesaForecast> despesasNoDetalhe)
 	{
 		MesEnum mesEnum = MesEnum.valueOf(month);
@@ -104,7 +86,7 @@ public class ForecastHelper {
 					break;
 
 				default:
-					valor+=calcularValorMensalisadoDespesa(despesa);
+					valor+=calcularValorMensalisado(despesa);
 					break;
 
 			}

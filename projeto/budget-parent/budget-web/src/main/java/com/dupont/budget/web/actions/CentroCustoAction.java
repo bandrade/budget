@@ -68,7 +68,7 @@ public class CentroCustoAction extends GenericAction<CentroCusto> {
 			result = create();
 			try {
 				if (bpms.existeProcessoAtivo(Calendar.getInstance().get(Calendar.YEAR) + "")) {
-					facesUtils.addInfoMessage("Centro de Custo nao fara parte do processo de budget do ano "+Calendar.getInstance().get(Calendar.YEAR));
+					facesUtils.addWarnMessage("Centro de Custo nao fara parte do processo de budget do ano "+Calendar.getInstance().get(Calendar.YEAR));
 				}
 			} catch(Exception e) {
 				facesUtils.addErrorMessage("Erro ao consultar o processo BPM");
@@ -103,7 +103,7 @@ public class CentroCustoAction extends GenericAction<CentroCusto> {
 		userCallBackCache.removeGroupsFromCache(responsavel.getLogin());
 		userCallBackCache.removeGroupsFromCache(gestor.getLogin());
 		clearInstance();
-				return result;
+		return result;
 	}
 
 	@Override
@@ -137,7 +137,7 @@ public class CentroCustoAction extends GenericAction<CentroCusto> {
 		final String[] papel = {"RESPONSAVEL_", "GESTOR_","GERENTE_"};
 		StringBuilder nomePapel = new StringBuilder(papel[nivel - 1]);
 		String nomeArea = cc.getCodigo();
-		nomeArea = nomeArea.trim().replaceAll(" ", "_");
+		nomeArea = facesUtils.removeSpecialCharacters(nomeArea).toUpperCase();
 		nomePapel.append(nomeArea.toUpperCase());
 		return nomePapel.toString();
 	}

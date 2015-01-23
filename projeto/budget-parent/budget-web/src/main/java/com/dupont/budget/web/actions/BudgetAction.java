@@ -19,7 +19,6 @@ import com.dupont.budget.model.Acao;
 import com.dupont.budget.model.Budget;
 import com.dupont.budget.model.CentroCusto;
 import com.dupont.budget.model.Despesa;
-import com.dupont.budget.model.NamedAbstractEntity;
 import com.dupont.budget.service.BudgetService;
 import com.dupont.budget.service.DomainService;
 import com.dupont.budget.service.bpms.BPMSProcessService;
@@ -48,6 +47,7 @@ public class BudgetAction implements Serializable{
 
 	@Inject
 	protected BudgetService budgetService;
+	
 	@Inject
 	protected DomainService domainService;
 
@@ -58,7 +58,7 @@ public class BudgetAction implements Serializable{
 	protected Despesa despesaDetalheSelecionada;
 
 	protected static final String ACAO_EXISTENTE="S";
-	protected static final String ACAO_NAO_EXISTENTE="S";
+	protected static final String ACAO_NAO_EXISTENTE="N";
 
 	@Inject
 	protected Logger logger;
@@ -98,6 +98,7 @@ public class BudgetAction implements Serializable{
 	public void trataInclusao()
 	{
 		incAltComSucesso=false;
+		tipoAcao = ACAO_EXISTENTE;
 		inclusao=true;
 		inicializarDespesa();
 	}
@@ -138,21 +139,18 @@ public class BudgetAction implements Serializable{
 	{
 		incAltComSucesso=false;
 		despesa.initLists();
-		if(despesa.getAcao().getId()==null || despesa.getAcao().getId()==0)
-		{
-			tipoAcao=ACAO_NAO_EXISTENTE;
-		}
-		else
+		if(despesa.getAcao()!=null&& despesa.getAcao().getId()!=null && despesa.getAcao().getId()!=0)
 		{
 			tipoAcao = ACAO_EXISTENTE;
 		}
 		inclusao=false;
 	}
 
-	public void adicionarDespesa()
+	public boolean adicionarDespesa()
 	{
 		try
 		{
+			
 			if(!possuiBudgetSalvo)
 			{
 				criarBudget();
@@ -161,17 +159,26 @@ public class BudgetAction implements Serializable{
 			{
 				budget.setDespesas(new HashSet<Despesa>());
 			}
+			despesa.setBudget(budget);
 			validarDadosDespesa();
+			if(despesa.getAcao() !=null && budgetService.isDespesaExistente(despesa))
+			{
+				facesUtils.addErrorMessage("Nao é possível adicionar uma despesa com o mesmo tipo de despesa e ação.");
+				return false;
+			}
 			budgetService.insertItemDespesa(despesa);
 			incAltComSucesso=true;
 			inicializarDespesa();
 			facesUtils.addInfoMessage("Despesa adicionada com sucesso");
+			return true;
 		}
 		catch(Exception e)
 		{
 			facesUtils.addErrorMessage("Erro ao adicionar a despesa");
 			logger.error("Erro ao adicionar a despesa", e);
+			return false;
 		}
+		
 	}
 
 
@@ -201,11 +208,11 @@ public class BudgetAction implements Serializable{
 
 	protected void validarDadosDespesa()
 	{
-		despesa.setProduto(validarCamposDespesaId(despesa.getProduto()));
-		despesa.setCultura(validarCamposDespesaId(despesa.getCultura()));
-		despesa.setDistrito(validarCamposDespesaId(despesa.getDistrito()));
-		despesa.setVendedor(validarCamposDespesaId(despesa.getVendedor()));
-		despesa.setCliente(validarCamposDespesaId(despesa.getCliente()));
+		despesa.setProduto(facesUtils.validarCamposDespesaId(despesa.getProduto()));
+		despesa.setCultura(facesUtils.validarCamposDespesaId(despesa.getCultura()));
+		despesa.setDistrito(facesUtils.validarCamposDespesaId(despesa.getDistrito()));
+		despesa.setVendedor(facesUtils.validarCamposDespesaId(despesa.getVendedor()));
+		despesa.setCliente(facesUtils.validarCamposDespesaId(despesa.getCliente()));
 		validarAcao();
 		despesa.setBudget(budget);
 		despesa.setTipoDespesa(domainService.findById(despesa.getTipoDespesa()));
@@ -253,21 +260,39 @@ public class BudgetAction implements Serializable{
 	{
 		if(tipoAcao.equals(ACAO_EXISTENTE))
 		{
-			despesa.setAcao(validarCamposDespesa(despesa.getAcao()));
+			despesa.setAcao(facesUtils.validarCamposDespesa(despesa.getAcao()));
 		}
 		else
 		{
-			despesa.getAcao().setId(null);
-			despesa.getAcao().setBudget(budget);;
-			domainService.create(despesa.getAcao());
+			Acao acao = domainService.findAcaoByForecastOrBudget(budget.getId(),null,despesa.getAcao().getNome());
+			if(acao !=null)
+				despesa.setAcao(acao);
+			else
+			{
+				despesa.getAcao().setId(null);
+				despesa.getAcao().setBudget(budget);;
+				domainService.insertAcao(despesa.getAcao());
+			}
 		}
 	}
 
-	protected void alterarDespesa()
+	protected boolean alterarDespesa()
 	{
 		try
 		{
+			
 			validarDadosDespesa();
+			if(despesa.getAcao() !=null && budgetService.isDespesaExistente(despesa))
+			{
+				Despesa despesaRetorno = budgetService.obterDespesaPorTipoEAcao(despesa);
+				if(!(despesaRetorno.getId().equals(despesa.getId())))
+				{
+					
+					facesUtils.addErrorMessage("Nao é possível adicionar uma despesa com o mesmo tipo de despesa e ação.");	
+					incAltComSucesso= false;
+					return false;
+				}
+			}
 			budgetService.updateItemDespesa(despesa);
 			incAltComSucesso= true;
 			inicializarDespesa();
@@ -278,28 +303,13 @@ public class BudgetAction implements Serializable{
 		{
 			facesUtils.addErrorMessage("Erro ao alterar despesa");
 			logger.error("Erro ao alterar despesa", e);
+			incAltComSucesso= false;
+			return false;
 		}
+		return true;
 	}
 	
 	
-	protected <T extends NamedAbstractEntity<Long>> T validarCamposDespesa(T entidade)
-	{
-
-		if(entidade !=null && entidade.getNome() !=null && !entidade.getNome().trim().equals("") )
-		{
-			return entidade;
-		}
-		return null;
-	}
-	protected <T extends NamedAbstractEntity<Long>> T validarCamposDespesaId(T entidade)
-	{
-
-		if(entidade !=null && entidade.getId() !=null && entidade.getId() !=0 )
-		{
-			return entidade;
-		}
-		return null;
-	}
 	
 	public List<Acao> autocompleteAcao(String input)
 	{

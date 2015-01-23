@@ -14,9 +14,11 @@ import javax.inject.Named;
 import org.slf4j.Logger;
 
 import com.dupont.budget.dto.CentroDeCustoDTO;
+import com.dupont.budget.model.Acao;
 import com.dupont.budget.model.DespesaForecast;
 import com.dupont.budget.model.DespesaForecastPK;
 import com.dupont.budget.model.MesEnum;
+import com.dupont.budget.service.DomainService;
 import com.dupont.budget.service.ForecastService;
 import com.dupont.budget.service.bpms.BPMSProcessService;
 import com.dupont.budget.service.bpms.BPMSTaskService;
@@ -36,7 +38,10 @@ public class ForecastAction implements Serializable {
 
 	@Inject
 	protected ForecastService forecastService;
-
+	
+	@Inject
+	protected DomainService domainService;
+	
 	protected Long idInstanciaProcesso;
 	protected Long idTarefa;
 
@@ -81,7 +86,6 @@ public class ForecastAction implements Serializable {
 			conversation.begin();
 			helper = new ForecastHelper();
 			params = new HashMap<>();
-
 		}
 
 	}
@@ -139,6 +143,7 @@ public class ForecastAction implements Serializable {
 			despesa.setForecast(despesasNoDetalhe.get(0).getForecast());
 		}
 		despesa.setValor(helper.calcularValorMensalisado(despesa));
+		validarAcao();
 
 		try
 		{
@@ -152,6 +157,27 @@ public class ForecastAction implements Serializable {
 		{
 			facesUtils.addErrorMessage("Erro ao incluir a despesa");
 			logger.error("Erro ao incluir a despesa",e);
+		}
+	}
+	
+	protected void validarAcao()
+	{
+		if(tipoAcao.equals(ACAO_EXISTENTE))
+		{
+			despesa.setAcao(facesUtils.validarCamposDespesa(despesa.getAcao()));
+		}
+		else
+		{
+			Long budgetId = despesa.getForecast().getBudget() !=null ?despesa.getForecast().getBudget().getId():null;
+			Acao acao = domainService.findAcaoByForecastOrBudget(budgetId,despesa.getForecast().getId(),despesa.getAcao().getNome());
+			if(acao !=null)
+				despesa.setAcao(acao);
+			else
+			{
+				despesa.getAcao().setId(null);
+				despesa.getAcao().setForecast(despesa.getForecast());
+				domainService.insertAcao(despesa.getAcao());
+			}
 		}
 	}
 

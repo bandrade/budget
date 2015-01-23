@@ -56,37 +56,45 @@ public class CriarBudgetAction extends BudgetAction implements Serializable {
 			}
 	}
 
-	public void adicionarDespesa()
+	public boolean adicionarDespesa()
 	{
 
-		super.adicionarDespesa();
-		budget.getDespesas().add(despesa);
-		try
+		if(super.adicionarDespesa())
 		{
-			despesasAgrupadas = budgetService.obterDespesaAgrupadas(budget.getId());
+			budget.getDespesas().add(despesa);
+			try
+			{
+				despesasAgrupadas = budgetService.obterDespesaAgrupadas(budget.getId());
+				return true;
+			}
+			catch(Exception e)
+			{
+				
+				facesUtils.addErrorMessage("Erro ao obter despesas.");
+				logger.error("Erro ao obter despesas", e);
+			}
 		}
-		catch(Exception e)
-		{
-			facesUtils.addErrorMessage("Erro ao obter despesas.");
-			logger.error("Erro ao obter despesas", e);
-		}
+		return false;
 	}
 
 
-	public void alterarDespesa(){
+	public boolean alterarDespesa(){
 
-		super.alterarDespesa();
-		try
+		if(super.alterarDespesa())
 		{
-			despesasAgrupadas = budgetService.obterDespesaAgrupadas(budget.getId());
+			try
+			{
+				despesasAgrupadas = budgetService.obterDespesaAgrupadas(budget.getId());
+				return true;
+			}
+			catch(Exception e)
+			{
+				facesUtils.addErrorMessage("Erro ao obter tarefas do usuario.");
+				logger.error("Erro ao obter tarefas do usuario.", e);
+			}
 
 		}
-		catch(Exception e)
-		{
-			facesUtils.addErrorMessage("Erro ao obter tarefas do usuario.");
-			logger.error("Erro ao obter tarefas do usuario.", e);
-		}
-
+		return false;
 	}
 
 	public void removerDespesa() {

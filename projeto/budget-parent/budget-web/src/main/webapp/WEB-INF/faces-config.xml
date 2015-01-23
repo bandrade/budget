@@ -39,6 +39,13 @@
 	<navigation-rule>
 		<from-view-id>*</from-view-id>
 		<navigation-case>
+			<from-outcome>ajustarForecast</from-outcome>
+			<to-view-id>/pages/process/forecast/ajustarForecast.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<from-view-id>*</from-view-id>
+		<navigation-case>
 			<from-outcome>divisaoBudgetMes</from-outcome>
 			<to-view-id>/pages/process/budget/divisaoBudgetMes.xhtml</to-view-id>
 		</navigation-case>

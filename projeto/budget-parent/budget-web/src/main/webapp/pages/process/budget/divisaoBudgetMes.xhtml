@@ -16,8 +16,17 @@
     <ui:define name="head">
         <style type="text/css">
             .ui-datatable-scrollable-header-box th, .ui-datatable-scrollable-footer-box td {
-                height: 30px !important;
+                height: 50px !important;
             }
+            .ui-datatable-even td
+            {
+              height: 75px ;
+            }
+            .ui-datatable-frozenlayout-right td
+            {
+            	height: 60px ;
+            }
+            
         </style>
     </ui:define>
 
@@ -38,7 +47,7 @@
 						var="detalheDespesa"
 						paginator="true"
 						paginatorPosition="bottom"
-						rows="20" style="overflow:visible;"
+						rows="20" style="overflow:wrap;"
 						scrollable="true"
 						scrollWidth="46%"
 						frozenColumns="4">

@@ -132,7 +132,7 @@ public class BPMProcessManagerApiImpl implements BPMProcessManagerApi {
 
 		try {
 			Map<String, Object> params = new HashMap<String, Object>();
-			params.put("solicitacoes", solicitacoes);
+			params.put("solicatacaoArray", solicitacoes);
 			ProcessInstance processInstance = ksession.startProcess(
 					"com.dupont.bpm.solicitarpagamento", params);
 			processInstanceId = processInstance.getId();
