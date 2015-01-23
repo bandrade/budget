@@ -32,6 +32,7 @@
 				 rowKey="#{itemDespesa.tipoDespesaId}"
 				 paginator="true"
 				 paginatorPosition="bottom"
+				 style="overflow:wrap;"
 				 rows="10" 
 				 selection="#{criarBudgetAction.despesaSelecionada}">
 					<f:facet name="header">
@@ -67,7 +68,7 @@
 					var="detalheDespesa"
 					paginator="true"
 					paginatorPosition="bottom"
-					rows="10" style="margin-left:-10px">
+					rows="10" style="margin-left:-10px;overflow:wrap;">
 					<f:facet name="header">
        				 #{criarBudgetAction.despesaSelecionada.nomeDespesa}
   						 </f:facet>

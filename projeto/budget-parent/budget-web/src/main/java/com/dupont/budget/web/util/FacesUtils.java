@@ -24,7 +24,7 @@ import com.dupont.budget.model.NamedAbstractEntity;
 @Named
 @ApplicationScoped
 public class FacesUtils implements Serializable{
-
+	private String regex="[^a-zA-Z0-9 -]";
 	private static final long serialVersionUID = 374768315446835217L;
 
 	/**
@@ -49,6 +49,11 @@ public class FacesUtils implements Serializable{
 	 */
 	public void addWarnMessage(String message){
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Aviso", message));
+	}
+	
+	public String removeSpecialCharacters(String word)
+	{
+		return word.replaceAll(regex, "");
 	}
 
 
@@ -85,6 +90,26 @@ public class FacesUtils implements Serializable{
 			}
 		}
 		return result;
+	}
+	
+
+	public <T extends NamedAbstractEntity<Long>> T validarCamposDespesa(T entidade)
+	{
+
+		if(entidade !=null && entidade.getNome() !=null && !entidade.getNome().trim().equals("") )
+		{
+			return entidade;
+		}
+		return null;
+	}
+	public <T extends NamedAbstractEntity<Long>> T validarCamposDespesaId(T entidade)
+	{
+
+		if(entidade !=null && entidade.getId() !=null && entidade.getId() !=0 )
+		{
+			return entidade;
+		}
+		return null;
 	}
 
 	public String formatarDinheiro(Double value){
