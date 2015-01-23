@@ -108,6 +108,10 @@
   		<exception-type>javax.faces.application.ViewExpiredException</exception-type>
   		<location>/pages/login/login.xhtml</location>
  	</error-page>
+	<error-page>
+  		<error-code>408</error-code>
+  		<location>/pages/login/login.xhtml</location>
+ 	</error-page>
 	
 	<error-page>
 		<error-code>403</error-code>
