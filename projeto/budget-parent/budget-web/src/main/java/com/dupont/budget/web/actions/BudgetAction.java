@@ -139,14 +139,14 @@ public class BudgetAction implements Serializable{
 	{
 		incAltComSucesso=false;
 		despesa.initLists();
-		if(despesa.getAcao().getId()!=null || despesa.getAcao().getId()!=0)
+		if(despesa.getAcao()!=null&& despesa.getAcao().getId()!=null && despesa.getAcao().getId()!=0)
 		{
 			tipoAcao = ACAO_EXISTENTE;
 		}
 		inclusao=false;
 	}
 
-	public void adicionarDespesa()
+	public boolean adicionarDespesa()
 	{
 		try
 		{
@@ -164,18 +164,21 @@ public class BudgetAction implements Serializable{
 			if(despesa.getAcao() !=null && budgetService.isDespesaExistente(despesa))
 			{
 				facesUtils.addErrorMessage("Nao é possível adicionar uma despesa com o mesmo tipo de despesa e ação.");
-				return ;
+				return false;
 			}
 			budgetService.insertItemDespesa(despesa);
 			incAltComSucesso=true;
 			inicializarDespesa();
 			facesUtils.addInfoMessage("Despesa adicionada com sucesso");
+			return true;
 		}
 		catch(Exception e)
 		{
 			facesUtils.addErrorMessage("Erro ao adicionar a despesa");
 			logger.error("Erro ao adicionar a despesa", e);
+			return false;
 		}
+		
 	}
 
 
@@ -273,7 +276,7 @@ public class BudgetAction implements Serializable{
 		}
 	}
 
-	protected void alterarDespesa()
+	protected boolean alterarDespesa()
 	{
 		try
 		{
@@ -286,7 +289,8 @@ public class BudgetAction implements Serializable{
 				{
 					
 					facesUtils.addErrorMessage("Nao é possível adicionar uma despesa com o mesmo tipo de despesa e ação.");	
-					return ;
+					incAltComSucesso= false;
+					return false;
 				}
 			}
 			budgetService.updateItemDespesa(despesa);
@@ -299,7 +303,10 @@ public class BudgetAction implements Serializable{
 		{
 			facesUtils.addErrorMessage("Erro ao alterar despesa");
 			logger.error("Erro ao alterar despesa", e);
+			incAltComSucesso= false;
+			return false;
 		}
+		return true;
 	}
 	
 	

@@ -28,19 +28,24 @@ public class AprovarBudgetAction extends BudgetAction  implements Serializable{
 			logger.error("Erro ao obter tarefas do usuario.", e);
 		}
 	}
-
-	public void adicionarDespesa()
+	@Override
+	public boolean adicionarDespesa()
 	{
-		try {
-			despesa.setAprovado(true);
-			super.adicionarDespesa();
-			budgetService.atualizarDespesas(despesasNoDetalhe);
-		} catch (Exception e) {
-			logger.error("Erro ao incluir a despesa",e);
-			facesUtils.addErrorMessage("Erro ao concluir a tarefa de Aprovacao de Budget");
+		despesa.setAprovado(true);
+		if(super.adicionarDespesa())
+		{
+			try {
+				
+				budgetService.atualizarDespesas(despesasNoDetalhe);
+			} catch (Exception e) {
+				logger.error("Erro ao incluir a despesa",e);
+				facesUtils.addErrorMessage("Erro ao incluir a despesa");
+				return false;
+			}
 		}
 		obterDespesaNoDetalhe(budget.getId());
 		validarAprovacao();
+		return true;
 	}
 
 	public void validarAprovacao()
@@ -90,19 +95,25 @@ public class AprovarBudgetAction extends BudgetAction  implements Serializable{
 			despesa.setAprovado(b);
 		}
 	}
-	public void alterarDespesa(){
-		try
+	
+	public boolean alterarDespesa(){
+		if(super.alterarDespesa())
 		{
-			super.alterarDespesa();
-			budgetService.atualizarDespesas(despesasNoDetalhe);
-			obterDespesaNoDetalhe(budget.getId());
-			validarAprovacao();
-		}	
-		catch (Exception e) {
-			logger.error("Erro ao incluir a despesa",e);
-			facesUtils.addErrorMessage("Erro ao concluir a tarefa de Aprovacao de Budget");
+			try
+			{
+				
+					budgetService.atualizarDespesas(despesasNoDetalhe);
+					obterDespesaNoDetalhe(budget.getId());
+					validarAprovacao();
+					return true;
+			}
+			
+			catch (Exception e) {
+				logger.error("Erro ao incluir a despesa",e);
+				facesUtils.addErrorMessage("Erro ao concluir a tarefa de Aprovacao de Budget");
+			}
 		}
-
+		return false;
 	}
 	public String concluir()
 	{
@@ -122,7 +133,7 @@ public class AprovarBudgetAction extends BudgetAction  implements Serializable{
 			return null;
 		}
 	}
-
+	
 	public String getTipoAprovacao() {
 		return tipoAprovacao;
 	}

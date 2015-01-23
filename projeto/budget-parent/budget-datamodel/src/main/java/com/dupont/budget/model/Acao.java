@@ -1,6 +1,7 @@
 package com.dupont.budget.model;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -29,9 +30,11 @@ public class Acao extends NamedAbstractEntity<Long> {
 	
 	//bi-directional many-to-one association to Budget
 	@ManyToOne
+	@JoinColumn(name="budget_id")
 	private Budget budget;
 
 	@ManyToOne
+	@JoinColumn(name="forecast_id")
 	private Forecast forecast;
 	public Acao() {
 		this(null);

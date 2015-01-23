@@ -87,8 +87,8 @@ public class SolicitacaoPagamentoServiceBean implements SolicitacaoPagamentoServ
 			_solicitacao.setNumeroNota(solicitacaoPagamento.getNumeroNotaFiscal());
 			
 			AreaDTO _area = new AreaDTO();
-			_area.setId(despesa.getAcao().getId());
-			_area.setNome(despesa.getAcao().getNome());
+			_area.setId(despesa.getCentroCusto().getArea().getId());
+			_area.setNome(despesa.getCentroCusto().getArea().getNome());
 			
 			_solicitacao.setArea(_area);
 			

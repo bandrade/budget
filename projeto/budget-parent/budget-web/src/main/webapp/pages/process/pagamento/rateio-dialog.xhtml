@@ -14,7 +14,8 @@
 		<f:event listener="#{incluirDespesaRateioAction.initConversation}" type="preRenderView" />
 		<p:panel id="content">
 			<h:form>
-			
+				<p:commandButton value="Incluir Despesa"
+						oncomplete="PF('criarDespesa').show();" action="#{atualizarForecastAction.trataInclusao()}" />
 				<p:messages id="messages" showDetail="true" showSummary="false" autoUpdate="true" closable="true" globalOnly="true"/>
 				<p:panelGrid columns="6" id="dadosCC" styleClass="layoutUnit main">
 							

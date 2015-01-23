@@ -1,6 +1,8 @@
 package com.dupont.budget.dto;
 
-public class SolicitacaoPagamentoDTO {
+import java.io.Serializable;
+
+public class SolicitacaoPagamentoDTO implements Serializable {
 	private Long idSolicitacao;
 	private Long idDespesa;
 	private AreaDTO area;
