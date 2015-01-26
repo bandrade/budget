@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:pe="http://primefaces.org/ui/extensions"
+	  xmlns:p="http://primefaces.org/ui">
+
+	<h:head>
+		<title>Incluir Despesa Forecast</title>
+		<link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/css/default.css"/>
+	</h:head>
+	
+	<h:body >		
+		<f:event listener="#{incluirDespesaRateioAction.initConversation}" type="preRenderView" />
+		<p:panel id="content">
+			<h:form>
+							
+				<p:messages id="messages" showDetail="true" showSummary="false" autoUpdate="true" closable="true" globalOnly="true"/>
+				
+				
+				<p:panelGrid columns="3" id="dadosCC" styleClass="layoutUnit main">
+							
+					<p:outputLabel value="Centro de custo:" for="centroCustosSelectOneMenu"/>
+					<p:selectOneMenu id="centroCustosSelectOneMenu" label="Centro de custo" value="#{solicitacaoPagamentoAction.centroCustoDespesaForecast}" converter="com.dupont.EntityConverter" required="true">
+						<p:ajax listener="#{solicitacaoPagamentoAction.doSelectCentroCustoDespesaForecast}" update="dadosCC"/>
+						<f:selectItem itemLabel="Selecione um centro de custo" itemValue="#{null}" />
+						<f:selectItems value="#{centroCustos}" var="item" itemLabel="#{item.codigo}" itemValue="#{item}" />
+					</p:selectOneMenu>
+					<p:message for="centroCustosSelectOneMenu" />
+										
+					<p:outputLabel value="Tipo de Despesa:" for="despesasSelectOneMenu"/>
+					<p:selectOneMenu id="despesasSelectOneMenu" label="Tipo de Despesa" value="#{despesaForecast.tipoDespesa}" converter="com.dupont.EntityConverter" required="true">
+						<f:selectItem itemLabel="Selecione um tipo de despesa" itemValue="#{null}" />
+						<f:selectItems value="#{tiposDespesas}" var="item" itemLabel="#{item.nome}" itemValue="#{item}"/>
+					</p:selectOneMenu>
+					<p:message for="despesasSelectOneMenu"  />
+										
+					<p:outputLabel value="Produto:" for="produtosSelectOneMenu"/>
+					<p:selectOneMenu id="produtosSelectOneMenu" value="#{despesaForecast.produto}" label="Produto" converter="com.dupont.EntityConverter" required="true">
+						<f:selectItem itemLabel="Selecione um produto" itemValue="#{null}" />
+						<f:selectItems value="#{produtos}" var="item" itemLabel="#{item.nome}"/>
+					</p:selectOneMenu>
+					<p:message for="produtosSelectOneMenu" />
+					
+					<p:outputLabel value="Cultura:" for="culturasSelecOneMenu"/>	
+					<p:selectOneMenu id="culturasSelecOneMenu" label="Cultura"  value="#{despesaForecast.cultura}" converter="com.dupont.EntityConverter" required="true">
+						<f:selectItem itemLabel="Selecione uma cultura" itemValue="#{null}" />
+						<f:selectItems value="#{culturas}" var="item" itemLabel="#{item.nome}" itemValue="#{item}"/>
+					</p:selectOneMenu>
+					<p:message for="culturasSelecOneMenu" />
+					
+					<p:outputLabel value="Distrito:" for="distritosSelectOneMenu"/>	
+					<p:selectOneMenu id="distritosSelectOneMenu" label="Distrito" value="#{despesaForecast.distrito}" converter="com.dupont.EntityConverter" required="true">
+						<f:selectItem itemLabel="Selecione um distrito" itemValue="#{null}" />
+						<f:selectItems value="#{distritos}" var="item" itemLabel="#{item.nome}" itemValue="#{item}"/>
+					</p:selectOneMenu>
+					<p:message for="distritosSelectOneMenu" />
+					
+					<p:outputLabel value="ERC/CCE:" for="vendedoresSelectOneMenu"/>	
+					<p:selectOneMenu id="vendedoresSelectOneMenu" label="ERC/CCE" value="#{despesaForecast.vendedor}" converter="com.dupont.EntityConverter">
+						<f:selectItem itemLabel="Selecione um vendedor" itemValue="#{null}" />
+						<f:selectItems value="#{vendedores}" var="item" itemLabel="#{item.nome}" itemValue="#{item}"/>
+					</p:selectOneMenu>
+					<p:message for="vendedoresSelectOneMenu" />
+					
+					<p:outputLabel value="Cliente:" for="clientesSelectOneMenu"/>	
+					<p:selectOneMenu id="clientesSelectOneMenu" label="Cliente" value="#{despesaForecast.cliente}" converter="com.dupont.EntityConverter">
+					
+						
+						<f:selectItem itemLabel="Selecione um cliente" itemValue="#{null}" />
+						<f:selectItems value="#{clientes}" var="item" itemLabel="#{item.nome}" itemValue="#{item}"/>
+					</p:selectOneMenu>
+					<p:message for="clientesSelectOneMenu" />
+					
+					<p:outputLabel value="Ação:" for="acoesSelectOneMenu"/>
+					<p:selectOneMenu id="acoesSelectOneMenu" label="Ação" value="#{despesaForecast.acao}" converter="com.dupont.EntityConverter" required="true">
+						<f:selectItem itemLabel="Selecione uma ação" itemValue="#{null}" />
+						<f:selectItems value="#{solicitacaoPagamentoAction.acoesDespesaForecast}" var="item" itemLabel="#{item.nome}" itemValue="#{item}"/>						
+					</p:selectOneMenu>								
+					<p:message for="acoesSelectOneMenu" />
+					
+					<p:outputLabel value="Comentário:" for="comentarioInput"/>			
+					<p:inputTextarea id="comentarioInput" value="#{despesaForecast.comentario}"/>
+					<p:message for="comentarioInput" />
+					
+				</p:panelGrid>
+				
+				<p:commandButton value="Incluir"  icon="ui-icon-check" action="#{solicitacaoPagamentoAction.closeDespesaForecastDialog}" styleClass="button" update="dadosCC"/>
+			</h:form>
+		</p:panel>
+	</h:body>
+
+</html>

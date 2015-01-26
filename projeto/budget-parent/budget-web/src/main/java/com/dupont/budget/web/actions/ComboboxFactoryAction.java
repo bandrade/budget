@@ -11,6 +11,7 @@ import javax.inject.Named;
 
 import com.dupont.budget.model.Acao;
 import com.dupont.budget.model.CentroCusto;
+import com.dupont.budget.model.Cliente;
 import com.dupont.budget.model.Cultura;
 import com.dupont.budget.model.Distrito;
 import com.dupont.budget.model.Fornecedor;
@@ -20,6 +21,13 @@ import com.dupont.budget.model.Vendedor;
 import com.dupont.budget.service.BudgetService;
 import com.dupont.budget.service.DomainService;
 
+/**
+ * Controller que fornece as listas para serem usadas em comboboxs.
+ * 
+ * @author <a href="mailto:asouza@redhat.com">Ângelo Galvão</a>
+ * @since 2014
+ *
+ */
 @Model
 public class ComboboxFactoryAction {
 
@@ -48,7 +56,7 @@ public class ComboboxFactoryAction {
 	}
 	
 	@Produces @Named
-	public List<TipoDespesa> getTiposDespesa() {
+	public List<TipoDespesa> getTiposDespesas() {
 		
 		return service.findAll(TipoDespesa.class);
 	}
@@ -69,6 +77,11 @@ public class ComboboxFactoryAction {
 	public List<Vendedor> getVendedores() {
 		
 		return service.findAll(Vendedor.class);
+	}
+	
+	@Produces @Named
+	public List<Cliente> getClientes() {
+		return service.findAll(Cliente.class);
 	}
 	
 	@Produces @Named

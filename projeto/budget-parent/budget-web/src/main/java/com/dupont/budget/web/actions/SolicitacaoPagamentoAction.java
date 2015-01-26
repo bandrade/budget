@@ -25,10 +25,12 @@ import com.dupont.budget.dto.SolicitacaoPagamentoDTO;
 import com.dupont.budget.exception.DuplicateEntityException;
 import com.dupont.budget.model.Acao;
 import com.dupont.budget.model.Budget;
+import com.dupont.budget.model.CentroCusto;
 import com.dupont.budget.model.Cliente;
 import com.dupont.budget.model.Cultura;
 import com.dupont.budget.model.Despesa;
 import com.dupont.budget.model.DespesaForecast;
+import com.dupont.budget.model.DespesaForecastPK;
 import com.dupont.budget.model.DespesaSolicitacaoPagamento;
 import com.dupont.budget.model.Distrito;
 import com.dupont.budget.model.Forecast;
@@ -50,7 +52,7 @@ import com.dupont.budget.web.util.FacesUtils;
 /**
  * Controller da tela de Solicitação de Pagamento.
  * 
- * @author <a href="asouza@redhat.com">Ângelo Galvão</a>
+ * @author <a href="mailto:asouza@redhat.com">Ângelo Galvão</a>
  * @since 2014
  *
  */
@@ -83,15 +85,37 @@ public class SolicitacaoPagamentoAction implements Serializable {
 	@Inject
 	private LoggedUserAction loggedUserAction;
 
-	private SolicitacaoPagamento solicitacaoPagamento               = new SolicitacaoPagamento();	
-	
-	private DespesaSolicitacaoPagamento despesaSolicitacaoPagamento = new DespesaSolicitacaoPagamento();
+	private SolicitacaoPagamento solicitacaoPagamento               = new SolicitacaoPagamento();		
+	private DespesaSolicitacaoPagamento despesaSolicitacaoPagamento = new DespesaSolicitacaoPagamento();	
+	private DespesaForecast despesaForecast 						= new DespesaForecast();
+	private CentroCusto centroCustoDespesaForecast   				= new CentroCusto();
 	
 	private List<SolicitacaoPagamento> list;
-	
 	private Long tarefa;
-	
 	private Long processInstanceId;
+	
+	// Listas que populam os combos da tela
+	private List<Produto> produtos          = new ArrayList<Produto>();	
+	private List<TipoDespesa> tiposDespesas = new ArrayList<TipoDespesa>();
+	private List<Cultura> culturas          = new ArrayList<Cultura>();
+	private List<Distrito> distritos        = new ArrayList<Distrito>();
+	private List<Vendedor> vendedores		= new ArrayList<Vendedor>();
+	private List<Acao> acoes				= new ArrayList<Acao>();
+	private List<Cliente> clientes			= new ArrayList<Cliente>();
+	
+	// lista do combo de inclusao de despesa do forecast
+	private List<Acao> acoesDespesaForecast = new ArrayList<Acao>();
+	
+	// Propriedades da tela
+	private String checkAcao = "Existente";	
+	private String novaAcao;
+	protected boolean despesaForecastFlag = false; // Propriedade que informa se o usuario incluiu a despesa de forecast
+	
+	// Cache
+	private Budget budget;
+	private List<Forecast> forecasts;
+	
+	private List<DespesaForecast> despesasForecast = new ArrayList<DespesaForecast>();
 	
 	@PostConstruct
 	private void init() {
@@ -134,6 +158,11 @@ public class SolicitacaoPagamentoAction implements Serializable {
 		return despesaSolicitacaoPagamento;
 	}
 	
+	@Produces @Named @RequestScoped
+	public DespesaForecast getDespesaForecast(){
+		return despesaForecast;
+	}
+	
 	@Produces 
 	@Named 
 	public TipoSolicitacao[] getTipoSolicitacaoPagamentoList() {
@@ -149,24 +178,6 @@ public class SolicitacaoPagamentoAction implements Serializable {
 	public void find() {
 		list = domainService.listSolicitacaoByFiltro(solicitacaoPagamento.getNumeroNotaFiscal(), solicitacaoPagamento.getTipoSolicitacao(), solicitacaoPagamento.getStatus(), solicitacaoPagamento.getFornecedor().getNome());
 	}
-	
-	// Listas que populam os combos da tela
-	private List<Produto> produtos          = new ArrayList<Produto>();	
-	private List<TipoDespesa> tiposDespesas = new ArrayList<TipoDespesa>();
-	private List<Cultura> culturas          = new ArrayList<Cultura>();
-	private List<Distrito> distritos        = new ArrayList<Distrito>();
-	private List<Vendedor> vendedores		= new ArrayList<Vendedor>();
-	private List<Acao> acoes				= new ArrayList<Acao>();
-	private List<Cliente> clientes			= new ArrayList<Cliente>();
-	
-	// Propriedades da tela
-	private String checkAcao = "Existente";	
-	private String novaAcao;
-	
-	// Cache
-	private Budget budget;
-	private List<Forecast> forecasts;
-	
 	
 	/* Inicia o escopo de conversação */
 	public void initConversation(){
@@ -543,6 +554,72 @@ public class SolicitacaoPagamentoAction implements Serializable {
 
 	}
 	
+	/* Carrega os combos a aprtir do centro de custo na tela de despesa de forecast*/
+	public void doSelectCentroCustoDespesaForecast(){	
+		
+		
+		String ano = Calendar.getInstance().get(Calendar.YEAR) + "";
+		
+		// Popula os combos a partir do CENTRO DE CUSTO selecionado
+		
+		Budget budget = getBudgetDespesaForecast(ano);
+		
+		if( budget == null ) {
+			facesUtils.addErrorMessage("Não exite BUDGET cadastro para o centro de custo informado!");
+			return;
+		}
+		
+		Set<Despesa> despesas = budget.getDespesas();
+		if( despesas == null ) {
+			facesUtils.addErrorMessage("Não exite DESPESAS cadastras para o centro de custo informado!");
+			return;
+		}
+		
+		// Limpar combo
+		acoesDespesaForecast = new ArrayList<Acao>();
+		
+		
+		// Popula os combos da tela a partir do budget
+		for (Despesa despesa : despesas) {
+			
+			if( despesa.getAprovado() == false )
+				continue;
+			
+			if(!acoesDespesaForecast.contains(despesa.getAcao()))
+				acoesDespesaForecast.add(despesa.getAcao());
+			
+		}
+		
+		// Popula combos a partir dos forecasts do budget
+		List<Forecast> forecasts = forecastService.findForecastsByBudgetId(budget.getId());
+		
+		if(forecasts != null ) {
+			for (Forecast forecast : forecasts) {
+				
+				
+				Set<DespesaForecast> _despesas = forecast.getDespesas();
+				
+				if( _despesas == null)
+					continue;
+				
+				for (DespesaForecast _despesa : _despesas) {
+					
+					if( _despesa.getAtivo() == false )
+						continue;
+					
+					if(!acoesDespesaForecast.contains(_despesa.getAcao()))
+						acoesDespesaForecast.add(_despesa.getAcao());
+					
+				}
+			}
+		}
+
+	}
+	
+	protected Budget getBudgetDespesaForecast(String ano) {
+		return budgetService.findByAnoAndCentroDeCusto(ano, centroCustoDespesaForecast.getId());
+	}
+	
 	protected Budget getBudget(String ano) {
 		return budgetService.findByAnoAndCentroDeCusto(ano, despesaSolicitacaoPagamento.getCentroCusto().getId());
 	}
@@ -576,6 +653,17 @@ public class SolicitacaoPagamentoAction implements Serializable {
 			facesUtils.addErrorMessage("Já existe um registro com o mesmo número de nota fiscal cadastrado.");
 			return null;
 		}		
+		
+		// Caso se optou por cadastrar despesa do forecast
+		if( despesaForecastFlag ) {
+			try {
+				for (DespesaForecast df : despesasForecast) {
+					forecastService.incluirDespesaForecast(df);					
+				}
+			} catch (Exception e) {
+				facesUtils.addErrorMessage(e.getMessage());
+			}			
+		}
 		
 		conversation.end();
 		
@@ -663,6 +751,26 @@ public class SolicitacaoPagamentoAction implements Serializable {
 		doSelectVendedor();
 		
 	}
+	
+	public void closeDespesaForecastDialog(){
+		
+		Map<String, Object> objects = new HashMap<String, Object>();
+		objects.put("despesaForecast", despesaForecast);
+		objects.put("centroCustoDespesaForecast", centroCustoDespesaForecast);
+		
+		RequestContext.getCurrentInstance().closeDialog(objects);
+	}
+	
+	public void openDespesaForecastDialog() {
+		Map<String,Object> options = new HashMap<String, Object>();
+		options.put("modal", true);
+		options.put("draggable", true);
+		options.put("resizable", false);
+		//options.put("height", 265);
+		options.put("contentWidth", 800);
+		
+		RequestContext.getCurrentInstance().openDialog("despesa-forecast-dialog", options, null);
+	}
 
 	public void openCCDialog() {
 		
@@ -688,6 +796,7 @@ public class SolicitacaoPagamentoAction implements Serializable {
 	}
 		
 	public void incluirDespesa(SelectEvent event){
+		
 		DespesaSolicitacaoPagamento despesa = (DespesaSolicitacaoPagamento) event.getObject();
 		
 		solicitacaoPagamento.addDespesaSolicitacaoPagamento(despesa);
@@ -695,6 +804,48 @@ public class SolicitacaoPagamentoAction implements Serializable {
 		Double valor = despesa.getValor() + (solicitacaoPagamento.getValor()==null?0.0:solicitacaoPagamento.getValor());
 		
 		solicitacaoPagamento.setValor(valor);
+	
+	}
+	
+	/* Ao incluir a DESPESA de forecast, a despesa de solicitação de pagamento fica identica a ela. */
+	public void incluirDespesaForecast(SelectEvent event){
+		Map<String, Object> objects = (Map<String, Object>) event.getObject();
+		
+		centroCustoDespesaForecast = (CentroCusto)     objects.get("centroCustoDespesaForecast");
+		despesaForecast 		   = (DespesaForecast) objects.get("despesaForecast");
+		
+		String ano = Calendar.getInstance().get(Calendar.YEAR) + "";
+		DespesaForecastPK pk = new DespesaForecastPK();
+		pk.setAno(ano);
+		pk.setMes(0L);		
+		despesaForecast.setDespesaPK(pk);		
+		Forecast forecast = forecastService.findForecastByCCAndAno(ano, centroCustoDespesaForecast.getId());		
+		despesaForecast.setForecast(forecast);
+		
+		despesasForecast.add(despesaForecast);
+		
+		if( solicitacaoPagamento.getValor() == null	) {
+			solicitacaoPagamento.setValor(0.0);
+		}
+		
+		// Seta os mesmo valores 
+		despesaSolicitacaoPagamento.setCentroCusto(centroCustoDespesaForecast);
+		despesaSolicitacaoPagamento.setTipoDespesa(despesaForecast.getTipoDespesa());
+		despesaSolicitacaoPagamento.setAcao(despesaForecast.getAcao());
+		despesaSolicitacaoPagamento.setProduto(despesaForecast.getProduto());
+		despesaSolicitacaoPagamento.setCultura(despesaForecast.getCultura());
+		despesaSolicitacaoPagamento.setDistrito(despesaForecast.getDistrito());
+		despesaSolicitacaoPagamento.setVendedor(despesaForecast.getVendedor());
+		despesaSolicitacaoPagamento.setCliente(despesaForecast.getCliente());
+		
+		// troca o flag afirmando que incluiu despesa
+		despesaForecastFlag = true;
+		
+		if(solicitacaoPagamento.getTipoSolicitacao() == TipoSolicitacao.CC) {
+			facesUtils.addInfoMessage("Despesa incluida com sucesso. A partir de agora, não é possível editar os dados de Centro de Custo.");
+		} else if (solicitacaoPagamento.getTipoSolicitacao() == TipoSolicitacao.RATEIO) {
+			solicitacaoPagamento.addDespesaSolicitacaoPagamento(despesaSolicitacaoPagamento);
+		}
 	}
 	
 	public List<SolicitacaoPagamento> getList() {
@@ -762,5 +913,21 @@ public class SolicitacaoPagamentoAction implements Serializable {
 
 	public List<Cliente> getClientes() {
 		return clientes;
+	}
+
+	public CentroCusto getCentroCustoDespesaForecast() {
+		return centroCustoDespesaForecast;
+	}
+
+	public void setCentroCustoDespesaForecast(CentroCusto centroCustoDespesaForecast) {
+		this.centroCustoDespesaForecast = centroCustoDespesaForecast;
+	}
+	
+	public List<Acao> getAcoesDespesaForecast() {
+		return acoesDespesaForecast;
+	}
+	
+	public boolean isDespesaForecastFlag() {
+		return despesaForecastFlag;
 	}
 }

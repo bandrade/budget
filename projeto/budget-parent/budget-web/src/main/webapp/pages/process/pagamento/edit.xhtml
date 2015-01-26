@@ -16,9 +16,9 @@
 			
 			<h:form id="form"> 
 			
-				<p:panelGrid columns="4">
+				<p:panelGrid id="tipoSolicitacaoPanel" columns="4">
 					<p:outputLabel value="Tipo de Solicitação:"/>
-					<p:selectOneRadio id="tipoSolicitacaoSelectOneRadio" value="#{solicitacaoPagamento.tipoSolicitacao}" >
+					<p:selectOneRadio id="tipoSolicitacaoSelectOneRadio" value="#{solicitacaoPagamento.tipoSolicitacao}" disabled="#{solicitacaoPagamentoAction.despesaForecastFlag}" >
 						<p:ajax update="dadosPanel, valorTotalNotaInput1" oncomplete="PF('valorTotalNotaInputVar').value='';"/>
 						<f:selectItem itemValue="CC" itemLabel="CC" />
 						<f:selectItem itemValue="RATEIO" itemLabel="Rateio"/>
@@ -68,10 +68,15 @@
 					<h3>Dados de #{solicitacaoPagamento.tipoSolicitacao}</h3>
 					<br />
 					
-					<p:panelGrid columns="1" styleClass="painel-botoes">
-				</p:panelGrid>
+					<p:panelGrid id="incluirDespesaPanel" columns="1" styleClass="painel-botoes" rendered="#{solicitacaoPagamento.tipoSolicitacao == 'CC'}" >
+						<p:commandButton value="Incluir Despesa" icon="ui-icon-extlink" actionListener="#{solicitacaoPagamentoAction.openDespesaForecastDialog}" rendered="#{!solicitacaoPagamentoAction.despesaForecastFlag}" styleClass="button" immediate="true">
+							<p:ajax event="dialogReturn" listener="#{solicitacaoPagamentoAction.incluirDespesaForecast}" update="tipoSolicitacaoPanel,incluirDespesaPanel,dadosCC,dadosRateio"/>						
+						</p:commandButton>
+					</p:panelGrid>
 						
 					<p:panelGrid id="dadosCC" columns="6" rendered="#{solicitacaoPagamento.tipoSolicitacao == 'CC'}">
+					
+						
 					
 						<p:outputLabel value="Centro de custo:" for="centroCustosSelectOneMenu"/>
 						<p:autoComplete id="centroCustosSelectOneMenu" 
@@ -81,9 +86,11 @@
 								converter="com.dupont.EntityConverter"
 					 			var="_centroCusto" itemLabel="#{_centroCusto.codigo}" itemValue="#{_centroCusto}"
 					 			emptyMessage="NAO ENCONTRADO" effect="size" 
-					 			required="true">
+					 			required="true"
+					 			rendered="#{!solicitacaoPagamentoAction.despesaForecastFlag}">
 					 			<p:ajax event="itemSelect" listener="#{solicitacaoPagamentoAction.doSelectCentroCusto}" update="dadosCC" process="@this"/>
 					 	</p:autoComplete>
+					 	<h:outputText value="#{despesaSolicitacaoPagamento.centroCusto.codigo}" rendered="#{solicitacaoPagamentoAction.despesaForecastFlag}" />
 						<p:message for="centroCustosSelectOneMenu" />
 						
 						<p:outputLabel value="Descrição: "/>
@@ -91,12 +98,12 @@
 						<h:outputText  value="" />
 						
 						<p:outputLabel value="Tipo de Despesa:" for="despesasSelectOneMenu"/>
-						<p:selectOneMenu id="despesasSelectOneMenu" label="Tipo de Despesa" value="#{despesaSolicitacaoPagamento.tipoDespesa}" converter="com.dupont.EntityConverter" required="true">
+						<p:selectOneMenu id="despesasSelectOneMenu" label="Tipo de Despesa" value="#{despesaSolicitacaoPagamento.tipoDespesa}" converter="com.dupont.EntityConverter" required="true" rendered="#{!solicitacaoPagamentoAction.despesaForecastFlag}">
 							<p:ajax listener="#{solicitacaoPagamentoAction.doSelectTipoDespesa}" update="dadosCC"/>
-							<!-- <p:ajax update="contaContabilPanel" process="@this" /> -->
 							<f:selectItem itemLabel="Selecione um tipo de despesa" itemValue="#{null}" />
 							<f:selectItems value="#{solicitacaoPagamentoAction.tiposDespesas}" var="item" itemLabel="#{item.nome}" itemValue="#{item}"/>
 						</p:selectOneMenu>
+						<h:outputText value="#{despesaSolicitacaoPagamento.tipoDespesa.nome}" rendered="#{solicitacaoPagamentoAction.despesaForecastFlag}" />
 						<p:message for="despesasSelectOneMenu"  />
 						
 						<p:outputLabel value="Conta Contábil: "/>
@@ -106,85 +113,104 @@
 						<h:outputText  value="" />
 						
 						<p:outputLabel value="Ação:" for="acoesSelectOneMenu"/>
-	 					<p:selectOneMenu id="acoesSelectOneMenu" label="Ação" value="#{despesaSolicitacaoPagamento.acao}" converter="com.dupont.EntityConverter" required="true">								
+	 					<p:selectOneMenu id="acoesSelectOneMenu" label="Ação" value="#{despesaSolicitacaoPagamento.acao}" converter="com.dupont.EntityConverter" required="true" rendered="#{!solicitacaoPagamentoAction.despesaForecastFlag}">								
 							<p:ajax listener="#{solicitacaoPagamentoAction.doSelectAcao}" update="dadosCC"/>
 							<f:selectItem itemLabel="Selecione uma ação" itemValue="#{null}" />
 							<f:selectItems value="#{solicitacaoPagamentoAction.acoes}" var="item" itemLabel="#{item.nome}" itemValue="#{item}"/>						
-						</p:selectOneMenu>								
+						</p:selectOneMenu>			
+						<h:outputText value="#{despesaSolicitacaoPagamento.acao.nome}" rendered="#{solicitacaoPagamentoAction.despesaForecastFlag}" />					
 						<p:message for="acoesSelectOneMenu" />
 
 						
 						<p:outputLabel value="Produto:" for="produtosSelectOneMenu"/>
-						<p:selectOneMenu id="produtosSelectOneMenu" value="#{despesaSolicitacaoPagamento.produto}" label="Produto" converter="com.dupont.EntityConverter" required="true">
+						<p:selectOneMenu id="produtosSelectOneMenu" value="#{despesaSolicitacaoPagamento.produto}" label="Produto" converter="com.dupont.EntityConverter" required="true" rendered="#{!solicitacaoPagamentoAction.despesaForecastFlag}">
 							<p:ajax listener="#{solicitacaoPagamentoAction.doSelectProduto}" update="dadosCC"/>
 							<f:selectItem itemLabel="Selecione um produto" itemValue="#{null}" />
 							<f:selectItems value="#{solicitacaoPagamentoAction.produtos}" var="item" itemLabel="#{item.nome}"/>
 						</p:selectOneMenu>
+						<h:outputText value="#{despesaSolicitacaoPagamento.produto.nome}" rendered="#{solicitacaoPagamentoAction.despesaForecastFlag}" />
 						<p:message for="produtosSelectOneMenu" />
 						
 						
 						
 						<p:outputLabel value="Cultura:" for="culturasSelecOneMenu"/>	
-						<p:selectOneMenu id="culturasSelecOneMenu" label="Cultura"  value="#{despesaSolicitacaoPagamento.cultura}" converter="com.dupont.EntityConverter" required="true">
+						<p:selectOneMenu id="culturasSelecOneMenu" label="Cultura"  value="#{despesaSolicitacaoPagamento.cultura}" converter="com.dupont.EntityConverter" required="true" rendered="#{!solicitacaoPagamentoAction.despesaForecastFlag}">
 							<p:ajax listener="#{solicitacaoPagamentoAction.doSelectCultura}" update="dadosCC"/>
 							<f:selectItem itemLabel="Selecione uma cultura" itemValue="#{null}" />
 							<f:selectItems value="#{solicitacaoPagamentoAction.culturas}" var="item" itemLabel="#{item.nome}" itemValue="#{item}"/>
 						</p:selectOneMenu>
+						<h:outputText value="#{despesaSolicitacaoPagamento.cultura.nome}" rendered="#{solicitacaoPagamentoAction.despesaForecastFlag}" />
 						<p:message for="culturasSelecOneMenu" />
 						
 						
 						
 						<p:outputLabel value="Distrito:" for="distritosSelectOneMenu"/>	
-						<p:selectOneMenu id="distritosSelectOneMenu" label="Distrito" value="#{despesaSolicitacaoPagamento.distrito}" converter="com.dupont.EntityConverter" required="true">
+						<p:selectOneMenu id="distritosSelectOneMenu" label="Distrito" value="#{despesaSolicitacaoPagamento.distrito}" converter="com.dupont.EntityConverter" required="true" rendered="#{!solicitacaoPagamentoAction.despesaForecastFlag}">
 							<p:ajax listener="#{solicitacaoPagamentoAction.doSelectDistrito}" update="dadosCC"/>
 							<f:selectItem itemLabel="Selecione um distrito" itemValue="#{null}" />
 							<f:selectItems value="#{solicitacaoPagamentoAction.distritos}" var="item" itemLabel="#{item.nome}" itemValue="#{item}"/>
 						</p:selectOneMenu>
+						<h:outputText value="#{despesaSolicitacaoPagamento.distrito.nome}" rendered="#{solicitacaoPagamentoAction.despesaForecastFlag}" />
 						<p:message for="distritosSelectOneMenu" />
 						
 						<p:outputLabel value="ERC/CCE:" for="vendedoresSelectOneMenu"/>	
-						<p:selectOneMenu id="vendedoresSelectOneMenu" label="ERC/CCE" value="#{despesaSolicitacaoPagamento.vendedor}" converter="com.dupont.EntityConverter">
+						<p:selectOneMenu id="vendedoresSelectOneMenu" label="ERC/CCE" value="#{despesaSolicitacaoPagamento.vendedor}" converter="com.dupont.EntityConverter" rendered="#{!solicitacaoPagamentoAction.despesaForecastFlag}">
 							<p:ajax listener="#{solicitacaoPagamentoAction.doSelectVendedor}" update="dadosCC"/>
 							<f:selectItem itemLabel="Selecione um vendedor" itemValue="#{null}" />
 							<f:selectItems value="#{solicitacaoPagamentoAction.vendedores}" var="item" itemLabel="#{item.nome}" itemValue="#{item}"/>
 						</p:selectOneMenu>
+						<h:outputText value="#{despesaSolicitacaoPagamento.vendedor.nome}" rendered="#{solicitacaoPagamentoAction.despesaForecastFlag}" />
 						<p:message for="vendedoresSelectOneMenu" />
 						
 						<p:outputLabel value="Cliente:" for="clientesSelectOneMenu"/>	
-						<p:selectOneMenu id="clientesSelectOneMenu" label="Cliente" value="#{despesaSolicitacaoPagamento.cliente}" converter="com.dupont.EntityConverter">
-						
-							
+						<p:selectOneMenu id="clientesSelectOneMenu" label="Cliente" value="#{despesaSolicitacaoPagamento.cliente}" converter="com.dupont.EntityConverter" rendered="#{!solicitacaoPagamentoAction.despesaForecastFlag}">
 							<f:selectItem itemLabel="Selecione um cliente" itemValue="#{null}" />
 							<f:selectItems value="#{solicitacaoPagamentoAction.clientes}" var="item" itemLabel="#{item.nome}" itemValue="#{item}"/>
 						</p:selectOneMenu>
+						<h:outputText value="#{despesaSolicitacaoPagamento.cliente.nome}" rendered="#{solicitacaoPagamentoAction.despesaForecastFlag}" />
 						<p:message for="clientesSelectOneMenu" />
 						
 					</p:panelGrid>
+					
+					<h:panelGroup id="tableRateio">
 						
-					<p:dataTable id="dadosRateio" value="#{solicitacaoPagamento.despesas}" var="item" rendered="#{not empty solicitacaoPagamento.despesas}">
-						<p:column headerText="Descrição">
-							#{item.centroCusto.nome}
-						</p:column>
-						<p:column headerText="CC">
-							#{item.centroCusto.codigo}
-						</p:column>
-						<p:column headerText="Ação">
-							#{item.acao.nome}
-						</p:column>
-						<p:column headerText="Valor">
-							<h:outputText value="#{item.valor}">
-								<f:convertNumber type="currency"/>
-							</h:outputText>
-						</p:column>							
+						<p:dataTable id="dadosRateio" value="#{solicitacaoPagamento.despesas}" var="item" rendered="#{not empty solicitacaoPagamento.despesas}" >
 						
-					</p:dataTable>
+						
+							<p:column headerText="Descrição CC">
+								#{item.centroCusto.nome}
+							</p:column>
+							<p:column headerText="CC">
+								#{item.centroCusto.codigo}
+							</p:column>
+							<p:column headerText="Tipo de despesa">
+								#{item.tipoDespesa.nome}
+							</p:column>
+							<p:column headerText="Ação">
+								#{item.acao.nome}
+							</p:column>
+							<p:column headerText="Valor">
+								<h:outputText value="#{item.valor}">
+									<f:convertNumber type="currency"/>
+								</h:outputText>
+							</p:column>							
+							
+						</p:dataTable>
+					
+					</h:panelGroup>
+					
+					<br/>
 					
 					<p:commandButton value="Incluir CC" icon="ui-icon-extlink" actionListener="#{solicitacaoPagamentoAction.openCCDialog}" styleClass="button" immediate="true" rendered="#{solicitacaoPagamento.tipoSolicitacao == 'RATEIO'}">
 						<p:ajax event="dialogReturn" listener="#{solicitacaoPagamentoAction.incluirDespesa}" update="dadosRateio,valorTotalNotaInput"/>						
 					</p:commandButton>
 					
+					<p:commandButton value="Incluir Despesa Forecast" icon="ui-icon-extlink" actionListener="#{solicitacaoPagamentoAction.openDespesaForecastDialog}" styleClass="button" immediate="true" rendered="#{solicitacaoPagamento.tipoSolicitacao == 'RATEIO'}">
+						<p:ajax event="dialogReturn" listener="#{solicitacaoPagamentoAction.incluirDespesaForecast}" update="tableRateio,valorTotalNotaInput,tipoSolicitacaoPanel"/>						
+					</p:commandButton>
+					<br/>
 				</h:panelGroup>
-			
+				<br/>
 				<p:commandButton id="saveBtn" value="Concluir" icon="ui-icon-check" action="#{solicitacaoPagamentoAction.save}" styleClass="button" ajax="false" rendered="#{solicitacaoPagamento.id == null}"/>
 				<p:commandButton id="updateBtn" value="Concluir" icon="ui-icon-check" action="#{solicitacaoPagamentoAction.update}" styleClass="button" ajax="false" rendered="#{solicitacaoPagamento.id  != null}"/>
 				
