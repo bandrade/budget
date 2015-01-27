@@ -6,7 +6,7 @@
                 template="/WEB-INF/templates/default.xhtml">
                 
 	<ui:define name="content">
-		<h3>Pesquisa de Colaboradores</h3>
+		<h3>Pesquisa de Pagamentos</h3>
 		
 		<h:form id="form" prependId="false">
 		
@@ -35,7 +35,6 @@
                    <p:message for="statusList" />
 				
 				<p:commandButton value="Pesquisar" icon="ui-icon-search"   styleClass="button" action="#{solicitacaoPagamentoAction.find}" update="solicitacaoPagamentos" process="@this,numeroNotaInput,fornecedorInput,tipoSolicitacaoList,statusList"/>
-				<p:commandButton value="Novo"      icon="ui-icon-document" styleClass="button" action="/pages/adm/solicitacaoPagamento/edit.xml"   />
 			</h:panelGrid>
 			
 			<p:separator />

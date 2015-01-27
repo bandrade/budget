@@ -14,15 +14,21 @@ import javax.inject.Named;
 import org.slf4j.Logger;
 
 import com.dupont.budget.dto.CentroDeCustoDTO;
+import com.dupont.budget.dto.DetalheValoresComprometidosDTO;
 import com.dupont.budget.model.Acao;
 import com.dupont.budget.model.DespesaForecast;
 import com.dupont.budget.model.DespesaForecastPK;
+import com.dupont.budget.model.Forecast;
 import com.dupont.budget.model.MesEnum;
 import com.dupont.budget.service.DomainService;
 import com.dupont.budget.service.ForecastService;
 import com.dupont.budget.service.bpms.BPMSProcessService;
 import com.dupont.budget.service.bpms.BPMSTaskService;
 import com.dupont.budget.web.util.FacesUtils;
+/**
+ * @author bandrade
+ *
+ */
 @Named
 @ConversationScoped
 public class ForecastAction implements Serializable {
@@ -76,6 +82,12 @@ public class ForecastAction implements Serializable {
 	protected ForecastHelper helper;
 
 	protected Map<String, Object> params ;
+	
+	protected Forecast forecast;
+	
+	protected DespesaForecast despesaSelecionada;
+	
+	protected List<DetalheValoresComprometidosDTO> detalheValorComprometido;
 
 
 	@PostConstruct
@@ -98,6 +110,9 @@ public class ForecastAction implements Serializable {
 		  ano = (String)bpmsProcesso.obterVariavelProcesso(idInstanciaProcesso, "ano");
 		  if(despesasNoDetalhe==null)
 			  despesasNoDetalhe =  forecastService.obterDespesasForecast(mes, ano, centroDeCusto.getId());
+		  if(forecast == null)
+			  setForecast(forecastService.findForecastByCCAndAno(ano, centroDeCusto.getId()));
+		  
 
 		}
 	    catch(Exception e )
@@ -107,6 +122,12 @@ public class ForecastAction implements Serializable {
 
 		}
 
+	}
+	
+	public void obterDetalheValorComprometido(String mesDetalhe)
+	{
+		MesEnum mesEnum = MesEnum.valueOf(mesDetalhe.toUpperCase());
+		setDetalheValorComprometido(forecastService.obterDetalheValoresComprometidos(despesaDetalheSelecionada, (int)mesEnum.getId()));
 	}
 
 	public void atualizarDetalhe()
@@ -134,7 +155,7 @@ public class ForecastAction implements Serializable {
 	}
 
 
-	public void adicionarDespesa()
+	public boolean adicionarDespesa()
 	{
 		MesEnum mesEnum = MesEnum.valueOf(mes.toUpperCase());
 		despesa.setDespesaPK(new DespesaForecastPK(ano, mesEnum.getId(), null));
@@ -143,8 +164,18 @@ public class ForecastAction implements Serializable {
 			despesa.setForecast(despesasNoDetalhe.get(0).getForecast());
 		}
 		despesa.setValor(helper.calcularValorMensalisado(despesa));
+		if(despesa.getValor() ==null || despesa.getValor()<=0d)
+		{
+			facesUtils.addErrorMessage("O valor da despesa deve ser maior que zero.");
+			return false;
+		
+		}
 		validarAcao();
-
+		if(despesa.getAcao() !=null && forecastService.isDespesaExistente(despesa))
+		{
+			facesUtils.addErrorMessage("Não é possível adicionar uma despesa com o mesmo tipo de despesa e ação.");
+			return false;
+		}
 		try
 		{
 			forecastService.incluirDespesaForecast(despesa);
@@ -158,6 +189,7 @@ public class ForecastAction implements Serializable {
 			facesUtils.addErrorMessage("Erro ao incluir a despesa");
 			logger.error("Erro ao incluir a despesa",e);
 		}
+		return true;
 	}
 	
 	protected void validarAcao()
@@ -276,9 +308,23 @@ public class ForecastAction implements Serializable {
 		{
 			valorTotalDetalhe +=despesa.getValor();
 		}
-
+	}
+	
+	
+	public List<Acao> obterAcoesPorBudget()
+	{
+		Long budgetId = forecast !=null && forecast.getBudget() !=null ? forecast.getBudget().getId() : null;
+		Long forecastId = forecast !=null ? forecast.getId() : null;
+		
+		return domainService.findAcaoByForecastOrBudget(budgetId,forecastId); 
 	}
 
+	public List<Acao> autocompleteAcao(String input)
+	{
+
+		return facesUtils.autoComplete(obterAcoesPorBudget(),input);
+	}
+	
 
 
 	public Long getIdInstanciaProcesso() {
@@ -366,6 +412,25 @@ public class ForecastAction implements Serializable {
 	public void setInclusao(boolean inclusao) {
 		this.inclusao = inclusao;
 	}
+	public Forecast getForecast() {
+		return forecast;
+	}
+	public void setForecast(Forecast forecast) {
+		this.forecast = forecast;
+	}
+	public DespesaForecast getDespesaSelecionada() {
+		return despesaSelecionada;
+	}
+	public void setDespesaSelecionada(DespesaForecast despesaSelecionada) {
+		this.despesaSelecionada = despesaSelecionada;
+	}
+	public List<DetalheValoresComprometidosDTO> getDetalheValorComprometido() {
+		return detalheValorComprometido;
+	}
+	public void setDetalheValorComprometido(
+			List<DetalheValoresComprometidosDTO> detalheValorComprometido) {
+		this.detalheValorComprometido = detalheValorComprometido;
+	}
 
-
+	
 }

@@ -60,8 +60,14 @@ public class ProcessoAction {
 		return isPrazoOk;
 		
 	}
-	private boolean validarPrazoForecast()
+	private boolean validarPrazoForecast() throws Exception
 	{
+
+		if(bpms.existeProcessoAtivo(ano))
+		{
+			facesUtils.addErrorMessage("O processo de budget deve ser finalizado");
+			return false;
+		}
 		calendar.setTime(dataExpiracao);
 		if(dataExpiracao.before(new Date()))
 		{
@@ -110,12 +116,12 @@ public class ProcessoAction {
 	}
 	public void iniciarProcessoForecast()
 	{
-		if(!validarPrazoForecast())
-		{
-			return;
-		}	
+	
 		try {
-			
+			if(!validarPrazoForecast())
+			{
+				return;
+			}	
 			if(bpms.existeProcessoForecastAtivo(ano))
 			{
 				facesUtils.addErrorMessage("Ja existe um processo de forecast ativo");

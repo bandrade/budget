@@ -39,6 +39,11 @@
 		                     <h:outputText value="(Prazo - " rendered="#{not empty _item.prazo}"></h:outputText>
 		                    <h:outputText id="processInstanceId" value="#{_item.prazo}" rendered="#{not empty _item.prazo}" converter="javax.faces.DateTime"/>
 		                    <h:outputText value=")" rendered="#{not empty _item.prazo}"></h:outputText>
+		              
+		                    <h:outputText value="(Data de criação - " rendered="#{empty _item.prazo}"></h:outputText>
+		                    <h:outputText id="createdOnId" value="#{_item.createdOn}" rendered="#{empty _item.prazo}" converter="javax.faces.DateTime"/>
+		                    <h:outputText value=")" rendered="#{empty _item.prazo}"></h:outputText>
+			
 					    </p:dataList>
                     </div>
 <!--                     <div class="ui-grid-col-1">

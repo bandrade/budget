@@ -234,11 +234,26 @@ public class DomainServiceBean extends GenericService implements DomainService {
 		}
 	}
 	
+	public List<Acao> findAcaoByForecastOrBudget(Long budgetId,Long forecastId){
+		List<Acao> acao =null;
+		try
+		{
+			acao = em.createNamedQuery(Acao.FIND_ACAO_BY_BUDGET_OR_FORECAST, Acao.class)
+			.setParameter("budgetId", budgetId)
+			.setParameter("forecastId", forecastId)
+			.getResultList();
+		} catch (NoResultException e) {
+			return null;
+		}
+		return acao;
+	}
+
+	
 	public Acao findAcaoByForecastOrBudget(Long budgetId,Long forecastId, String nomeAcao){
 		Acao acao =null;
 		try
 		{
-			acao = em.createNamedQuery(Acao.FIND_ACAO_BY_BUDGET_OR_FORECAST, Acao.class)
+			acao = em.createNamedQuery(Acao.FIND_ACAO_BY_BUDGET_OR_FORECAST_AND_NOMEACAO, Acao.class)
 			.setParameter("budgetId", budgetId)
 			.setParameter("forecastId", forecastId)
 			.setParameter("nomeAcao",nomeAcao)

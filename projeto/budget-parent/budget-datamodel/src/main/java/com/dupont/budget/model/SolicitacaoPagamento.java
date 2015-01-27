@@ -111,7 +111,7 @@ public class SolicitacaoPagamento extends AbstractEntity<Long> {
 
 	public static final StringBuilder QUERY_DETALHE_VALOR_COMPROMETIDO =
 			new StringBuilder()
-				.append(" select distinct solicitacao.valor, tipo_despesa.nome, acao.nome ")
+				.append(" select distinct solicitacao.valor, tipo_despesa.nome as 'tipoDespesa', acao.nome as 'acao',solicitacao.num_nota_fiscal  ")
 				.append(BODY_QUERY_VALOR_COMPROMETIDO.toString());
 
 

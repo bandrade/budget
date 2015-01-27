@@ -137,15 +137,19 @@ public class SolicitacaoPagamentoAction implements Serializable {
 		}
 	}
 	
-	public void approve() {
+	public String approve() {
 		try {
 			solicitacaoPagamento = domainService.findById(solicitacaoPagamento);
 			solicitacaoPagamento.setStatus(StatusPagamento.ENVIADO_SAP);
 			domainService.update(solicitacaoPagamento);
 			taskService.aprovarTarefa(facesUtils.getUserLogin(), tarefa, new HashMap<String,Object>());
+			facesUtils.addInfoMessage("Tarefa concluida com sucesso");
 		} catch (Exception e) {
 			facesUtils.addErrorMessage("Não foi possível aprovar a tarefa");
+			return null;
 		}
+		return "minhasTarefas";
+		
 	}
 	
 	@Produces @Named
@@ -683,7 +687,8 @@ public class SolicitacaoPagamentoAction implements Serializable {
 //			despesaSolicitacaoPagamento.setAcao(acao);
 //		}
 		
-		solicitacaoPagamento.setStatus(StatusPagamento.COMPROMETIDO);
+		if(solicitacaoPagamento.getStatus().equals(StatusPagamento.ENVIADO_SAP))
+				solicitacaoPagamento.setStatus(StatusPagamento.COMPROMETIDO);
 		
 		if( solicitacaoPagamento.getTipoSolicitacao() == TipoSolicitacao.CC )
 			despesaSolicitacaoPagamento.setValor(solicitacaoPagamento.getValor());
@@ -700,9 +705,9 @@ public class SolicitacaoPagamentoAction implements Serializable {
 	
 	public void delete(SolicitacaoPagamento _solicitacaoPagamento) {
 		
-		domainService.delete(solicitacaoPagamento);
+		domainService.delete(_solicitacaoPagamento);
 		
-		getList().remove(solicitacaoPagamento);
+		getList().remove(_solicitacaoPagamento);
 		
 		facesUtils.addInfoMessage(String.format("%s removido(a) com sucesso.", "Solicitação de Pagamento"));
 		
@@ -723,7 +728,11 @@ public class SolicitacaoPagamentoAction implements Serializable {
 			
 			return null;
 		}
+		if( _solicitacaoPagamento.getStatus().equals(StatusPagamento.PENDENTE_VALIDACAO))
+		{
 		
+			_solicitacaoPagamento.setStatus(StatusPagamento.PAGO);
+		}
 		if (solicitacaoPagamento.getTipoSolicitacao() == TipoSolicitacao.CC && !solicitacaoPagamento.getDespesas().isEmpty()) {
 			this.despesaSolicitacaoPagamento = solicitacaoPagamento.getDespesas().get(0);
 			

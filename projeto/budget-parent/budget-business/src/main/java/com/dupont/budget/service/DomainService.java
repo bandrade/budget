@@ -173,4 +173,6 @@ public interface DomainService {
 	
 	public void insertAcao(Acao acao);
 	
+	public List<Acao> findAcaoByForecastOrBudget(Long budgetId,Long forecastId); 
+	
 }

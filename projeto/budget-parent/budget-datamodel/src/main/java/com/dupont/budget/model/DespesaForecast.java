@@ -20,7 +20,8 @@ import javax.persistence.Transient;
 @Table(name="despesa_forecast")
 @NamedQueries({
 	@NamedQuery(name="DespesaForecast.findByForecastTipoDespesaAndAcao", 
-			query="select d from DespesaForecast d where d.forecast.id=:forecastId and d.tipoDespesa.id=:tipoDespesaId and d.acao.id=:acaoId")
+			query="select d from DespesaForecast d where d.forecast.id=:forecastId and d.tipoDespesa.id=:tipoDespesaId and d.acao.id=:acaoId"),
+	@NamedQuery(name="DespesaForecast.obterDespesaPorTipoEAcao", query="select c from DespesaForecast c where c.forecast.id = :forecastId and c.tipoDespesa.id=:tipoDespesaId and c.acao.id=:acaoId")
 })
 public class DespesaForecast {
 
@@ -287,7 +288,6 @@ public class DespesaForecast {
 		DespesaForecastPK pk  = new DespesaForecastPK(despesaForecast.getDespesaPK().getAno(),
 				Long.valueOf(mesSeguinte),despesaForecast.getDespesaPK().getId());
 		this.setDespesaPK(pk);
-		this.setYtd(obterPLM(despesaForecast, despesaForecast.getDespesaPK().getMes()));
 		this.setPlm(obterPLM(despesaForecast, 12L));
 		this.setDespesaBudget(despesaForecast.getDespesaBudget());
 		this.setForecast(despesaForecast.getForecast());

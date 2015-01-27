@@ -23,7 +23,10 @@
 					</p:selectOneMenu>
 					<p:outputLabel value="Prazo:"/>
 					<p:calendar value="#{processoAction.dataExpiracao}" required="true" locale="pt_BR"></p:calendar>
-					
+					<p:commandButton
+						onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"
+						action="#{processoAction.iniciarProcessoForecast()}"
+						value="Iniciar Processo" update=":form"/>
 					
 				</p:panelGrid>
 				

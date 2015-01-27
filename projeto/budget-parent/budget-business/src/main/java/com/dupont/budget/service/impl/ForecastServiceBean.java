@@ -195,96 +195,98 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 			
 			//obtendo valor total de notas que foram criadas no cover sheet e estao comprometidas
 			//obtendo valor total de notas que estao pendentes de validacao no SAP
+			
 			Double valorD=+ obterValoresComprometidosNotas(despesa,(int)_mes);
-			if(valorComprometido!=null)
+			valorD+= valorComprometido !=null ? valorComprometido.getValor() : 0D;
+			if(valorD !=null && valorD !=0D)
 			{
 				switch (MesEnum.values()[(int)_mes-1]) {
 				case JANEIRO:
 					
 					if( despesa.getDespesaMensalisada().getDespesaJaneiro()==null)
-						despesa.getDespesaMensalisada().setDespesaJaneiro(valorD+valorComprometido.getValor());
+						despesa.getDespesaMensalisada().setDespesaJaneiro(valorD);
 					else
-						despesa.getDespesaMensalisada().setDespesaJaneiro(valorD+valorComprometido.getValor() +despesa.getDespesaMensalisada().getDespesaJaneiro());
+						despesa.getDespesaMensalisada().setDespesaJaneiro(valorD+despesa.getDespesaMensalisada().getDespesaJaneiro());
 					break;
 				case FEVEREIRO:
 					if( despesa.getDespesaMensalisada().getDespesaFevereiro()==null)
-						despesa.getDespesaMensalisada().setDespesaFevereiro(valorD+valorComprometido.getValor());
+						despesa.getDespesaMensalisada().setDespesaFevereiro(valorD);
 					else
-						despesa.getDespesaMensalisada().setDespesaFevereiro(valorD+valorComprometido.getValor());
+						despesa.getDespesaMensalisada().setDespesaFevereiro(valorD+despesa.getDespesaMensalisada().getDespesaFevereiro());
 					break;
 
 				case MARCO:
 					if( despesa.getDespesaMensalisada().getDespesaMarco()==null)
-						despesa.getDespesaMensalisada().setDespesaMarco(valorComprometido.getValor());
+						despesa.getDespesaMensalisada().setDespesaMarco(valorD);
 					else
-						despesa.getDespesaMensalisada().setDespesaMarco(valorD+valorComprometido.getValor());
+						despesa.getDespesaMensalisada().setDespesaMarco(valorD+despesa.getDespesaMensalisada().getDespesaMarco());
 					break;
 
 				case ABRIL:
 					if( despesa.getDespesaMensalisada().getDespesaAbril()==null)
-						despesa.getDespesaMensalisada().setDespesaAbril(valorComprometido.getValor());
+						despesa.getDespesaMensalisada().setDespesaAbril(valorD);
 					else
-						despesa.getDespesaMensalisada().setDespesaAbril(valorD+valorComprometido.getValor());
+						despesa.getDespesaMensalisada().setDespesaAbril(valorD+despesa.getDespesaMensalisada().getDespesaAbril());
 					
 					break;
 					
 				case MAIO:
 					if(despesa.getDespesaMensalisada().getDespesaMaio()==null)
-						despesa.getDespesaMensalisada().setDespesaMaio(valorComprometido.getValor());
+						despesa.getDespesaMensalisada().setDespesaMaio(valorD);
 					else
-						despesa.getDespesaMensalisada().setDespesaMaio(valorD+valorComprometido.getValor());
+						despesa.getDespesaMensalisada().setDespesaMaio(valorD+despesa.getDespesaMensalisada().getDespesaAbril());
 					
 					break;
 				
 				case JUNHO:
-					if(valorD==null)
-						despesa.getDespesaMensalisada().setDespesaJunho(valorComprometido.getValor());
+					if(despesa.getDespesaMensalisada().getDespesaJunho()==null)
+						despesa.getDespesaMensalisada().setDespesaJunho(valorD);
 					else
-						despesa.getDespesaMensalisada().setDespesaJunho(valorD+valorComprometido.getValor());
+						despesa.getDespesaMensalisada().setDespesaJunho(valorD+despesa.getDespesaMensalisada().getDespesaJunho());
 					
 					break;
 
 				case JULHO:
-					if(valorD==null)
-						despesa.getDespesaMensalisada().setDespesaJulho(valorComprometido.getValor());
+					if(despesa.getDespesaMensalisada().getDespesaJulho() ==null)
+						despesa.getDespesaMensalisada().setDespesaJulho(valorD);
 					else
-						despesa.getDespesaMensalisada().setDespesaJulho(valorD+valorComprometido.getValor());
+						despesa.getDespesaMensalisada().setDespesaJulho(valorD+despesa.getDespesaMensalisada().getDespesaJulho());
 					
 					break;
 
 				case AGOSTO:
-					if(valorD==null)
-						despesa.getDespesaMensalisada().setDespesaAgosto(valorComprometido.getValor());
+					if(despesa.getDespesaMensalisada().getDespesaAgosto()==null)
+						despesa.getDespesaMensalisada().setDespesaAgosto(valorD);
 					else
-						despesa.getDespesaMensalisada().setDespesaAgosto(valorD+valorComprometido.getValor());
+						despesa.getDespesaMensalisada().setDespesaAgosto(valorD+despesa.getDespesaMensalisada().getDespesaAgosto());
 					break;
 				
 				case SETEMBRO:
-					if(valorD==null)
-						despesa.getDespesaMensalisada().setDespesaSetembro(valorComprometido.getValor());
+					if(despesa.getDespesaMensalisada().getDespesaSetembro() ==null)
+						despesa.getDespesaMensalisada().setDespesaSetembro(valorD);
 					else
-						despesa.getDespesaMensalisada().setDespesaSetembro(valorD+valorComprometido.getValor());
+						despesa.getDespesaMensalisada().setDespesaSetembro(valorD+despesa.getDespesaMensalisada().getDespesaSetembro());
 					break;
 			
 				case OUTUBRO:
-					if(valorD==null)
-						despesa.getDespesaMensalisada().setDespesaOutubro(valorComprometido.getValor());
+					if(despesa.getDespesaMensalisada().getDespesaOutubro()==null)
+						despesa.getDespesaMensalisada().setDespesaOutubro(valorD);
 					else
-						despesa.getDespesaMensalisada().setDespesaOutubro(valorD+valorComprometido.getValor());
+						despesa.getDespesaMensalisada().setDespesaOutubro(valorD+despesa.getDespesaMensalisada().getDespesaOutubro());
 					break;
 			
 				case NOVEMBRO:
-					if(valorD==null)
-						despesa.getDespesaMensalisada().setDespesaNovembro(valorComprometido.getValor());
+					if(despesa.getDespesaMensalisada().getDespesaNovembro()==null)
+						despesa.getDespesaMensalisada().setDespesaNovembro(valorD);
 					else
-						despesa.getDespesaMensalisada().setDespesaNovembro(valorD+valorComprometido.getValor());
+						despesa.getDespesaMensalisada().setDespesaNovembro(valorD+despesa.getDespesaMensalisada().getDespesaNovembro());
 					break;
 			
 				case DEZEMBRO:
-					if(valorD==null)
-						despesa.getDespesaMensalisada().setDespesaDezembro(valorComprometido.getValor());
+					if(despesa.getDespesaMensalisada().getDespesaDezembro()==null)
+						despesa.getDespesaMensalisada().setDespesaDezembro(valorD);
 					else
-						despesa.getDespesaMensalisada().setDespesaDezembro(valorD+valorComprometido.getValor());
+						despesa.getDespesaMensalisada().setDespesaDezembro(valorD+despesa.getDespesaMensalisada().getDespesaDezembro());
 					break;
 			
 				}
@@ -381,6 +383,59 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 		}
 		return valorComprometido;
 	}
+	
+	
+	public List<DetalheValoresComprometidosDTO> obterDetalheValoresComprometidos(DespesaForecast despesa, int mes)
+	{
+		List<DetalheValoresComprometidosDTO> detalheList = obterDetalheValoresComprometidosNotas(despesa,mes);
+		if(detalheList == null)
+			detalheList = new ArrayList<>();
+		ValorComprometido valor =domainServiceBean.findValorComprometidoByFiltro(despesa.getForecast().getBudget().getCentroCusto().getCodigo(), despesa.getTipoDespesa().getNome(), despesa.getAcao().getNome(),(long)mes);
+		if(valor !=null)
+		{
+			DetalheValoresComprometidosDTO detalhe = new DetalheValoresComprometidosDTO();
+			detalhe.setValor(valor.getValor());
+			detalhe.setTipoDespesa(valor.getTipoDespesa().getNome());
+			detalhe.setAcao(valor.getAcao().getNome() );
+			detalheList.add(detalhe);
+		}
+		
+		return detalheList;
+		
+	}
+	public List<DetalheValoresComprometidosDTO> obterDetalheValoresComprometidosNotas(DespesaForecast despesaForecast, int mes)
+	{
+		List<DetalheValoresComprometidosDTO> detalheList = new ArrayList<>();
+		try
+		{
+			List<Object[]> result =(List<Object[]>)em.createNativeQuery(SolicitacaoPagamento.QUERY_DETALHE_VALOR_COMPROMETIDO.toString())
+				.setParameter("ano", despesaForecast.getForecast().getBudget().getAno())
+				.setParameter("centro_custo_id",despesaForecast.getForecast().getBudget().getCentroCusto().getId())
+				.setParameter("mes_forecast",despesaForecast.getDespesaPK().getMes())
+			    .setParameter("mes_anterior",mes)
+			    .setParameter("acao_id", despesaForecast.getAcao().getId())
+				.setParameter("tipo_despesa_id", despesaForecast.getTipoDespesa().getId()).getResultList();
+			if(result !=null)
+			{
+				for(Object[] object : result)
+				{
+					DetalheValoresComprometidosDTO detalhe =  new DetalheValoresComprometidosDTO();
+					detalhe.setValor(Double.valueOf(object[0]+""));
+					detalhe.setTipoDespesa(String.valueOf(object[1]));
+					detalhe.setAcao(String.valueOf(object[2]));
+					detalhe.setNotaFiscal(String.valueOf(object[3]));
+					detalheList.add(detalhe);
+				}
+				
+			}
+				
+		}
+		catch(NoResultException e)
+		{
+		}
+		return detalheList;
+	}
+
 
 	public List<DetalheValoresComprometidosDTO> obterDetalhesNotas()
 	{
@@ -446,14 +501,15 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 
 	@Override
 	public DespesaForecast obterDespesaForecast(Forecast forecast,
-			TipoDespesa tipoDespesa, Acao acao) throws Exception {
+			TipoDespesa tipoDespesa, Acao acao)  {
 		DespesaForecast despesaForecast = null;
 		try
 		{
+			Long acaoId =  acao !=null ? acao.getId():null;
 			despesaForecast =em.createNamedQuery("DespesaForecast.findByForecastTipoDespesaAndAcao", DespesaForecast.class)
 			.setParameter("forecastId", forecast.getId())
 			.setParameter("tipoDespesaId",tipoDespesa.getId())
-			.setParameter("acaoId",acao.getId())
+			.setParameter("acaoId",acaoId )
 			.getSingleResult();
 		}
 		catch(NoResultException e)
@@ -462,6 +518,17 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 		}
 		
 		return despesaForecast;
+	}
+
+	@Override
+	public boolean isDespesaExistente(DespesaForecast despesa) {
+		return obterDespesaPorTipoEAcao(despesa)!=null;
+	}
+
+	@Override
+	public DespesaForecast obterDespesaPorTipoEAcao(DespesaForecast despesa) {
+		
+		return obterDespesaForecast(despesa.getForecast(), despesa.getTipoDespesa(), despesa.getAcao());
 	}
 
 

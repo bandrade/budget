@@ -2,6 +2,7 @@ package com.dupont.budget.service;
 
 import java.util.List;
 
+import com.dupont.budget.dto.DetalheValoresComprometidosDTO;
 import com.dupont.budget.model.Acao;
 import com.dupont.budget.model.DespesaForecast;
 import com.dupont.budget.model.Forecast;
@@ -34,5 +35,13 @@ public interface ForecastService {
 	void alterarForecastMensalisado(Long mes, String ano) throws Exception;
 
 	Forecast findForecastByCCAndAno(String ano, Long centroCustoId);
+	
+	public boolean isDespesaExistente(DespesaForecast despesa);
+	
+	public DespesaForecast obterDespesaPorTipoEAcao(DespesaForecast despesa);
+	
+	public List<DetalheValoresComprometidosDTO> obterDetalheValoresComprometidosNotas(DespesaForecast despesaForecast, int mes);
+	
+	public List<DetalheValoresComprometidosDTO> obterDetalheValoresComprometidos(DespesaForecast despesa, int mes);
 
 }

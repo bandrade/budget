@@ -19,11 +19,13 @@ import javax.persistence.Table;
 @NamedQueries({
 	@NamedQuery(name = Acao.FIND_ACAO_BY_BUDGET, query = "select a from Acao a where a.budget.id =:budgetId"),
 	@NamedQuery(name = Acao.FIND_ACAO_BY_NAME_AND_BUDGET, query = "select a from Acao a where a.budget.id =:budgetId and lower(a.nome) = lower(:nomeAcao)"),
-	@NamedQuery(name = Acao.FIND_ACAO_BY_BUDGET_OR_FORECAST, query = "select a from Acao a where (a.budget.id =:budgetId or a.forecast.id =:forecastId) and lower(a.nome) like :nomeAcao")
+	@NamedQuery(name = Acao.FIND_ACAO_BY_BUDGET_OR_FORECAST, query = "select a from Acao a where (a.budget.id =:budgetId or a.forecast.id =:forecastId)"),
+	@NamedQuery(name = Acao.FIND_ACAO_BY_BUDGET_OR_FORECAST_AND_NOMEACAO, query = "select a from Acao a where (a.budget.id =:budgetId or a.forecast.id =:forecastId) and lower(a.nome) like :nomeAcao")
 })
 public class Acao extends NamedAbstractEntity<Long> {
 	
 	public static final String FIND_ACAO_BY_BUDGET="Acao.findAcaoByBudget";
+	public static final String FIND_ACAO_BY_BUDGET_OR_FORECAST_AND_NOMEACAO="Acao.findAcaoByBudgetAndForecastAndNomeAcao";
 	public static final String FIND_ACAO_BY_BUDGET_OR_FORECAST="Acao.findAcaoByBudgetAndForecast";
 	public static final String FIND_ACAO_BY_NAME_AND_BUDGET="Acao.findAcaoByNameAndBudget";
 	private static final long serialVersionUID = -1359075483819011154L;
