@@ -144,10 +144,6 @@ public class DomainServiceBean extends GenericService implements DomainService {
 			params.put("status", status);
 		}
 		
-		if (tipo != null) {
-			params.put("tipoSolicitacao", tipo);
-		}
-		
 		if (!params.isEmpty()) {
 			q.append("where ");
 			boolean con = false;

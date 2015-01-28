@@ -181,7 +181,7 @@ public class SolicitacaoPagamentoAction implements Serializable {
 	}
 	
 	public void find() {
-		list = domainService.listSolicitacaoByFiltro(solicitacaoPagamento.getNumeroNotaFiscal(), solicitacaoPagamento.getTipoSolicitacao(), solicitacaoPagamento.getStatus(), solicitacaoPagamento.getFornecedor().getNome());
+		list = domainService.listSolicitacaoByFiltro(solicitacaoPagamento.getNumeroNotaFiscal(), solicitacaoPagamento.getTipoSolicitacao(),null, solicitacaoPagamento.getFornecedor().getNome());
 	}
 	
 	/* Inicia o escopo de conversação */

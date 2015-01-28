@@ -20,13 +20,6 @@
                    <p:inputText id="fornecedorInput" value="#{solicitacaoPagamento.fornecedor.nome}"/>
                    <p:message for="fornecedorInput"/>
                    
-                   <h:outputLabel for="tipoSolicitacaoList" value="Tipo:" />
-                   <p:selectOneMenu label="Tipo" id="tipoSolicitacaoList" value="#{solicitacaoPagamento.tipoSolicitacao}">
-                       <f:selectItem itemLabel="Selecione..." itemValue="" />
-                       <f:selectItems value="#{tipoSolicitacaoPagamentoList}" itemValue="#{i}" itemLabel="#{i.toString()}" var="i" />
-                   </p:selectOneMenu>
-                   <p:message for="tipoSolicitacaoList" />
-                   
                    <h:outputLabel for="statusList" value="Status:" />
                    <p:selectOneMenu label="Status" id="statusList" value="#{solicitacaoPagamento.status}">
                        <f:selectItem itemLabel="Selecione..." itemValue="" />
@@ -34,7 +27,7 @@
                    </p:selectOneMenu>
                    <p:message for="statusList" />
 				
-				<p:commandButton value="Pesquisar" icon="ui-icon-search"   styleClass="button" action="#{solicitacaoPagamentoAction.find}" update="solicitacaoPagamentos" process="@this,numeroNotaInput,fornecedorInput,tipoSolicitacaoList,statusList"/>
+				<p:commandButton value="Pesquisar" icon="ui-icon-search"   styleClass="button" action="#{solicitacaoPagamentoAction.find}" update="solicitacaoPagamentos" process="@this,numeroNotaInput,fornecedorInput,statusList"/>
 			</h:panelGrid>
 			
 			<p:separator />
