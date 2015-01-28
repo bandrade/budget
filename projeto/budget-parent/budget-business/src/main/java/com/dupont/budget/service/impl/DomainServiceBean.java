@@ -20,6 +20,7 @@ import com.dupont.budget.model.Papel;
 import com.dupont.budget.model.PapelUsuario;
 import com.dupont.budget.model.SolicitacaoPagamento;
 import com.dupont.budget.model.StatusPagamento;
+import com.dupont.budget.model.TipoDespesa;
 import com.dupont.budget.model.TipoSolicitacao;
 import com.dupont.budget.model.Usuario;
 import com.dupont.budget.model.ValorComprometido;
@@ -242,7 +243,7 @@ public class DomainServiceBean extends GenericService implements DomainService {
 			.setParameter("budgetId", budgetId)
 			.setParameter("forecastId", forecastId)
 			.getResultList();
-		} catch (NoResultException e) {
+		} catch (NoResultException e) { 
 			return null;
 		}
 		return acao;
@@ -267,5 +268,20 @@ public class DomainServiceBean extends GenericService implements DomainService {
 	@Override
 	public void insertAcao(Acao acao) {
 			em.persist(acao);
+	}
+
+	public List<TipoDespesa> findTiposDespesaForecast(Long forecastId) {
+		List<TipoDespesa> tiposDespesa = em.createNamedQuery("DespesaForecast.obterDespesaTipoDespesa", TipoDespesa.class)
+				.setParameter("forecastId", forecastId)
+				.getResultList();
+		return tiposDespesa;
+	}
+
+	public List<Acao> findAcaoDespesaForecastByTipo(Long forecastId,Long tipoDespesaId) {
+		List<Acao> acoes = em.createNamedQuery("DespesaForecast.obterAcoesDespesaPorTipoDespesa", Acao.class)
+				.setParameter("forecastId", forecastId)
+				.setParameter("tipoDespesaId", tipoDespesaId)
+				.getResultList();
+		return acoes;
 	}
 }

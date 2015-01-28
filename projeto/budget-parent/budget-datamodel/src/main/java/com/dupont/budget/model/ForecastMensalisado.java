@@ -24,9 +24,9 @@ import javax.persistence.Table;
 @Entity
 @Table(name="forecast_mensalisado")
 @NamedQueries({
-	@NamedQuery(name="ForecastMensalisado.findByForecastMes", query="select f from ForecastMensalisado f where f.pk.mes=:mes and f.forecast.id=:forecast_id")
+	@NamedQuery(name="ForecastMensalisado.findByForecastMes", query="select f from ForecastMensalisado f where f.pk.mes=:mes and f.forecast.id=:forecast_id"),
+	@NamedQuery(name="ForecastMensalisado.findByForecastEmAndamento", query="select f from ForecastMensalisado f where f.forecast.id=:forecast_id and f.statusForecast='EM_ANDAMENTO'")
 })
-//TODO CORRIGIR MAPEAMENTO
 public class ForecastMensalisado implements Serializable {
 	private static final long serialVersionUID = 1L;
 	 @EmbeddedId

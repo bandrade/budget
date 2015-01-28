@@ -21,7 +21,11 @@ import javax.persistence.Transient;
 @NamedQueries({
 	@NamedQuery(name="DespesaForecast.findByForecastTipoDespesaAndAcao", 
 			query="select d from DespesaForecast d where d.forecast.id=:forecastId and d.tipoDespesa.id=:tipoDespesaId and d.acao.id=:acaoId"),
-	@NamedQuery(name="DespesaForecast.obterDespesaPorTipoEAcao", query="select c from DespesaForecast c where c.forecast.id = :forecastId and c.tipoDespesa.id=:tipoDespesaId and c.acao.id=:acaoId")
+	@NamedQuery(name="DespesaForecast.obterDespesaPorTipoEAcao", query="select c from DespesaForecast c where c.forecast.id = :forecastId and c.tipoDespesa.id=:tipoDespesaId and c.acao.id=:acaoId"),
+	@NamedQuery(name="DespesaForecast.obterDespesasForecastMes", query="select c from DespesaForecast c where c.forecast.id = :forecastId and c.despesaPK.mes=:mes"),
+	@NamedQuery(name="DespesaForecast.obterDespesaTipoDespesa", query="select distinct c.tipoDespesa from DespesaForecast c where c.forecast.id = :forecastId and c.ativo=true "),
+	@NamedQuery(name="DespesaForecast.obterAcoesDespesaPorTipoDespesa", query="select distinct c.acao from DespesaForecast c where c.forecast.id = :forecastId and c.ativo=true and c.tipoDespesa.id=:tipoDespesaId")
+	
 })
 public class DespesaForecast {
 
@@ -291,8 +295,8 @@ public class DespesaForecast {
 		this.setPlm(obterPLM(despesaForecast, 12L));
 		this.setDespesaBudget(despesaForecast.getDespesaBudget());
 		this.setForecast(despesaForecast.getForecast());
-		//XXX VERIFICAR SE PRECISA CRIAR UMA NOVA DESPESA MENSALIZADA
-		this.setDespesaMensalisada(despesaForecast.getDespesaMensalisada());
+		DespesaForecastMes despesaForecastMes =  DespesaForecastMes.createFromDespesaMes(despesaForecast.getDespesaMensalisada());
+		this.setDespesaMensalisada(despesaForecastMes);
 	}
 
 

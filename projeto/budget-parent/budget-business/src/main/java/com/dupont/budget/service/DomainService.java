@@ -10,6 +10,8 @@ import com.dupont.budget.model.Papel;
 import com.dupont.budget.model.PapelUsuario;
 import com.dupont.budget.model.SolicitacaoPagamento;
 import com.dupont.budget.model.StatusPagamento;
+import com.dupont.budget.model.TipoCentroCusto;
+import com.dupont.budget.model.TipoDespesa;
 import com.dupont.budget.model.TipoSolicitacao;
 import com.dupont.budget.model.Usuario;
 import com.dupont.budget.model.ValorComprometido;
@@ -174,5 +176,10 @@ public interface DomainService {
 	public void insertAcao(Acao acao);
 	
 	public List<Acao> findAcaoByForecastOrBudget(Long budgetId,Long forecastId); 
+	 
+	public List<TipoDespesa> findTiposDespesaForecast(Long forecastId); 
+	
+	public List<Acao> findAcaoDespesaForecastByTipo(Long forecastId,Long tipoDespesaId) ; 
+	
 	
 }

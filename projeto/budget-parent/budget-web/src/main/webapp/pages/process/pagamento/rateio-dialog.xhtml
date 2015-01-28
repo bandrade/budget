@@ -33,7 +33,9 @@
 					<h:outputText  value="" />
 					
 					<p:outputLabel value="Tipo de Despesa:" for="despesasSelectOneMenu"/>
-					<p:selectOneMenu id="despesasSelectOneMenu" label="Tipo de Despesa" value="#{incluirDespesaRateioAction.despesaSolicitacaoPagamento.tipoDespesa}" converter="com.dupont.EntityConverter" required="true">
+					<p:selectOneMenu id="despesasSelectOneMenu" label="Tipo de Despesa" value="#{incluirDespesaRateioAction.despesaSolicitacaoPagamento.tipoDespesa}" converter="com.dupont.EntityConverter" 
+						required="true"
+						disabled="#{empty incluirDespesaRateioAction.tiposDespesas}">>
 						<p:ajax listener="#{incluirDespesaRateioAction.doSelectTipoDespesa}" update="dadosCC"/>
 						<!-- <p:ajax update="contaContabilPanel" process="@this" /> -->
 						<f:selectItem itemLabel="Selecione um tipo de despesa" itemValue="#{null}" />
@@ -48,7 +50,8 @@
 					<h:outputText  value="" />
 					
 					<p:outputLabel value="Ação:" for="acoesSelectOneMenu"/>
-					<p:selectOneMenu id="acoesSelectOneMenu" label="Ação" value="#{incluirDespesaRateioAction.despesaSolicitacaoPagamento.acao}" converter="com.dupont.EntityConverter" required="true">								
+					<p:selectOneMenu id="acoesSelectOneMenu" label="Ação" value="#{incluirDespesaRateioAction.despesaSolicitacaoPagamento.acao}" converter="com.dupont.EntityConverter" required="true"
+						disabled="#{empty incluirDespesaRateioAction.acoes}">								
 						<p:ajax listener="#{incluirDespesaRateioAction.doSelectAcao}" update="dadosCC"/>
 						<f:selectItem itemLabel="Selecione uma ação" itemValue="#{null}" />
 						<f:selectItems value="#{incluirDespesaRateioAction.acoes}" var="item" itemLabel="#{item.nome}" itemValue="#{item}"/>						
@@ -57,7 +60,8 @@
 					
 					
 					<p:outputLabel value="Produto:" for="produtosSelectOneMenu"/>
-					<p:selectOneMenu id="produtosSelectOneMenu" value="#{incluirDespesaRateioAction.despesaSolicitacaoPagamento.produto}" label="Produto" converter="com.dupont.EntityConverter" required="true">
+					<p:selectOneMenu id="produtosSelectOneMenu" value="#{incluirDespesaRateioAction.despesaSolicitacaoPagamento.produto}" label="Produto" converter="com.dupont.EntityConverter" 
+						disabled="true">
 						<p:ajax listener="#{incluirDespesaRateioAction.doSelectProduto}" update="dadosCC"/>
 						<f:selectItem itemLabel="Selecione um produto" itemValue="#{null}" />
 						<f:selectItems value="#{incluirDespesaRateioAction.produtos}" var="item" itemLabel="#{item.nome}"/>
@@ -67,17 +71,16 @@
 					
 					
 					<p:outputLabel value="Cultura:" for="culturasSelecOneMenu"/>	
-					<p:selectOneMenu id="culturasSelecOneMenu" label="Cultura"  value="#{incluirDespesaRateioAction.despesaSolicitacaoPagamento.cultura}" converter="com.dupont.EntityConverter" required="true">
+					<p:selectOneMenu id="culturasSelecOneMenu" label="Cultura"  value="#{incluirDespesaRateioAction.despesaSolicitacaoPagamento.cultura}" converter="com.dupont.EntityConverter" 
+					disabled="true">
 						<p:ajax listener="#{incluirDespesaRateioAction.doSelectCultura}" update="dadosCC"/>
 						<f:selectItem itemLabel="Selecione uma cultura" itemValue="#{null}" />
 						<f:selectItems value="#{incluirDespesaRateioAction.culturas}" var="item" itemLabel="#{item.nome}" itemValue="#{item}"/>
 					</p:selectOneMenu>
 					<p:message for="culturasSelecOneMenu" />
 					
-					
-					
 					<p:outputLabel value="Distrito:" for="distritosSelectOneMenu"/>	
-					<p:selectOneMenu id="distritosSelectOneMenu" label="Distrito" value="#{incluirDespesaRateioAction.despesaSolicitacaoPagamento.distrito}" converter="com.dupont.EntityConverter" required="true">
+					<p:selectOneMenu id="distritosSelectOneMenu" label="Distrito" value="#{incluirDespesaRateioAction.despesaSolicitacaoPagamento.distrito}" converter="com.dupont.EntityConverter" disabled="true">
 						<p:ajax listener="#{incluirDespesaRateioAction.doSelectDistrito}" update="dadosCC"/>
 						<f:selectItem itemLabel="Selecione um distrito" itemValue="#{null}" />
 						<f:selectItems value="#{incluirDespesaRateioAction.distritos}" var="item" itemLabel="#{item.nome}" itemValue="#{item}"/>
@@ -85,7 +88,8 @@
 					<p:message for="distritosSelectOneMenu" />
 					
 					<p:outputLabel value="ERC/CCE:" for="vendedoresSelectOneMenu"/>	
-					<p:selectOneMenu id="vendedoresSelectOneMenu" label="ERC/CCE" value="#{incluirDespesaRateioAction.despesaSolicitacaoPagamento.vendedor}" converter="com.dupont.EntityConverter">
+					<p:selectOneMenu id="vendedoresSelectOneMenu" label="ERC/CCE" value="#{incluirDespesaRateioAction.despesaSolicitacaoPagamento.vendedor}" converter="com.dupont.EntityConverter"
+						disabled="true">
 						<p:ajax listener="#{incluirDespesaRateioAction.doSelectVendedor}" update="dadosCC"/>
 						<f:selectItem itemLabel="Selecione um vendedor" itemValue="#{null}" />
 						<f:selectItems value="#{incluirDespesaRateioAction.vendedores}" var="item" itemLabel="#{item.nome}" itemValue="#{item}"/>
@@ -93,7 +97,8 @@
 					<p:message for="vendedoresSelectOneMenu" />
 					
 					<p:outputLabel value="Cliente:" for="clientesSelectOneMenu"/>	
-					<p:selectOneMenu id="clientesSelectOneMenu" label="Cliente" value="#{incluirDespesaRateioAction.despesaSolicitacaoPagamento.cliente}" converter="com.dupont.EntityConverter">
+					<p:selectOneMenu id="clientesSelectOneMenu" label="Cliente" value="#{incluirDespesaRateioAction.despesaSolicitacaoPagamento.cliente}" converter="com.dupont.EntityConverter"
+						disabled="true">
 					
 						
 						<f:selectItem itemLabel="Selecione um cliente" itemValue="#{null}" />

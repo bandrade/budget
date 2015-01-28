@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Conversation;
@@ -28,7 +27,6 @@ import com.dupont.budget.model.Budget;
 import com.dupont.budget.model.CentroCusto;
 import com.dupont.budget.model.Cliente;
 import com.dupont.budget.model.Cultura;
-import com.dupont.budget.model.Despesa;
 import com.dupont.budget.model.DespesaForecast;
 import com.dupont.budget.model.DespesaForecastPK;
 import com.dupont.budget.model.DespesaSolicitacaoPagamento;
@@ -62,12 +60,12 @@ public class SolicitacaoPagamentoAction implements Serializable {
 	private static final long serialVersionUID = -5396229570158854069L;
 
 	@Inject
-	private BudgetService budgetService;
+	protected BudgetService budgetService;
 	
 	@Inject
 	private ForecastService forecastService;
 	
-	@Inject
+	@Inject 
 	private FacesUtils facesUtils;
 	
 	@Inject
@@ -77,7 +75,7 @@ public class SolicitacaoPagamentoAction implements Serializable {
 	protected Conversation conversation;
 	
 	@Inject
-	private DomainService domainService;
+	protected DomainService domainService;
 	
 	@Inject
 	private BPMSTaskService taskService;
@@ -86,7 +84,7 @@ public class SolicitacaoPagamentoAction implements Serializable {
 	private LoggedUserAction loggedUserAction;
 
 	private SolicitacaoPagamento solicitacaoPagamento               = new SolicitacaoPagamento();		
-	private DespesaSolicitacaoPagamento despesaSolicitacaoPagamento = new DespesaSolicitacaoPagamento();	
+	protected DespesaSolicitacaoPagamento despesaSolicitacaoPagamento = new DespesaSolicitacaoPagamento();	
 	private DespesaForecast despesaForecast 						= new DespesaForecast();
 	private CentroCusto centroCustoDespesaForecast   				= new CentroCusto();
 	
@@ -103,25 +101,28 @@ public class SolicitacaoPagamentoAction implements Serializable {
 	private List<Acao> acoes				= new ArrayList<Acao>();
 	private List<Cliente> clientes			= new ArrayList<Cliente>();
 	
-	// lista do combo de inclusao de despesa do forecast
-	private List<Acao> acoesDespesaForecast = new ArrayList<Acao>();
 	
 	// Propriedades da tela
 	private String checkAcao = "Existente";	
 	private String novaAcao;
 	protected boolean despesaForecastFlag = false; // Propriedade que informa se o usuario incluiu a despesa de forecast
 	
-	// Cache
-	private Budget budget;
-	private List<Forecast> forecasts;
 	
 	private List<DespesaForecast> despesasForecast = new ArrayList<DespesaForecast>();
+	
+	private Forecast forecast;
+	
+	private String ano = Calendar.getInstance().get(Calendar.YEAR) + "";
+	
+	private boolean desabilitarDespesa;
 	
 	@PostConstruct
 	private void init() {
 		solicitacaoPagamento = new SolicitacaoPagamento();
 		solicitacaoPagamento.setFornecedor(new Fornecedor());
 		despesaSolicitacaoPagamento = new DespesaSolicitacaoPagamento();
+		despesaForecast = new DespesaForecast();
+		despesaForecast.init();
 	}
 	
 	public void load() {
@@ -190,302 +191,42 @@ public class SolicitacaoPagamentoAction implements Serializable {
 		}
 
 	}
-	
-	public void doSelectVendedor(){
-		
-		Vendedor vendedor = getDespesaSolicitacaoPagamento().getVendedor();
-		
-		clientes      = new ArrayList<Cliente>();
-		
-		Set<Despesa> despesas = budget.getDespesas();
-		for (Despesa despesa : despesas) {
-			
-			if( despesa.getAprovado() == false )
-				continue;
-		
-			if( !despesa.getVendedor().equals(vendedor) )
-				continue;
-			
-			if( clientes.contains(despesa.getCliente()) )
-				continue;
-			
-			clientes.add(despesa.getCliente());
-		}
-		
-		if(forecasts != null ) {
-			for (Forecast forecast : forecasts) {
-				
-				
-				Set<DespesaForecast> _despesas = forecast.getDespesas();
-				
-				if( _despesas == null)
-					continue;
-				
-				for (DespesaForecast _despesa : _despesas) {
-					
-					if( _despesa.getAtivo() == false )
-						continue;
-					
-					if( !_despesa.getVendedor().equals(vendedor) )
-						continue;
-					
-					if( clientes.contains(_despesa.getCliente()) )
-						continue;
-					
-					clientes.add(_despesa.getCliente());
-				}
-			}
-		}
-		
+	public void limparCombos()
+	{
+		produtos = new ArrayList<>();
+		distritos = new ArrayList<>();
+		culturas= new ArrayList<>();
+		vendedores = new ArrayList<>();
+		clientes = new ArrayList<>();
 	}
-	
-	public void doSelectDistrito(){
-		
-		Distrito distrito = getDespesaSolicitacaoPagamento().getDistrito();
-		
-		vendedores    = new ArrayList<Vendedor>();
-		clientes      = new ArrayList<Cliente>();
-		
-		Set<Despesa> despesas = budget.getDespesas();
-		for (Despesa despesa : despesas) {
-			
-			if( despesa.getAprovado() == false )
-				continue;
-		
-			if( !despesa.getDistrito().equals(distrito) )
-				continue;
-			
-			if( vendedores.contains(despesa.getVendedor()) )
-				continue;
-			
-			vendedores.add(despesa.getVendedor());
-		}
-		
-		if(forecasts != null ) {
-			for (Forecast forecast : forecasts) {
-				
-				
-				Set<DespesaForecast> _despesas = forecast.getDespesas();
-				
-				if( _despesas == null)
-					continue;
-				
-				for (DespesaForecast _despesa : _despesas) {
-					
-					if( _despesa.getAtivo() == false )
-						continue;
-					
-					if( !_despesa.getDistrito().equals(distrito) )
-						continue;
-					
-					if( vendedores.contains(_despesa.getVendedor()) )
-						continue;
-					
-					vendedores.add(_despesa.getVendedor());
-				}
-			}
-		}
-	}
-	
-	public void doSelectCultura(){
-		
-		Cultura cultura = getDespesaSolicitacaoPagamento().getCultura();
-		
-		distritos     = new ArrayList<Distrito>();
-		vendedores    = new ArrayList<Vendedor>();
-		clientes      = new ArrayList<Cliente>();
-		
-		Set<Despesa> despesas = budget.getDespesas();
-		for (Despesa despesa : despesas) {
-			
-			if( despesa.getAprovado() == false )
-				continue;
-		
-			if( !despesa.getCultura().equals(cultura) )
-				continue;
-			
-			if( distritos.contains(despesa.getDistrito()) )
-				continue;
-			
-			distritos.add(despesa.getDistrito());
-		}
-		
-		if(forecasts != null ) {
-			for (Forecast forecast : forecasts) {
-				
-				
-				Set<DespesaForecast> _despesas = forecast.getDespesas();
-				
-				if( _despesas == null)
-					continue;
-				
-				for (DespesaForecast _despesa : _despesas) {
-					
-					if( _despesa.getAtivo() == false )
-						continue;
-					
-					if( !_despesa.getCultura().equals(cultura) )
-						continue;
-					
-					if( distritos.contains(_despesa.getDistrito()) )
-						continue;
-					
-					distritos.add(_despesa.getDistrito());
-				}
-			}
-		}
-	}
-	
-	public void doSelectProduto(){
-		
-		Produto produto = getDespesaSolicitacaoPagamento().getProduto();
-		
-		culturas      = new ArrayList<Cultura>();
-		distritos     = new ArrayList<Distrito>();
-		vendedores    = new ArrayList<Vendedor>();
-		clientes      = new ArrayList<Cliente>();
-		
-		Set<Despesa> despesas = budget.getDespesas();
-		for (Despesa despesa : despesas) {
-			
-			if( despesa.getAprovado() == false )
-				continue;
-		
-			if( !despesa.getProduto().equals(produto) )
-				continue;
-			
-			if( culturas.contains(despesa.getCultura()) )
-				continue;
-			
-			culturas.add(despesa.getCultura());
-		}
-		
-		if(forecasts != null ) {
-			for (Forecast forecast : forecasts) {
-				
-				
-				Set<DespesaForecast> _despesas = forecast.getDespesas();
-				
-				if( _despesas == null)
-					continue;
-				
-				for (DespesaForecast _despesa : _despesas) {
-					
-					if( _despesa.getAtivo() == false )
-						continue;
-					
-					if( !_despesa.getProduto().equals(produto) )
-						continue;
-					
-					if( culturas.contains(_despesa.getCultura()) )
-						continue;
-					
-					culturas.add(_despesa.getCultura());
-				}
-			}
-		}
-	}
-	
 	public void doSelectTipoDespesa(){
 		
 		TipoDespesa tipoDespesa = getDespesaSolicitacaoPagamento().getTipoDespesa();
-		
-		acoes         = new ArrayList<Acao>();
-		produtos      = new ArrayList<Produto>();
-		culturas      = new ArrayList<Cultura>();
-		distritos     = new ArrayList<Distrito>();
-		vendedores    = new ArrayList<Vendedor>();
-		clientes      = new ArrayList<Cliente>();
-		
-		Set<Despesa> despesas = budget.getDespesas();
-		for (Despesa despesa : despesas) {
-			
-			if( despesa.getAprovado() == false )
-				continue;
-		
-			if( !despesa.getTipoDespesa().equals(tipoDespesa) )
-				continue;
-			
-			if( acoes.contains(despesa.getAcao()) )
-				continue;
-			
-			acoes.add(despesa.getAcao());
-		}
-		
-		if(forecasts != null ) {
-			for (Forecast forecast : forecasts) {
-				
-				
-				Set<DespesaForecast> _despesas = forecast.getDespesas();
-				
-				if( _despesas == null)
-					continue;
-				
-				for (DespesaForecast _despesa : _despesas) {
-					
-					if( _despesa.getAtivo() == false )
-						continue;
-					
-					if( !_despesa.getTipoDespesa().equals(tipoDespesa) )
-						continue;
-					
-					if( acoes.contains(_despesa.getAcao()) )
-						continue;
-					
-					acoes.add(_despesa.getAcao());
-				}
-			}
-		}
+		acoes =domainService.findAcaoDespesaForecastByTipo(forecast.getId(),tipoDespesa.getId());
+		limparCombos();
 	}
 	
 	public void doSelectAcao(){
 		
-		Acao acao = getDespesaSolicitacaoPagamento().getAcao();		
-		
-		produtos      = new ArrayList<Produto>();
-		culturas      = new ArrayList<Cultura>();
-		distritos     = new ArrayList<Distrito>();
-		vendedores    = new ArrayList<Vendedor>();
-		clientes      = new ArrayList<Cliente>();
-		
-		Set<Despesa> despesas = budget.getDespesas();
-		for (Despesa despesa : despesas) {
-			
-			if( despesa.getAprovado() == false )
-				continue;
-		
-			if( !despesa.getAcao().equals(acao) )
-				continue;
-			
-			if( produtos.contains(despesa.getProduto()) )
-				continue;
+		Acao acao = getDespesaSolicitacaoPagamento().getAcao();	
+		try {
+			DespesaForecast despesa =forecastService.obterDespesaForecast(forecast, getDespesaSolicitacaoPagamento().getTipoDespesa(),acao);
+			limparCombos();
 			
 			produtos.add(despesa.getProduto());
-		}
-		
-		if(forecasts != null ) {
-			for (Forecast forecast : forecasts) {
-				
-				
-				Set<DespesaForecast> _despesas = forecast.getDespesas();
-				
-				if( _despesas == null)
-					continue;
-				
-				for (DespesaForecast _despesa : _despesas) {
-					
-					if( _despesa.getAtivo() == false )
-						continue;
-					
-					if( !_despesa.getAcao().equals(acao) )
-						continue;
-					
-					if( produtos.contains(_despesa.getProduto()) )
-						continue;
-					
-					produtos.add(_despesa.getProduto());
-				}
-			}
+			distritos.add(despesa.getDistrito());
+			clientes.add(despesa.getCliente());
+			vendedores.add(despesa.getVendedor());
+			culturas.add(despesa.getCultura());
+			
+			getDespesaSolicitacaoPagamento().setCultura(despesa.getCultura());
+			getDespesaSolicitacaoPagamento().setDistrito(despesa.getDistrito());
+			getDespesaSolicitacaoPagamento().setVendedor(despesa.getVendedor());
+			getDespesaSolicitacaoPagamento().setCliente(despesa.getCliente());
+			getDespesaSolicitacaoPagamento().setProduto(despesa.getProduto());
+			
+		} catch (Exception e) {
+			facesUtils.addErrorMessage("Erro ao obter a despesa");
 		}
 		
 	}
@@ -493,130 +234,10 @@ public class SolicitacaoPagamentoAction implements Serializable {
 	/* Carrega os combos a aprtir do centro de custo */
 	public void doSelectCentroCusto(){	
 		
-		
-		String ano = Calendar.getInstance().get(Calendar.YEAR) + "";
-		
-		// Popula os combos a partir do CENTRO DE CUSTO selecionado
-		
-		budget = getBudget(ano);
-		
-		if( budget == null ) {
-			facesUtils.addErrorMessage("Não exite BUDGET cadastro para o centro de custo informado!");
-			return;
-		}
-		
-		Set<Despesa> despesas = budget.getDespesas();
-		if( despesas == null ) {
-			facesUtils.addErrorMessage("Não exite DESPESAS cadastras para o centro de custo informado!");
-			return;
-		}
-		
-		// Limpar combos abaixo da hierarquia
-		tiposDespesas = new ArrayList<TipoDespesa>();
+		forecast = forecastService.findForecastByCCAndAno(ano,despesaSolicitacaoPagamento.getCentroCusto().getId());
+		tiposDespesas =	domainService.findTiposDespesaForecast(forecast.getId());
 		acoes         = new ArrayList<Acao>();
-		produtos      = new ArrayList<Produto>();
-		culturas      = new ArrayList<Cultura>();
-		distritos     = new ArrayList<Distrito>();
-		vendedores    = new ArrayList<Vendedor>();
-		clientes      = new ArrayList<Cliente>();
-		
-		
-		// Popula os combos da tela a partir do budget
-		for (Despesa despesa : despesas) {
-			
-			if( despesa.getAprovado() == false )
-				continue;
-			
-			if(!tiposDespesas.contains(despesa.getTipoDespesa()))
-				tiposDespesas.add(despesa.getTipoDespesa());
-			
-		}
-		
-		// Popula combos a partir dos forecasts do budget
-		forecasts = forecastService.findForecastsByBudgetId(budget.getId());
-		
-		if(forecasts != null ) {
-			for (Forecast forecast : forecasts) {
-				
-				
-				Set<DespesaForecast> _despesas = forecast.getDespesas();
-				
-				if( _despesas == null)
-					continue;
-				
-				for (DespesaForecast _despesa : _despesas) {
-					
-					if( _despesa.getAtivo() == false )
-						continue;
-					
-					if(!tiposDespesas.contains(_despesa.getTipoDespesa()))
-						tiposDespesas.add(_despesa.getTipoDespesa());
-					
-				}
-			}
-		}
-
-	}
-	
-	/* Carrega os combos a aprtir do centro de custo na tela de despesa de forecast*/
-	public void doSelectCentroCustoDespesaForecast(){	
-		
-		
-		String ano = Calendar.getInstance().get(Calendar.YEAR) + "";
-		
-		// Popula os combos a partir do CENTRO DE CUSTO selecionado
-		
-		Budget budget = getBudgetDespesaForecast(ano);
-		
-		if( budget == null ) {
-			facesUtils.addErrorMessage("Não exite BUDGET cadastro para o centro de custo informado!");
-			return;
-		}
-		
-		Set<Despesa> despesas = budget.getDespesas();
-		if( despesas == null ) {
-			facesUtils.addErrorMessage("Não exite DESPESAS cadastras para o centro de custo informado!");
-			return;
-		}
-		
-		// Limpar combo
-		acoesDespesaForecast = new ArrayList<Acao>();
-		
-		
-		// Popula os combos da tela a partir do budget
-		for (Despesa despesa : despesas) {
-			
-			if( despesa.getAprovado() == false )
-				continue;
-			
-			if(!acoesDespesaForecast.contains(despesa.getAcao()))
-				acoesDespesaForecast.add(despesa.getAcao());
-			
-		}
-		
-		// Popula combos a partir dos forecasts do budget
-		List<Forecast> forecasts = forecastService.findForecastsByBudgetId(budget.getId());
-		
-		if(forecasts != null ) {
-			for (Forecast forecast : forecasts) {
-				
-				
-				Set<DespesaForecast> _despesas = forecast.getDespesas();
-				
-				if( _despesas == null)
-					continue;
-				
-				for (DespesaForecast _despesa : _despesas) {
-					
-					if( _despesa.getAtivo() == false )
-						continue;
-					
-					if(!acoesDespesaForecast.contains(_despesa.getAcao()))
-						acoesDespesaForecast.add(_despesa.getAcao());
-					
-				}
-			}
-		}
+		limparCombos();
 
 	}
 	
@@ -738,10 +359,7 @@ public class SolicitacaoPagamentoAction implements Serializable {
 			
 			Calendar criacao = Calendar.getInstance();
 			criacao.setTime(solicitacaoPagamento.getCriacao());
-			
 
-			budget = getBudget(criacao.get(Calendar.YEAR) + "");
-			
 			populateAllCombos();
 		} 
 		
@@ -754,10 +372,10 @@ public class SolicitacaoPagamentoAction implements Serializable {
 		doSelectCentroCusto();
 		doSelectTipoDespesa();
 		doSelectAcao();
-		doSelectProduto();
-		doSelectCultura();
-		doSelectDistrito();
-		doSelectVendedor();
+		//doSelectProduto();
+		//doSelectCultura();
+		//doSelectDistrito();
+		//doSelectVendedor();
 		
 	}
 	
@@ -776,7 +394,7 @@ public class SolicitacaoPagamentoAction implements Serializable {
 		options.put("draggable", true);
 		options.put("resizable", false);
 		//options.put("height", 265);
-		options.put("contentWidth", 800);
+		options.put("contentWidth", 600);
 		
 		RequestContext.getCurrentInstance().openDialog("despesa-forecast-dialog", options, null);
 	}
@@ -932,11 +550,17 @@ public class SolicitacaoPagamentoAction implements Serializable {
 		this.centroCustoDespesaForecast = centroCustoDespesaForecast;
 	}
 	
-	public List<Acao> getAcoesDespesaForecast() {
-		return acoesDespesaForecast;
-	}
-	
 	public boolean isDespesaForecastFlag() {
 		return despesaForecastFlag;
 	}
+
+	public boolean isDesabilitarDespesa() {
+		return desabilitarDespesa;
+	}
+
+	public void setDesabilitarDespesa(boolean desabilitarDespesa) {
+		this.desabilitarDespesa = desabilitarDespesa;
+	}
+	
+	
 }

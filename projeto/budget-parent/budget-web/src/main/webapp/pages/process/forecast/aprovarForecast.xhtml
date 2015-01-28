@@ -8,9 +8,9 @@
 
 	<ui:param name="pageTitle" value="Human Tasks" />
 	<f:metadata>
-        <f:viewParam name="taskId" value="#{atualizarForecastAction.idTarefa}" />
-        <f:viewParam name="processInstanceId" value="#{atualizarForecastAction.idInstanciaProcesso}" />
-        <f:event type="preRenderView" listener="#{atualizarForecastAction.obterDadosForecast()}" />
+        <f:viewParam name="taskId" value="#{aprovarForecastAction.idTarefa}" />
+        <f:viewParam name="processInstanceId" value="#{aprovarForecastAction.idInstanciaProcesso}" />
+        <f:event type="preRenderView" listener="#{aprovarForecastAction.obterDadosForecast()}" />
     </f:metadata>
 	  <ui:define name="head">
         <style type="text/css">
@@ -39,17 +39,18 @@
 				<h3>Aprovar Forecast</h3>
 				<p:panelGrid columns="2">
 					<p:outputLabel value="Centro de Custo:"></p:outputLabel>
-					<p:outputLabel styleClass="bold-label" value="#{atualizarForecastAction.centroDeCusto.nome}"></p:outputLabel>
+					<p:outputLabel styleClass="bold-label" value="#{aprovarForecastAction.centroDeCusto.nome}"></p:outputLabel>
 					<p:outputLabel value="Ano:"></p:outputLabel>
-					<p:outputLabel styleClass="bold-label" value="#{atualizarForecastAction.ano}"></p:outputLabel>
+					<p:outputLabel styleClass="bold-label" value="#{aprovarForecastAction.ano}"></p:outputLabel>
 					<p:outputLabel value="Mes:"></p:outputLabel>
-					<p:outputLabel styleClass="bold-label" value="#{atualizarForecastAction.mes}"></p:outputLabel>
+					<p:outputLabel styleClass="bold-label" value="#{aprovarForecastAction.mes}"></p:outputLabel>
 					
 				</p:panelGrid>
+				
 			<p:dataTable id="tblDespesa"
 					emptyMessage="Não existem despesas cadastradas" 
-					value="#{atualizarForecastAction.despesasNoDetalhe}"
-					selection="#{atualizarForecastAction.despesaDetalheSelecionada}"
+					value="#{aprovarForecastAction.despesasNoDetalhe}"
+					selection="#{aprovarForecastAction.despesaDetalheSelecionada}"
 					var="detalheDespesa"
 					paginator="true" 
 					paginatorPosition="bottom"
@@ -71,7 +72,7 @@
 						</f:facet>
 						<h:outputText value="#{detalheDespesa.acao.nome}"/>
 					</p:column>
-					<p:column width="50" footerText="#{facesUtils.formatarDinheiro(atualizarForecastAction.calcularTotalYTD())}" style="text-align:center"  >
+					<p:column width="50" footerText="#{facesUtils.formatarDinheiro(aprovarForecastAction.calcularTotalYTD())}" style="text-align:center"  >
 						<f:facet name="header">
 							<h:outputText value="YTD" />
 						</f:facet>
@@ -79,7 +80,7 @@
 							<f:convertNumber type="currency"/>
 						</h:outputText>
 					</p:column> 
-					<p:column width="50" footerText="#{facesUtils.formatarDinheiro(atualizarForecastAction.calcularTotalBudget())}" style="text-align:center" >
+					<p:column width="50" footerText="#{facesUtils.formatarDinheiro(aprovarForecastAction.calcularTotalBudget())}" style="text-align:center" >
 						<f:facet name="header" rowspan="2">
 							<h:outputText value="Budget Ano" />
 						</f:facet>
@@ -87,7 +88,7 @@
 							<f:convertNumber type="currency"/>
 						</h:outputText>
 					</p:column> 
-					<p:column width="50" footerText="#{facesUtils.formatarDinheiro(atualizarForecastAction.calcularTotalPLM())}" style="text-align:center" >
+					<p:column width="50" footerText="#{facesUtils.formatarDinheiro(aprovarForecastAction.calcularTotalPLM())}" style="text-align:center" >
 						<f:facet name="header">
 							<h:outputText value="PLM" />
 						</f:facet>
@@ -96,141 +97,141 @@
 						</h:outputText>
 					</p:column> 
 					
-					<p:column rendered="#{atualizarForecastAction.exibirColuna('JANEIRO')}" style="text-align:center"
-							 width="180" footerText="#{facesUtils.formatarDinheiro(atualizarForecastAction.calcularValorColuna('JANEIRO'))}" >
+					<p:column rendered="#{aprovarForecastAction.exibirColuna('JANEIRO')}" style="text-align:center"
+							 width="180" footerText="#{facesUtils.formatarDinheiro(aprovarForecastAction.calcularValorColuna('JANEIRO'))}" >
 						<f:facet name="header">
 							<h:outputText value="Jan." />
 						</f:facet>
 						<h:outputText  id="valorJan" value="#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.janeiro)}" converter="javax.faces.Double" />
-						<p:commandLink rendered="#{atualizarForecastAction.exibirDespesa('JANEIRO')}" value=" / #{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaJaneiro)}"
-							action="#{atualizarForecastAction.obterDetalheValorComprometido('JANEIRO')}" update=":tblValoresComprometidos"  oncomplete="PF('panelDetalhe').show();">
-							<f:setPropertyActionListener target="#{atualizarForecastAction.despesaDetalheSelecionada}" value="#{detalheDespesa}" />
+						<p:commandLink rendered="#{aprovarForecastAction.exibirDespesa('JANEIRO')}" value=" / #{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaJaneiro)}"
+							action="#{aprovarForecastAction.obterDetalheValorComprometido('JANEIRO')}" update=":tblValoresComprometidos"  oncomplete="PF('panelDetalhe').show();">
+							<f:setPropertyActionListener target="#{aprovarForecastAction.despesaDetalheSelecionada}" value="#{detalheDespesa}" />
 						</p:commandLink>
 					</p:column> 
-					<p:column rendered="#{atualizarForecastAction.exibirColuna('FEVEREIRO')}" style="text-align:center"
-							 width="180" footerText="#{facesUtils.formatarDinheiro(atualizarForecastAction.calcularValorColuna('FEVEREIRO'))}" >
+					<p:column rendered="#{aprovarForecastAction.exibirColuna('FEVEREIRO')}" style="text-align:center"
+							 width="180" footerText="#{facesUtils.formatarDinheiro(aprovarForecastAction.calcularValorColuna('FEVEREIRO'))}" >
 						<f:facet name="header">
 							<h:outputText value="Fev." />
 						</f:facet>
 						<h:outputText  id="valorFev" value="#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.fevereiro)}" converter="javax.faces.Double" />
-						<p:commandLink rendered="#{atualizarForecastAction.exibirDespesa('FEVEREIRO')}" value=" / #{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaFevereiro)}"
-							action="#{atualizarForecastAction.obterDetalheValorComprometido('FEVEREIRO')}" update=":tblValoresComprometidos"  oncomplete="PF('panelDetalhe').show();">
-							<f:setPropertyActionListener target="#{atualizarForecastAction.despesaDetalheSelecionada}" value="#{detalheDespesa}" />
+						<p:commandLink rendered="#{aprovarForecastAction.exibirDespesa('FEVEREIRO')}" value=" / #{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaFevereiro)}"
+							action="#{aprovarForecastAction.obterDetalheValorComprometido('FEVEREIRO')}" update=":tblValoresComprometidos"  oncomplete="PF('panelDetalhe').show();">
+							<f:setPropertyActionListener target="#{aprovarForecastAction.despesaDetalheSelecionada}" value="#{detalheDespesa}" />
 						</p:commandLink>
 					</p:column> 
-					<p:column rendered="#{atualizarForecastAction.exibirColuna('MARCO')}" style="text-align:center"
-							 width="180" footerText="#{facesUtils.formatarDinheiro(atualizarForecastAction.calcularValorColuna('MARCO'))}" >
+					<p:column rendered="#{aprovarForecastAction.exibirColuna('MARCO')}" style="text-align:center"
+							 width="180" footerText="#{facesUtils.formatarDinheiro(aprovarForecastAction.calcularValorColuna('MARCO'))}" >
 						<f:facet name="header">
 							<h:outputText value="Mar." />
 						</f:facet>
 						<h:outputText  id="valorMar" value="#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.marco)}" converter="javax.faces.Double" />						
-						<p:commandLink rendered="#{atualizarForecastAction.exibirDespesa('MARCO')}" value=" / #{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaMarco)}"
-							action="#{atualizarForecastAction.obterDetalheValorComprometido('MARCO')}" update=":tblValoresComprometidos"  oncomplete="PF('panelDetalhe').show();">
-							<f:setPropertyActionListener target="#{atualizarForecastAction.despesaDetalheSelecionada}" value="#{detalheDespesa}" />
+						<p:commandLink rendered="#{aprovarForecastAction.exibirDespesa('MARCO')}" value=" / #{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaMarco)}"
+							action="#{aprovarForecastAction.obterDetalheValorComprometido('MARCO')}" update=":tblValoresComprometidos"  oncomplete="PF('panelDetalhe').show();">
+							<f:setPropertyActionListener target="#{aprovarForecastAction.despesaDetalheSelecionada}" value="#{detalheDespesa}" />
 						</p:commandLink>
 					
 					</p:column> 
 					
-					<p:column rendered="#{atualizarForecastAction.exibirColuna('ABRIL')}" style="text-align:center"
-							 width="180" footerText="#{facesUtils.formatarDinheiro(atualizarForecastAction.calcularValorColuna('ABRIL'))}" >
+					<p:column rendered="#{aprovarForecastAction.exibirColuna('ABRIL')}" style="text-align:center"
+							 width="180" footerText="#{facesUtils.formatarDinheiro(aprovarForecastAction.calcularValorColuna('ABRIL'))}" >
 						<f:facet name="header">
 							<h:outputText value="Abr." />
 						</f:facet>
 						<h:outputText  id="valorAbr" value="#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.abril)}" converter="javax.faces.Double" />
-						<p:commandLink rendered="#{atualizarForecastAction.exibirDespesa('ABRIL')}" value=" / #{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaAbril)}"
-							action="#{atualizarForecastAction.obterDetalheValorComprometido('ABRIL')}" update=":tblValoresComprometidos"  oncomplete="PF('panelDetalhe').show();">
-							<f:setPropertyActionListener target="#{atualizarForecastAction.despesaDetalheSelecionada}" value="#{detalheDespesa}" />
+						<p:commandLink rendered="#{aprovarForecastAction.exibirDespesa('ABRIL')}" value=" / #{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaAbril)}"
+							action="#{aprovarForecastAction.obterDetalheValorComprometido('ABRIL')}" update=":tblValoresComprometidos"  oncomplete="PF('panelDetalhe').show();">
+							<f:setPropertyActionListener target="#{aprovarForecastAction.despesaDetalheSelecionada}" value="#{detalheDespesa}" />
 						</p:commandLink>
 					</p:column> 
-					<p:column rendered="#{atualizarForecastAction.exibirColuna('MAIO')}" style="text-align:center"
-							 width="180" footerText="#{facesUtils.formatarDinheiro(atualizarForecastAction.calcularValorColuna('MAIO'))}" >
+					<p:column rendered="#{aprovarForecastAction.exibirColuna('MAIO')}" style="text-align:center"
+							 width="180" footerText="#{facesUtils.formatarDinheiro(aprovarForecastAction.calcularValorColuna('MAIO'))}" >
 						<f:facet name="header">
 							<h:outputText value="Mai." />
 						</f:facet>
 						<h:outputText  id="valorMai" value="#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.maio)}" converter="javax.faces.Double" />
-						<p:commandLink rendered="#{atualizarForecastAction.exibirDespesa('MAIO')}" value=" / #{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaMaio)}"
-							action="#{atualizarForecastAction.obterDetalheValorComprometido('MAIO')}" update=":tblValoresComprometidos"  oncomplete="PF('panelDetalhe').show();">
-							<f:setPropertyActionListener target="#{atualizarForecastAction.despesaDetalheSelecionada}" value="#{detalheDespesa}" />
+						<p:commandLink rendered="#{aprovarForecastAction.exibirDespesa('MAIO')}" value=" / #{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaMaio)}"
+							action="#{aprovarForecastAction.obterDetalheValorComprometido('MAIO')}" update=":tblValoresComprometidos"  oncomplete="PF('panelDetalhe').show();">
+							<f:setPropertyActionListener target="#{aprovarForecastAction.despesaDetalheSelecionada}" value="#{detalheDespesa}" />
 						</p:commandLink>
 					</p:column> 
-					<p:column rendered="#{atualizarForecastAction.exibirColuna('JUNHO')}" style="text-align:center"
-							 width="180" footerText="#{facesUtils.formatarDinheiro(atualizarForecastAction.calcularValorColuna('JUNHO'))}" >
+					<p:column rendered="#{aprovarForecastAction.exibirColuna('JUNHO')}" style="text-align:center"
+							 width="180" footerText="#{facesUtils.formatarDinheiro(aprovarForecastAction.calcularValorColuna('JUNHO'))}" >
 						<f:facet name="header">
 							<h:outputText value="Jun." />
 						</f:facet>
 						<h:outputText  id="valorJun" value="#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.junho)}" converter="javax.faces.Double" />
-						<p:commandLink rendered="#{atualizarForecastAction.exibirDespesa('JUNHO')}" value=" / #{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaJunho)}"
-							action="#{atualizarForecastAction.obterDetalheValorComprometido('JUNHO')}" update=":tblValoresComprometidos"  oncomplete="PF('panelDetalhe').show();">
-							<f:setPropertyActionListener target="#{atualizarForecastAction.despesaDetalheSelecionada}" value="#{detalheDespesa}" />
+						<p:commandLink rendered="#{aprovarForecastAction.exibirDespesa('JUNHO')}" value=" / #{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaJunho)}"
+							action="#{aprovarForecastAction.obterDetalheValorComprometido('JUNHO')}" update=":tblValoresComprometidos"  oncomplete="PF('panelDetalhe').show();">
+							<f:setPropertyActionListener target="#{aprovarForecastAction.despesaDetalheSelecionada}" value="#{detalheDespesa}" />
 						</p:commandLink>
 					</p:column> 
-					<p:column rendered="#{atualizarForecastAction.exibirColuna('JULHO')}" style="text-align:center"
-							 width="180" footerText="#{facesUtils.formatarDinheiro(atualizarForecastAction.calcularValorColuna('JULHO'))}" >
+					<p:column rendered="#{aprovarForecastAction.exibirColuna('JULHO')}" style="text-align:center"
+							 width="180" footerText="#{facesUtils.formatarDinheiro(aprovarForecastAction.calcularValorColuna('JULHO'))}" >
 						<f:facet name="header">
 							<h:outputText value="Jul." />
 						</f:facet>
 						<h:outputText  id="valorJul" value="#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.julho)}" converter="javax.faces.Double" />
-						<p:commandLink rendered="#{atualizarForecastAction.exibirDespesa('JULHO')}" value=" / #{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaJulho)}"
-							action="#{atualizarForecastAction.obterDetalheValorComprometido('JULHO')}" update=":tblValoresComprometidos"  oncomplete="PF('panelDetalhe').show();">
-							<f:setPropertyActionListener target="#{atualizarForecastAction.despesaDetalheSelecionada}" value="#{detalheDespesa}" />
+						<p:commandLink rendered="#{aprovarForecastAction.exibirDespesa('JULHO')}" value=" / #{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaJulho)}"
+							action="#{aprovarForecastAction.obterDetalheValorComprometido('JULHO')}" update=":tblValoresComprometidos"  oncomplete="PF('panelDetalhe').show();">
+							<f:setPropertyActionListener target="#{aprovarForecastAction.despesaDetalheSelecionada}" value="#{detalheDespesa}" />
 						</p:commandLink>
 					</p:column> 
-					<p:column rendered="#{atualizarForecastAction.exibirColuna('AGOSTO')}" style="text-align:center"
-							 width="180" footerText="#{facesUtils.formatarDinheiro(atualizarForecastAction.calcularValorColuna('AGOSTO'))}" >
+					<p:column rendered="#{aprovarForecastAction.exibirColuna('AGOSTO')}" style="text-align:center"
+							 width="180" footerText="#{facesUtils.formatarDinheiro(aprovarForecastAction.calcularValorColuna('AGOSTO'))}" >
 						<f:facet name="header">
 							<h:outputText value="Ago." />
 						</f:facet>
 						<h:outputText  id="valorAgo" value="#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.agosto)}" converter="javax.faces.Double" />
-						<p:commandLink rendered="#{atualizarForecastAction.exibirDespesa('AGOSTO')}" value=" / #{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaAgosto)}"
-							action="#{atualizarForecastAction.obterDetalheValorComprometido('AGOSTO')}" update=":tblValoresComprometidos"  oncomplete="PF('panelDetalhe').show();">
-							<f:setPropertyActionListener target="#{atualizarForecastAction.despesaDetalheSelecionada}" value="#{detalheDespesa}" />
+						<p:commandLink rendered="#{aprovarForecastAction.exibirDespesa('AGOSTO')}" value=" / #{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaAgosto)}"
+							action="#{aprovarForecastAction.obterDetalheValorComprometido('AGOSTO')}" update=":tblValoresComprometidos"  oncomplete="PF('panelDetalhe').show();">
+							<f:setPropertyActionListener target="#{aprovarForecastAction.despesaDetalheSelecionada}" value="#{detalheDespesa}" />
 						</p:commandLink>
 					</p:column> 
-					<p:column rendered="#{atualizarForecastAction.exibirColuna('SETEMBRO')}" style="text-align:center"
-							 width="180" footerText="#{facesUtils.formatarDinheiro(atualizarForecastAction.calcularValorColuna('SETEMBRO'))}" >
+					<p:column rendered="#{aprovarForecastAction.exibirColuna('SETEMBRO')}" style="text-align:center"
+							 width="180" footerText="#{facesUtils.formatarDinheiro(aprovarForecastAction.calcularValorColuna('SETEMBRO'))}" >
 						<f:facet name="header">
 							<h:outputText value="Set." />
 						</f:facet>
 						<h:outputText  id="valorSet" value="#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.setembro)}" converter="javax.faces.Double" />
-						<p:commandLink rendered="#{atualizarForecastAction.exibirDespesa('SETEMBRO')}" value=" / #{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaSetembro)}"
-							action="#{atualizarForecastAction.obterDetalheValorComprometido('SETEMBRO')}" update=":tblValoresComprometidos"  oncomplete="PF('panelDetalhe').show();">
-							<f:setPropertyActionListener target="#{atualizarForecastAction.despesaDetalheSelecionada}" value="#{detalheDespesa}" />
+						<p:commandLink rendered="#{aprovarForecastAction.exibirDespesa('SETEMBRO')}" value=" / #{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaSetembro)}"
+							action="#{aprovarForecastAction.obterDetalheValorComprometido('SETEMBRO')}" update=":tblValoresComprometidos"  oncomplete="PF('panelDetalhe').show();">
+							<f:setPropertyActionListener target="#{aprovarForecastAction.despesaDetalheSelecionada}" value="#{detalheDespesa}" />
 						</p:commandLink>
 					</p:column> 
-					<p:column rendered="#{atualizarForecastAction.exibirColuna('OUTUBRO')}" style="text-align:center"
-							 width="180" footerText="#{facesUtils.formatarDinheiro(atualizarForecastAction.calcularValorColuna('OUTUBRO'))}" >
+					<p:column rendered="#{aprovarForecastAction.exibirColuna('OUTUBRO')}" style="text-align:center"
+							 width="180" footerText="#{facesUtils.formatarDinheiro(aprovarForecastAction.calcularValorColuna('OUTUBRO'))}" >
 						<f:facet name="header">
 							<h:outputText value="Out." />
 						</f:facet>
 						<h:outputText  id="valorOut" value="#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.outubro)}" converter="javax.faces.Double" />
-						<p:commandLink rendered="#{atualizarForecastAction.exibirDespesa('OUTUBRO')}" value=" / #{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaOutubro)}"
-							action="#{atualizarForecastAction.obterDetalheValorComprometido('OUTUBRO')}" update=":tblValoresComprometidos"  oncomplete="PF('panelDetalhe').show();">
-							<f:setPropertyActionListener target="#{atualizarForecastAction.despesaDetalheSelecionada}" value="#{detalheDespesa}" />
+						<p:commandLink rendered="#{aprovarForecastAction.exibirDespesa('OUTUBRO')}" value=" / #{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaOutubro)}"
+							action="#{aprovarForecastAction.obterDetalheValorComprometido('OUTUBRO')}" update=":tblValoresComprometidos"  oncomplete="PF('panelDetalhe').show();">
+							<f:setPropertyActionListener target="#{aprovarForecastAction.despesaDetalheSelecionada}" value="#{detalheDespesa}" />
 						</p:commandLink>
 					</p:column> 
-					<p:column rendered="#{atualizarForecastAction.exibirColuna('NOVEMBRO')}" style="text-align:center"
-							 width="180" footerText="#{facesUtils.formatarDinheiro(atualizarForecastAction.calcularValorColuna('NOVEMBRO'))}" >
+					<p:column rendered="#{aprovarForecastAction.exibirColuna('NOVEMBRO')}" style="text-align:center"
+							 width="180" footerText="#{facesUtils.formatarDinheiro(aprovarForecastAction.calcularValorColuna('NOVEMBRO'))}" >
 						<f:facet name="header">
 							<h:outputText value="Nov." />
 						</f:facet>
 						<h:outputText  id="valorNov" value="#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.novembro)}" converter="javax.faces.Double" />
-						<p:commandLink rendered="#{atualizarForecastAction.exibirDespesa('NOVEMBRO')}" value=" / #{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaNovembro)}"
-							action="#{atualizarForecastAction.obterDetalheValorComprometido('NOVEMBRO')}" update=":tblValoresComprometidos"  oncomplete="PF('panelDetalhe').show();">
-							<f:setPropertyActionListener target="#{atualizarForecastAction.despesaDetalheSelecionada}" value="#{detalheDespesa}" />
+						<p:commandLink rendered="#{aprovarForecastAction.exibirDespesa('NOVEMBRO')}" value=" / #{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaNovembro)}"
+							action="#{aprovarForecastAction.obterDetalheValorComprometido('NOVEMBRO')}" update=":tblValoresComprometidos"  oncomplete="PF('panelDetalhe').show();">
+							<f:setPropertyActionListener target="#{aprovarForecastAction.despesaDetalheSelecionada}" value="#{detalheDespesa}" />
 						</p:commandLink>
 					</p:column> 
-					<p:column rendered="#{atualizarForecastAction.exibirColuna('DEZEMBRO')}" style="text-align:center"
-							 width="180" footerText="#{facesUtils.formatarDinheiro(atualizarForecastAction.calcularValorColuna('DEZEMBRO'))}" >
+					<p:column rendered="#{aprovarForecastAction.exibirColuna('DEZEMBRO')}" style="text-align:center"
+							 width="180" footerText="#{facesUtils.formatarDinheiro(aprovarForecastAction.calcularValorColuna('DEZEMBRO'))}" >
 						<f:facet name="header">
 							<h:outputText value="Dez." />
 						</f:facet>
 						<h:outputText  id="valorDez" value="#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.dezembro)}" converter="javax.faces.Double" />
-						<p:commandLink rendered="#{atualizarForecastAction.exibirDespesa('DEZEMBRO')}" value=" / #{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaDezembro)}"
-							action="#{atualizarForecastAction.obterDetalheValorComprometido('DEZEMBRO')}" update=":tblValoresComprometidos"  oncomplete="PF('panelDetalhe').show();">
-							<f:setPropertyActionListener target="#{atualizarForecastAction.despesaDetalheSelecionada}" value="#{detalheDespesa}" />
+						<p:commandLink rendered="#{aprovarForecastAction.exibirDespesa('DEZEMBRO')}" value=" / #{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaDezembro)}"
+							action="#{aprovarForecastAction.obterDetalheValorComprometido('DEZEMBRO')}" update=":tblValoresComprometidos"  oncomplete="PF('panelDetalhe').show();">
+							<f:setPropertyActionListener target="#{aprovarForecastAction.despesaDetalheSelecionada}" value="#{detalheDespesa}" />
 						</p:commandLink>
 					</p:column> 
-					<p:column width="100" footerText="#{facesUtils.formatarDinheiro(atualizarForecastAction.calcularTotalAno())}" style="text-align:center" >
+					<p:column width="100" footerText="#{facesUtils.formatarDinheiro(aprovarForecastAction.calcularTotalAno())}" style="text-align:center" >
 						<f:facet name="header">
 							<h:outputText value="Total ano" />
 						</f:facet>
@@ -239,15 +240,16 @@
 						</h:outputText>
 			     	</p:column> 
 				</p:dataTable>
-				
-				<p:selectOneRadio value="#{criarBudgetAction.tipoAcao}" >
+				<p:panel id="painel" header="Aprovação">	
+				<p:selectOneRadio value="#{aprovarForecastAction.aprovacao}" required="true">
 						<f:selectItem itemValue="S"  itemLabel="Aprovar"/>
 						<f:selectItem itemValue="N" itemLabel="Reprovar"/>
+						<p:ajax listener="#{aprovarForecastAction.tipoAprovacaoAlterada()}" update=":form" oncomplete="onDatatableResize();" ></p:ajax>
 				</p:selectOneRadio>
-								
+				<pe:inputNumber  id="valorAprovado" rendered="#{aprovarForecastAction.aprovacao eq 'N' }" value="#{aprovarForecastAction.valorAprovacao}" converter="javax.faces.Double" required="true"/>
+				</p:panel>
 				<p:panelGrid columns="1" styleClass="painel-botoes">
-					<p:commandButton value="Concluir"  action="#{atualizarForecastAction.concluir()}" onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()">
-						<p:confirm header="Confirmação" message="Confirma a conclusão da Aprovação do Budget?" icon="ui-icon-alert"/>
+					<p:commandButton value="Concluir"  action="#{aprovarForecastAction.concluir()}" onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" ajax="false" update=":form">
 					</p:commandButton>
 				</p:panelGrid>
 			</p:panel>
@@ -256,8 +258,8 @@
 			<p:dialog header="Detalhe Valores Comprometidos" id="panelDetalheValorComprometido" widgetVar="panelDetalhe" height="400" width="600">
 				<p:dataTable id="tblValoresComprometidos"
 					emptyMessage="Não existem valores comprometidos" 
-					value="#{atualizarForecastAction.detalheValorComprometido}"
-					selection="#{atualizarForecastAction.despesaDetalheSelecionada}"
+					value="#{aprovarForecastAction.detalheValorComprometido}"
+					selection="#{aprovarForecastAction.despesaDetalheSelecionada}"
 					var="detalheValoresComprometidos"
 					paginator="true" 
 					paginatorPosition="bottom"

@@ -125,8 +125,9 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 		{
 			tx.begin();
 			Forecast forecast = em.find(Forecast.class, Long.valueOf(idForecast));
-			//XXX
-			Integer mesSeguinte = 0;
+			ForecastMensalisado forecastMensalidado = obterForecastMensalidadeEmAndamento(forecast);
+			
+			Integer mesSeguinte = ((int)forecastMensalidado.getPk().getMes()+1);
 
 			//mes de dezembro eh o ultimo mes do ano
 			if(mesSeguinte > MesEnum.DEZEMBRO.getId())
@@ -154,6 +155,14 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 		}
 
 	}
+	public ForecastMensalisado obterForecastMensalidadeEmAndamento(Forecast forecast)
+	{
+		ForecastMensalisado forecastMensalido = em.createNamedQuery("ForecastMensalisado.findByForecastEmAndamento",ForecastMensalisado.class)
+		.setParameter("forecast_id", forecast.getId()).getSingleResult();
+		return forecastMensalido;
+		
+	}
+	
 	private Long getGeneratedId()
 	{
 		Integer id = (Integer) em.createNativeQuery("select MAX(id) from despesa_forecast").getSingleResult();
@@ -170,8 +179,11 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 
 	public List<DespesaForecast> obterDespesasForecast(String mes, String  ano, Long idCentroCusto) throws Exception{
 		Budget budget = budgetService.findByAnoAndCentroDeCusto(ano, idCentroCusto);
+		MesEnum mesEnum = MesEnum.valueOf(mes.toUpperCase());
 		Forecast forecast = em.createNamedQuery("Forecast.findByBudgetId", Forecast.class).setParameter("budgetId", budget.getId()).getResultList().get(0);
-
+		List<DespesaForecast> despesasForecast = em.createNamedQuery("DespesaForecast.obterDespesasForecastMes",DespesaForecast.class)
+				.setParameter("forecastId", forecast.getId())
+				.setParameter("mes",mesEnum.getId()).getResultList();
 		for(DespesaForecast despesa : forecast.getDespesas())
 		{
 			obterValorComprometidoDespesa(forecast, despesa, mes);

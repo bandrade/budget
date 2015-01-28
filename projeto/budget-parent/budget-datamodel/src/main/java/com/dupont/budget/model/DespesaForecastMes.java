@@ -129,6 +129,15 @@ public class DespesaForecastMes implements Serializable {
 		this.dezembro = dezembro;
 	}
 
+	public static DespesaForecastMes createFromDespesaMes(DespesaForecastMes despesaMensalisada) {
+		DespesaForecastMes forecastMes = new DespesaForecastMes(despesaMensalisada.getJaneiro(), despesaMensalisada.getFevereiro(),
+				despesaMensalisada.getMarco(), despesaMensalisada.getAbril(), despesaMensalisada.getMaio(), despesaMensalisada.getJunho(),
+				despesaMensalisada.getJulho(),
+				despesaMensalisada.getAgosto(), despesaMensalisada.getSetembro(), despesaMensalisada.getOutubro(), despesaMensalisada.getNovembro(), 
+				despesaMensalisada.getDezembro());
+		return forecastMes;
+	}
+
 	public static DespesaForecastMes createFromBudgetMes(BudgetMes mes)
 	{
 		DespesaForecastMes forecastMes = new DespesaForecastMes(mes.getJaneiro(), mes.getFevereiro(),
