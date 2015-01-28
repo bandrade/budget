@@ -69,7 +69,7 @@
 					<br />
 					
 					<p:panelGrid id="incluirDespesaPanel" columns="1" styleClass="painel-botoes" rendered="#{solicitacaoPagamento.tipoSolicitacao == 'CC'}" >
-						<p:commandButton value="Incluir Despesa" icon="ui-icon-extlink" actionListener="#{solicitacaoPagamentoAction.openDespesaForecastDialog}" rendered="#{!solicitacaoPagamentoAction.despesaForecastFlag}" styleClass="button" immediate="true">
+						<p:commandButton value="Incluir Despesa Forecast" icon="ui-icon-extlink" actionListener="#{solicitacaoPagamentoAction.openDespesaForecastDialog}" rendered="#{!solicitacaoPagamentoAction.despesaForecastFlag}" styleClass="button" immediate="true">
 							<p:ajax event="dialogReturn" listener="#{solicitacaoPagamentoAction.incluirDespesaForecast}" update="tipoSolicitacaoPanel,incluirDespesaPanel,dadosCC,dadosRateio,painelNotas"/>						
 						</p:commandButton>
 					</p:panelGrid>
@@ -223,7 +223,7 @@
 					
 					<br/>
 					<p:commandButton value="Incluir CC" icon="ui-icon-extlink" actionListener="#{solicitacaoPagamentoAction.openCCDialog}" styleClass="button" immediate="true" rendered="#{solicitacaoPagamento.tipoSolicitacao == 'RATEIO'}">
-						<p:ajax event="dialogReturn" listener="#{solicitacaoPagamentoAction.incluirDespesa}" update="dadosRateio,valorTotalNotaInput"/>						
+						<p:ajax event="dialogReturn" listener="#{solicitacaoPagamentoAction.incluirDespesa}" update="tableRateio,dadosRateio,valorTotalNotaInput"/>						
 					</p:commandButton>
 					
 					<p:commandButton value="Incluir Despesa Forecast" icon="ui-icon-extlink" actionListener="#{solicitacaoPagamentoAction.openDespesaForecastDialog}" styleClass="button" immediate="true" rendered="#{solicitacaoPagamento.tipoSolicitacao == 'RATEIO'}">

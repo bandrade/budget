@@ -215,8 +215,11 @@ public class SolicitacaoPagamentoAction implements Serializable {
 			
 			produtos.add(despesa.getProduto());
 			distritos.add(despesa.getDistrito());
-			clientes.add(despesa.getCliente());
-			vendedores.add(despesa.getVendedor());
+			if(despesa.getCliente()!=null)
+				clientes.add(despesa.getCliente());
+			if(despesa.getVendedor()!=null)
+				vendedores.add(despesa.getVendedor());
+			
 			culturas.add(despesa.getCultura());
 			
 			getDespesaSolicitacaoPagamento().setCultura(despesa.getCultura());
@@ -235,9 +238,18 @@ public class SolicitacaoPagamentoAction implements Serializable {
 	public void doSelectCentroCusto(){	
 		
 		forecast = forecastService.findForecastByCCAndAno(ano,despesaSolicitacaoPagamento.getCentroCusto().getId());
-		tiposDespesas =	domainService.findTiposDespesaForecast(forecast.getId());
-		acoes         = new ArrayList<Acao>();
 		limparCombos();
+		if(forecast != null)
+		{
+			tiposDespesas =	domainService.findTiposDespesaForecast(forecast.getId());
+			acoes         = new ArrayList<Acao>();
+			
+		}
+		else
+		{
+			facesUtils.addErrorMessage("O centro de custo nao possui forecast cadastrado" );
+		}
+		
 
 	}
 	
@@ -411,6 +423,8 @@ public class SolicitacaoPagamentoAction implements Serializable {
 	}
 	
 	public void openDespesaForecastDialog() {
+		despesaForecast = new DespesaForecast();
+		despesaForecast.init();
 		Map<String,Object> options = new HashMap<String, Object>();
 		options.put("modal", true);
 		options.put("draggable", true);

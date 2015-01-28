@@ -1,5 +1,6 @@
 package com.dupont.budget.web.actions;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ConversationScoped;
 import javax.inject.Named;
 
@@ -7,6 +8,7 @@ import org.primefaces.context.RequestContext;
 
 import com.dupont.budget.model.Acao;
 import com.dupont.budget.model.DespesaForecast;
+import com.dupont.budget.model.DespesaSolicitacaoPagamento;
 
 /**
  * Action do modal de inclusão de despesa de rateio, do caso de uso de lançamento de despesas.
@@ -24,6 +26,11 @@ public class IncluirDespesaRateioAction extends SolicitacaoPagamentoAction {
 
 	public void incluirDespesaForecast(){
 		despesaForecastFlag = !despesaForecastFlag;
+	}
+	@PostConstruct
+	public void initDespesa()
+	{
+		despesaSolicitacaoPagamento = new DespesaSolicitacaoPagamento();
 	}
 	
 	public void closeCCDialog(){	
