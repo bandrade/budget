@@ -311,10 +311,16 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 		despesaForecast.setAtivo(true);
 		try
 		{
+			Long nextId =getGeneratedId();
+			despesaForecast.getDespesaPK().setId(nextId);
 			tx.begin();
-			em.persist(despesaForecast.getDespesaMensalisada());
-			despesaForecast.getDespesaPK().setId(getGeneratedId());
-			em.persist(despesaForecast);
+			for(long mes =1; mes <=12 ; mes++)
+			{
+				em.persist(despesaForecast.getDespesaMensalisada());
+				despesaForecast.getDespesaPK().setId(nextId);
+				despesaForecast.getDespesaPK().setMes(mes);
+				em.persist(despesaForecast);
+			}
 			tx.commit();
 		}
 		catch(Exception e)

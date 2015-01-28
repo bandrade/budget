@@ -38,7 +38,7 @@
 					 converter="com.dupont.EntityConverter"
 					  />
 					 
-					<p:outputLabel value="Produto:"></p:outputLabel>
+					<p:outputLabel value="Produto:*"></p:outputLabel>
 					<p:autoComplete id="cboProduto" dropdown="true" value="#{despesaForecast.produto}" completeMethod="#{autocompleteAction.autocompleteProduto}" 
 					 styleClass="input"
 					 scrollHeight="300"
@@ -56,7 +56,7 @@
 					<p:outputLabel value="Distrito:*" ></p:outputLabel>
 					<p:autoComplete id="cboDistrito" dropdown="true" value="#{despesaForecast.distrito}" completeMethod="#{autocompleteAction.autocompleteDistrito}" 
 					 styleClass="input"
-					 scrollHeight="300"
+					 scrollHeight="200"
 					  required="true"
 					converter="com.dupont.EntityConverter"
 					 var="distrito" itemLabel="#{distrito.nome}" itemValue="#{distrito}" emptyMessage="NAO ENCONTRADO" effect="size" />
@@ -64,7 +64,7 @@
 					<p:outputLabel value="ERC:"></p:outputLabel>
 					<p:autoComplete id="cboVendedor" dropdown="true" value="#{despesaForecast.vendedor}" completeMethod="#{autocompleteAction.autocompleteVendedor}" 
 					 styleClass="input"
-					 scrollHeight="300"
+					 scrollHeight="200"
 					converter="com.dupont.EntityConverter"
 					 var="_vendedor" itemLabel="#{_vendedor.nome}" itemValue="#{_vendedor}" emptyMessage="NAO ENCONTRADO" effect="size"  />
 					
@@ -73,7 +73,7 @@
 				     converter="com.dupont.EntityConverter"
 				      styleClass="input"
 				       
-				     scrollHeight="300"  
+				     scrollHeight="200"  
 					 var="_cliente" itemLabel="#{_cliente.nome}" itemValue="#{_cliente}" emptyMessage="NAO ENCONTRADO" effect="size" />
 					<p:outputLabel value="Ação:*"></p:outputLabel>
 					 <p:inputTextarea id="inputAcao" value="#{despesaForecast.acao.nome}" required="true"/>
@@ -81,7 +81,7 @@
 					<p:outputLabel value="Comentário:*"></p:outputLabel>
 					<p:inputTextarea value="#{despesaForecast.comentario}" />
 					
-					<p:outputLabel value="Valor(R$):*"></p:outputLabel>
+					<p:outputLabel value="Valor Nota(R$):*"></p:outputLabel>
 					<pe:inputNumber  id="valor" value="#{despesaForecast.valor}" converter="javax.faces.Double" required="true"/>
 				</p:panelGrid>
 				

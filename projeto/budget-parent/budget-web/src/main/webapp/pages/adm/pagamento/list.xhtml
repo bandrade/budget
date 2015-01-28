@@ -64,8 +64,8 @@
 				
 				<p:column headerText="Ações" width="10%">
 					
-					<p:commandButton icon="ui-icon-pencil" action="#{solicitacaoPagamentoAction.edit(item)}"   update="solicitacaoPagamentos" immediate="true"/>
-					<p:commandButton icon="ui-icon-trash"  action="#{solicitacaoPagamentoAction.delete(item)}" update="solicitacaoPagamentos" immediate="true">
+					<p:commandButton icon="ui-icon-pencil" action="#{solicitacaoPagamentoAction.edit(item)}"   update="solicitacaoPagamentos" />
+					<p:commandButton icon="ui-icon-trash"  action="#{solicitacaoPagamentoAction.delete(item)}" update="solicitacaoPagamentos" >
 						<p:confirm header="Confirmação" message="Deseja realmente remover o dado?" icon="ui-icon-alert" />
 					</p:commandButton>
 					

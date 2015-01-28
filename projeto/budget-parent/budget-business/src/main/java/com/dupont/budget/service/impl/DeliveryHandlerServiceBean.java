@@ -11,6 +11,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.ejb.Asynchronous;
 import javax.ejb.Stateless;
@@ -288,7 +289,7 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
 							writeLine("PENDENTE_VALIDACAO", bw, row);
 							continue;
 						} else {
-							List<DespesaSolicitacaoPagamento> despesas = solicitacao.getDespesas();
+							Set<DespesaSolicitacaoPagamento> despesas = solicitacao.getDespesas();
 							for (Iterator<DespesaSolicitacaoPagamento> iterator = despesas.iterator(); iterator.hasNext();) {
 								DespesaSolicitacaoPagamento d = iterator.next();
 								

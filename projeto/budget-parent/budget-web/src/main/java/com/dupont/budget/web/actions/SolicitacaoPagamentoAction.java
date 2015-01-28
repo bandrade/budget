@@ -252,14 +252,12 @@ public class SolicitacaoPagamentoAction implements Serializable {
 	/* Salva a solicitacao  */
 	public String save(){
 		
-		// Salvar a nova ação caso tenha sido pedido
-//		if( getCheckAcao().equals("Criar Nova")){
-//			Acao acao = new Acao(novaAcao);
-//			
-//			acao = domainService.create(acao);
-//			
-//			despesaSolicitacaoPagamento.setAcao(acao);
-//		}
+		
+		if(new Date().after(solicitacaoPagamento.getDataPagamento()))
+		{
+			facesUtils.addErrorMessage("A data de pagamento deve ser uma data futura");
+			return null;
+		}
 		
 		solicitacaoPagamento.setCriacao(new Date());
 		solicitacaoPagamento.setStatus(StatusPagamento.COMPROMETIDO);
@@ -283,10 +281,12 @@ public class SolicitacaoPagamentoAction implements Serializable {
 		if( despesaForecastFlag ) {
 			try {
 				for (DespesaForecast df : despesasForecast) {
+					df.setValor(0d);
 					forecastService.incluirDespesaForecast(df);					
 				}
 			} catch (Exception e) {
 				facesUtils.addErrorMessage(e.getMessage());
+				return null;
 			}			
 		}
 		
@@ -299,14 +299,6 @@ public class SolicitacaoPagamentoAction implements Serializable {
 	}
 	
 	public String update(){
-		// Salvar a nova ação caso tenha sido pedido
-//		if( getCheckAcao().equals("Criar Nova")){
-//			Acao acao = new Acao(novaAcao);
-//			
-//			acao = domainService.create(acao);
-//			
-//			despesaSolicitacaoPagamento.setAcao(acao);
-//		}
 		
 		if(solicitacaoPagamento.getStatus().equals(StatusPagamento.ENVIADO_SAP))
 				solicitacaoPagamento.setStatus(StatusPagamento.COMPROMETIDO);
@@ -355,12 +347,15 @@ public class SolicitacaoPagamentoAction implements Serializable {
 			_solicitacaoPagamento.setStatus(StatusPagamento.PAGO);
 		}
 		if (solicitacaoPagamento.getTipoSolicitacao() == TipoSolicitacao.CC && !solicitacaoPagamento.getDespesas().isEmpty()) {
-			this.despesaSolicitacaoPagamento = solicitacaoPagamento.getDespesas().get(0);
+			this.despesaSolicitacaoPagamento = solicitacaoPagamento.getDespesas().iterator().next();
 			
 			Calendar criacao = Calendar.getInstance();
 			criacao.setTime(solicitacaoPagamento.getCriacao());
-
-			populateAllCombos();
+			
+			if(!StatusPagamento.PENDENTE_VALIDACAO.equals(solicitacaoPagamento.getStatus()))
+					populateAllCombos();
+			else
+				doSelectCentroCusto();
 		} 
 		
 		
@@ -380,12 +375,35 @@ public class SolicitacaoPagamentoAction implements Serializable {
 	}
 	
 	public void closeDespesaForecastDialog(){
+		Forecast fcast = forecastService.findForecastByCCAndAno(ano,centroCustoDespesaForecast.getId());
+		if(fcast ==null)
+		{
+			facesUtils.addErrorMessage("Centro de custo "+centroCustoDespesaForecast.getCodigo() + " nao possui forecast");
+			return ;
+		}
+		Long budgetId = fcast.getBudget() !=null ?fcast.getBudget().getId():null;
+		despesaForecast.setForecast(fcast);
+		Acao acao = domainService.findAcaoByForecastOrBudget(budgetId,fcast.getId(),despesaForecast.getAcao().getNome());
+		if(acao !=null)
+			despesaForecast.setAcao(acao);
+		else
+		{
+			despesaForecast.getAcao().setId(null);
+			despesaForecast.getAcao().setForecast(fcast);
+			domainService.insertAcao(despesaForecast.getAcao());
+		}
+		if(despesaForecast.getAcao() !=null && forecastService.isDespesaExistente(despesaForecast))
+		{
+			facesUtils.addErrorMessage("Não é possível adicionar uma despesa com o mesmo tipo de despesa e ação.");
+			return ;
+		}
 		
 		Map<String, Object> objects = new HashMap<String, Object>();
 		objects.put("despesaForecast", despesaForecast);
 		objects.put("centroCustoDespesaForecast", centroCustoDespesaForecast);
-		
+		objects.put("forecast", fcast);
 		RequestContext.getCurrentInstance().closeDialog(objects);
+		
 	}
 	
 	public void openDespesaForecastDialog() {
@@ -440,19 +458,23 @@ public class SolicitacaoPagamentoAction implements Serializable {
 		
 		centroCustoDespesaForecast = (CentroCusto)     objects.get("centroCustoDespesaForecast");
 		despesaForecast 		   = (DespesaForecast) objects.get("despesaForecast");
+		Forecast fcast 		   = (Forecast) objects.get("forecast");
 		
-		String ano = Calendar.getInstance().get(Calendar.YEAR) + "";
 		DespesaForecastPK pk = new DespesaForecastPK();
 		pk.setAno(ano);
-		pk.setMes(0L);		
+		pk.setMes(null);		
 		despesaForecast.setDespesaPK(pk);		
-		Forecast forecast = forecastService.findForecastByCCAndAno(ano, centroCustoDespesaForecast.getId());		
-		despesaForecast.setForecast(forecast);
+		despesaForecast.setForecast(fcast);
 		
+	
 		despesasForecast.add(despesaForecast);
 		
-		if( solicitacaoPagamento.getValor() == null	) {
-			solicitacaoPagamento.setValor(0.0);
+		if( solicitacaoPagamento.getValor() == null	||  solicitacaoPagamento.getTipoSolicitacao() == TipoSolicitacao.CC) {
+			solicitacaoPagamento.setValor(despesaForecast.getValor());
+		}
+		else
+		{
+			solicitacaoPagamento.setValor(solicitacaoPagamento.getValor() + despesaForecast.getValor());
 		}
 		
 		// Seta os mesmo valores 
@@ -464,7 +486,7 @@ public class SolicitacaoPagamentoAction implements Serializable {
 		despesaSolicitacaoPagamento.setDistrito(despesaForecast.getDistrito());
 		despesaSolicitacaoPagamento.setVendedor(despesaForecast.getVendedor());
 		despesaSolicitacaoPagamento.setCliente(despesaForecast.getCliente());
-		
+		despesaSolicitacaoPagamento.setValor(despesaForecast.getValor());
 		// troca o flag afirmando que incluiu despesa
 		despesaForecastFlag = true;
 		

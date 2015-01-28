@@ -66,7 +66,7 @@ public class ReportServiceBean implements ReportService {
 		
 		for (SolicitacaoPagamento solicitacao : solicitacoes) {		
 			
-			List<DespesaSolicitacaoPagamento> despesas = solicitacao.getDespesas();
+			Set<DespesaSolicitacaoPagamento> despesas = solicitacao.getDespesas();
 			
 			if( despesas == null || despesas.isEmpty() )
 				continue;

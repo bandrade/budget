@@ -1,9 +1,8 @@
 package com.dupont.budget.model;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -157,7 +156,7 @@ public class SolicitacaoPagamento extends AbstractEntity<Long> {
 	private StatusPagamento status;
 
 	@OneToMany(mappedBy = "solicitacaoPagamento", cascade = CascadeType.ALL, fetch=FetchType.EAGER, orphanRemoval= true)
-	private List<DespesaSolicitacaoPagamento> despesas;
+	private Set<DespesaSolicitacaoPagamento> despesas;
 
 	@ManyToOne
 	@JoinColumn(name = "usuario_id")
@@ -169,7 +168,7 @@ public class SolicitacaoPagamento extends AbstractEntity<Long> {
 
 	public void addDespesaSolicitacaoPagamento(DespesaSolicitacaoPagamento despesaSolicitacaoPagamento) {
 		if(this.despesas == null)
-			this.despesas = new ArrayList<DespesaSolicitacaoPagamento>();
+			this.despesas = new HashSet<DespesaSolicitacaoPagamento>();
 
 		this.despesas.add(despesaSolicitacaoPagamento);
 		despesaSolicitacaoPagamento.setSolicitacaoPagamento(this);
@@ -239,14 +238,14 @@ public class SolicitacaoPagamento extends AbstractEntity<Long> {
 		this.status = status;
 	}
 
-	public List<DespesaSolicitacaoPagamento> getDespesas() {
+	public Set<DespesaSolicitacaoPagamento> getDespesas() {
 		if (despesas == null) {
-			despesas = new LinkedList<>();
+			despesas = new HashSet<>();
 		}
 		return despesas;
 	}
 
-	public void setDespesas(List<DespesaSolicitacaoPagamento> despesas) {
+	public void setDespesas(Set<DespesaSolicitacaoPagamento> despesas) {
 		this.despesas = despesas;
 	}
 

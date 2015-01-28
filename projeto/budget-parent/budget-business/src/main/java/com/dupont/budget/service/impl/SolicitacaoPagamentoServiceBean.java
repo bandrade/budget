@@ -68,7 +68,7 @@ public class SolicitacaoPagamentoServiceBean implements SolicitacaoPagamentoServ
 		
 		solicitacaoPagamento = em.merge(solicitacaoPagamento);
 		
-		callSolicitacaoPagamentoProcess(solicitacaoPagamento);
+		//callSolicitacaoPagamentoProcess(solicitacaoPagamento);
 	}
 
 	private void callSolicitacaoPagamentoProcess( SolicitacaoPagamento solicitacaoPagamento) {
