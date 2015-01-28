@@ -302,6 +302,10 @@ public class SolicitacaoPagamentoAction implements Serializable {
 		
 		if(solicitacaoPagamento.getStatus().equals(StatusPagamento.ENVIADO_SAP))
 				solicitacaoPagamento.setStatus(StatusPagamento.COMPROMETIDO);
+	
+		if(solicitacaoPagamento.getStatus().equals(StatusPagamento.PENDENTE_VALIDACAO))
+			solicitacaoPagamento.setStatus(StatusPagamento.PAGO);
+	
 		
 		if( solicitacaoPagamento.getTipoSolicitacao() == TipoSolicitacao.CC )
 			despesaSolicitacaoPagamento.setValor(solicitacaoPagamento.getValor());
