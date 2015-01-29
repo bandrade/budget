@@ -118,5 +118,136 @@
 					dsp.produto, dsp.acao			
           </query>
       </named-query>
-      
+     <named-native-query name="Colaborador.ObterResponsaveisCentroCusto">
+     	<query>
+     		select
+     			 distinct usuario.id,usuario.login, usuario.email,usuario.nome
+			from 
+				usuario
+            inner join 
+            	papel_usuario
+            on
+				papel_usuario.usuario_id=usuario.id
+            where
+				papel_usuario.nivel=1
+     	</query>
+     </named-native-query>
+     <named-native-query name="CentroCusto.ObterResponsabilidadeUsuario">
+     	<query>
+     	select
+     		 centro_custo.id,centro_custo.nome,centro_custo.codigo 
+     	from 
+     		usuario
+			inner join papel_usuario
+	        on
+				papel_usuario.usuario_id=usuario.id
+			inner join centro_custo
+				on papel_usuario.centro_custo_id=centro_custo.id
+			inner join papel
+				on papel.id = papel_usuario.papel_id
+			where
+				papel_usuario.nivel=1
+			and
+	            usuario.id=:usuarioId
+     	</query>
+     </named-native-query>
+      <named-native-query name="SolicitacaoPagamento.ObterSomaValorYTD">
+     	<query>
+     	select
+     		 sum(despesa_solicitacao.valor)
+     	from solicitacao_pagamento solicitacao
+     		inner join
+     	 		despesa_solicitacao_pagamento despesa_solicitacao
+     	  	on 
+				solicitacao.id = despesa_solicitacao.solicitacao_pagamento_id
+			inner join 
+				despesa_forecast
+		    on
+					despesa_solicitacao.acao_id = despesa_forecast.acao_id
+				and
+					despesa_solicitacao.tipo_despesa_id = despesa_forecast.tipo_despesa_id
+				and
+					despesa_forecast.mes = :mes_forecast
+			 WHERE
+				MONTH (solicitacao.data_pagamento) in(:meses) and YEAR(solicitacao.data_pagamento)=:ano
+			 and 
+				solicitacao.status='PAGO'
+			 and
+				despesa_solicitacao.centro_custo_id=:centro_custo_id
+		     and
+		    		despesa_solicitacao.acao_id = :acao_id
+		     and
+		    		despesa_solicitacao.tipo_despesa_id = :tipo_despesa_id
+     	 
+     	</query>
+     </named-native-query>
+      <named-native-query name="SolicitacaoPagamento.ObterSomaValorComprometido">
+     	<query>
+     	select 
+     		sum(despesa_solicitacao.valor)
+     	 from solicitacao_pagamento solicitacao
+		 inner join
+			despesa_solicitacao_pagamento despesa_solicitacao
+		 on 
+			solicitacao.id = despesa_solicitacao.solicitacao_pagamento_id
+		 inner join 
+			despesa_forecast
+	     on
+				despesa_solicitacao.acao_id = despesa_forecast.acao_id
+			and
+				despesa_solicitacao.tipo_despesa_id = despesa_forecast.tipo_despesa_id
+			and
+				despesa_forecast.mes = :mes_forecast
+			inner join 	tipo_despesa
+			on	tipo_despesa.id = despesa_solicitacao.tipo_despesa_id
+		   inner join 	acao
+				on acao.id = despesa_solicitacao.acao_id
+		 WHERE
+			MONTH (solicitacao.data_pagamento)=:mes_anterior and YEAR(solicitacao.data_pagamento)=:ano
+		 and 
+			(solicitacao.status='COMPROMETIDO'  or solicitacao.status='ENVIADO_SAP' or solicitacao.status='PENDENTE_VALIDACAO')
+		 and
+			despesa_solicitacao.centro_custo_id=:centro_custo_id
+	     and
+	    		despesa_solicitacao.acao_id = :acao_id
+	     and
+	    		despesa_solicitacao.tipo_despesa_id = :tipo_despesa_id
+     	</query>
+     </named-native-query>
+  	   <named-native-query name="SolicitacaoPagamento.ObterDetalheValorComprometido">
+     	<query>
+     	select 
+     		  distinct solicitacao.valor, tipo_despesa.nome as 'tipoDespesa', acao.nome as 'acao',solicitacao.num_nota_fiscal
+     	 from solicitacao_pagamento solicitacao
+		 inner join
+			despesa_solicitacao_pagamento despesa_solicitacao
+		 on 
+			solicitacao.id = despesa_solicitacao.solicitacao_pagamento_id
+		 inner join 
+			despesa_forecast
+	     on
+				despesa_solicitacao.acao_id = despesa_forecast.acao_id
+			and
+				despesa_solicitacao.tipo_despesa_id = despesa_forecast.tipo_despesa_id
+			and
+				despesa_forecast.mes = :mes_forecast
+			inner join 	tipo_despesa
+			on	tipo_despesa.id = despesa_solicitacao.tipo_despesa_id
+		   inner join 	acao
+				on acao.id = despesa_solicitacao.acao_id
+		 WHERE
+			MONTH (solicitacao.data_pagamento)=:mes_anterior and YEAR(solicitacao.data_pagamento)=:ano
+		 and 
+			(solicitacao.status='COMPROMETIDO'  or solicitacao.status='ENVIADO_SAP' or solicitacao.status='PENDENTE_VALIDACAO')
+		 and
+			despesa_solicitacao.centro_custo_id=:centro_custo_id
+	     and
+	    		despesa_solicitacao.acao_id = :acao_id
+	     and
+	    		despesa_solicitacao.tipo_despesa_id = :tipo_despesa_id
+     	</query>
+     </named-native-query>
+  	   
+   
+     
 </entity-mappings>

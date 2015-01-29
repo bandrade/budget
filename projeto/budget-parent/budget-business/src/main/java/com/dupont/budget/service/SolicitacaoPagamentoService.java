@@ -32,4 +32,7 @@ public interface SolicitacaoPagamentoService {
 	 * @return
 	 */
 	public SolicitacaoPagamento findSolicitacaoPagamento(Long id);
+	//despesas que nao foram lancadas por pessoas envolvidas ao cc
+	
+	void enviarRelatorioDespesasExternas();
 }

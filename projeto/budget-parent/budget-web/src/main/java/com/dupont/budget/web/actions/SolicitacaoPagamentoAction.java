@@ -28,7 +28,6 @@ import com.dupont.budget.model.CentroCusto;
 import com.dupont.budget.model.Cliente;
 import com.dupont.budget.model.Cultura;
 import com.dupont.budget.model.DespesaForecast;
-import com.dupont.budget.model.DespesaForecastPK;
 import com.dupont.budget.model.DespesaSolicitacaoPagamento;
 import com.dupont.budget.model.Distrito;
 import com.dupont.budget.model.Forecast;
@@ -118,6 +117,7 @@ public class SolicitacaoPagamentoAction implements Serializable {
 	
 	@PostConstruct
 	private void init() {
+		//solicitacaoPagamentoService.enviarRelatorioDespesasExternas();
 		solicitacaoPagamento = new SolicitacaoPagamento();
 		solicitacaoPagamento.setFornecedor(new Fornecedor());
 		despesaSolicitacaoPagamento = new DespesaSolicitacaoPagamento();
@@ -294,7 +294,7 @@ public class SolicitacaoPagamentoAction implements Serializable {
 			try {
 				for (DespesaForecast df : despesasForecast) {
 					df.setValor(0d);
-					forecastService.incluirDespesaForecast(df);					
+					forecastService.incluirDespesaForecast(df,(Calendar.getInstance().get(Calendar.MONTH)+1));					
 				}
 			} catch (Exception e) {
 				facesUtils.addErrorMessage(e.getMessage());
@@ -473,18 +473,11 @@ public class SolicitacaoPagamentoAction implements Serializable {
 	/* Ao incluir a DESPESA de forecast, a despesa de solicitação de pagamento fica identica a ela. */
 	public void incluirDespesaForecast(SelectEvent event){
 		Map<String, Object> objects = (Map<String, Object>) event.getObject();
-		
+
 		centroCustoDespesaForecast = (CentroCusto)     objects.get("centroCustoDespesaForecast");
 		despesaForecast 		   = (DespesaForecast) objects.get("despesaForecast");
 		Forecast fcast 		   = (Forecast) objects.get("forecast");
-		
-		DespesaForecastPK pk = new DespesaForecastPK();
-		pk.setAno(ano);
-		pk.setMes(null);		
-		despesaForecast.setDespesaPK(pk);		
 		despesaForecast.setForecast(fcast);
-		
-	
 		despesasForecast.add(despesaForecast);
 		
 		if( solicitacaoPagamento.getValor() == null	||  solicitacaoPagamento.getTipoSolicitacao() == TipoSolicitacao.CC) {

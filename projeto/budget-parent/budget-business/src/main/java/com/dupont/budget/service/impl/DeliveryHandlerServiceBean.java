@@ -29,7 +29,6 @@ import com.dupont.budget.model.Acao;
 import com.dupont.budget.model.Budget;
 import com.dupont.budget.model.CentroCusto;
 import com.dupont.budget.model.DespesaForecast;
-import com.dupont.budget.model.DespesaForecastPK;
 import com.dupont.budget.model.DespesaSolicitacaoPagamento;
 import com.dupont.budget.model.Forecast;
 import com.dupont.budget.model.Fornecedor;
@@ -141,6 +140,7 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
 	public void onValorComprometidoUpload(@Observes @Uploaded(ValorComprometido.class) UploadEvent event) {
 		logger.debug("Evento de cadastro de valores comprometidos sendo processado pelo serviço.");
 		Integer ano = Calendar.getInstance().get(Calendar.YEAR);
+		Integer mes= Calendar.getInstance().get(Calendar.MONTH)+1;
 		File file = new File(event.getPath());
 
 		try {
@@ -207,8 +207,7 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
 								despesaForecast.setAtivo(true);
 								despesaForecast.setTipoDespesa(tipoDespesa);
 								despesaForecast.setValor(0D);
-								despesaForecast.setDespesaPK(new DespesaForecastPK(ano+"", mesRow, null));
-								forecastService.incluirDespesaForecast(despesaForecast);
+								forecastService.incluirDespesaForecast(despesaForecast,mes);
 								
 							}
 							valor.setAcao(acao);

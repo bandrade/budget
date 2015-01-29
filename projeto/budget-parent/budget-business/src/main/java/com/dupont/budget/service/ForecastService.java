@@ -22,8 +22,7 @@ public interface ForecastService {
 	DespesaForecast obterDespesaForecast(Forecast forecast,
 			TipoDespesa tipoDespesa, Acao acao) throws Exception;
 
-	void incluirDespesaForecast(DespesaForecast despesaForecast)
-			throws Exception;
+	public void incluirDespesaForecast(DespesaForecast despesaForecast,Integer mes) throws Exception;
 
 	void atualizarDespesaForecast(DespesaForecast despesaForecast)
 			throws Exception;

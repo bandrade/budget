@@ -30,7 +30,8 @@ import javax.persistence.Table;
 @Table(name="usuario")
 @NamedQueries({
 	@NamedQuery(name="Usuario.findByLogin", query = "select u from Usuario u where u.login = :login"),
-	@NamedQuery(name = Usuario.FIND_BY_NOME_PAPEL, query = "select u from Usuario u join u.papeis p where p.papel.nome = :nome")
+	@NamedQuery(name = Usuario.FIND_BY_NOME_PAPEL, query = "select u from Usuario u join u.papeis p where p.papel.nome = :nome"),
+	@NamedQuery(name = "Usuario.findEmails", query = "select distinct u.email from Usuario u")
 })
 public class Usuario extends NamedAbstractEntity<Long> {
 	

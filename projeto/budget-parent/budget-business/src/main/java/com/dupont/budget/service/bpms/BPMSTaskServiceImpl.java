@@ -30,9 +30,9 @@ public class BPMSTaskServiceImpl implements BPMSTaskService {
 	
 	@Inject
 	private DomainService domainService;
-
+	
+	
 	public List<TarefaDTO> obterTarefas(String user) throws Exception {
-		
 		Usuario usuario = domainService.getUsuarioByLogin(user);
 		
 		List<TaskSummary> tasks = taskApi.retrieveTaskList(user,usuario.getPapeisAsString());

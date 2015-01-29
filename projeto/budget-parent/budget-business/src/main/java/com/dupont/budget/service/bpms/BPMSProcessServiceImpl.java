@@ -45,6 +45,7 @@ public class BPMSProcessServiceImpl implements BPMSProcessService{
 				areasListDto.add(areaDto);
 			}
 		}
+		
 		AreaDTO [] areaArray = areasListDto.toArray(new AreaDTO[areasListDto.size()]);
 		return processApi.startBudgetProcess(ceDtos,areaArray,ano,prazo);
 	}

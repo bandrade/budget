@@ -10,6 +10,7 @@ public class ColaboradorDTO implements Serializable{
 	private String nome;
 	private String login;
 	private String email;
+	private Long id;
 	
 	public ColaboradorDTO(){}
 	public ColaboradorDTO(String nome,String login,String email) {
@@ -17,6 +18,14 @@ public class ColaboradorDTO implements Serializable{
 		this.nome = nome;
 		this.email = email;
 		this.login = login;
+	}
+	
+	public ColaboradorDTO(String nome,String login,String email,Long id) {
+		super();
+		this.nome = nome;
+		this.email = email;
+		this.login = login;
+		this.id=id;
 	}
 	
 	public String getNome() {
@@ -36,6 +45,12 @@ public class ColaboradorDTO implements Serializable{
 	}
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
 	}
 	@Override
 	public int hashCode() {
@@ -65,6 +80,7 @@ public class ColaboradorDTO implements Serializable{
 		return "ColaboradorDTO [nome=" + nome + ", login=" + login + ", email="
 				+ email + "]";
 	}
+	
 	
 	
 	

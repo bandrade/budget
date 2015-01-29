@@ -17,7 +17,6 @@ import com.dupont.budget.dto.CentroDeCustoDTO;
 import com.dupont.budget.dto.DetalheValoresComprometidosDTO;
 import com.dupont.budget.model.Acao;
 import com.dupont.budget.model.DespesaForecast;
-import com.dupont.budget.model.DespesaForecastPK;
 import com.dupont.budget.model.Forecast;
 import com.dupont.budget.model.MesEnum;
 import com.dupont.budget.service.DomainService;
@@ -158,7 +157,8 @@ public class ForecastAction implements Serializable {
 	public boolean adicionarDespesa()
 	{
 		MesEnum mesEnum = MesEnum.valueOf(mes.toUpperCase());
-		despesa.setDespesaPK(new DespesaForecastPK(ano, mesEnum.getId(), null));
+		//XXX
+		/*despesa.setDespesaPK(new DespesaForecastPK(ano, mesEnum.getId(), null));*/
 		if(despesasNoDetalhe !=null && despesasNoDetalhe.size()>0)
 		{
 			despesa.setForecast(despesasNoDetalhe.get(0).getForecast());
@@ -178,7 +178,7 @@ public class ForecastAction implements Serializable {
 		}
 		try
 		{
-			forecastService.incluirDespesaForecast(despesa);
+			forecastService.incluirDespesaForecast(despesa,(int)mesEnum.getId());
 			incAltComSucesso=true;
 			inicializarDespesa();
 			facesUtils.addInfoMessage("Despesa adicionada com sucesso");

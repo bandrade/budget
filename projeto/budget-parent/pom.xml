@@ -19,6 +19,7 @@
 		<deltaspike.version>1.2.1</deltaspike.version>
 	</properties>
 	<modules>
+		<module>budget-jms</module>
 		<module>budget-bpm</module>
 		<module>budget-business</module>
 		<module>budget-datamodel</module>
