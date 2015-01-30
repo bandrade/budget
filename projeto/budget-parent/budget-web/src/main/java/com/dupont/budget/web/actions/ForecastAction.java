@@ -157,8 +157,6 @@ public class ForecastAction implements Serializable {
 	public boolean adicionarDespesa()
 	{
 		MesEnum mesEnum = MesEnum.valueOf(mes.toUpperCase());
-		//XXX
-		/*despesa.setDespesaPK(new DespesaForecastPK(ano, mesEnum.getId(), null));*/
 		if(despesasNoDetalhe !=null && despesasNoDetalhe.size()>0)
 		{
 			despesa.setForecast(despesasNoDetalhe.get(0).getForecast());

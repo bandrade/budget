@@ -1,11 +1,9 @@
 package com.dupont.budget.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -100,7 +98,7 @@ public class DespesaForecast {
 
 	//bi-directional many-to-one association to DespesaForecastAno
 	@OneToMany(mappedBy="despesaForecast")
-	private List<DespesaForecastAno> despesaForecastMes;
+	private Set<DespesaForecastAno> despesaForecastMes;
 	
 
 	public TipoDespesa getTipoDespesa() {
@@ -316,13 +314,13 @@ public class DespesaForecast {
 		this.valorComprometido = valorComprometido;
 	}
 
-	public List<DespesaForecastAno> getDespesaForecastMes() {
+	public Set<DespesaForecastAno> getDespesaForecastMes() {
 		if(despesaForecastMes==null)
-			despesaForecastMes = new ArrayList<>();
+			despesaForecastMes = new HashSet<>();
 		return despesaForecastMes;
 	}
 
-	public void setDespesaForecastMes(List<DespesaForecastAno> despesaForecastMes) {
+	public void setDespesaForecastMes(Set<DespesaForecastAno> despesaForecastMes) {
 		this.despesaForecastMes = despesaForecastMes;
 	}
 
@@ -344,6 +342,34 @@ public class DespesaForecast {
 		
 		this.despesaMensalisada = despesaMensalisada;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		DespesaForecast other = (DespesaForecast) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
+	}
+	
+	
+	
 	
 	
 }

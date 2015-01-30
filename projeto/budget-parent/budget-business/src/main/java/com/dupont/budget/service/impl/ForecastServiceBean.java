@@ -149,6 +149,8 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 				em.merge(despesaForecast);
 
 			}
+			forecastMensalidado.setStatusForecast(StatusForecastEnum.FINALIZADO);
+			em.merge(forecastMensalidado);
 			tx.commit();
 		}
 		catch(Exception e)
@@ -315,7 +317,7 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 			Long nextId =getGeneratedId();
 			despesaForecast.setId(nextId);
 			DespesaForecastAno despesaForecastAno = null;
-			if(despesaForecast.getDespesaMensalisada() !=null)
+			if(despesaForecast.getDespesaMensalisada() !=null && despesaForecast.getDespesaMensalisada().getId()!=null)
 			{
 				DespesaForecastAnoPK despesaForecastAnoPK = new DespesaForecastAnoPK(despesaForecast.getId(),despesaForecast.getDespesaMensalisada().getId());
 				despesaForecastAno = new DespesaForecastAno(despesaForecastAnoPK,
@@ -330,8 +332,12 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 						(int)mes,despesaForecast,despesaForecastMes);
 
 			}
-			em.persist(despesaForecastAno);
+			
 			em.persist(despesaForecast);
+			despesaForecastAno.setDespesaForecast(despesaForecast);
+			em.persist(despesaForecastAno);
+			despesaForecast.getDespesaForecastMes().add(despesaForecastAno);
+			em.merge(despesaForecast);
 			tx.commit();
 		}
 		catch(Exception e)
@@ -377,7 +383,6 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 			Object result = em.createNamedQuery("SolicitacaoPagamento.ObterSomaValorYTD")
 				.setParameter("ano", despesaForecast.getForecast().getBudget().getAno())
 			    .setParameter("meses",meses_ytd)
-			    .setParameter("mes_forecast",mes_id)
 			    .setParameter("centro_custo_id",despesaForecast.getForecast().getBudget().getCentroCusto().getId())
 			    .setParameter("acao_id", despesaForecast.getAcao().getId())
 				.setParameter("tipo_despesa_id", despesaForecast.getTipoDespesa().getId()).getSingleResult();
@@ -400,7 +405,6 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 			Object result = em.createNamedQuery("SolicitacaoPagamento.ObterSomaValorComprometido")
 				.setParameter("ano", despesaForecast.getForecast().getBudget().getAno())
 				.setParameter("centro_custo_id",despesaForecast.getForecast().getBudget().getCentroCusto().getId())
-				.setParameter("mes_forecast",mes+1)
 			    .setParameter("mes_anterior",mes)
 			    .setParameter("acao_id", despesaForecast.getAcao().getId())
 				.setParameter("tipo_despesa_id", despesaForecast.getTipoDespesa().getId()).getSingleResult();
@@ -440,7 +444,6 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 			List<Object[]> result =(List<Object[]>)em.createNamedQuery("SolicitacaoPagamento.ObterDetalheValorComprometido")
 				.setParameter("ano", despesaForecast.getForecast().getBudget().getAno())
 				.setParameter("centro_custo_id",despesaForecast.getForecast().getBudget().getCentroCusto().getId())
-				.setParameter("mes_forecast",mes+1)
 			    .setParameter("mes_anterior",mes)
 			    .setParameter("acao_id", despesaForecast.getAcao().getId())
 				.setParameter("tipo_despesa_id", despesaForecast.getTipoDespesa().getId()).getResultList();

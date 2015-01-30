@@ -3,6 +3,7 @@ package com.dupont.budget.web.util;
 import java.io.Serializable;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -10,6 +11,10 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.Days;
 
 import com.dupont.budget.model.CentroCusto;
 import com.dupont.budget.model.NamedAbstractEntity;
@@ -116,4 +121,10 @@ public class FacesUtils implements Serializable{
 		Locale locale = new Locale("pt", "BR");
 		return NumberFormat.getCurrencyInstance(locale).format(value);
 	}
+	public boolean isDateAfterOrEqualToday(Date to){
+		DateTimeZone BRAZIL = DateTimeZone.forID("America/Sao_Paulo");
+		return Days.daysBetween(new DateTime(BRAZIL),new DateTime(to,BRAZIL)).getDays()>=0;
+	}
+	
+	
 }

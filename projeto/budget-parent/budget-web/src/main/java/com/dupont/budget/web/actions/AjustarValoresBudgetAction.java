@@ -58,7 +58,7 @@ public class AjustarValoresBudgetAction extends BudgetAction implements Serializ
 	}
 	public void obterBudgetNoDetalhe(){
 		try {
-			despesasNoDetalhe = budgetService.obterDespesaNoDetalheBudget(budgetSelecionado.getId());
+			despesasNoDetalhe = budgetService.obterDespesaAprovadasNoDetalheBudget(budgetSelecionado.getId());
 			super.calcularTotalBudget();
 		} catch (Exception e) {
 			facesUtils.addErrorMessage("Erro ao obter informações do budget");

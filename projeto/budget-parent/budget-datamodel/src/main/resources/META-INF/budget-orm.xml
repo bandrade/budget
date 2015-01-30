@@ -166,8 +166,7 @@
 					despesa_solicitacao.acao_id = despesa_forecast.acao_id
 				and
 					despesa_solicitacao.tipo_despesa_id = despesa_forecast.tipo_despesa_id
-				and
-					despesa_forecast.mes = :mes_forecast
+				
 			 WHERE
 				MONTH (solicitacao.data_pagamento) in(:meses) and YEAR(solicitacao.data_pagamento)=:ano
 			 and 
@@ -196,9 +195,7 @@
 				despesa_solicitacao.acao_id = despesa_forecast.acao_id
 			and
 				despesa_solicitacao.tipo_despesa_id = despesa_forecast.tipo_despesa_id
-			and
-				despesa_forecast.mes = :mes_forecast
-			inner join 	tipo_despesa
+		inner join 	tipo_despesa
 			on	tipo_despesa.id = despesa_solicitacao.tipo_despesa_id
 		   inner join 	acao
 				on acao.id = despesa_solicitacao.acao_id
@@ -229,8 +226,7 @@
 				despesa_solicitacao.acao_id = despesa_forecast.acao_id
 			and
 				despesa_solicitacao.tipo_despesa_id = despesa_forecast.tipo_despesa_id
-			and
-				despesa_forecast.mes = :mes_forecast
+
 			inner join 	tipo_despesa
 			on	tipo_despesa.id = despesa_solicitacao.tipo_despesa_id
 		   inner join 	acao
@@ -247,7 +243,65 @@
 	    		despesa_solicitacao.tipo_despesa_id = :tipo_despesa_id
      	</query>
      </named-native-query>
-  	   
-   
-     
+  	    <named-native-query name="SolicitacaoPagamento.ObterNotasOutrosUsuarios">
+     	<query> 
+   	
+		    select 
+				solicitacao.num_nota_fiscal, solicitacao.data_criacao,
+		        fornecedor.nome as 'fornecedor', usuario.nome as 'usuario',
+		        tipo_despesa.nome as 'tipo_despesa', acao.nome as 'acao',
+		        despesa_solicitacao.valor
+		        
+			from 
+				solicitacao_pagamento solicitacao
+				inner join
+		     	 		despesa_solicitacao_pagamento despesa_solicitacao
+				on 
+						solicitacao.id = despesa_solicitacao.solicitacao_pagamento_id
+				inner join 
+						centro_custo
+				on
+						centro_custo.id = despesa_solicitacao.centro_custo_id
+		        inner join
+		     	 		fornecedor 
+				on 
+						solicitacao.fornecedor_id = fornecedor.id
+		        inner join
+		     	 		usuario 
+				on 
+						usuario.id = solicitacao.usuario_id   
+				inner join
+		     	 		tipo_despesa 
+				on 
+						tipo_despesa.id = despesa_solicitacao.tipo_despesa_id   
+				
+		        inner join
+		     	 		acao 
+				on 
+						acao.id = despesa_solicitacao.acao_id    
+		        where	
+						solicitacao.usuario_id not in
+						( 
+							select 
+								usuario_id 
+							from
+								usuario
+							inner join 
+								papel_usuario
+							on
+								papel_usuario.usuario_id=usuario.id 
+							where
+								papel_usuario.centro_custo_id=:centro_custo_id
+								
+						)
+				and
+						centro_custo.id=:centro_custo_id
+				and 	
+						 (solicitacao.data_criacao BETWEEN :data_7_dias_atras AND :data_hoje)
+					
+				order by 
+						solicitacao.data_criacao
+				</query>
+			</named-native-query>
+		     
 </entity-mappings>

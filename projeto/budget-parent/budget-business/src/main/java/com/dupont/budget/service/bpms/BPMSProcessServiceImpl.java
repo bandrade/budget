@@ -47,7 +47,8 @@ public class BPMSProcessServiceImpl implements BPMSProcessService{
 		}
 		
 		AreaDTO [] areaArray = areasListDto.toArray(new AreaDTO[areasListDto.size()]);
-		return processApi.startBudgetProcess(ceDtos,areaArray,ano,prazo);
+		String emails = domainService.obterEmailsUsuarios();
+		return processApi.startBudgetProcess(ceDtos,areaArray,ano,prazo,emails);
 	}
 
 
@@ -55,7 +56,8 @@ public class BPMSProcessServiceImpl implements BPMSProcessService{
 	public long iniciarProcessoForecast(String ano, String mes,Date prazo)
 			throws Exception {
 		CentroDeCustoDTO [] ceDtos = ccService.obterCentrosDeCusto();
-		return processApi.startForecastProcess(ceDtos, ano, mes,prazo);
+		String emails = domainService.obterEmailsUsuarios();
+		return processApi.startForecastProcess(ceDtos, ano, mes,prazo,emails);
 	}
 
 	@Override

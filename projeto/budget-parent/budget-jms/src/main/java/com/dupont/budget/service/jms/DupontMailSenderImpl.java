@@ -9,6 +9,7 @@ import javax.ejb.Stateless;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
+import javax.jms.JMSException;
 import javax.jms.MessageProducer;
 import javax.jms.Queue;
 import javax.jms.Session;
@@ -31,9 +32,9 @@ public class DupontMailSenderImpl implements DupontMailSender,Serializable {
 	    public void sendMail(EmailDTO emailDTO)
 	    {
 	    	
+	    	Connection connection = null;
 	    	try
 	    	{
-		    	Connection connection = null;
 		    	Destination destination = queue;
 		    	connection = connectionFactory.createConnection();
 		        Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
@@ -49,6 +50,15 @@ public class DupontMailSenderImpl implements DupontMailSender,Serializable {
 	    	catch(Exception e)
 	    	{
 	    		LOGGER.log(Level.WARNING, "Erro ao enviar o email ",e);
+	    	}
+	    	finally
+	    	{
+	    		try {
+	    			if(connection !=null)
+						connection.close();
+					} catch (JMSException e) {
+				   		LOGGER.log(Level.WARNING, "Erro ao fechar a conexao ",e);
+					}
 	    	}
 	            
 	    }

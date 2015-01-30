@@ -62,10 +62,17 @@ public class BudgetServiceBean extends GenericService implements BudgetService {
 				.getResultList();
 	}
 
+	@Override
+	public List<Despesa> obterDespesaAprovadasNoDetalheBudget(Long budgetId) throws Exception {
+
+		return em.createNamedQuery("Despesa.obterDespesaAprovadasNoDetalheBudget",Despesa.class).setParameter("budgetId", budgetId)
+				.getResultList();
+	}
+
 
 	public List<DespesaMesDTO> obterDespesaNoDetalheBudgetAsDTO(Long budgetId) throws Exception {
 
-		List<Despesa> despesas = obterDespesaNoDetalheBudget(budgetId);
+		List<Despesa> despesas = obterDespesaAprovadasNoDetalheBudget(budgetId);
 		List<DespesaMesDTO> despesasMes = new ArrayList<>();
 		for(Despesa despesa : despesas)
 		{

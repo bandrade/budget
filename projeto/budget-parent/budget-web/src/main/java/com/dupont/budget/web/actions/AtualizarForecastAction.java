@@ -69,7 +69,7 @@ public class AtualizarForecastAction extends ForecastAction implements Serializa
 			if(desp.getDespesaMensalisada().isValorComprometidoMaiorQueForecast())
 			{
 				facesUtils.addErrorMessage("A despesa " +desp.getTipoDespesa().getNome() +" - "+desp.getAcao().getNome() + " possui um "
-						+ "valor comprometido maior que o forecast");
+						+ "valor comprometido maior que o valor planejado");
 				return false;
 			}
 		}

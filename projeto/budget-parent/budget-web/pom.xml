@@ -99,7 +99,12 @@
 		    <version>${deltaspike.version}</version>
 		    <scope>runtime</scope>
 		</dependency>
+		<dependency>
+  			<groupId>joda-time</groupId>
+  			<artifactId>joda-time</artifactId>
+		</dependency>
 	</dependencies>
+	
 	<build>
 		<finalName>budget.war</finalName>
 		<plugins>

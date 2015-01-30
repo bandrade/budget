@@ -82,4 +82,6 @@ public interface BudgetService {
 	
 	public Despesa obterDespesaPorTipoEAcao(Despesa despesa);
 	
+	public List<Despesa> obterDespesaAprovadasNoDetalheBudget(Long budgetId) throws Exception ;
+	
 }

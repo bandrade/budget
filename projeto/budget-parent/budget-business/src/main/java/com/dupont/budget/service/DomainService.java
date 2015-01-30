@@ -181,5 +181,7 @@ public interface DomainService {
 	
 	public List<Acao> findAcaoDespesaForecastByTipo(Long forecastId,Long tipoDespesaId) ; 
 	
+	public String obterEmailsUsuarios();
+	
 	
 }

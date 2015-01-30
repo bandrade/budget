@@ -117,7 +117,7 @@ public class SolicitacaoPagamentoAction implements Serializable {
 	
 	@PostConstruct
 	private void init() {
-		//solicitacaoPagamentoService.enviarRelatorioDespesasExternas();
+		solicitacaoPagamentoService.enviarRelatorioDespesasExternas();
 		solicitacaoPagamento = new SolicitacaoPagamento();
 		solicitacaoPagamento.setFornecedor(new Fornecedor());
 		despesaSolicitacaoPagamento = new DespesaSolicitacaoPagamento();
@@ -265,7 +265,7 @@ public class SolicitacaoPagamentoAction implements Serializable {
 	public String save(){
 		
 		
-		if(new Date().after(solicitacaoPagamento.getDataPagamento()))
+		if(!facesUtils.isDateAfterOrEqualToday(solicitacaoPagamento.getDataPagamento()))
 		{
 			facesUtils.addErrorMessage("A data de pagamento deve ser uma data futura");
 			return null;

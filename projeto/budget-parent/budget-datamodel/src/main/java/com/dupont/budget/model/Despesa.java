@@ -25,9 +25,10 @@ import javax.persistence.Table;
 @NamedQueries({
 	@NamedQuery(name="Despesa.agruparPorTipoDeDespesa", query="select c.tipoDespesa, sum(c.valor) from Despesa c where c.budget.id = :id group by c.tipoDespesa"),
 	@NamedQuery(name="Despesa.obterDespesaNoDetalhe", query="select c from Despesa c where c.budget.id = :budgetId and c.tipoDespesa.id=:id"),
-	@NamedQuery(name="Despesa.obterSomaDespesa", query="select sum(c.valor) from Despesa c where c.budget.id = :budgetId"),
+	@NamedQuery(name="Despesa.obterSomaDespesa", query="select sum(c.valor) from Despesa c where c.budget.id = :budgetId and c.aprovado=true"),
 	@NamedQuery(name="Despesa.obterSomaValorPropostoDespesa", query="select sum(c.valorProposto) from Despesa c where c.budget.id = :budgetId"),
 	@NamedQuery(name="Despesa.obterDespesaNoDetalheBudget", query="select c from Despesa c where c.budget.id = :budgetId order by c.tipoDespesa.id"),
+	@NamedQuery(name="Despesa.obterDespesaAprovadasNoDetalheBudget", query="select c from Despesa c where c.budget.id = :budgetId and c.aprovado=true order by c.tipoDespesa.id"),
 	@NamedQuery(name="Despesa.aprovarDespesasBudget", query="update Despesa c  set c.aprovado=true where c.budget.id = :budgetId"),
 	@NamedQuery(name="Despesa.obterDespesaPorTipoEAcao", query="select c from Despesa c where c.budget.id = :budgetId and c.tipoDespesa.id=:tipoDespesaId and c.acao.id=:acaoId")
 })

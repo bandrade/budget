@@ -57,9 +57,7 @@
 					<p:message for="valorTotalNotaInput"  />
 					
 					<p:outputLabel value="Data de Pgto.:" for="dataPagamentoInput"/>
-					<p:inputMask id="dataPagamentoInput" value="#{solicitacaoPagamento.dataPagamento}" label="Data de Pgto." required="true" mask="99/99/9999">
-						<f:convertDateTime pattern="dd/MM/yyyy" />
-					</p:inputMask>
+					<p:calendar id="dataPagamentoInput" value="#{solicitacaoPagamento.dataPagamento}" label="Data de Pgto." required="true" mask="99/99/9999"/>
 					<p:message for="dataPagamentoInput" />
 				</p:panelGrid>
 				
@@ -104,7 +102,7 @@
 						    converter="com.dupont.EntityConverter" required="true" 
 						    rendered="#{!solicitacaoPagamentoAction.despesaForecastFlag}"
 							disabled="#{solicitacaoPagamentoAction.desabilitarDespesa || empty solicitacaoPagamentoAction.tiposDespesas}">
-							<p:ajax listener="#{solicitacaoPagamentoAction.doSelectTipoDespesa}" update="dadosCC"/>
+							<p:ajax listener="#{solicitacaoPagamentoAction.doSelectTipoDespesa}" update="dadosCC" process="@this"/>
 							<f:selectItem itemLabel="Selecione um tipo de despesa" itemValue="#{null}" />
 							<f:selectItems value="#{solicitacaoPagamentoAction.tiposDespesas}" var="item" itemLabel="#{item.nome}" itemValue="#{item}"/>
 						</p:selectOneMenu>
@@ -121,7 +119,7 @@
 	 					<p:selectOneMenu id="acoesSelectOneMenu" label="Ação" value="#{despesaSolicitacaoPagamento.acao}"
 	 						 converter="com.dupont.EntityConverter" required="true" rendered="#{!solicitacaoPagamentoAction.despesaForecastFlag}"
 	 						 disabled="#{solicitacaoPagamentoAction.desabilitarDespesa || empty solicitacaoPagamentoAction.acoes}">								
-							<p:ajax listener="#{solicitacaoPagamentoAction.doSelectAcao}" update="dadosCC"/>
+							<p:ajax listener="#{solicitacaoPagamentoAction.doSelectAcao}" update="dadosCC" process="@this"/>
 							<f:selectItem itemLabel="Selecione uma ação" itemValue="#{null}" />
 							<f:selectItems value="#{solicitacaoPagamentoAction.acoes}" var="item" itemLabel="#{item.nome}" itemValue="#{item}"/>						
 						</p:selectOneMenu>			
@@ -132,7 +130,7 @@
 						<p:outputLabel value="Produto:" for="produtosSelectOneMenu"/>
 						<p:selectOneMenu id="produtosSelectOneMenu" value="#{despesaSolicitacaoPagamento.produto}" label="Produto" converter="com.dupont.EntityConverter" required="true" rendered="#{!solicitacaoPagamentoAction.despesaForecastFlag}"
 							disabled="true">
-							<p:ajax listener="#{solicitacaoPagamentoAction.doSelectProduto}" update="dadosCC"/>
+							<p:ajax listener="#{solicitacaoPagamentoAction.doSelectProduto}" update="dadosCC" process="@this"/>
 							<f:selectItem itemLabel="Selecione um produto" itemValue="#{null}" />
 							<f:selectItems value="#{solicitacaoPagamentoAction.produtos}" var="item" itemLabel="#{item.nome}"/>
 						</p:selectOneMenu>
@@ -144,7 +142,7 @@
 						<p:selectOneMenu id="culturasSelecOneMenu" label="Cultura"  value="#{despesaSolicitacaoPagamento.cultura}" converter="com.dupont.EntityConverter"
 								 rendered="#{!solicitacaoPagamentoAction.despesaForecastFlag}"
 								 disabled="true">
-							<p:ajax listener="#{solicitacaoPagamentoAction.doSelectCultura}" update="dadosCC"/>
+							<p:ajax listener="#{solicitacaoPagamentoAction.doSelectCultura}" update="dadosCC" process="@this"/>
 							<f:selectItem itemLabel="Selecione uma cultura" itemValue="#{null}" />
 							<f:selectItems value="#{solicitacaoPagamentoAction.culturas}" var="item" itemLabel="#{item.nome}" itemValue="#{item}"/>
 						</p:selectOneMenu>

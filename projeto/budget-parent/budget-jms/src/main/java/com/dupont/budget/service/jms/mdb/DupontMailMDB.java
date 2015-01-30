@@ -49,7 +49,7 @@ public class DupontMailMDB implements MessageListener {
             m.setRecipients(javax.mail.Message.RecipientType.TO, to);
             m.setSubject(subject);
             m.setSentDate(new java.util.Date());
-            m.setContent(content,"text/plain");
+            m.setContent(content,"text/html");
             Transport.send(m);
         } catch (Exception e) {
         	LOGGER.log(Level.WARNING, "Erro ao enviar email ",e);

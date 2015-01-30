@@ -68,7 +68,8 @@ public class InserirBudgetAprovadoAction extends AreaBudgetAction implements
 		valorTotalAprovadoBudget= 0d;
 		for(BudgetAreaDTO budgetArea : budgetsArea)
 		{
-			valorTotalAprovadoBudget+=budgetArea.getValorTotalAprovadoBudget();
+			if(budgetArea.getValorTotalAprovadoBudget()!=null)
+				valorTotalAprovadoBudget+=budgetArea.getValorTotalAprovadoBudget();
 		}
 	}
 

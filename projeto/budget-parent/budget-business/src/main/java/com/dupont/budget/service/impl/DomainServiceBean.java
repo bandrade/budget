@@ -280,4 +280,16 @@ public class DomainServiceBean extends GenericService implements DomainService {
 				.getResultList();
 		return acoes;
 	}
+
+	@Override
+	public String obterEmailsUsuarios() {
+		List<String> emails = em.createNamedQuery("Usuario.findEmails",String.class).getResultList();
+		StringBuilder emailString=new StringBuilder();
+		for(String email : emails)
+		{
+			emailString.append(email);
+			emailString.append(",");
+		}
+		return emailString.toString().substring(0,emailString.toString().length()-1);
+	}
 }
