@@ -20,6 +20,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.slf4j.Logger;
 
 import com.dupont.budget.dto.AreaDTO;
@@ -186,7 +187,7 @@ public class SolicitacaoPagamentoServiceBean implements SolicitacaoPagamentoServ
 					if(_notas!=null && _notas.size() >0)
 					{
 						possuiNota=true;
-						email.append("<br/><br/><b>Nome Centro Custo:</b>" +ccDto.getNumero());
+						email.append("<br/><br/><b>Nome Centro Custo:</b>" +StringEscapeUtils.escapeHtml4(ccDto.getNumero()));
 						adicionarNotaAoEmail(email,_notas);
 						
 					}
@@ -226,10 +227,10 @@ public class SolicitacaoPagamentoServiceBean implements SolicitacaoPagamentoServ
 			buffer.append("<tr>");
 			buffer.append("<td>"+item.getNotaFiscal() +"</td>");
 			buffer.append("<td>"+item.getDataCriacao() +"</td>");
-			buffer.append("<td>"+item.getFornecedor() +"</td>");
-			buffer.append("<td>"+item.getUsuario() +"</td>");
-			buffer.append("<td>"+item.getTipoDespesa() +"</td>");
-			buffer.append("<td>"+item.getAcao() +"</td>");
+			buffer.append("<td>"+StringEscapeUtils.escapeHtml4(item.getFornecedor()) +"</td>");
+			buffer.append("<td>"+StringEscapeUtils.escapeHtml4(item.getUsuario()) +"</td>");
+			buffer.append("<td>"+StringEscapeUtils.escapeHtml4(item.getTipoDespesa()) +"</td>");
+			buffer.append("<td>"+StringEscapeUtils.escapeHtml4(item.getAcao()) +"</td>");
 			buffer.append("<td>"+item.getValor() +"</td>");
 			buffer.append("</tr>");
 		}

@@ -29,7 +29,7 @@
 				
 				<p:commandButton value="Pesquisar" icon="ui-icon-search"   styleClass="button" action="#{solicitacaoPagamentoAction.find}" update="solicitacaoPagamentos" process="@this,numeroNotaInput,fornecedorInput,statusList"/>
 			</h:panelGrid>
-			
+			<p:commandButton value="Testar envio email semanal" action="#{solicitacaoPagamentoAction.testeEnvioRelatorio()}"></p:commandButton>
 			<p:separator />
 			
 			<p:dataTable id="solicitacaoPagamentos" var="item" value="#{solicitacaoPagamentoAction.list}" emptyMessage="Nenhum registro encontrado."

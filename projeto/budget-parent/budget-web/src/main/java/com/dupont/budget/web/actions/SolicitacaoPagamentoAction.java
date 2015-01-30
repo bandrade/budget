@@ -117,7 +117,6 @@ public class SolicitacaoPagamentoAction implements Serializable {
 	
 	@PostConstruct
 	private void init() {
-		solicitacaoPagamentoService.enviarRelatorioDespesasExternas();
 		solicitacaoPagamento = new SolicitacaoPagamento();
 		solicitacaoPagamento.setFornecedor(new Fornecedor());
 		despesaSolicitacaoPagamento = new DespesaSolicitacaoPagamento();
@@ -151,6 +150,10 @@ public class SolicitacaoPagamentoAction implements Serializable {
 		}
 		return "minhasTarefas";
 		
+	}
+	public void testeEnvioRelatorio()
+	{
+		solicitacaoPagamentoService.enviarRelatorioDespesasExternas();
 	}
 	
 	@Produces @Named
