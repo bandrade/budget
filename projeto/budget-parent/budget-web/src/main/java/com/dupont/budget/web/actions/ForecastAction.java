@@ -161,7 +161,7 @@ public class ForecastAction implements Serializable {
 		{
 			despesa.setForecast(despesasNoDetalhe.get(0).getForecast());
 		}
-		despesa.setValor(helper.calcularValorMensalisado(despesa));
+		despesa.setValor(helper.calcularValorMensalisado(mes,despesa));
 		if(despesa.getValor() ==null || despesa.getValor()<=0d)
 		{
 			facesUtils.addErrorMessage("O valor da despesa deve ser maior que zero.");
@@ -226,7 +226,7 @@ public class ForecastAction implements Serializable {
 	public void despesaAlterada(DespesaForecast despesa, String mounth)
 	{
 		despesa.setAlterada(true);
-		despesa.setValor(helper.calcularValorMensalisado(despesa));
+		despesa.setValor(helper.calcularValorMensalisado(mes,despesa));
 		calcularValorColuna(mounth);
 		calcularTotalBudget();
 	}
@@ -242,15 +242,10 @@ public class ForecastAction implements Serializable {
 		return helper.exibirColuna(mounth, mes);
 	}
 
-	public Boolean exibirDespesa(String mounth)
-	{
-
-		return helper.exibirDespesa(mounth, mes);
-	}
 
 	public Double calcularValorMensalisado()
 	{
-		return helper.calcularValorMensalisado(despesa);
+		return helper.calcularValorMensalisado(mes,despesa);
 	}
 	public Double calcularTotalBudget()
 	{

@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Table(name="despesa_forecast_ano")
 @NamedQueries({
 @NamedQuery(name="DespesaForecastAno.findAll", query="SELECT d FROM DespesaForecastAno d"),
-@NamedQuery(name="DespesaForecastAno.obterDespesasMensalizada", query="select c.despesaForecastMes from DespesaForecastAno c where c.despesaForecast.forecast.id = :forecastId and c.mes=:mes"),
+@NamedQuery(name="DespesaForecastAno.obterDespesasMensalizada", query="select c.despesaForecastMes from DespesaForecastAno c where c.despesaForecast.forecast.id = :forecastId and c.mes=:mes and c.despesaForecast.id=:despesaForecastId"),
 })
 public class DespesaForecastAno implements Serializable {
 	private static final long serialVersionUID = 1L;

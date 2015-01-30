@@ -5,6 +5,8 @@ public class DetalheValoresComprometidosDTO {
 	private String acao;
 	private Double valor;
 	private String tipoDespesa;
+	private String fornecedor;
+	
 	public String getNotaFiscal() {
 		return notaFiscal;
 	}
@@ -28,6 +30,12 @@ public class DetalheValoresComprometidosDTO {
 	}
 	public void setTipoDespesa(String tipoDespesa) {
 		this.tipoDespesa = tipoDespesa;
+	}
+	public String getFornecedor() {
+		return fornecedor;
+	}
+	public void setFornecedor(String fornecedor) {
+		this.fornecedor = fornecedor;
 	}
 	
 	

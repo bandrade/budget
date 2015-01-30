@@ -69,7 +69,7 @@ public class ProcessoAction {
 			return false;
 		}
 		calendar.setTime(dataExpiracao);
-		if(facesUtils.isDateAfterOrEqualToday(dataExpiracao))
+		if(!facesUtils.isDateAfterOrEqualToday(dataExpiracao))
 		{
 			facesUtils.addErrorMessage("O prazo deve ser uma data futura");
 			return false;

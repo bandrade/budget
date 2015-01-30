@@ -115,6 +115,23 @@ public class DespesaForecastMes implements Serializable {
 		return false;
 
 	}
+	
+	public boolean possuiValorPreenchido()
+	{
+		 	 return 	 
+		 			janeiro !=null 	|| 
+					fevereiro !=null ||
+					marco !=null 	||
+					abril !=null 	||
+					maio !=null 		||
+					junho !=null 	||
+					julho !=null		|| 
+					agosto !=null 	||
+					setembro !=null 	||
+					outubro !=null 	||
+					novembro !=null 	||
+					dezembro !=null ;
+	}
 
 	public DespesaForecastMes(){}
 	public DespesaForecastMes( Double janeiro, Double fevereiro,
