@@ -7,6 +7,7 @@ import com.dupont.budget.model.CentroCusto;
 
 public interface CentroDeCustoService {
 	CentroDeCustoDTO[] obterCentrosDeCusto();
-	List<CentroCusto> findByArea(Long areaId) throws Exception;
+	List<CentroCusto> findByArea(Long areaId) throws Exception
+	;public CentroDeCustoDTO parseCentroCusto(CentroCusto cc);
 
 }

@@ -87,7 +87,7 @@ public class BPMProcessManagerApiImpl implements BPMProcessManagerApi {
 			params.put("prazo", prazo);
 			params.put("emails", email);
 			ProcessInstance processInstance = ksession.startProcess(
-			"com.dupont.bpm.criarbudget", params);
+			"com.dupont.bpm.criarbudget.v2", params);
 			processInstanceId = processInstance.getId();
 
 		} catch (Exception e) {

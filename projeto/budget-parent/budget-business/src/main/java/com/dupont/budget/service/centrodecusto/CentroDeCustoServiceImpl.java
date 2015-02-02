@@ -65,6 +65,40 @@ public class CentroDeCustoServiceImpl extends GenericService implements CentroDe
 
 		return centrosDeCusto.toArray(new CentroDeCustoDTO[centrosDeCusto.size()]);
 	}
+	
+	public CentroDeCustoDTO parseCentroCusto(CentroCusto cc){
+		CentroDeCustoDTO ccDto = new CentroDeCustoDTO();
+		ccDto.setNome(cc.getNome());
+		ccDto.setId(cc.getId());
+		ccDto.setNumero(cc.getCodigo());
+		ccDto.setArea(cc.getArea().getNome());
+		List<PapelUsuario> papeis = domainService.findPapeisByCentroDeCusto(cc.getId());
+		List<PapelDTO> papeisDTO = new ArrayList<PapelDTO>();
+
+		for(PapelUsuario papel : papeis)
+		{
+			PapelDTO p = new PapelDTO();
+			p.setNomePapel(papel.getPapel().getNome());
+			ColaboradorDTO colaborador = new ColaboradorDTO(papel.getUsuario().getNome(),
+							papel.getUsuario().getLogin(),papel.getUsuario().getEmail());
+
+			p.setColaborador(colaborador);
+			papeisDTO.add(p);
+		}
+		ccDto.setPapeis(papeisDTO);
+
+		Papel papelLider = cc.getArea().getLider().getPapel();
+		Usuario usuario = cc.getArea().getLider().getUsuario();
+		PapelDTO pDto = new PapelDTO();
+		pDto.setNomePapel(papelLider.getNome());
+		ColaboradorDTO colaborador = new ColaboradorDTO(usuario.getNome(),
+				usuario.getLogin(),usuario.getEmail());
+
+		pDto.setColaborador(colaborador);
+		ccDto.getPapeis().add(pDto);
+		
+		return ccDto;
+	}
 
 	@Override
 	public List<CentroCusto> findByArea(Long areaId) throws Exception{

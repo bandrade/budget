@@ -1,6 +1,7 @@
 package com.dupont.budget.dto;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class AreaDTO implements Serializable {
@@ -31,6 +32,8 @@ public class AreaDTO implements Serializable {
 	}
 	
 	public List<CentroDeCustoDTO> getCentrosDeCusto() {
+		if(centrosDeCusto == null)
+			centrosDeCusto = new ArrayList<CentroDeCustoDTO>();
 		return centrosDeCusto;
 	}
 	public void setCentrosDeCusto(List<CentroDeCustoDTO> centrosDeCusto) {

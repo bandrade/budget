@@ -42,6 +42,10 @@ public class BPMSProcessServiceImpl implements BPMSProcessService{
 				AreaDTO areaDto =  new AreaDTO();
 				areaDto.setId(area.getId());
 				areaDto.setNome(area.getNome());
+				for(CentroCusto centroCusto : centrosDeCusto)
+				{
+					areaDto.getCentrosDeCusto().add(ccService.parseCentroCusto(centroCusto));
+				}
 				areasListDto.add(areaDto);
 			}
 		}
