@@ -47,7 +47,7 @@
 					<p:outputLabel value="Valor Aprovado:"></p:outputLabel>
 					<p:outputLabel styleClass="bold-label" value="#{facesUtils.formatarDinheiro(ajustarForecastAction.valorTolerancia)}"></p:outputLabel>
 				</p:panelGrid>
-				<p:panelGrid columns="1" styleClass="painel-botoes">
+					<p:panelGrid columns="1" styleClass="painel-botoes">
 					<p:commandButton value="Incluir Despesa"
 						oncomplete="PF('criarDespesa').show();" action="#{ajustarForecastAction.trataInclusao()}" update=":criarDespesaPanel,:formDespesa"/>
 				</p:panelGrid>
@@ -109,7 +109,7 @@
 						<pe:inputNumber  id="valorJan" value="#{detalheDespesa.despesaMensalisada.janeiro}" converter="javax.faces.Double" >
 							<p:ajax   listener="#{ajustarForecastAction.despesaAlterada(detalheDespesa,'JANEIRO')}" update=":form" process="@this"></p:ajax>
 						</pe:inputNumber>
-						<p:commandLink rendered="#{ajustarForecastAction.exibirDespesa('JANEIRO')}" value="/#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaJaneiro)}"
+						<p:commandLink value="/#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaJaneiro)}"
 							action="#{ajustarForecastAction.obterDetalheValorComprometido('JANEIRO')}" update=":tblValoresComprometidos"  oncomplete="PF('panelDetalhe').show();">
 							<f:setPropertyActionListener target="#{ajustarForecastAction.despesaDetalheSelecionada}" value="#{detalheDespesa}" />
 						</p:commandLink>
@@ -122,7 +122,7 @@
 						<pe:inputNumber  id="valorFev" value="#{detalheDespesa.despesaMensalisada.fevereiro}" converter="javax.faces.Double" >
 							<p:ajax   listener="#{ajustarForecastAction.despesaAlterada(detalheDespesa,'FEVEREIRO')}" update=":form" process="@this"></p:ajax>
 						</pe:inputNumber>
-						<p:commandLink rendered="#{ajustarForecastAction.exibirDespesa('FEVEREIRO')}" value="/#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaFevereiro)}"
+						<p:commandLink value="/#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaFevereiro)}"
 							action="#{ajustarForecastAction.obterDetalheValorComprometido('FEVEREIRO')}" update=":tblValoresComprometidos"  oncomplete="PF('panelDetalhe').show();">
 							<f:setPropertyActionListener target="#{ajustarForecastAction.despesaDetalheSelecionada}" value="#{detalheDespesa}" />
 						</p:commandLink>
@@ -135,7 +135,7 @@
 						<pe:inputNumber  id="valorMar" value="#{detalheDespesa.despesaMensalisada.marco}" converter="javax.faces.Double" >
 							<p:ajax   listener="#{ajustarForecastAction.despesaAlterada(detalheDespesa,'MARCO')}" update=":form" process="@this"></p:ajax>
 						</pe:inputNumber>
-						<p:commandLink rendered="#{ajustarForecastAction.exibirDespesa('MARCO')}" value="/#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaMarco)}"
+						<p:commandLink  value="/#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaMarco)}"
 							action="#{ajustarForecastAction.obterDetalheValorComprometido('MARCO')}" update=":tblValoresComprometidos"  oncomplete="PF('panelDetalhe').show();">
 							<f:setPropertyActionListener target="#{ajustarForecastAction.despesaDetalheSelecionada}" value="#{detalheDespesa}" />
 						</p:commandLink>
@@ -150,7 +150,7 @@
 						<pe:inputNumber  id="valorAbr" value="#{detalheDespesa.despesaMensalisada.abril}" converter="javax.faces.Double" >
 							<p:ajax   listener="#{ajustarForecastAction.despesaAlterada(detalheDespesa,'ABRIL')}" update=":form" process="@this"></p:ajax>
 						</pe:inputNumber>
-						<p:commandLink rendered="#{ajustarForecastAction.exibirDespesa('ABRIL')}" value="/#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaAbril)}"
+						<p:commandLink  value="/#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaAbril)}"
 							action="#{ajustarForecastAction.obterDetalheValorComprometido('ABRIL')}" update=":tblValoresComprometidos"  oncomplete="PF('panelDetalhe').show();">
 							<f:setPropertyActionListener target="#{ajustarForecastAction.despesaDetalheSelecionada}" value="#{detalheDespesa}" />
 						</p:commandLink>
@@ -163,7 +163,7 @@
 						<pe:inputNumber  id="valorMai" value="#{detalheDespesa.despesaMensalisada.maio}" converter="javax.faces.Double" >
 							<p:ajax   listener="#{ajustarForecastAction.despesaAlterada(detalheDespesa,'MAIO')}" update=":form" process="@this"></p:ajax>
 						</pe:inputNumber>
-						<p:commandLink rendered="#{ajustarForecastAction.exibirDespesa('MAIO')}" value="/#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaMaio)}"
+						<p:commandLink  value="/#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaMaio)}"
 							action="#{ajustarForecastAction.obterDetalheValorComprometido('MAIO')}" update=":tblValoresComprometidos"  oncomplete="PF('panelDetalhe').show();">
 							<f:setPropertyActionListener target="#{ajustarForecastAction.despesaDetalheSelecionada}" value="#{detalheDespesa}" />
 						</p:commandLink>
@@ -176,7 +176,7 @@
 						<pe:inputNumber  id="valorJun" value="#{detalheDespesa.despesaMensalisada.junho}" converter="javax.faces.Double" >
 							<p:ajax   listener="#{ajustarForecastAction.despesaAlterada(detalheDespesa,'JUNHO')}" update=":form" process="@this"></p:ajax>
 						</pe:inputNumber>
-						<p:commandLink rendered="#{ajustarForecastAction.exibirDespesa('JUNHO')}" value="/#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaJunho)}"
+						<p:commandLink value="/#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaJunho)}"
 							action="#{ajustarForecastAction.obterDetalheValorComprometido('JUNHO')}" update=":tblValoresComprometidos"  oncomplete="PF('panelDetalhe').show();">
 							<f:setPropertyActionListener target="#{ajustarForecastAction.despesaDetalheSelecionada}" value="#{detalheDespesa}" />
 						</p:commandLink>
@@ -189,7 +189,7 @@
 						<pe:inputNumber  id="valorJul" value="#{detalheDespesa.despesaMensalisada.julho}" converter="javax.faces.Double" >
 							<p:ajax   listener="#{ajustarForecastAction.despesaAlterada(detalheDespesa,'JULHO')}" update=":form" process="@this"></p:ajax>
 						</pe:inputNumber>
-						<p:commandLink rendered="#{ajustarForecastAction.exibirDespesa('JULHO')}" value="/#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaJulho)}"
+						<p:commandLink  value="/#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaJulho)}"
 							action="#{ajustarForecastAction.obterDetalheValorComprometido('JULHO')}" update=":tblValoresComprometidos"  oncomplete="PF('panelDetalhe').show();">
 							<f:setPropertyActionListener target="#{ajustarForecastAction.despesaDetalheSelecionada}" value="#{detalheDespesa}" />
 						</p:commandLink>
@@ -202,7 +202,7 @@
 						<pe:inputNumber  id="valorAgo" value="#{detalheDespesa.despesaMensalisada.agosto}" converter="javax.faces.Double" >
 							<p:ajax   listener="#{ajustarForecastAction.despesaAlterada(detalheDespesa,'AGOSTO')}" update=":form" process="@this"></p:ajax>
 						</pe:inputNumber>
-						<p:commandLink rendered="#{ajustarForecastAction.exibirDespesa('AGOSTO')}" value="/#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaAgosto)}"
+						<p:commandLink  value="/#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaAgosto)}"
 							action="#{ajustarForecastAction.obterDetalheValorComprometido('AGOSTO')}" update=":tblValoresComprometidos"  oncomplete="PF('panelDetalhe').show();">
 							<f:setPropertyActionListener target="#{ajustarForecastAction.despesaDetalheSelecionada}" value="#{detalheDespesa}" />
 						</p:commandLink>
@@ -215,7 +215,7 @@
 						<pe:inputNumber  id="valorSet" value="#{detalheDespesa.despesaMensalisada.setembro}" converter="javax.faces.Double" >
 							<p:ajax   listener="#{ajustarForecastAction.despesaAlterada(detalheDespesa,'SETEMBRO')}" update=":form" process="@this"></p:ajax>
 						</pe:inputNumber>
-						<p:commandLink rendered="#{ajustarForecastAction.exibirDespesa('SETEMBRO')}" value="/#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaSetembro)}"
+						<p:commandLink value="/#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaSetembro)}"
 							action="#{ajustarForecastAction.obterDetalheValorComprometido('SETEMBRO')}" update=":tblValoresComprometidos"  oncomplete="PF('panelDetalhe').show();">
 							<f:setPropertyActionListener target="#{ajustarForecastAction.despesaDetalheSelecionada}" value="#{detalheDespesa}" />
 						</p:commandLink>
@@ -228,7 +228,7 @@
 						<pe:inputNumber  id="valorOut" value="#{detalheDespesa.despesaMensalisada.outubro}" converter="javax.faces.Double" >
 							<p:ajax   listener="#{ajustarForecastAction.despesaAlterada(detalheDespesa,'OUTUBRO')}" update=":form" process="@this"></p:ajax>
 						</pe:inputNumber>
-						<p:commandLink rendered="#{ajustarForecastAction.exibirDespesa('OUTUBRO')}" value="/#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaOutubro)}"
+						<p:commandLink  value="/#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaOutubro)}"
 							action="#{ajustarForecastAction.obterDetalheValorComprometido('OUTUBRO')}" update=":tblValoresComprometidos"  oncomplete="PF('panelDetalhe').show();">
 							<f:setPropertyActionListener target="#{ajustarForecastAction.despesaDetalheSelecionada}" value="#{detalheDespesa}" />
 						</p:commandLink>
@@ -241,7 +241,7 @@
 						<pe:inputNumber  id="valorNov" value="#{detalheDespesa.despesaMensalisada.novembro}" converter="javax.faces.Double" >
 							<p:ajax   listener="#{ajustarForecastAction.despesaAlterada(detalheDespesa,'NOVEMBRO')}" update=":form" process="@this"></p:ajax>
 						</pe:inputNumber>
-						<p:commandLink rendered="#{ajustarForecastAction.exibirDespesa('NOVEMBRO')}" value="/#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaNovembro)}"
+						<p:commandLink value="/#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaNovembro)}"
 							action="#{ajustarForecastAction.obterDetalheValorComprometido('NOVEMBRO')}" update=":tblValoresComprometidos"  oncomplete="PF('panelDetalhe').show();">
 							<f:setPropertyActionListener target="#{ajustarForecastAction.despesaDetalheSelecionada}" value="#{detalheDespesa}" />
 						</p:commandLink>
@@ -254,7 +254,7 @@
 						<pe:inputNumber  id="valorDez" value="#{detalheDespesa.despesaMensalisada.dezembro}" converter="javax.faces.Double" >
 							<p:ajax   listener="#{ajustarForecastAction.despesaAlterada(detalheDespesa,'DEZEMBRO')}" update=":form" process="@this"></p:ajax>
 						</pe:inputNumber>
-						<p:commandLink rendered="#{ajustarForecastAction.exibirDespesa('DEZEMBRO')}" value="/#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaDezembro)}"
+						<p:commandLink  value="/#{facesUtils.formatarDinheiro(detalheDespesa.despesaMensalisada.despesaDezembro)}"
 							action="#{ajustarForecastAction.obterDetalheValorComprometido('DEZEMBRO')}" update=":tblValoresComprometidos"  oncomplete="PF('panelDetalhe').show();">
 							<f:setPropertyActionListener target="#{ajustarForecastAction.despesaDetalheSelecionada}" value="#{detalheDespesa}" />
 						</p:commandLink>
@@ -298,27 +298,21 @@
 					<f:facet name="header">Valores Comprometidos</f:facet>
   				    <p:column >
 						<f:facet name="header">
-							<h:outputText value="Tipo Despesa" />
+							<h:outputText value="Fornecedor" />
 						</f:facet>
-						<h:outputText value="#{detalheValoresComprometidos.tipoDespesa}" />
-					</p:column>
-					<p:column >
-						<f:facet name="header">
-							<h:outputText value="Ação" />
-						</f:facet>
-						<h:outputText value="#{detalheValoresComprometidos.acao}" />
-					</p:column>
-					<p:column >
-						<f:facet name="header">
-							<h:outputText value="Valor" />
-						</f:facet>
-						<h:outputText value="#{facesUtils.formatarDinheiro(detalheValoresComprometidos.valor)}" />
+						<h:outputText value="#{detalheValoresComprometidos.fornecedor}" />
 					</p:column>
 					<p:column >
 						<f:facet name="header">
 							<h:outputText value="Nota Fiscal" />
 						</f:facet>
 						<h:outputText value="#{detalheValoresComprometidos.notaFiscal}" />
+					</p:column>
+					<p:column >
+						<f:facet name="header">
+							<h:outputText value="Valor" />
+						</f:facet>
+						<h:outputText value="#{facesUtils.formatarDinheiro(detalheValoresComprometidos.valor)}" />
 					</p:column>
 						
 					</p:dataTable>

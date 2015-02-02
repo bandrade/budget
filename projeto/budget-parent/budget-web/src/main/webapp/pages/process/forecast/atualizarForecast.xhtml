@@ -261,7 +261,7 @@
 						<f:facet name="header">
 							<h:outputText value="Total ano" />
 						</f:facet>
-						<h:outputText value="#{detalheDespesa.valor + detalheDespesa.ytd}" >
+						<h:outputText value="#{atualizarForecastAction.calcularValorMensalisado(detalheDespesa) + detalheDespesa.ytd}" >
 							<f:convertNumber type="currency"/>
 						</h:outputText>
 			     	</p:column> 

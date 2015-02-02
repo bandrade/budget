@@ -26,7 +26,7 @@ public class AprovarForecastAction extends ForecastAction implements Serializabl
 			return null;
 		}
 		params.put("aprovado",APROVACAO_SIM.equals(aprovacao));
-		params.put("valorAprovado", valorAprovacao);
+		params.put("valorAprovacao", valorAprovacao);
 		
 		return super.concluir();
 	}

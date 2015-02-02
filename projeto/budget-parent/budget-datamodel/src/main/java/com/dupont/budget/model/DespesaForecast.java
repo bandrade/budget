@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -26,8 +27,6 @@ import javax.persistence.Transient;
 	@NamedQuery(name="DespesaForecast.findByForecastTipoDespesaAndAcao", 
 			query="select d from DespesaForecast d where d.forecast.id=:forecastId and d.tipoDespesa.id=:tipoDespesaId and d.acao.id=:acaoId"),
 	@NamedQuery(name="DespesaForecast.obterDespesaPorTipoEAcao", query="select c from DespesaForecast c where c.forecast.id = :forecastId and c.tipoDespesa.id=:tipoDespesaId and c.acao.id=:acaoId"),
-	//XXX
-	//@NamedQuery(name="DespesaForecast.obterDespesasForecastMes", query="select c from DespesaForecast c where c.forecast.id = :forecastId and c.despesaPK.mes=:mes"),
 	@NamedQuery(name="DespesaForecast.obterDespesaTipoDespesa", query="select distinct c.tipoDespesa from DespesaForecast c where c.forecast.id = :forecastId and c.ativo=true "),
 	@NamedQuery(name="DespesaForecast.obterAcoesDespesaPorTipoDespesa", query="select distinct c.acao from DespesaForecast c where c.forecast.id = :forecastId and c.ativo=true and c.tipoDespesa.id=:tipoDespesaId")
 	
@@ -97,7 +96,7 @@ public class DespesaForecast {
 	
 
 	//bi-directional many-to-one association to DespesaForecastAno
-	@OneToMany(mappedBy="despesaForecast")
+	@OneToMany(mappedBy="despesaForecast",fetch=FetchType.EAGER)
 	private Set<DespesaForecastAno> despesaForecastMes;
 	
 
@@ -228,30 +227,6 @@ public class DespesaForecast {
 			setValor(null);
 	}
 
-	public Double obterPLM(DespesaForecast despesaForecast , Long mes)
-	{
-		Double[]  valores = new Double[]{despesaForecast.getDespesaMensalisada().getJaneiro(),
-									 despesaForecast.getDespesaMensalisada().getFevereiro(),
-									 despesaForecast.getDespesaMensalisada().getMarco(),
-									 despesaForecast.getDespesaMensalisada().getAbril(),
-									 despesaForecast.getDespesaMensalisada().getMaio(),
-									 despesaForecast.getDespesaMensalisada().getJunho(),
-									 despesaForecast.getDespesaMensalisada().getJulho(),
-									 despesaForecast.getDespesaMensalisada().getAgosto(),
-									 despesaForecast.getDespesaMensalisada().getSetembro(),
-									 despesaForecast.getDespesaMensalisada().getOutubro(),
-									 despesaForecast.getDespesaMensalisada().getNovembro(),
-									 despesaForecast.getDespesaMensalisada().getDezembro()
-					};
-
-		Double ytd= 0d;
-		for(int i=0; i<mes;i++)
-		{
-			ytd += valores[i] !=null ? valores[i] : 0d;
-		}
-		return ytd;
-	}
-
 
 	public DespesaForecast(TipoDespesa tipoDespesa, Cliente cliente,
 			Acao acao, Vendedor vendedor, Produto produto, Cultura cultura,
@@ -275,7 +250,6 @@ public class DespesaForecast {
 				despesaForecast.getValor(),
 				despesaForecast.getComentario());
 		
-		this.setPlm(obterPLM(despesaForecast, 12L));
 		this.setDespesaBudget(despesaForecast.getDespesaBudget());
 		this.setForecast(despesaForecast.getForecast());
 		DespesaForecastMes despesaForecastMes =  DespesaForecastMes.createFromDespesaMes(despesaForecast.getDespesaMensalisada());

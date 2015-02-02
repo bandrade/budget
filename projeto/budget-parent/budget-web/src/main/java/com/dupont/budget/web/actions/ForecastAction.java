@@ -247,6 +247,10 @@ public class ForecastAction implements Serializable {
 	{
 		return helper.calcularValorMensalisado(mes,despesa);
 	}
+	public Double calcularValorMensalisado(DespesaForecast despesaForecast)
+	{
+		return helper.calcularValorMensalisado(mes,despesaForecast);
+	}
 	public Double calcularTotalBudget()
 	{
 		Double valor = 0d;

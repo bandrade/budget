@@ -141,13 +141,15 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 				despesaForecast.setDespesaMensalisada(em.createNamedQuery("DespesaForecastAno.obterDespesasMensalizada",DespesaForecastMes.class)
 				.setParameter("despesaForecastId", despesaForecast.getId())
 				.setParameter("forecastId", forecast.getId())
-				.setParameter("mes", forecastMensalidado.getPk().getMes()).getSingleResult());
+				.setParameter("mes",  Integer.valueOf(forecastMensalidado.getPk().getMes()+"")).getSingleResult());
 				
 				DespesaForecastMes despesaForecastMes = DespesaForecastMes.createFromDespesaMes(despesaForecast.getDespesaMensalisada());
 				em.persist(despesaForecastMes);
 				DespesaForecastAno despesaForecastAno = new DespesaForecastAno(new DespesaForecastAnoPK(despesaForecast.getId(),despesaForecastMes.getId()),mesSeguinte,despesaForecast,despesaForecastMes);
 				em.persist(despesaForecastAno);
+				despesaForecast.setYtd(obterYtd(despesaForecast,forecastMensalidado.getPk().getMes()));
 				despesaForecast.getDespesaForecastMes().add(despesaForecastAno);
+				despesaForecast.setPlm(obterPLM(despesaForecastMes,Integer.valueOf(forecastMensalidado.getPk().getMes()+""), despesaForecast.getYtd()));
 				em.merge(despesaForecast);
 
 			}
@@ -164,6 +166,30 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 		}
 
 	}
+	public Double obterPLM(DespesaForecastMes despesaForecastMes,Integer mes,Double ytd)
+	{
+		Double[]  valores = new Double[]{despesaForecastMes.getJaneiro(),
+									 despesaForecastMes.getFevereiro(),
+									 despesaForecastMes.getMarco(),
+									 despesaForecastMes.getAbril(),
+									 despesaForecastMes.getMaio(),
+									 despesaForecastMes.getJunho(),
+									 despesaForecastMes.getJulho(),
+									 despesaForecastMes.getAgosto(),
+									 despesaForecastMes.getSetembro(),
+									 despesaForecastMes.getOutubro(),
+									 despesaForecastMes.getNovembro(),
+									 despesaForecastMes.getDezembro()
+					};
+
+		Double valor= 0d;
+		for(int i=mes; i<12;i++)
+		{
+			valor += valores[i] !=null ? valores[i] : 0d;
+		}
+		return valor +ytd;
+	}
+
 	public ForecastMensalisado obterForecastMensalidadeEmAndamento(Forecast forecast)
 	{
 		ForecastMensalisado forecastMensalido = em.createNamedQuery("ForecastMensalisado.findByForecastEmAndamento",ForecastMensalisado.class)

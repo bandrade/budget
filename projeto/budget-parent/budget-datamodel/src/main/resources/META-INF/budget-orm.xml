@@ -214,7 +214,7 @@
   	   <named-native-query name="SolicitacaoPagamento.ObterDetalheValorComprometido">
      	<query>
      	select 
-     		  distinct solicitacao.valor, tipo_despesa.nome as 'tipoDespesa', acao.nome as 'acao',solicitacao.num_nota_fiscal
+     		  distinct solicitacao.valor,solicitacao.num_nota_fiscal,fornecedor.nome
      	 from solicitacao_pagamento solicitacao
 		 inner join
 			despesa_solicitacao_pagamento despesa_solicitacao
@@ -227,8 +227,8 @@
 			and
 				despesa_solicitacao.tipo_despesa_id = despesa_forecast.tipo_despesa_id
 
-			inner join 	tipo_despesa
-			on	tipo_despesa.id = despesa_solicitacao.tipo_despesa_id
+			inner join fornecedor
+			on	fornecedor.id = solicitacao.fornecedor_id
 		   inner join 	acao
 				on acao.id = despesa_solicitacao.acao_id
 		 WHERE

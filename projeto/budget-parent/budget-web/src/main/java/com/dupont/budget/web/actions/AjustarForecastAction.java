@@ -24,7 +24,7 @@ public class AjustarForecastAction extends AtualizarForecastAction implements Se
 	}
 	public String concluir() {
 	
-		if(valorTolerancia != super.calcularTotalAno())
+		if(!valorTolerancia.equals(super.calcularTotalAno()) )
 		{
 			facesUtils.addErrorMessage("Valor total ano é diferente do valor de tolerância");
 			return null;
