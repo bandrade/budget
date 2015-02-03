@@ -1,0 +1,264 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="/WEB-INF/templates/default.xhtml">
+
+	<ui:param name="pageTitle" value="Human Tasks" />
+	<f:metadata>
+        <f:viewParam name="taskId" value="#{ajustarValoresBudgetAction.idTarefa}" />
+        <f:viewParam name="processInstanceId" value="#{ajustarValoresBudgetAction.idInstanciaProcesso}" />
+        <f:event type="preRenderView" listener="#{ajustarValoresBudgetAction.obterDadosBudget()}" />
+    </f:metadata>
+
+	<ui:define name="content">
+		<h:form id="form"> 
+			<p:panel id="content">
+				<h3>Ajustar o Budget aprovado por Centro de Custo</h3>
+				<p:panel>
+					<p:panelGrid columns="2">
+						<p:outputLabel value="Ano:"></p:outputLabel>
+						<p:outputLabel styleClass="bold-label" value="#{ajustarValoresBudgetAction.ano}"></p:outputLabel>
+						<p:outputLabel value="Area:"></p:outputLabel>
+						<p:outputLabel styleClass="bold-label" value="#{ajustarValoresBudgetAction.area.nome}"></p:outputLabel>
+						<p:outputLabel value="Valor Submetido:"></p:outputLabel> 
+						<p:outputLabel styleClass="bold-label" value="#{facesUtils.formatarDinheiro(ajustarValoresBudgetAction.budgetEstipuladoAno.valorSubmetido)}"></p:outputLabel>
+						<p:outputLabel value="Valor Aprovado:"></p:outputLabel>
+						<p:outputLabel styleClass="bold-label" value="#{facesUtils.formatarDinheiro(ajustarValoresBudgetAction.budgetEstipuladoAno.valorAprovado)}"></p:outputLabel>
+					</p:panelGrid>
+					<p:panelGrid id="panelDetalhe" columns="1">
+					<p:dataTable 
+						id="tblBudget"
+						emptyMessage="Não existem centros de custo cadastrados" 
+						value="#{ajustarValoresBudgetAction.budgets}"
+						var="budget"
+						paginator="true"
+						paginatorPosition="bottom"
+						rows="10" style="margin-left:-10px">
+						<f:facet name="header">
+        				Centros de custo
+   						 </f:facet>
+   						 <p:column>
+							<f:facet name="header">
+								<h:outputText value="Nome" />
+							</f:facet>
+							<h:outputText value="#{budget.centroCusto.nome}" />
+						</p:column>
+						 <p:column>
+							<f:facet name="header">
+								<h:outputText value="Codigo" />
+							</f:facet>
+							<h:outputText value="#{budget.centroCusto.codigo}" />
+						</p:column>
+						 <p:column footerText="#{facesUtils.formatarDinheiro(ajustarValoresBudgetAction.valorTotalPropostoBudgetArea)}" style="text-align:center">
+							<f:facet name="header">
+								<h:outputText value="Valor Proposto" />
+							</f:facet>							
+							<h:outputText value="#{facesUtils.formatarDinheiro(budget.valorTotalProposto)}" />
+						</p:column>
+						 <p:column footerText="#{facesUtils.formatarDinheiro(ajustarValoresBudgetAction.valorTotalBudgetArea)}" style="text-align:center">
+							<f:facet name="header">
+								<h:outputText value="Valor Submetido" />
+							</f:facet>							
+							<h:outputText value="#{facesUtils.formatarDinheiro(budget.valorTotalBudget)}" />
+						</p:column>
+						<p:column width="5%">
+							<p:commandButton icon="ui-icon-plus" action="#{ajustarValoresBudgetAction.obterBudgetNoDetalhe()}" update=":form:panelDetalheBudget">
+								<f:setPropertyActionListener target="#{ajustarValoresBudgetAction.budgetSelecionado}" value="#{budget}"/>
+							</p:commandButton>
+						</p:column>
+					
+ 					</p:dataTable>
+					</p:panelGrid>
+				
+					</p:panel>
+				
+					<p:panelGrid id="panelDetalheBudget" columns="1" >
+					<p:panelGrid columns="1" styleClass="painel-botoes">
+						<p:commandButton value="Incluir Despesa" rendered="#{not empty ajustarValoresBudgetAction.budgetSelecionado}"
+							oncomplete="PF('criarDespesa').show();" action="#{ajustarValoresBudgetAction.trataInclusao()}" update=":criarDespesaPanel,:formDespesa"/>
+					</p:panelGrid>
+					<p:dataTable 
+						id="tblDespesa"
+						emptyMessage="Não existem despesas cadastradas" 
+						value="#{ajustarValoresBudgetAction.despesasNoDetalhe}"
+						selection="#{ajustarValoresBudgetAction.despesaDetalheSelecionada}"
+						var="detalheDespesa"
+						paginator="true"
+						rendered="#{not empty ajustarValoresBudgetAction.budgetSelecionado}"
+						paginatorPosition="bottom"
+						rows="10" style="margin-left:-10px">
+						<f:facet name="header">
+        				 Despesa
+   						 </f:facet>
+   						 <p:column>
+							<f:facet name="header">
+								<h:outputText value="Tipo Despesa" />
+							</f:facet>
+							<h:outputText value="#{detalheDespesa.tipoDespesa.nome}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Ação" />
+							</f:facet>
+							<h:outputText value="#{detalheDespesa.acao.nome}" />
+						</p:column>
+						
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Produto" />
+							</f:facet>
+							<h:outputText value="#{detalheDespesa.produto.nome}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Cultura" />
+							</f:facet>
+							<h:outputText value="#{detalheDespesa.cultura.nome}" />
+						</p:column>
+						<p:column width="8%">
+							<f:facet name="header">
+								<h:outputText value="Distrito" />
+							</f:facet>
+							<h:outputText value="#{detalheDespesa.distrito.nome}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="ERC" />
+							</f:facet>
+							<h:outputText value="#{detalheDespesa.vendedor.nome}" />
+						</p:column>
+						
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Comentário" />
+							</f:facet>
+							<h:outputText value="#{detalheDespesa.comentario}" />
+						</p:column>
+						<p:column footerText="Total:#{facesUtils.formatarDinheiro(ajustarValoresBudgetAction.calcularTotalValorProposto())}" style="text-align:center" >
+							<f:facet name="header">
+								<h:outputText value="Valor Proposto" />
+							</f:facet>
+							<h:outputText value="#{detalheDespesa.valorProposto}" >
+								<f:convertNumber type="currency"/>
+							</h:outputText>
+						</p:column> 
+						<p:column footerText="Total:#{facesUtils.formatarDinheiro(ajustarValoresBudgetAction.valorTotalDetalhe)}" style="text-align:center" >
+							<f:facet name="header">
+								<h:outputText value="Valor Submetido" />
+							</f:facet>
+							<h:outputText value="#{detalheDespesa.valor}" >
+								<f:convertNumber type="currency"/>
+							</h:outputText>
+						</p:column> 
+						<p:column width="8%">
+								<p:commandButton icon="ui-icon-pencil" update=":formDespesa,:criarDespesaPanel" oncomplete="PF('criarDespesa').show();" action="#{ajustarValoresBudgetAction.tratarDadosAlteracao()}">
+										<f:setPropertyActionListener target="#{ajustarValoresBudgetAction.despesa}" value="#{detalheDespesa}"/>
+								</p:commandButton>
+								<p:commandButton icon="ui-icon-trash" action="#{ajustarValoresBudgetAction.removerDespesa()}" update=":form,:formDespesa">
+										<p:confirm header="Confirmação" message="Deseja realmente remover a despesa?" icon="ui-icon-alert"/>
+										<f:setPropertyActionListener target="#{ajustarValoresBudgetAction.despesaDetalheSelecionada}" value="#{detalheDespesa}"/>
+								</p:commandButton>
+						</p:column>
+					</p:dataTable>
+					</p:panelGrid>
+			
+				<p:panelGrid columns="1" styleClass="painel-botoes">
+						<p:commandButton value="Concluir" action="#{ajustarValoresBudgetAction.concluir()}" onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()">
+							<p:confirm header="Confirmação" message="Confirma a conclusão da tarefa Ajustar o Budget aprovado por Centro de Custo?" icon="ui-icon-alert"/>
+						</p:commandButton>
+					</p:panelGrid>
+			</p:panel>
+			</h:form>
+				<p:dialog header="#{not ajustarValoresBudgetAction.inclusao? 'Alterar Despesa' : 'Incluir Despesa'}  " id="criarDespesaPanel" widgetVar="criarDespesa" height="500"
+				resizable="false" draggable="false"
+				width="550">
+				<h:form id="formDespesa">
+				<p:panel id="panelDespesa">
+				<p:panelGrid columns="2">
+					<p:outputLabel value="* Tipo de Despesa:"></p:outputLabel>
+					<p:autoComplete id="cboTipoDespesa" dropdown="true" value="#{ajustarValoresBudgetAction.despesa.tipoDespesa}" completeMethod="#{autocompleteAction.autocompleteTipoDespesa}" 
+					 var="_tipoDespesa" itemLabel="#{_tipoDespesa.nome}" itemValue="#{_tipoDespesa}" emptyMessage="NAO ENCONTRADO" effect="size"  required="true" 
+					 styleClass="input"
+					 scrollHeight="300"
+					 converter="com.dupont.EntityConverter" />
+					 
+					<p:outputLabel value="* Produto:"></p:outputLabel>
+					<p:autoComplete id="cboProduto" dropdown="true" value="#{ajustarValoresBudgetAction.despesa.produto}" completeMethod="#{autocompleteAction.autocompleteProduto}" 
+					 styleClass="input"
+					 scrollHeight="300"
+					 var="_produto" itemLabel="#{_produto.nome}" itemValue="#{_produto}" emptyMessage="NAO ENCONTRADO" effect="size" converter="com.dupont.EntityConverter" required="true"/>
+
+					<p:outputLabel value="* Cultura:"></p:outputLabel>
+					<p:autoComplete id="cboCultura" dropdown="true" value="#{ajustarValoresBudgetAction.despesa.cultura}" completeMethod="#{autocompleteAction.autocompleteCultura}" 
+					 styleClass="input"
+					 scrollHeight="300"
+					converter="com.dupont.EntityConverter"
+					 var="_cultura" itemLabel="#{_cultura.nome}" itemValue="#{_cultura}" emptyMessage="NAO ENCONTRADO" effect="size" 
+					 required="true" />
+					
+					<p:outputLabel value="* Distrito:" ></p:outputLabel>
+					<p:autoComplete id="cboDistrito" dropdown="true" value="#{ajustarValoresBudgetAction.despesa.distrito}" completeMethod="#{autocompleteAction.autocompleteDistrito}" 
+					 styleClass="input"
+					 scrollHeight="300"
+					converter="com.dupont.EntityConverter"
+					 var="distrito" itemLabel="#{distrito.nome}" itemValue="#{distrito}" emptyMessage="NAO ENCONTRADO" effect="size"
+					 required="true"/>
+ 
+					<p:outputLabel value="ERC:"></p:outputLabel>
+					<p:autoComplete id="cboVendedor" dropdown="true" value="#{ajustarValoresBudgetAction.despesa.vendedor}" completeMethod="#{autocompleteAction.autocompleteVendedor}" 
+					 styleClass="input"
+					 scrollHeight="300"
+					converter="com.dupont.EntityConverter"
+					 var="_vendedor" itemLabel="#{_vendedor.nome}" itemValue="#{_vendedor}" emptyMessage="NAO ENCONTRADO" effect="size"
+					 />
+					
+					<p:outputLabel value="Cliente:"></p:outputLabel>
+					<p:autoComplete id="cboCliente" dropdown="true" value="#{ajustarValoresBudgetAction.despesa.cliente}" completeMethod="#{autocompleteAction.autocompleteCliente}" 
+				     converter="com.dupont.EntityConverter"	
+				     scrollHeight="300"
+				      styleClass="input"
+					 var="_cliente" itemLabel="#{_cliente.nome}" itemValue="#{_cliente}" emptyMessage="NAO ENCONTRADO" effect="size"
+					  />
+					<p:outputLabel value="Ação:"></p:outputLabel>
+					 <p:panelGrid columns="3" id="painel">
+					<p:selectOneRadio value="#{ajustarValoresBudgetAction.tipoAcao}" >
+						<p:ajax update=":formDespesa:painel" process="@this" ></p:ajax>
+						<f:selectItem itemValue="S"  itemLabel="Existente"/>
+						<f:selectItem itemValue="N" itemLabel="Nova"/>
+					</p:selectOneRadio>					
+					<p:autoComplete id="cboAcao" dropdown="true" value="#{ajustarValoresBudgetAction.despesa.acao}" completeMethod="#{ajustarValoresBudgetAction.autocompleteAcao}" 
+				      converter="com.dupont.EntityConverter"
+				      styleClass="input"
+				      scrollHeight="300"
+					 var="_acao" itemLabel="#{_acao.nome}" itemValue="#{_acao}" emptyMessage="NAO ENCONTRADO" effect="size"
+					 rendered="#{ajustarValoresBudgetAction.tipoAcao =='S'}" required="true"/>
+						<p:inputTextarea id="inputAcao" value="#{ajustarValoresBudgetAction.despesa.acao.nome}" required="true" rendered="#{ajustarValoresBudgetAction.tipoAcao =='N'}"/>
+					</p:panelGrid>
+					
+					<p:outputLabel value="Comentário:"></p:outputLabel>
+					<p:inputTextarea value="#{ajustarValoresBudgetAction.despesa.comentario}" required="true"/>
+					
+					<p:outputLabel value="* Valor(R$):"></p:outputLabel>
+					<pe:inputNumber  id="valor" value="#{ajustarValoresBudgetAction.despesa.valor}" converter="javax.faces.Double" required="true"/>
+					<h:inputHidden value="#{ajustarValoresBudgetAction.incAltComSucesso}" id="incAltSucesso" />
+				</p:panelGrid>
+				<p:panelGrid styleClass="painel-botoes" columns="1">				
+						<p:commandButton value="Incluir Despesa" action="#{ajustarValoresBudgetAction.adicionarDespesa()}"  
+						 onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"
+						 update=":formDespesa:panelDespesa,:form" rendered="#{ajustarValoresBudgetAction.inclusao}" 
+						 oncomplete="if(document.getElementById('formDespesa:incAltSucesso').value=='true'){PF('criarDespesa').hide();}"/>
+						<p:commandButton value="Alterar Despesa" action="#{ajustarValoresBudgetAction.alterarDespesa()}"  
+						 onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"
+						 update=":formDespesa:panelDespesa,:form" rendered="#{not ajustarValoresBudgetAction.inclusao}"  
+						 oncomplete="if(document.getElementById('formDespesa:incAltSucesso').value=='true'){PF('criarDespesa').hide();}"/>
+				</p:panelGrid>
+				</p:panel>
+			
+				</h:form>
+			</p:dialog>
+			
+	</ui:define>
+</ui:composition>
