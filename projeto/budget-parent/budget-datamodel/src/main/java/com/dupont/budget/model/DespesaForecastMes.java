@@ -3,6 +3,7 @@ package com.dupont.budget.model;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -43,10 +44,12 @@ public class DespesaForecastMes implements Serializable {
 
 	private Double julho;
 
+	@Column(name="agosto")
 	private Double agosto;
 
 	private Double setembro;
-
+	
+	@Column(name="outubro")
 	private Double outubro;
 
 	private Double novembro;

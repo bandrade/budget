@@ -1,5 +1,4 @@
 <jboss-web>
-    <context-root>budget</context-root>
-    
+    <context-root>/budget</context-root>
     <security-domain>dupont-security-domain</security-domain>
 </jboss-web>

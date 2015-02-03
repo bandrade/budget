@@ -62,7 +62,7 @@ public class DivisaoBudgetMesAction implements Serializable{
 	public void obterDadosBudget() {
 		try {
 			centroDeCusto = (CentroDeCustoDTO) bpmsTask.obterConteudoTarefa(idTarefa).get("centroCusto");
-			ano = (String)bpmsProcesso.obterVariavelProcesso(idInstanciaProcesso, "ano");
+			ano = (String)bpmsProcesso.obterVariavelProcesso(idInstanciaProcesso, "anoBudget");
 			budget = budgetService.findByAnoAndCentroDeCusto(ano, centroDeCusto.getId());
 			if(despesas ==null)
 				obterDespesaNoDetalhe(budget.getId());

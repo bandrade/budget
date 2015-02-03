@@ -43,8 +43,8 @@ public class AjustarValoresBudgetAction extends BudgetAction implements Serializ
 	public void obterDadosBudget() {
 		try
 		{
-		   area = (AreaDTO)  bpmsProcesso.obterVariavelProcesso(idInstanciaProcesso, "areaAtual");;
-		   ano = (String)bpmsProcesso.obterVariavelProcesso(idInstanciaProcesso, "ano");
+		   area = (AreaDTO)  bpmsTask.obterConteudoTarefa(idTarefa).get("areaAtual");
+		   ano = (String)bpmsProcesso.obterVariavelProcesso(idInstanciaProcesso, "anoBudget");
 		   budgetEstipuladoAno = budgetService.obterValoresAprovadosESubmetidos(area.getId(), ano);
 		   budgets = budgetService.obterBudgetsPorArea(area.getId(), ano);
 		}

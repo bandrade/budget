@@ -106,7 +106,9 @@ public class BudgetServiceBean extends GenericService implements BudgetService {
 			budgetMes.setMaio(despesa.getMaio());
 			budgetMes.setJunho(despesa.getJunho());
 			budgetMes.setJulho(despesa.getJulho());
+			budgetMes.setAgosto(despesa.getAgosto());
 			budgetMes.setSetembro(despesa.getSetembro());
+			budgetMes.setOutubro(despesa.getOutubro());
 			budgetMes.setNovembro(despesa.getNovembro());
 			budgetMes.setDezembro(despesa.getDezembro());
 			BudgetMes _budgetMes= null;

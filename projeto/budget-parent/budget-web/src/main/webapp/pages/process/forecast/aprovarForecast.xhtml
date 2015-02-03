@@ -253,6 +253,7 @@
 				</p:panel>
 				<p:panelGrid columns="1" styleClass="painel-botoes">
 					<p:commandButton value="Concluir"  action="#{aprovarForecastAction.concluir()}" onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" ajax="false" update=":form">
+						<p:confirm header="Confirmação" message="Confirma a conclusão da Aprovação do Forecast?" icon="ui-icon-alert"/>
 					</p:commandButton>
 				</p:panelGrid>
 			</p:panel>
