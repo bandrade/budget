@@ -18,7 +18,7 @@ import javax.persistence.Table;
 @NamedQueries({
 		@NamedQuery(name = "TipoDespesa.findAll", query = "select t from TipoDespesa t"),
 		@NamedQuery(name = "TipoDespesa.findByName", query = "select t from TipoDespesa t where t.nome like :nome") })
-public class TipoDespesa extends NamedAbstractEntity<Long> {
+public class TipoDespesa extends NamedAbstractEntity<Long> implements Comparable<TipoDespesa>{
 
 	private static final long serialVersionUID = -1150860018776728153L;
 	
@@ -46,6 +46,12 @@ public class TipoDespesa extends NamedAbstractEntity<Long> {
 	}
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
+	}
+
+	@Override
+	public int compareTo(TipoDespesa o) {
+
+		return getId().compareTo(o.getId());
 	}
 	
 }

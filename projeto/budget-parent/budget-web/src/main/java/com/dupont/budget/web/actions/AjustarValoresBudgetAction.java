@@ -81,7 +81,7 @@ public class AjustarValoresBudgetAction extends BudgetAction implements Serializ
 		return valor;
 	}
 
-	@Override
+	/*@Override
 	public boolean adicionarDespesa() {
 		despesa.setAprovado(true);
 		possuiBudgetSalvo=true;
@@ -96,7 +96,7 @@ public class AjustarValoresBudgetAction extends BudgetAction implements Serializ
 		{
 			return false;
 		}
-	}
+	}*/
 
 	public String concluir()
 	{
@@ -129,7 +129,7 @@ public class AjustarValoresBudgetAction extends BudgetAction implements Serializ
 		return true;
 
 	}
-	@Override
+/*	@Override
 	protected boolean alterarDespesa() {
 		setBudget(budgetSelecionado);
 		if(super.alterarDespesa())
@@ -141,7 +141,7 @@ public class AjustarValoresBudgetAction extends BudgetAction implements Serializ
 		{
 			return false;
 		}
-	}
+	}*/
 
 	public void removerDespesa()
 	{

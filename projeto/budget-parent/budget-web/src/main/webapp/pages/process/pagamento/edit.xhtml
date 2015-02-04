@@ -130,7 +130,6 @@
 						<p:outputLabel value="Produto:" for="produtosSelectOneMenu"/>
 						<p:selectOneMenu id="produtosSelectOneMenu" value="#{despesaSolicitacaoPagamento.produto}" label="Produto" converter="com.dupont.EntityConverter" required="true" rendered="#{!solicitacaoPagamentoAction.despesaForecastFlag}"
 							disabled="true">
-							<p:ajax listener="#{solicitacaoPagamentoAction.doSelectProduto}" update="dadosCC" process="@this"/>
 							<f:selectItem itemLabel="Selecione um produto" itemValue="#{null}" />
 							<f:selectItems value="#{solicitacaoPagamentoAction.produtos}" var="item" itemLabel="#{item.nome}"/>
 						</p:selectOneMenu>
@@ -142,7 +141,6 @@
 						<p:selectOneMenu id="culturasSelecOneMenu" label="Cultura"  value="#{despesaSolicitacaoPagamento.cultura}" converter="com.dupont.EntityConverter"
 								 rendered="#{!solicitacaoPagamentoAction.despesaForecastFlag}"
 								 disabled="true">
-							<p:ajax listener="#{solicitacaoPagamentoAction.doSelectCultura}" update="dadosCC" process="@this"/>
 							<f:selectItem itemLabel="Selecione uma cultura" itemValue="#{null}" />
 							<f:selectItems value="#{solicitacaoPagamentoAction.culturas}" var="item" itemLabel="#{item.nome}" itemValue="#{item}"/>
 						</p:selectOneMenu>
@@ -155,7 +153,6 @@
 						<p:selectOneMenu id="distritosSelectOneMenu" label="Distrito" value="#{despesaSolicitacaoPagamento.distrito}" converter="com.dupont.EntityConverter" 
 							rendered="#{!solicitacaoPagamentoAction.despesaForecastFlag}"
 							disabled="true">
-							<p:ajax listener="#{solicitacaoPagamentoAction.doSelectDistrito}" update="dadosCC"/>
 							<f:selectItem itemLabel="Selecione um distrito" itemValue="#{null}" />
 							<f:selectItems value="#{solicitacaoPagamentoAction.distritos}" var="item" itemLabel="#{item.nome}" itemValue="#{item}"/>
 						</p:selectOneMenu>
@@ -166,7 +163,6 @@
 						<p:selectOneMenu id="vendedoresSelectOneMenu" label="ERC/CCE" value="#{despesaSolicitacaoPagamento.vendedor}" converter="com.dupont.EntityConverter" 
 							rendered="#{!solicitacaoPagamentoAction.despesaForecastFlag}"
 							disabled="true">
-							<p:ajax listener="#{solicitacaoPagamentoAction.doSelectVendedor}" update="dadosCC"/>
 							<f:selectItem itemLabel="Selecione um vendedor" itemValue="#{null}" />
 							<f:selectItems value="#{solicitacaoPagamentoAction.vendedores}" var="item" itemLabel="#{item.nome}" itemValue="#{item}"/>
 						</p:selectOneMenu>

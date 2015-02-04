@@ -28,7 +28,7 @@ public class AprovarBudgetAction extends BudgetAction  implements Serializable{
 			logger.error("Erro ao obter tarefas do usuario.", e);
 		}
 	}
-	@Override
+	/*@Override
 	public boolean adicionarDespesa()
 	{
 		despesa.setAprovado(true);
@@ -46,7 +46,7 @@ public class AprovarBudgetAction extends BudgetAction  implements Serializable{
 		obterDespesaNoDetalhe(budget.getId());
 		validarAprovacao();
 		return true;
-	}
+	}*/
 
 	public void validarAprovacao()
 	{
@@ -96,12 +96,11 @@ public class AprovarBudgetAction extends BudgetAction  implements Serializable{
 		}
 	}
 	
-	public boolean alterarDespesa(){
+	/*public boolean alterarDespesa(){
 		if(super.alterarDespesa())
 		{
 			try
 			{
-				
 					budgetService.atualizarDespesas(despesasNoDetalhe);
 					obterDespesaNoDetalhe(budget.getId());
 					validarAprovacao();
@@ -114,7 +113,7 @@ public class AprovarBudgetAction extends BudgetAction  implements Serializable{
 			}
 		}
 		return false;
-	}
+	}*/
 	public String concluir()
 	{
 		if(valorTotalDetalhe==null || valorTotalDetalhe == 0 )

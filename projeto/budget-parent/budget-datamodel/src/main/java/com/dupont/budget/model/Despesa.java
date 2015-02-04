@@ -8,6 +8,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * Itens de despesa do Budget
@@ -24,7 +25,7 @@ import javax.persistence.Table;
 @Table(name="despesa")
 @NamedQueries({
 	@NamedQuery(name="Despesa.agruparPorTipoDeDespesa", query="select c.tipoDespesa, sum(c.valor) from Despesa c where c.budget.id = :id group by c.tipoDespesa"),
-	@NamedQuery(name="Despesa.obterDespesaNoDetalhe", query="select c from Despesa c where c.budget.id = :budgetId and c.tipoDespesa.id=:id"),
+	@NamedQuery(name="Despesa.obterDespesaNoDetalhe", query="select c from Despesa c where c.budget.id = :budgetId and c.tipoDespesa.id=:id order by c.tipoDespesa"),
 	@NamedQuery(name="Despesa.obterSomaDespesa", query="select sum(c.valor) from Despesa c where c.budget.id = :budgetId and c.aprovado=true"),
 	@NamedQuery(name="Despesa.obterSomaValorPropostoDespesa", query="select sum(c.valorProposto) from Despesa c where c.budget.id = :budgetId"),
 	@NamedQuery(name="Despesa.obterDespesaNoDetalheBudget", query="select c from Despesa c where c.budget.id = :budgetId order by c.tipoDespesa.id"),
@@ -82,7 +83,8 @@ public class Despesa extends AbstractEntity<Long> {
 	@JoinColumn(name = "id")
 	private BudgetMes despesaMensalisada;
 
-
+	@Transient
+	private boolean firstLine;
 
 	public TipoDespesa getTipoDespesa() {
 		return tipoDespesa;
@@ -220,6 +222,60 @@ public class Despesa extends AbstractEntity<Long> {
 		this.valorProposto = valorProposto;
 	}
 
+	public boolean isFirstLine() {
+		return firstLine;
+	}
+
+	public void setFirstLine(boolean firstLine) {
+		this.firstLine = firstLine;
+	}
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((tipoDespesa == null || tipoDespesa.getId()!=null) ? 0 : tipoDespesa.getId().hashCode());
+		result = prime * result + ((acao == null || acao.getId()!=null) ? 0 : acao.getId().hashCode());
+		result = prime * result + (firstLine ? 1 : 0);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Despesa other = (Despesa) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (tipoDespesa == null) {
+			if (other.getTipoDespesa() != null)
+				return false;
+		} else if (!tipoDespesa.equals(other.getTipoDespesa()))
+			return false;
+		if (acao == null) {
+			if (other.getAcao() != null)
+				return false;
+		} else if (!acao.equals(other.getAcao()))
+			return false;
+		if (acao == null) {
+			if (other.getAcao() != null)
+				return false;
+		} else if (!firstLine==other.isFirstLine())
+			return false;
+		
+		return true;
+	}
+
+	
+	
+	
 
 	
 }
