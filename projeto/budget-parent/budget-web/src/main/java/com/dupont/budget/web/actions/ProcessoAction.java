@@ -76,7 +76,7 @@ public class ProcessoAction {
 		}
 				
 		MesEnum mesPrazo = MesEnum.values()[calendar.get(Calendar.MONTH)];
-		MesEnum mesForecast = MesEnum.valueOf(mes.toUpperCase());
+		MesEnum mesForecast = MesEnum.obterMes(mes);
 		if(mesForecast.getId()>mesPrazo.getId())
 		{
 			facesUtils.addErrorMessage("O prazo não pode ter uma data inferior ao mes do Forecast");
@@ -129,7 +129,8 @@ public class ProcessoAction {
 			else
 			{
 				bpms.iniciarProcessoForecast(ano, mes,dataExpiracao);
-				MesEnum mesForecast = MesEnum.valueOf(mes.toUpperCase());
+				
+				MesEnum mesForecast = MesEnum.obterMes(mes);
 				forecastService.alterarForecastMensalisado((Long)(mesForecast.getId()), ano);
 				facesUtils.addInfoMessage("Processo de Forecast iniciado com sucesso");
 			}

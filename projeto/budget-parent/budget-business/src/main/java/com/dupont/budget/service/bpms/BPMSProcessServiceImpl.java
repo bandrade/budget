@@ -89,6 +89,19 @@ public class BPMSProcessServiceImpl implements BPMSProcessService{
 	}
 
 
+	@Override
+	public void abortarProcesso(long processId) {
+		processApi.abortProcess(processId);
+	}
+
+
+	@Override
+	public boolean isProcessoEmExecucao(long processInstanceId) {
+		return processApi.isProcessInstanceRunning(processInstanceId);
+	}
+	
+
+
 
 
 }

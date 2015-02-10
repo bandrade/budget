@@ -43,6 +43,7 @@ import com.dupont.budget.service.BudgetService;
 import com.dupont.budget.service.DomainService;
 import com.dupont.budget.service.ForecastService;
 import com.dupont.budget.service.SolicitacaoPagamentoService;
+import com.dupont.budget.service.bpms.BPMSProcessService;
 import com.dupont.budget.service.bpms.BPMSTaskService;
 import com.dupont.budget.web.util.FacesUtils;
 
@@ -78,6 +79,10 @@ public class SolicitacaoPagamentoAction implements Serializable {
 	
 	@Inject
 	private BPMSTaskService taskService;
+	
+
+	@Inject
+    protected BPMSProcessService bpmsProcesso;
 	
 	@Inject
 	private LoggedUserAction loggedUserAction;
@@ -204,37 +209,43 @@ public class SolicitacaoPagamentoAction implements Serializable {
 	}
 	public void doSelectTipoDespesa(){
 		
+		
 		TipoDespesa tipoDespesa = getDespesaSolicitacaoPagamento().getTipoDespesa();
-		acoes =domainService.findAcaoDespesaForecastByTipo(forecast.getId(),tipoDespesa.getId());
-		limparCombos();
+		if(tipoDespesa !=null)
+		{
+			acoes =domainService.findAcaoDespesaForecastByTipo(forecast.getId(),tipoDespesa.getId());
+			limparCombos();
+		}
 	}
 	
 	public void doSelectAcao(){
 		
 		Acao acao = getDespesaSolicitacaoPagamento().getAcao();	
-		try {
-			DespesaForecast despesa =forecastService.obterDespesaForecast(forecast, getDespesaSolicitacaoPagamento().getTipoDespesa(),acao);
-			limparCombos();
-			
-			produtos.add(despesa.getProduto());
-			distritos.add(despesa.getDistrito());
-			if(despesa.getCliente()!=null)
-				clientes.add(despesa.getCliente());
-			if(despesa.getVendedor()!=null)
-				vendedores.add(despesa.getVendedor());
-			
-			culturas.add(despesa.getCultura());
-			
-			getDespesaSolicitacaoPagamento().setCultura(despesa.getCultura());
-			getDespesaSolicitacaoPagamento().setDistrito(despesa.getDistrito());
-			getDespesaSolicitacaoPagamento().setVendedor(despesa.getVendedor());
-			getDespesaSolicitacaoPagamento().setCliente(despesa.getCliente());
-			getDespesaSolicitacaoPagamento().setProduto(despesa.getProduto());
-			
-		} catch (Exception e) {
-			facesUtils.addErrorMessage("Erro ao obter a despesa");
+		if(acao!=null)
+		{
+			try {
+				DespesaForecast despesa =forecastService.obterDespesaForecast(forecast, getDespesaSolicitacaoPagamento().getTipoDespesa(),acao);
+				limparCombos();
+				
+				produtos.add(despesa.getProduto());
+				distritos.add(despesa.getDistrito());
+				if(despesa.getCliente()!=null)
+					clientes.add(despesa.getCliente());
+				if(despesa.getVendedor()!=null)
+					vendedores.add(despesa.getVendedor());
+				
+				culturas.add(despesa.getCultura());
+				
+				getDespesaSolicitacaoPagamento().setCultura(despesa.getCultura());
+				getDespesaSolicitacaoPagamento().setDistrito(despesa.getDistrito());
+				getDespesaSolicitacaoPagamento().setVendedor(despesa.getVendedor());
+				getDespesaSolicitacaoPagamento().setCliente(despesa.getCliente());
+				getDespesaSolicitacaoPagamento().setProduto(despesa.getProduto());
+				
+			} catch (Exception e) {
+				facesUtils.addErrorMessage("Erro ao obter a despesa");
+			}
 		}
-		
 	}
 	
 	/* Carrega os combos a aprtir do centro de custo */
@@ -288,7 +299,7 @@ public class SolicitacaoPagamentoAction implements Serializable {
 		try {
 			solicitacaoPagamentoService.startSolicitacaoPagamento(solicitacaoPagamento);
 		} catch (DuplicateEntityException e) {
-			facesUtils.addErrorMessage("Já existe um registro com o mesmo número de nota fiscal cadastrado.");
+			facesUtils.addErrorMessage("Já existe um registro com o mesmo número de nota fiscal e fornecedor cadastrado.");
 			return null;
 		}		
 		
@@ -336,13 +347,21 @@ public class SolicitacaoPagamentoAction implements Serializable {
 	}
 	
 	public void delete(SolicitacaoPagamento _solicitacaoPagamento) {
+
+		try
+		{
+			boolean processoEmExecucao = bpmsProcesso.isProcessoEmExecucao(_solicitacaoPagamento.getProcessInstanceId());
+			if(processoEmExecucao)
+				bpmsProcesso.abortarProcesso(_solicitacaoPagamento.getProcessInstanceId());
+			domainService.delete(_solicitacaoPagamento);
+			getList().remove(_solicitacaoPagamento);
 		
-		domainService.delete(_solicitacaoPagamento);
-		
-		getList().remove(_solicitacaoPagamento);
-		
-		facesUtils.addInfoMessage(String.format("%s removido(a) com sucesso.", "Solicitação de Pagamento"));
-		
+			facesUtils.addInfoMessage(String.format("%s removido(a) com sucesso.", "Solicitação de Pagamento"));
+		}
+		catch(Exception e)
+		{
+			facesUtils.addErrorMessage("Erro ao excluir solictação de pagamento");
+		}
 		
 	}
 	

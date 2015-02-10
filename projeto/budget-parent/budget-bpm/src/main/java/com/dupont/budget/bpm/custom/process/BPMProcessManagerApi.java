@@ -17,4 +17,6 @@ public interface BPMProcessManagerApi {
 	public boolean isProcessAlreadyStarted(String ano) throws BPMException;
 	public long startForecastProcess(CentroDeCustoDTO[] ceDtos, String ano, String mes, Date prazo,String email) throws Exception;
 	public boolean isProcessForecastAlreadyStarted(String ano) throws BPMException;
+	public boolean isProcessInstanceRunning(long processInstanceId);
+	
 }

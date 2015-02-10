@@ -31,6 +31,7 @@ import javax.persistence.TemporalType;
 @NamedQueries({
 	@NamedQuery(name = SolicitacaoPagamento.FIND_BY_FILTRO, query = "select o from SolicitacaoPagamento o where o.numeroNotaFiscal = :numeroNotaFiscal and lower(o.fornecedor.nome) like :fornecedor and o.tipoSolicitacao = :tipoSolicitacao and o.status = :status"),
 	@NamedQuery(name = SolicitacaoPagamento.FIND_BY_NUMERO_NOTA, query = "select o from SolicitacaoPagamento o where lower(o.numeroNotaFiscal) = :numeroNotaFiscal"),
+	@NamedQuery(name = SolicitacaoPagamento.FIND_BY_NUMERO_NOTA_FORNECEDOR, query = "select o from SolicitacaoPagamento o where lower(o.numeroNotaFiscal) = :numeroNotaFiscal and o.fornecedor.id=:fornecedor"),
 	@NamedQuery(name = "SolicitacaoPagamento.findAll", query = "select p from SolicitacaoPagamento p" )
 })
 public class SolicitacaoPagamento extends AbstractEntity<Long> {
@@ -40,6 +41,7 @@ public class SolicitacaoPagamento extends AbstractEntity<Long> {
 	public static final String FIND_BY_FILTRO = "SolicitacaoPagamento.findByFiltro";
 
 	public static final String FIND_BY_NUMERO_NOTA = "SolicitacaoPagamento.findByNumeroNota";
+	public static final String FIND_BY_NUMERO_NOTA_FORNECEDOR = "SolicitacaoPagamento.findByNumeroNotaFornecedor";
 
 	private Double valor;
 

@@ -3,6 +3,7 @@ package com.dupont.budget.web.actions;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Conversation;
@@ -61,8 +62,9 @@ public class DivisaoBudgetMesAction implements Serializable{
 
 	public void obterDadosBudget() {
 		try {
-			centroDeCusto = (CentroDeCustoDTO) bpmsTask.obterConteudoTarefa(idTarefa).get("centroCusto");
-			ano = (String)bpmsProcesso.obterVariavelProcesso(idInstanciaProcesso, "anoBudget");
+			Map<String,Object> dados = bpmsTask.obterConteudoTarefa(idTarefa);
+			centroDeCusto = (CentroDeCustoDTO)dados.get("centroCusto");
+			ano = (String)bpmsProcesso.obterVariavelProcesso(idInstanciaProcesso, "ano");
 			budget = budgetService.findByAnoAndCentroDeCusto(ano, centroDeCusto.getId());
 			if(despesas ==null)
 				obterDespesaNoDetalhe(budget.getId());

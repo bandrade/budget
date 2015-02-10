@@ -168,7 +168,9 @@
 					despesa_solicitacao.tipo_despesa_id = despesa_forecast.tipo_despesa_id
 				
 			 WHERE
-				MONTH (solicitacao.data_pagamento) in(:meses) and YEAR(solicitacao.data_pagamento)=:ano
+			 	solicitacao.data_pagamento_realizado is not null
+			 and
+				MONTH (solicitacao.data_pagamento_realizado) in(:meses) and YEAR(solicitacao.data_pagamento_realizado)=:ano
 			 and 
 				solicitacao.status='PAGO'
 			 and
@@ -200,7 +202,7 @@
 		   inner join 	acao
 				on acao.id = despesa_solicitacao.acao_id
 		 WHERE
-			MONTH (solicitacao.data_pagamento)=:mes_anterior and YEAR(solicitacao.data_pagamento)=:ano
+			MONTH (solicitacao.data_criacao)=:mes_anterior and YEAR(solicitacao.data_criacao)=:ano
 		 and 
 			(solicitacao.status='COMPROMETIDO'  or solicitacao.status='ENVIADO_SAP' or solicitacao.status='PENDENTE_VALIDACAO')
 		 and
@@ -211,10 +213,42 @@
 	    		despesa_solicitacao.tipo_despesa_id = :tipo_despesa_id
      	</query>
      </named-native-query>
+     
+      <named-native-query name="SolicitacaoPagamento.ObterSomaValorComprometidoMesesAnteriores">
+     	<query>
+     	select 
+     		sum(despesa_solicitacao.valor)
+     	 from solicitacao_pagamento solicitacao
+		 inner join
+			despesa_solicitacao_pagamento despesa_solicitacao
+		 on 
+			solicitacao.id = despesa_solicitacao.solicitacao_pagamento_id
+		 inner join 
+			despesa_forecast
+	     on
+				despesa_solicitacao.acao_id = despesa_forecast.acao_id
+			and
+				despesa_solicitacao.tipo_despesa_id = despesa_forecast.tipo_despesa_id
+		inner join 	tipo_despesa
+			on	tipo_despesa.id = despesa_solicitacao.tipo_despesa_id
+		   inner join 	acao
+				on acao.id = despesa_solicitacao.acao_id
+		 WHERE
+			MONTH (solicitacao.data_criacao) in (:meses_anteriores) and YEAR(solicitacao.data_criacao)=:ano
+		 and 
+			(solicitacao.status='COMPROMETIDO'  or solicitacao.status='ENVIADO_SAP' or solicitacao.status='PENDENTE_VALIDACAO')
+		 and
+				despesa_solicitacao.centro_custo_id=:centro_custo_id
+	     and
+	    		despesa_solicitacao.acao_id = :acao_id
+	     and
+	    		despesa_solicitacao.tipo_despesa_id = :tipo_despesa_id
+     	</query>
+     </named-native-query>
   	   <named-native-query name="SolicitacaoPagamento.ObterDetalheValorComprometido">
      	<query>
      	select 
-     		  distinct solicitacao.valor,solicitacao.num_nota_fiscal,fornecedor.nome
+     		  distinct despesa_solicitacao.valor,solicitacao.num_nota_fiscal,fornecedor.nome
      	 from solicitacao_pagamento solicitacao
 		 inner join
 			despesa_solicitacao_pagamento despesa_solicitacao
@@ -232,7 +266,40 @@
 		   inner join 	acao
 				on acao.id = despesa_solicitacao.acao_id
 		 WHERE
-			MONTH (solicitacao.data_pagamento)=:mes_anterior and YEAR(solicitacao.data_pagamento)=:ano
+			MONTH (solicitacao.data_criacao)=:mes_anterior and YEAR(solicitacao.data_criacao)=:ano
+		 and 
+			(solicitacao.status='COMPROMETIDO'  or solicitacao.status='ENVIADO_SAP' or solicitacao.status='PENDENTE_VALIDACAO')
+		 and
+			despesa_solicitacao.centro_custo_id=:centro_custo_id
+	     and
+	    		despesa_solicitacao.acao_id = :acao_id
+	     and
+	    		despesa_solicitacao.tipo_despesa_id = :tipo_despesa_id
+     	</query>
+     </named-native-query>
+     
+     <named-native-query name="SolicitacaoPagamento.ObterDetalheValorComprometidoMesesAnteriores">
+     	<query>
+     	select 
+     		  distinct despesa_solicitacao.valor,solicitacao.num_nota_fiscal,fornecedor.nome
+     	 from solicitacao_pagamento solicitacao
+		 inner join
+			despesa_solicitacao_pagamento despesa_solicitacao
+		 on 
+			solicitacao.id = despesa_solicitacao.solicitacao_pagamento_id
+		 inner join 
+			despesa_forecast
+	     on
+				despesa_solicitacao.acao_id = despesa_forecast.acao_id
+			and
+				despesa_solicitacao.tipo_despesa_id = despesa_forecast.tipo_despesa_id
+
+			inner join fornecedor
+			on	fornecedor.id = solicitacao.fornecedor_id
+		   inner join 	acao
+				on acao.id = despesa_solicitacao.acao_id
+		 WHERE
+			MONTH (solicitacao.data_pagamento) in (:mes_anterior) and YEAR(solicitacao.data_pagamento)=:ano
 		 and 
 			(solicitacao.status='COMPROMETIDO'  or solicitacao.status='ENVIADO_SAP' or solicitacao.status='PENDENTE_VALIDACAO')
 		 and

@@ -63,8 +63,9 @@ public class SolicitacaoPagamentoServiceBean implements SolicitacaoPagamentoServ
 	public void startSolicitacaoPagamento( SolicitacaoPagamento solicitacaoPagamento) throws DuplicateEntityException {
 		
 		// valida solicitacao pagamento com numero da nota fiscal igual
-		List <SolicitacaoPagamento> exists = em.createNamedQuery(SolicitacaoPagamento.FIND_BY_NUMERO_NOTA, SolicitacaoPagamento.class)
+		List <SolicitacaoPagamento> exists = em.createNamedQuery(SolicitacaoPagamento.FIND_BY_NUMERO_NOTA_FORNECEDOR, SolicitacaoPagamento.class)
 												.setParameter("numeroNotaFiscal", solicitacaoPagamento.getNumeroNotaFiscal())
+												.setParameter("fornecedor", solicitacaoPagamento.getFornecedor().getId())
 												.getResultList();
 		
 		if( exists != null && !exists.isEmpty())

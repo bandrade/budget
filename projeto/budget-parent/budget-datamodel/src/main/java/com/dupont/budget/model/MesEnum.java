@@ -1,5 +1,7 @@
 package com.dupont.budget.model;
 
+import com.dupont.budget.model.MesEnum;
+
 public enum MesEnum {
 	JANEIRO(1l,"Janeiro"),
 	FEVEREIRO(2L,"Fevereiro"),
@@ -32,6 +34,15 @@ public enum MesEnum {
 	}
 	public void setMes(String mes) {
 		this.mes = mes;
+	}
+	public static MesEnum obterMes(String mes)
+	{
+		MesEnum mesForecast = null;
+		if(mes.toUpperCase().equals("MARÇO"))
+			mesForecast= MesEnum.valueOf("MARCO");
+		else
+			mesForecast= MesEnum.valueOf(mes.toUpperCase());
+		return mesForecast;
 	}
 
 }

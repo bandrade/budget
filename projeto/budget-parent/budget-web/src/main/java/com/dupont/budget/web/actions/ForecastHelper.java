@@ -25,7 +25,7 @@ public class ForecastHelper {
 			if(exibirColuna(MesEnum.JUNHO.toString(), mes))
 				valor+= getDouble(despesa.getDespesaMensalisada().getJunho());
 			if(exibirColuna(MesEnum.JULHO.toString(), mes))
-				valor+= getDouble(despesa.getDespesaMensalisada().getJunho());
+				valor+= getDouble(despesa.getDespesaMensalisada().getJulho());
 			if(exibirColuna(MesEnum.AGOSTO.toString(), mes))
 				valor+= getDouble(despesa.getDespesaMensalisada().getAgosto());
 			if(exibirColuna(MesEnum.SETEMBRO.toString(), mes))	
@@ -109,8 +109,8 @@ public class ForecastHelper {
 	public Boolean exibirColuna(String mounth,String mes)
 	{
 		if (mes != null) {
-		MesEnum mesEnum = MesEnum.valueOf(mounth);
-		MesEnum mesForecast = MesEnum.valueOf(mes.toUpperCase());
+		MesEnum mesEnum = MesEnum.obterMes(mounth);
+		MesEnum mesForecast = MesEnum.obterMes(mes.toUpperCase());
 
 		//mes anterior nao deve ser exibido
 		if(mesForecast.getId()> mesEnum.getId() )

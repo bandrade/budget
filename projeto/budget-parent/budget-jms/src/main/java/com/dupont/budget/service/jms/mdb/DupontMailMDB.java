@@ -38,6 +38,7 @@ public class DupontMailMDB implements MessageListener {
             String subject= rcvMessage.getStringProperty("Subject");
 
             String[] toEmails = toS.split(",");
+            
             Address[] to = new InternetAddress[toEmails.length] ;
            
             for(int count=0;count< toEmails.length;count++)
@@ -50,7 +51,13 @@ public class DupontMailMDB implements MessageListener {
             m.setSubject(subject);
             m.setSentDate(new java.util.Date());
             m.setContent(content,"text/html");
+            LOGGER.info("****************************************************************************");
+            LOGGER.info("Enviando email");
+            LOGGER.info("Para: "+toS);
+            LOGGER.info("Assunto: "+subject);
+            LOGGER.info("****************************************************************************");
             Transport.send(m);
+            LOGGER.info("Email enviado com sucesso");
         } catch (Exception e) {
         	LOGGER.log(Level.WARNING, "Erro ao enviar email ",e);
             throw new RuntimeException(e);

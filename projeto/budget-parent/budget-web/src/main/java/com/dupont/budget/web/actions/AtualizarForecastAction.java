@@ -48,7 +48,7 @@ public class AtualizarForecastAction extends ForecastAction implements Serializa
 			facesUtils.addErrorMessage("Erro ao concluir a tarefa");
 			logger.error("Erro ao concluir a tarefa ",e );
 		}
-		MesEnum mesEnum = MesEnum.valueOf(mes.toUpperCase());
+		MesEnum mesEnum = MesEnum.obterMes(mes);
 		if(mesEnum.equals(MesEnum.JANEIRO))
 		{
 			params.put("valorTotalForecastAtual",String.valueOf(super.calcularTotalBudget()));

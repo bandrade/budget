@@ -125,7 +125,7 @@ public class ForecastAction implements Serializable {
 	
 	public void obterDetalheValorComprometido(String mesDetalhe)
 	{
-		MesEnum mesEnum = MesEnum.valueOf(mesDetalhe.toUpperCase());
+		MesEnum mesEnum = MesEnum.obterMes(mesDetalhe);
 		setDetalheValorComprometido(forecastService.obterDetalheValoresComprometidos(despesaDetalheSelecionada, (int)mesEnum.getId()));
 	}
 
@@ -156,7 +156,7 @@ public class ForecastAction implements Serializable {
 
 	public boolean adicionarDespesa()
 	{
-		MesEnum mesEnum = MesEnum.valueOf(mes.toUpperCase());
+		MesEnum mesEnum = MesEnum.obterMes(mes);
 		if(despesasNoDetalhe !=null && despesasNoDetalhe.size()>0)
 		{
 			despesa.setForecast(despesasNoDetalhe.get(0).getForecast());
@@ -269,7 +269,8 @@ public class ForecastAction implements Serializable {
 		if (despesasNoDetalhe != null)
 		for(DespesaForecast despesa : despesasNoDetalhe)
 		{
-			valor += despesa.getValor();
+			valor += helper.calcularValorMensalisado(mes, despesa);
+			valor += helper.getDouble(despesa.getYtd()) ;
 		}
 		return valor;
 	}

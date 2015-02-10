@@ -42,7 +42,6 @@ import com.dupont.budget.dto.CentroDeCustoDTO;
 import com.dupont.budget.dto.SolicitacaoPagamentoDTO;
 
 @ApplicationScoped
-//@TransactionManagement(TransactionManagementType.BEAN)
 public class BPMProcessManagerApiImpl implements BPMProcessManagerApi {
 
 	@Inject
@@ -87,7 +86,7 @@ public class BPMProcessManagerApiImpl implements BPMProcessManagerApi {
 			params.put("prazo", prazo);
 			params.put("emails", email);
 			ProcessInstance processInstance = ksession.startProcess(
-			"com.dupont.bpm.criarbudget", params);
+			"com.dupont.bpm.criarbudget.v2", params);
 			processInstanceId = processInstance.getId();
 
 		} catch (Exception e) {
@@ -150,7 +149,7 @@ public class BPMProcessManagerApiImpl implements BPMProcessManagerApi {
 				.get());
 		KieSession ksession = runtime.getKieSession();
 		List<Long> lista =
-				emf.createEntityManager().createQuery("SELECT procInfo.id from ProcessInstanceInfo procInfo where procInfo.state=1 and procInfo.processId='com.dupont.bpm.criarbudget'"
+				emf.createEntityManager().createQuery("SELECT procInfo.id from ProcessInstanceInfo procInfo where procInfo.state=1 and procInfo.processId='com.dupont.bpm.criarbudget.v2'"
 						,Long.class).getResultList();
 		for(Long id :lista)
 		{
@@ -176,7 +175,6 @@ public class BPMProcessManagerApiImpl implements BPMProcessManagerApi {
 
 				WorkflowProcessInstance work = (WorkflowProcessInstance) ksession.getProcessInstance(id);
 			    String anoProcesso =  (String)work.getVariable("anoForecast");
-			    String mesProcesso =  (String)work.getVariable("mesForecast");
 			    if(ano.equals(anoProcesso) )
 			    	return true;
 		}
@@ -205,6 +203,24 @@ public class BPMProcessManagerApiImpl implements BPMProcessManagerApi {
 			throw new BPMException(e);
 		}
 
+	}
+
+	@Override
+	public boolean isProcessInstanceRunning(long processInstanceId) {
+		RuntimeEngine runtime = singletonManager
+				.getRuntimeEngine(EmptyContext.get());
+		KieSession ksession = runtime.getKieSession();
+		try
+		{
+			WorkflowProcessInstance process = ((WorkflowProcessInstance) ksession
+				.getProcessInstance(processInstanceId));
+			return process !=null;
+		}
+		catch(Exception e )
+		{
+			
+			return false;
+		}
 	}
 
 }
