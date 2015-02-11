@@ -330,7 +330,10 @@ public class SolicitacaoPagamentoAction implements Serializable {
 				solicitacaoPagamento.setStatus(StatusPagamento.COMPROMETIDO);
 	
 		if(solicitacaoPagamento.getStatus().equals(StatusPagamento.PENDENTE_VALIDACAO))
+		{
 			solicitacaoPagamento.setStatus(StatusPagamento.PAGO);
+			solicitacaoPagamento.setDataPagamentoRealizado(new Date());
+		}
 	
 		
 		if( solicitacaoPagamento.getTipoSolicitacao() == TipoSolicitacao.CC )
