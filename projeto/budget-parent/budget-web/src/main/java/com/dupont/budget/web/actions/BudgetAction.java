@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import javax.crypto.spec.PSource;
 import javax.enterprise.context.Conversation;
 import javax.enterprise.context.ConversationScoped;
 import javax.inject.Inject;
@@ -82,7 +81,11 @@ public class BudgetAction implements Serializable{
 		   ano = (String)bpmsProcesso.obterVariavelProcesso(idInstanciaProcesso, "ano");
 		   budget = budgetService.findByAnoAndCentroDeCusto(ano, centroDeCusto.getId());
 		   possuiBudgetSalvo = budget !=null;
-		   
+			if(!possuiBudgetSalvo && despesasNoDetalhe == null)
+			{
+				setDespesasNoDetalhe(new ArrayList<Despesa>());
+				setTiposDespesasSelecionadas(new ArrayList<TipoDespesa>());
+			}
 		   
 	}
 	
@@ -183,7 +186,7 @@ public class BudgetAction implements Serializable{
 	{
 		if(despesaDetalheSelecionada.getId() !=null)
 			domainService.delete(despesaDetalheSelecionada);
-		despesasNoDetalhe.remove(despesaDetalheSelecionada);
+		despesasNoDetalhe.remove(despesaDetalheSelecionada.getIndice());
 		calcularTotalBudget();
 		facesUtils.addInfoMessage("Despesa removida com sucesso");
 	}
@@ -273,6 +276,7 @@ public class BudgetAction implements Serializable{
 		List<Despesa> listaTratada = new ArrayList<>();
 		TipoDespesa tipoDespesa = null;
 		tiposDespesasSelecionadas = new ArrayList<>();
+	
 		for(int c = 0 ; c<despesasNoDetalhe.size();c++)
 		{
 			Despesa desp = despesasNoDetalhe.get(c);
@@ -385,6 +389,13 @@ public class BudgetAction implements Serializable{
 	}
 
 	public List<Despesa> getDespesasNoDetalhe() {
+		if(despesasNoDetalhe !=null)
+		{
+			for(int i=0 ; i<despesasNoDetalhe.size(); i++){
+				Despesa _despesa = despesasNoDetalhe.get(i);
+				_despesa.setIndice(i);
+			}
+		}
 		return despesasNoDetalhe;
 	}
 

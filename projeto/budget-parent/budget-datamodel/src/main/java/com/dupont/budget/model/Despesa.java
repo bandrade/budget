@@ -84,6 +84,9 @@ public class Despesa extends AbstractEntity<Long> {
 	private BudgetMes despesaMensalisada;
 
 	@Transient
+	private Integer indice;
+	
+	@Transient
 	private boolean firstLine;
 
 	public TipoDespesa getTipoDespesa() {
@@ -229,6 +232,16 @@ public class Despesa extends AbstractEntity<Long> {
 	public void setFirstLine(boolean firstLine) {
 		this.firstLine = firstLine;
 	}
+	
+	
+	public Integer getIndice() {
+		return indice;
+	}
+
+	public void setIndice(Integer indice) {
+		this.indice = indice;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -236,6 +249,7 @@ public class Despesa extends AbstractEntity<Long> {
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((tipoDespesa == null || tipoDespesa.getId()!=null) ? 0 : tipoDespesa.getId().hashCode());
 		result = prime * result + ((acao == null || acao.getId()!=null) ? 0 : acao.getId().hashCode());
+		result = prime * result + ((valor == null || valor!=null) ? 0 : valor.hashCode());
 		result = prime * result + (firstLine ? 1 : 0);
 		return result;
 	}
@@ -267,7 +281,12 @@ public class Despesa extends AbstractEntity<Long> {
 		if (acao == null) {
 			if (other.getAcao() != null)
 				return false;
-		} else if (!firstLine==other.isFirstLine())
+		}
+		if (valor == null) {
+			if (other.getValor() != null)
+				return false;
+		}
+		else if (!firstLine==other.isFirstLine())
 			return false;
 		
 		return true;
