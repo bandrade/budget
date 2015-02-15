@@ -7,11 +7,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import javax.ejb.Asynchronous;
 import javax.ejb.Stateless;
@@ -36,6 +38,7 @@ import com.dupont.budget.model.OrigemSolicitacao;
 import com.dupont.budget.model.SolicitacaoPagamento;
 import com.dupont.budget.model.StatusPagamento;
 import com.dupont.budget.model.TipoDespesa;
+import com.dupont.budget.model.TipoSolicitacao;
 import com.dupont.budget.model.ValorComprometido;
 import com.dupont.budget.service.BudgetService;
 import com.dupont.budget.service.DeliveryHandlerService;
@@ -232,20 +235,28 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
     @Asynchronous
 	public void onSolicitacaoPagamentoUpload(@Observes @Uploaded(SolicitacaoPagamento.class) UploadEvent event) {
     	logger.debug("Evento de atualização de solicitações de pagamento sendo processado pelo serviço.");
-
+    	
 		File file = new File(event.getPath());
 		Sheet sheet = loadFileSheet(file);
+		Calendar c = Calendar.getInstance();
 		Iterator<Row> rowIterator = sheet.iterator();
+		List<SolicitacaoPagamento> rateiosPendentes = new ArrayList<>();
 
 		try {
 			SolicitacaoPagamento solicitacao = null;
-
 			File csv = createFile();
 			try (BufferedWriter bw = new BufferedWriter(new FileWriter(csv))) {
-				line:
 				while (rowIterator.hasNext()) {
 					Row row = rowIterator.next();
 					try {
+						row.getCell(0).setCellType(Cell.CELL_TYPE_STRING);
+						Integer per = Integer.valueOf(row.getCell(0).getStringCellValue());
+						
+						
+						c.setTime(new Date());
+						c.set(Calendar.DAY_OF_MONTH, 1);
+						c.set(Calendar.MONTH, per-1);
+						
 						String numeroNota = null;
 						row.getCell(7).setCellType(Cell.CELL_TYPE_STRING);
 						numeroNota= row.getCell(7).getStringCellValue();
@@ -258,8 +269,9 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
 						if (list.isEmpty() || list.size() > 1) {
 							writeLine("Fornecedor não encontrado", bw, row);
 							continue;
-						}
-
+						}	
+						Fornecedor fornecedor = list.get(0);
+						
 						CentroCusto centroCusto = service.findCentroCustoByCodigo(row.getCell(8).getStringCellValue());
 						if (centroCusto == null) {
 							writeLine("Centro de custo não encontrado", bw, row);
@@ -267,57 +279,99 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
 						}
 
 						Double valor = row.getCell(16).getNumericCellValue();
-						solicitacao = service.findSolicitacaoByNumeroNota(row.getCell(7).getStringCellValue());
-
+						
+						solicitacao = service.findSolicitacaoByNumeroNotaEFornecedor(row.getCell(7).getStringCellValue(),list.get(0).getId());
+						
 						if (solicitacao == null) {
-							SolicitacaoPagamento o = new SolicitacaoPagamento(StatusPagamento.PENDENTE_VALIDACAO);
-							o.setFornecedor(list.get(0));
-							o.setNumeroNotaFiscal(numeroNota);
-							o.setOrigem(OrigemSolicitacao.SAP);
-							o.setValor(valor);
-							o.setDataPagamento(new Date());
-							o.setCriacao(new Date());
-							service.create(o);
-							DespesaSolicitacaoPagamento d = new DespesaSolicitacaoPagamento();
-							d.setSolicitacaoPagamento(o);
-							d.setCentroCusto(centroCusto);
-							d.setValor(valor);
-							service.create(d);
-							o.getDespesas().add(d);
-							service.update(o);
+							criarCoverSheet(fornecedor,numeroNota,valor,centroCusto,c.getTime());
 							writeLine("PENDENTE_VALIDACAO", bw, row);
 							continue;
-						} else {
-							Set<DespesaSolicitacaoPagamento> despesas = solicitacao.getDespesas();
-							for (Iterator<DespesaSolicitacaoPagamento> iterator = despesas.iterator(); iterator.hasNext();) {
-								DespesaSolicitacaoPagamento d = iterator.next();
-								
-									if (!d.getCentroCusto().equals(centroCusto)) {
-										writeLine("Centro de Custo divergente entre Cover Sheet e Relatório SAP", bw, row);
-										continue line;
-									} else if (!(solicitacao.getFornecedor().equals(list.get(0)))) {
-										writeLine("Fornecedor divergente entre Cover Sheet e Relatório SAP", bw, row);
-										continue line;
+						} 
+						else if(solicitacao.getStatus().equals(StatusPagamento.PAGO) && valor >=0d)
+							continue;
+						else {
+								DespesaSolicitacaoPagamento d =  solicitacao.getDespesaByCC(centroCusto);
+								if(d !=null)
+								{
+									//tratamento de reclassificacao
+								    if (valor<0d) {
+										tratarReClassificacao(solicitacao,d,valor,bw,row);
+										continue;
 									}
 									else if (!(d.getValor().equals(valor))) {
 										writeLine("Valor divergente entre Cover Sheet e Relatório SAP", bw, row);
-										continue line;
+										continue ;
 									} 
-									else {
-										solicitacao.setDataPagamentoRealizado(new Date());
-										solicitacao.setStatus(StatusPagamento.PAGO);
-										service.update(solicitacao);
-										writeLine("SUCESSO.", bw, row);
-									/*if (d.getCentroCusto().equals(centroCusto) && solicitacao.getFornecedor().equals(list.get(0))) {
-										writeLine("Não foi possível tratar o registro. Existe mais de uma despesa com o mesmo fornecedor e centro de custo.", bw, row);
-										continue line;
-									}*/
+									//tratamento de rateio
+									else  if(solicitacao.getTipoSolicitacao().equals(TipoSolicitacao.RATEIO))
+									{
+											int index = rateiosPendentes.indexOf(solicitacao);
+											
+											if(index >=0)
+											{
+												solicitacao = rateiosPendentes.get(index);
+												solicitacao.setDataPagamentoRealizado(c.getTime());
+												solicitacao.addDespesasContabilizada(d);
+												solicitacao.addRow(row);
+												rateiosPendentes.set(index,solicitacao);
+											}
+											else
+											{
+												solicitacao.setDataPagamentoRealizado(c.getTime());
+												solicitacao.addDespesasContabilizada(d);
+												solicitacao.addRow(row);
+												rateiosPendentes.add(solicitacao);	
+											}
+											continue;
+									}
+								solicitacao.setStatus(StatusPagamento.PAGO);
+								service.update(solicitacao);
+								writeLine("SUCESSO", bw, row);
+
+								}
+								//tratamento de rateio pendente de validacao
+								else if(solicitacao.getStatus().equals(StatusPagamento.PENDENTE_VALIDACAO))
+								{
+											DespesaSolicitacaoPagamento _despesa = new DespesaSolicitacaoPagamento();
+											_despesa.setSolicitacaoPagamento(solicitacao);
+											_despesa.setCentroCusto(centroCusto);
+											_despesa.setValor(valor);
+											service.create(_despesa);
+											solicitacao.getDespesas().add(_despesa);
+											solicitacao.setTipoSolicitacao(TipoSolicitacao.RATEIO);
+											solicitacao.setValor(solicitacao.getValor()+ valor);
+											solicitacao.addDespesaSolicitacaoPagamento(_despesa);
+											service.update(solicitacao);
+											writeLine("SUCESSO.", bw, row);
+											continue;
 								}
 							}
-						}
-						
+							
 					} catch (Exception e) {
-						bw.write(String.format("%s;%s;%s;%s;Erro durante a leitura\n", row.getCell(7).getStringCellValue(), row.getCell(8).getStringCellValue(), row.getCell(6).getStringCellValue(), row.getCell(16).getStringCellValue().replace(",", ".")));
+						if(row.getCell(7)!=null && row.getCell(8) !=null && row.getCell(6)!=null && row.getCell(16)!=null)
+							bw.write(String.format("%s;%s;%s;%s;Erro durante a leitura\n", row.getCell(7).getStringCellValue(),
+									row.getCell(8).getStringCellValue(), row.getCell(6).getStringCellValue(), row.getCell(16).getStringCellValue().replace(",", ".")));
+					}
+				}
+				//validando rateios
+				for(SolicitacaoPagamento s : rateiosPendentes)
+				{
+					if(s.isDespesaTotalmenteContabilizada())
+					{
+						s.setStatus(StatusPagamento.PAGO);
+						service.update(s);
+						for(Row row: s.getRows())
+						{
+							writeLine("SUCESSO", bw, row);
+						}
+					}
+					else
+					{
+						for(Row row: s.getRows())
+						{
+							writeLine("SOMA DO RATEIO DIVERGENTE", bw, row);
+						}
+
 					}
 				}
 			} catch (IOException e) {
@@ -326,6 +380,40 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+    }
+    
+    private void tratarReClassificacao(SolicitacaoPagamento solicitacao, DespesaSolicitacaoPagamento d,Double valor,BufferedWriter bw,Row row) throws IOException
+    {
+    	if(d.getValor() - valor <0d)
+		{
+			writeLine("Valor de reclassificação é maior que o valor do cover sheet", bw, row);
+		}
+		else
+		{
+			solicitacao.setValor( solicitacao.getValor() - valor);
+			service.update(solicitacao);
+			writeLine("SUCESSO", bw, row);
+		}
+    }
+    
+    private void criarCoverSheet(Fornecedor fornecedor,String numeroNota,Double valor,CentroCusto centroCusto, Date dataPagamentoRealizado)
+    {
+    	SolicitacaoPagamento o = new SolicitacaoPagamento(StatusPagamento.PENDENTE_VALIDACAO);
+		o.setFornecedor(fornecedor);
+		o.setNumeroNotaFiscal(numeroNota);
+		o.setOrigem(OrigemSolicitacao.SAP);
+		o.setValor(valor);
+		o.setDataPagamento(new Date());
+		o.setDataPagamentoRealizado(dataPagamentoRealizado);
+		o.setCriacao(new Date());
+		service.create(o);
+		DespesaSolicitacaoPagamento d = new DespesaSolicitacaoPagamento();
+		d.setSolicitacaoPagamento(o);
+		d.setCentroCusto(centroCusto);
+		d.setValor(valor);
+		service.create(d);
+		o.getDespesas().add(d);
+		service.update(o);
     }
 
 	private void writeLine(String message, BufferedWriter bw, Row row) throws IOException {

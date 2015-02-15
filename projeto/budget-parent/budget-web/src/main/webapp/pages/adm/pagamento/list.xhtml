@@ -27,9 +27,19 @@
                    </p:selectOneMenu>
                    <p:message for="statusList" />
 				
-				<p:commandButton value="Pesquisar" icon="ui-icon-search"   styleClass="button" action="#{solicitacaoPagamentoAction.find}" update="solicitacaoPagamentos" process="@this,numeroNotaInput,fornecedorInput,statusList"/>
 			</h:panelGrid>
-			<p:commandButton value="Testar envio email semanal" action="#{solicitacaoPagamentoAction.testeEnvioRelatorio()}"></p:commandButton>
+			<h:panelGrid columns="4" border="0">
+			   		<p:outputLabel value="De:"/>
+					<p:calendar id="dataDe" value="#{solicitacaoPagamentoAction.dataDe}" locale="pt_BR" required="true"></p:calendar>
+					<p:outputLabel value="Até:"/>
+					<p:calendar id="dataAte" value="#{solicitacaoPagamentoAction.dataAte}" locale="pt_BR" required="true"></p:calendar>
+					
+			</h:panelGrid>
+			<p:panelGrid columns="2">
+				<p:commandButton value="Envio email semanal" action="#{solicitacaoPagamentoAction.testeEnvioRelatorio()}" onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"></p:commandButton>
+				<p:commandButton value="Pesquisar" icon="ui-icon-search"   styleClass="button" action="#{solicitacaoPagamentoAction.find}" update="form" 
+					onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"/>
+			</p:panelGrid>
 			<p:separator />
 			
 			<p:dataTable id="solicitacaoPagamentos" var="item" value="#{solicitacaoPagamentoAction.list}" emptyMessage="Nenhum registro encontrado."
@@ -54,9 +64,15 @@
                    <p:column headerText="Status" sortBy="#{item.status}" >
                        #{item.status}
                    </p:column>
-				
+					<p:column headerText="Data de Criação" sortBy="#{item.criacao}" >
+                       <h:outputText value="#{item.criacao}" >
+                       		<f:convertDateTime pattern="dd/MM/yyyy" />
+                       </h:outputText>
+                   </p:column>
+				 	<p:column headerText="Criado por:" >
+                       <h:outputText rendered="#{not empty item.usuarioCriador}" value="#{item.usuarioCriador.nome}"/>
+                   </p:column>
 				<p:column headerText="Ações" width="10%">
-					
 					<p:commandButton icon="ui-icon-pencil" action="#{solicitacaoPagamentoAction.edit(item)}"   update="solicitacaoPagamentos" />
 					<p:commandButton icon="ui-icon-trash"  action="#{solicitacaoPagamentoAction.delete(item)}" update="solicitacaoPagamentos" >
 						<p:confirm header="Confirmação" message="Deseja realmente remover o dado?" icon="ui-icon-alert" />

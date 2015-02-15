@@ -1,5 +1,6 @@
 package com.dupont.budget.service;
 
+import java.util.Date;
 import java.util.List;
 
 import com.dupont.budget.model.AbstractEntity;
@@ -10,7 +11,6 @@ import com.dupont.budget.model.Papel;
 import com.dupont.budget.model.PapelUsuario;
 import com.dupont.budget.model.SolicitacaoPagamento;
 import com.dupont.budget.model.StatusPagamento;
-import com.dupont.budget.model.TipoCentroCusto;
 import com.dupont.budget.model.TipoDespesa;
 import com.dupont.budget.model.TipoSolicitacao;
 import com.dupont.budget.model.Usuario;
@@ -136,6 +136,10 @@ public interface DomainService {
 	 */
 	SolicitacaoPagamento findSolicitacaoByNumeroNota(String numeroNotaFiscal);
 
+	
+	SolicitacaoPagamento findSolicitacaoByNumeroNotaEFornecedor(String numeroNotaFiscal,Long fornecedorId);
+	
+	
 	/**
 	 * Consulta um centro de custo através do código solicitado.
 	 * 
@@ -162,7 +166,7 @@ public interface DomainService {
 	 * @return
 	 */
 	List<SolicitacaoPagamento> listSolicitacaoByFiltro(String numeroNotaFiscal,
-			TipoSolicitacao tipo, StatusPagamento status, String fornecedor);
+			TipoSolicitacao tipo, StatusPagamento status, String fornecedor, Date de, Date ate);
 	
 	
 	public Usuario createUsuario(Usuario usuario);

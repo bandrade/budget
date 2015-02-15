@@ -2,6 +2,7 @@ package com.dupont.budget.model;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -18,6 +19,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+
+import org.apache.poi.ss.usermodel.Row;
 
 /**
  * Entidade de solicitação de pagamentos de despesas.
@@ -78,6 +82,9 @@ public class SolicitacaoPagamento extends AbstractEntity<Long> {
 
 	@OneToMany(mappedBy = "solicitacaoPagamento", cascade = CascadeType.ALL, fetch=FetchType.EAGER, orphanRemoval= true)
 	private Set<DespesaSolicitacaoPagamento> despesas;
+	
+	@Transient
+	private Set<DespesaSolicitacaoPagamento> despesasContabilizadas;
 
 	@ManyToOne
 	@JoinColumn(name = "usuario_id")
@@ -87,6 +94,24 @@ public class SolicitacaoPagamento extends AbstractEntity<Long> {
 	@Enumerated(EnumType.STRING)
 	private OrigemSolicitacao origem;
 
+	@Transient
+	private Set<org.apache.poi.ss.usermodel.Row> rows; 
+	
+	public void addDespesasContabilizada(DespesaSolicitacaoPagamento despesaSolicitacaoPagamento) {
+		if(this.despesasContabilizadas == null)
+			this.despesasContabilizadas = new HashSet<DespesaSolicitacaoPagamento>();
+
+		this.despesasContabilizadas.add(despesaSolicitacaoPagamento);
+		despesaSolicitacaoPagamento.setSolicitacaoPagamento(this);
+	}
+
+	public void addRow(Row row) {
+		if(this.rows == null)
+			this.rows = new HashSet<Row>();
+
+		this.rows.add(row);
+	}
+	
 	public void addDespesaSolicitacaoPagamento(DespesaSolicitacaoPagamento despesaSolicitacaoPagamento) {
 		if(this.despesas == null)
 			this.despesas = new HashSet<DespesaSolicitacaoPagamento>();
@@ -102,6 +127,28 @@ public class SolicitacaoPagamento extends AbstractEntity<Long> {
 		this.despesas.remove(despesaSolicitacaoPagamento);
 		//despesaSolicitacaoPagamento.setSolicitacaoPagamento(null);
 	}
+	
+	public DespesaSolicitacaoPagamento getDespesaByCC(CentroCusto centroCusto)
+	{
+		for(DespesaSolicitacaoPagamento despesaSolicitacaoPagamento: despesas)
+		{
+			if(despesaSolicitacaoPagamento.getCentroCusto().equals(centroCusto))
+			{
+				return despesaSolicitacaoPagamento;
+			}
+		}
+		return null;
+	}
+	public boolean isDespesaTotalmenteContabilizada()
+	{
+		Double valor=0d;
+		for(DespesaSolicitacaoPagamento desp: despesasContabilizadas)
+		{
+			valor+=desp.getValor();
+		}
+		return this.valor.equals(valor);
+	}
+	
 
 	public SolicitacaoPagamento() {
 		this(null);
@@ -144,6 +191,8 @@ public class SolicitacaoPagamento extends AbstractEntity<Long> {
 	}
 
 	public Fornecedor getFornecedor() {
+		if(fornecedor==null)
+			setFornecedor(new Fornecedor());
 		return fornecedor;
 	}
 
@@ -210,4 +259,22 @@ public class SolicitacaoPagamento extends AbstractEntity<Long> {
 		this.origem = origem;
 	}
 
+	public Set<DespesaSolicitacaoPagamento> getDespesaContabilizadas() {
+		return despesasContabilizadas;
+	}
+
+	public void setDespesaContabilizadas(
+			Set<DespesaSolicitacaoPagamento> despesaContabilizadas) {
+		this.despesasContabilizadas = despesaContabilizadas;
+	}
+
+	public Set<org.apache.poi.ss.usermodel.Row> getRows() {
+		return rows;
+	}
+
+	public void setRows(Set<org.apache.poi.ss.usermodel.Row> rows) {
+		this.rows = rows;
+	}
+
+	
 }

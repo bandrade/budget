@@ -1,5 +1,6 @@
 package com.dupont.budget.service.impl;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -127,7 +128,7 @@ public class DomainServiceBean extends GenericService implements DomainService {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<SolicitacaoPagamento> listSolicitacaoByFiltro(String numeroNotaFiscal, TipoSolicitacao tipo, StatusPagamento status, String fornecedor) {
+	public List<SolicitacaoPagamento> listSolicitacaoByFiltro(String numeroNotaFiscal, TipoSolicitacao tipo, StatusPagamento status, String fornecedor,Date de, Date ate) {
 		
 		StringBuilder q = new StringBuilder("select o from SolicitacaoPagamento o ");
 		Map<String, Object> params = new HashMap<>();
@@ -144,9 +145,9 @@ public class DomainServiceBean extends GenericService implements DomainService {
 			params.put("status", status);
 		}
 		
+		boolean con = false;
 		if (!params.isEmpty()) {
 			q.append("where ");
-			boolean con = false;
 			for (Entry<String, Object> e: params.entrySet()) {
 				if (con) {
 					q.append(" and ");
@@ -160,6 +161,21 @@ public class DomainServiceBean extends GenericService implements DomainService {
 			}
 		}
 		
+		if(de !=null && ate !=null)
+		{
+			params.put("de", de);
+			params.put("ate", ate);
+			
+			if (con) {
+				q.append(" and ");
+			}
+			else
+			{
+				q.append(" where ");
+			}
+			q.append("o.criacao>=:de ");
+			q.append("and  o.criacao<=:ate " );
+		}
 		Query query = em.createQuery(q.toString());
 		
 		for (Entry<String, Object> e: params.entrySet()) {
@@ -292,4 +308,21 @@ public class DomainServiceBean extends GenericService implements DomainService {
 		}
 		return emailString.toString().substring(0,emailString.toString().length()-1);
 	}
+	
+	public SolicitacaoPagamento findSolicitacaoByNumeroNotaEFornecedor(String numeroNotaFiscal , Long idFornecedor){
+		SolicitacaoPagamento solicitacao = null;
+		try
+		{
+			// valida solicitacao pagamento com numero da nota fiscal igual
+			solicitacao	= em.createNamedQuery(SolicitacaoPagamento.FIND_BY_NUMERO_NOTA_FORNECEDOR, SolicitacaoPagamento.class)
+												.setParameter("numeroNotaFiscal", numeroNotaFiscal)
+												.setParameter("fornecedor", idFornecedor)
+												.getSingleResult();
+			return solicitacao;
+		}
+		catch(NoResultException e){}
+		
+		return null;
+	}
+		
 }

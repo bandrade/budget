@@ -17,6 +17,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.deltaspike.core.api.scope.ViewAccessScoped;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 
@@ -54,7 +55,8 @@ import com.dupont.budget.web.util.FacesUtils;
  * @since 2014
  *
  */
-@ConversationScoped @Named
+@ViewAccessScoped
+@Named
 public class SolicitacaoPagamentoAction implements Serializable {
 
 	private static final long serialVersionUID = -5396229570158854069L;
@@ -120,6 +122,9 @@ public class SolicitacaoPagamentoAction implements Serializable {
 	
 	private boolean desabilitarDespesa;
 	
+	private Date dataDe;
+	
+	private Date dataAte;
 	@PostConstruct
 	private void init() {
 		solicitacaoPagamento = new SolicitacaoPagamento();
@@ -127,6 +132,14 @@ public class SolicitacaoPagamentoAction implements Serializable {
 		despesaSolicitacaoPagamento = new DespesaSolicitacaoPagamento();
 		despesaForecast = new DespesaForecast();
 		despesaForecast.init();
+		produtos          = new ArrayList<Produto>();
+		tiposDespesas = new ArrayList<TipoDespesa>();
+		culturas          = new ArrayList<Cultura>();
+		distritos        = new ArrayList<Distrito>();
+		vendedores		= new ArrayList<Vendedor>();
+		acoes				= new ArrayList<Acao>();
+		clientes			= new ArrayList<Cliente>();
+		despesasForecast = new ArrayList<DespesaForecast>();
 	}
 	
 	public void load() {
@@ -189,7 +202,7 @@ public class SolicitacaoPagamentoAction implements Serializable {
 	}
 	
 	public void find() {
-		list = domainService.listSolicitacaoByFiltro(solicitacaoPagamento.getNumeroNotaFiscal(), solicitacaoPagamento.getTipoSolicitacao(),null, solicitacaoPagamento.getFornecedor().getNome());
+		list = domainService.listSolicitacaoByFiltro(solicitacaoPagamento.getNumeroNotaFiscal(), solicitacaoPagamento.getTipoSolicitacao(),solicitacaoPagamento.getStatus(), solicitacaoPagamento.getFornecedor().getNome(),dataDe,dataAte);
 	}
 	
 	/* Inicia o escopo de conversação */
@@ -317,7 +330,7 @@ public class SolicitacaoPagamentoAction implements Serializable {
 		}
 		
 		conversation.end();
-		
+		init();
 		facesUtils.addInfoMessage("Solicitação de pagamento enviada para processamento.");
 		FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
 		
@@ -332,7 +345,6 @@ public class SolicitacaoPagamentoAction implements Serializable {
 		if(solicitacaoPagamento.getStatus().equals(StatusPagamento.PENDENTE_VALIDACAO))
 		{
 			solicitacaoPagamento.setStatus(StatusPagamento.PAGO);
-			solicitacaoPagamento.setDataPagamentoRealizado(new Date());
 		}
 	
 		
@@ -340,20 +352,19 @@ public class SolicitacaoPagamentoAction implements Serializable {
 			despesaSolicitacaoPagamento.setValor(solicitacaoPagamento.getValor());
 		
 		solicitacaoPagamentoService.updateSolicitacaoPagamento(solicitacaoPagamento);
-		
-		conversation.end();
-		
 		facesUtils.addInfoMessage("Solicitação de pagamento atualizada e reenviada para processamento.");
 		FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
-		
-		return "edit.xhtml?faces-redirect=true";
+		init();
+		return "/pages/adm/pagamento/list.xhtml";
 	}
 	
 	public void delete(SolicitacaoPagamento _solicitacaoPagamento) {
 
 		try
 		{
-			boolean processoEmExecucao = bpmsProcesso.isProcessoEmExecucao(_solicitacaoPagamento.getProcessInstanceId());
+			boolean processoEmExecucao = false;
+			if(_solicitacaoPagamento.getProcessInstanceId()!=null)
+				processoEmExecucao= bpmsProcesso.isProcessoEmExecucao(_solicitacaoPagamento.getProcessInstanceId());
 			if(processoEmExecucao)
 				bpmsProcesso.abortarProcesso(_solicitacaoPagamento.getProcessInstanceId());
 			domainService.delete(_solicitacaoPagamento);
@@ -371,7 +382,6 @@ public class SolicitacaoPagamentoAction implements Serializable {
 	
 	public String edit(SolicitacaoPagamento _solicitacaoPagamento) {	
 		
-		conversation.begin();
 		
 		solicitacaoPagamento = solicitacaoPagamentoService.findSolicitacaoPagamento(_solicitacaoPagamento.getId());
 		
@@ -399,8 +409,6 @@ public class SolicitacaoPagamentoAction implements Serializable {
 				doSelectCentroCusto();
 		} 
 		
-		
-		
 		return "/pages/process/pagamento/edit.xhtml";
 	}
 	
@@ -408,10 +416,6 @@ public class SolicitacaoPagamentoAction implements Serializable {
 		doSelectCentroCusto();
 		doSelectTipoDespesa();
 		doSelectAcao();
-		//doSelectProduto();
-		//doSelectCultura();
-		//doSelectDistrito();
-		//doSelectVendedor();
 		
 	}
 	
@@ -494,7 +498,11 @@ public class SolicitacaoPagamentoAction implements Serializable {
 		solicitacaoPagamento.setValor(valor);
 	
 	}
-	
+	public String iniciarPagamentos()
+	{
+		init();
+		return "/pages/adm/pagamento/list.xhtml";
+	}
 	/* Ao incluir a DESPESA de forecast, a despesa de solicitação de pagamento fica identica a ela. */
 	public void incluirDespesaForecast(SelectEvent event){
 		Map<String, Object> objects = (Map<String, Object>) event.getObject();
@@ -534,9 +542,6 @@ public class SolicitacaoPagamentoAction implements Serializable {
 	}
 	
 	public List<SolicitacaoPagamento> getList() {
-		if (list == null) {
-			list = (List<SolicitacaoPagamento>) domainService.findAll(SolicitacaoPagamento.class);
-		}
 		return list;
 	}
 	
@@ -618,6 +623,22 @@ public class SolicitacaoPagamentoAction implements Serializable {
 
 	public void setDesabilitarDespesa(boolean desabilitarDespesa) {
 		this.desabilitarDespesa = desabilitarDespesa;
+	}
+
+	public Date getDataDe() {
+		return dataDe;
+	}
+
+	public void setDataDe(Date dataDe) {
+		this.dataDe = dataDe;
+	}
+
+	public Date getDataAte() {	
+		return dataAte;
+	}
+
+	public void setDataAte(Date dataAte) {
+		this.dataAte = dataAte;
 	}
 	
 	

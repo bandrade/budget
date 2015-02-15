@@ -37,7 +37,7 @@
                    <p:column headerText="Valor(R$)">
                        R$ #{item.valor}
                    </p:column>
-                   <p:column headerText="Status">
+                   <p:column headerText="Status" style="color:#FFFFFF;background-color:#{item.status=='SUCESSO' ? '#009900' : item.status=='PENDENTE_VALIDACAO'?  '#FFAC00': '#FF0000'}" width="30%">
                        #{item.status}
                    </p:column>
                    <f:facet name="footer">
