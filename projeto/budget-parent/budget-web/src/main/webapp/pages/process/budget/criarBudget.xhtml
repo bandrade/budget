@@ -54,11 +54,11 @@
 					<f:facet name="header">
        					Despesas
   						 </f:facet>
-  					 <p:ajax event="cellEdit" listener="#{criarBudgetAction.editarCelula}" update=":messages" />
+  					 <p:ajax event="cellEdit" listener="#{criarBudgetAction.editarCelula}" update=":messages"  onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"/>
 					<p:column colspan="9" rendered="#{detalheDespesa.firstLine}" style="background-color:#CE0909;color:#fff;">
 							<h:outputText value="#{detalheDespesa.tipoDespesa.nome}" />
 					</p:column>
-					<p:column rendered="#{not detalheDespesa.firstLine}" width="2%">
+					<p:column rendered="#{not detalheDespesa.firstLine}" width="2%" style="text-align:center;">
 							<h:outputText value="#{detalheDespesa.indice}" />
 					</p:column>
 					<p:column  width="12%" rendered="#{not detalheDespesa.firstLine}">
