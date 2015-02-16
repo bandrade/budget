@@ -30,89 +30,168 @@
 						<f:selectItem itemValue="N" itemLabel="Aprovar Parcialmente"/>
 				</p:selectOneRadio>		
 				</p:panelGrid>
-				<p:panelGrid columns="1" styleClass="painel-botoes">
-					<p:commandButton value="Incluir Despesa"
-						oncomplete="PF('criarDespesa').show();" action="#{aprovarBudgetAction.trataInclusao()}" update=":criarDespesaPanel,:formDespesa"/>
+			
+				<p:panelGrid columns="3" >
+				<p:outputLabel value="* Tipo de Despesa:"></p:outputLabel>
+					<p:autoComplete id="cboTipoDespesa" dropdown="true" value="#{aprovarBudgetAction.tipoDespesa}" completeMethod="#{aprovarBudgetAction.autocompleteTipoDespesa}" 
+					 var="_tipoDespesa" itemLabel="#{_tipoDespesa.nome}" itemValue="#{_tipoDespesa}" emptyMessage="NAO ENCONTRADO" effect="size"   
+					 scrollHeight="300"
+					 styleClass="input"
+					 converter="com.dupont.EntityConverter" />
+				<p:commandButton value="Incluir Tipo Despesa"
+						action="#{aprovarBudgetAction.incluirTipoDespesa()}" 
+						update=":form"
+						style="margin-left:20px"/>
 				</p:panelGrid>
-				<p:panelGrid id="panelDetalhe" columns="1">
+				
 				<p:dataTable 
-					id="tblDespesa"
 					emptyMessage="Não existem despesas cadastradas" 
 					value="#{aprovarBudgetAction.despesasNoDetalhe}"
 					selection="#{aprovarBudgetAction.despesaDetalheSelecionada}"
 					var="detalheDespesa"
 					paginator="true"
+					sortBy="#{detalheDespesa.tipoDespesa}"
+					editable="true" 
+					editMode="cell" widgetVar="cellDespesa"
 					paginatorPosition="bottom"
-					rows="20"
-					 style="argin-left:-10px;overflow:wrap">
+					rows="20" style="margin-left:-10px;overflow:wrap;"
+					id="tableDespesas"
+					>
 					<f:facet name="header">
-       				 Despesa
+       					Despesas
   						 </f:facet>
-  						 <p:column width="15%">>
-						<f:facet name="header">
-							<h:outputText value="Tipo Despesa" />
-						</f:facet>
-						<h:outputText value="#{detalheDespesa.tipoDespesa.nome}" />
+  					 <p:ajax event="cellEdit" listener="#{aprovarBudgetAction.editarCelula}" update=":messages" />
+					<p:column colspan="10" rendered="#{detalheDespesa.firstLine}" style="background-color:#CE0909;color:#fff;">
+							<h:outputText value="#{detalheDespesa.tipoDespesa.nome}" />
 					</p:column>
-					<p:column>
+					<p:column rendered="#{not detalheDespesa.firstLine}" width="2%">
+							<h:outputText value="#{detalheDespesa.indice}" />
+					</p:column>
+					<p:column  width="12%" rendered="#{not detalheDespesa.firstLine}">
 						<f:facet name="header">
 							<h:outputText value="Ação" />
 						</f:facet>
-						<h:outputText value="#{detalheDespesa.acao.nome}" />
+							
+						 <p:cellEditor>
+			               	<f:facet name="output"><h:outputText value="#{detalheDespesa.acao.nome}" /></f:facet>
+            				<f:facet name="input">
+            					<p:inputTextarea value="#{detalheDespesa.acaoString}" cols="20" rows="3"></p:inputTextarea>
+            				</f:facet>
+			             </p:cellEditor>
 					</p:column>
 					
-					<p:column>
+					<p:column rendered="#{not detalheDespesa.firstLine}" width="10%">
 						<f:facet name="header">
 							<h:outputText value="Produto" />
 						</f:facet>
-						<h:outputText value="#{detalheDespesa.produto.nome}" />
+						<p:cellEditor>
+						<f:facet name="output"><h:outputText value="#{detalheDespesa.produto.nome}" /></f:facet>
+						<f:facet name="input">
+            					<p:autoComplete id="cboProduto" dropdown="true" value="#{detalheDespesa.produto}" completeMethod="#{autocompleteAction.autocompleteProduto}" 
+								 styleClass="input"
+								 size="12"
+								 scrollHeight="300"
+								 var="_produto" itemLabel="#{_produto.nome}" itemValue="#{_produto}" emptyMessage="NAO ENCONTRADO" effect="size" converter="com.dupont.EntityConverter">
+								 </p:autoComplete>
+            			</f:facet>
+						</p:cellEditor>
 					</p:column>
-					<p:column width="8%">
+					<p:column rendered="#{not detalheDespesa.firstLine}"  width="10%">
 						<f:facet name="header">
 							<h:outputText value="Cultura" />
 						</f:facet>
-						<h:outputText value="#{detalheDespesa.cultura.nome}" />
+						<p:cellEditor>
+							<f:facet name="output"><h:outputText value="#{detalheDespesa.cultura.nome}" /></f:facet>
+							<f:facet name="input">
+									<p:autoComplete id="cboCultura" dropdown="true" value="#{detalheDespesa.cultura}" completeMethod="#{autocompleteAction.autocompleteCultura}" 
+									 styleClass="input"
+									 scrollHeight="300"
+									 size="12"
+									 converter="com.dupont.EntityConverter"
+					   				 var="_cultura" itemLabel="#{_cultura.nome}" itemValue="#{_cultura}" emptyMessage="NAO ENCONTRADO" effect="size"  />
+					 		</f:facet>
+					 	</p:cellEditor>
 					</p:column>
-					<p:column width="8%">
+					<p:column width="8%" rendered="#{not detalheDespesa.firstLine}">
 						<f:facet name="header">
 							<h:outputText value="Distrito" />
 						</f:facet>
-						<h:outputText value="#{detalheDespesa.distrito.nome}" />
+						<p:cellEditor>
+							<f:facet name="output"><h:outputText value="#{detalheDespesa.distrito.nome}" /></f:facet>
+							<f:facet name="input">
+									<p:autoComplete id="cboDistrito" dropdown="true" value="#{detalheDespesa.distrito}" completeMethod="#{autocompleteAction.autocompleteDistrito}" 
+									 styleClass="input"
+									 size="10"
+									 scrollHeight="300"
+									 converter="com.dupont.EntityConverter"
+									 var="distrito" itemLabel="#{distrito.nome}" itemValue="#{distrito}" emptyMessage="NAO ENCONTRADO" effect="size"/>
+					 		</f:facet>
+					 	</p:cellEditor>
 					</p:column>
-					<p:column>
-						<f:facet name="header">
+					<p:column rendered="#{not detalheDespesa.firstLine}" width="15%">
+						<f:facet name="header" >
 							<h:outputText value="ERC" />
 						</f:facet>
-						<h:outputText value="#{detalheDespesa.vendedor.nome}" />
+						<p:cellEditor>
+							<f:facet name="output"><h:outputText value="#{detalheDespesa.vendedor.nome}" /></f:facet>
+							<f:facet name="input">
+									<p:autoComplete id="cboVendedor" dropdown="true" value="#{detalheDespesa.vendedor}" completeMethod="#{autocompleteAction.autocompleteVendedor}" 
+					 				styleClass="input"
+					 				scrollHeight="300"
+									converter="com.dupont.EntityConverter"
+					 				var="_vendedor" itemLabel="#{_vendedor.nome}" itemValue="#{_vendedor}" emptyMessage="NAO ENCONTRADO" effect="size"/>
+					 		</f:facet>
+					 	</p:cellEditor>
 					</p:column>
 					
-					<p:column>
+					<p:column  width="12%" rendered="#{not detalheDespesa.firstLine}">
 						<f:facet name="header">
 							<h:outputText value="Comentário" />
 						</f:facet>
-						<h:outputText value="#{detalheDespesa.comentario}" />
+						
+						 <p:cellEditor>
+			               	<f:facet name="output"><h:outputText value="#{detalheDespesa.comentario}" /></f:facet>
+            				<f:facet name="input">
+            					<p:inputTextarea value="#{detalheDespesa.comentario}" cols="20" rows="3" ></p:inputTextarea>
+            				</f:facet>
+            			</p:cellEditor>
 					</p:column>
-					<p:column width="150" footerText="Total Proposto:#{facesUtils.formatarDinheiro(aprovarBudgetAction.valorTotalDetalhe)}" style="text-align:center" >
+					<p:column width="8%" footerText="Total:#{facesUtils.formatarDinheiro(aprovarBudgetAction.valorTotalDetalhe)}" style="text-align:center"  rendered="#{not detalheDespesa.firstLine}">
 						<f:facet name="header">
-							<h:outputText value="Valor Proposto" />
+							<h:outputText value="*Valor Proposto" />
 						</f:facet>
-						<h:outputText value="#{detalheDespesa.valor}" >
-							<f:convertNumber type="currency"/>
-						</h:outputText>
+						
+						 <p:cellEditor>
+			               	<f:facet name="output">
+			               		<h:outputText value="#{detalheDespesa.valor}" >
+									<f:convertNumber type="currency"/>
+								</h:outputText>
+							</f:facet>
+            				<f:facet name="input">
+            					<pe:inputNumber  id="valor"  value="#{detalheDespesa.valor}"  converter="javax.faces.Double" required="true">
+										<p:ajax  update=":form" process="@this"></p:ajax>
+            					</pe:inputNumber>
+            				</f:facet>
+            			</p:cellEditor>
 					</p:column> 
-					<p:column width="5%" style="text-align:center">
-							<p:commandButton icon="ui-icon-pencil" update=":formDespesa,:criarDespesaPanel" oncomplete="PF('criarDespesa').show();" action="#{aprovarBudgetAction.tratarDadosAlteracao()}">
-									<f:setPropertyActionListener target="#{aprovarBudgetAction.despesa}" value="#{detalheDespesa}"/>
+					<p:column width="3%" rendered="#{not detalheDespesa.firstLine}">
+							<p:commandButton icon="ui-icon-trash" action="#{aprovarBudgetAction.removerDespesa()}" update=":form">
+									<p:confirm header="Confirmação" message="Deseja realmente remover a despesa?" icon="ui-icon-alert"/>
+									<f:setPropertyActionListener target="#{aprovarBudgetAction.despesaDetalheSelecionada}" value="#{detalheDespesa}"/>
 							</p:commandButton>
 					</p:column>
 					<p:column style="text-align:center" width="8%" headerText="Aprovado?" footerText="Total Aprovado:#{facesUtils.formatarDinheiro(aprovarBudgetAction.valorTotalAprovado)}">
 						<p:selectBooleanCheckbox value="#{detalheDespesa.aprovado}" disabled="#{aprovarBudgetAction.tipoAprovacao eq 'S'}">
-							<p:ajax listener="#{aprovarBudgetAction.calcularTotalBudget()}" event="change" update=":form"></p:ajax>
+							<p:ajax event="change" update=":form"></p:ajax>
 						</p:selectBooleanCheckbox>
 					</p:column>
+					 <p:summaryRow >
+			            <p:column  style="text-align:left;background-color:#fff">
+			               	<p:commandButton icon="ui-icon-plus" action="#{aprovarBudgetAction.adicionarDespesaPlanilha(detalheDespesa.tipoDespesa)}" update=":form"/>
+			            </p:column>
+      				 </p:summaryRow>
 				</p:dataTable>
-				
-				</p:panelGrid>
+			
 					<p:panelGrid columns="1" styleClass="painel-botoes">
 					<p:commandButton value="Concluir"  action="#{aprovarBudgetAction.concluir()}" onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()">
 						<p:confirm header="Confirmação" message="Confirma a conclusão da Aprovação do Budget?" icon="ui-icon-alert"/>
@@ -121,88 +200,7 @@
 			</p:panel>
 			
 			</h:form>
-			<p:dialog header="#{not aprovarBudgetAction.inclusao? 'Alterar Despesa' : 'Incluir Despesa'}  " id="criarDespesaPanel" widgetVar="criarDespesa" height="500"
-				width="550" resizable="false" draggable="false">
-				<h:form id="formDespesa">
-				<p:panel id="panelDespesa">
-				<p:panelGrid columns="2">
-					<p:outputLabel value="* Tipo de Despesa:"></p:outputLabel>
-					<p:autoComplete id="cboTipoDespesa" dropdown="true" value="#{aprovarBudgetAction.despesa.tipoDespesa}" completeMethod="#{autocompleteAction.autocompleteTipoDespesa}" 
-					 var="_tipoDespesa" itemLabel="#{_tipoDespesa.nome}" itemValue="#{_tipoDespesa}" emptyMessage="NAO ENCONTRADO" effect="size"  required="true" 
-					 styleClass="input"
-					 scrollHeight="300"
-					 converter="com.dupont.EntityConverter" />
-					 
-					<p:outputLabel value="Produto:"></p:outputLabel>
-					<p:autoComplete id="cboProduto" dropdown="true" value="#{aprovarBudgetAction.despesa.produto}" completeMethod="#{autocompleteAction.autocompleteProduto}" 
-					 styleClass="input"
-					 scrollHeight="300"
-					 var="_produto" itemLabel="#{_produto.nome}" itemValue="#{_produto}" emptyMessage="NAO ENCONTRADO" effect="size" converter="com.dupont.EntityConverter"/>
-
-					<p:outputLabel value="Cultura:"></p:outputLabel>
-					<p:autoComplete id="cboCultura" dropdown="true" value="#{aprovarBudgetAction.despesa.cultura}" completeMethod="#{autocompleteAction.autocompleteCultura}" 
-					 styleClass="input"
-					 scrollHeight="300"
-					converter="com.dupont.EntityConverter"
-					 var="_cultura" itemLabel="#{_cultura.nome}" itemValue="#{_cultura}" emptyMessage="NAO ENCONTRADO" effect="size"  />
-					
-					<p:outputLabel value="Distrito:" ></p:outputLabel>
-					<p:autoComplete id="cboDistrito" dropdown="true" value="#{aprovarBudgetAction.despesa.distrito}" completeMethod="#{autocompleteAction.autocompleteDistrito}" 
-					 styleClass="input"
-					 scrollHeight="300"
-					converter="com.dupont.EntityConverter"
-					 var="distrito" itemLabel="#{distrito.nome}" itemValue="#{distrito}" emptyMessage="NAO ENCONTRADO" effect="size"/>
- 
-					<p:outputLabel value="ERC:"></p:outputLabel>
-					<p:autoComplete id="cboVendedor" dropdown="true" value="#{aprovarBudgetAction.despesa.vendedor}" completeMethod="#{autocompleteAction.autocompleteVendedor}" 
-					 styleClass="input"
-					 scrollHeight="300"
-					converter="com.dupont.EntityConverter"
-					 var="_vendedor" itemLabel="#{_vendedor.nome}" itemValue="#{_vendedor}" emptyMessage="NAO ENCONTRADO" effect="size"/>
-					
-					<p:outputLabel value="Cliente:"></p:outputLabel>
-					<p:autoComplete id="cboCliente" dropdown="true" value="#{aprovarBudgetAction.despesa.cliente}" completeMethod="#{autocompleteAction.autocompleteCliente}" 
-				     converter="com.dupont.EntityConverter"	
-				     scrollHeight="300"
-				      styleClass="input"
-					 var="_cliente" itemLabel="#{_cliente.nome}" itemValue="#{_cliente}" emptyMessage="NAO ENCONTRADO" effect="size" />
-					<p:outputLabel value="Ação:"></p:outputLabel>
-					 <p:panelGrid columns="3" id="painel">
-					<p:selectOneRadio value="#{aprovarBudgetAction.tipoAcao}" >
-						<p:ajax update=":formDespesa:painel" process="@this" ></p:ajax>
-						<f:selectItem itemValue="S"  itemLabel="Existente"/>
-						<f:selectItem itemValue="N" itemLabel="Nova"/>
-					</p:selectOneRadio>					
-					<p:autoComplete id="cboAcao" dropdown="true" value="#{aprovarBudgetAction.despesa.acao}" completeMethod="#{aprovarBudgetAction.autocompleteAcao}" 
-				     converter="com.dupont.EntityConverter"
-				      styleClass="input"
-				      scrollHeight="300"
-					 var="_acao" itemLabel="#{_acao.nome}" itemValue="#{_acao}" emptyMessage="NAO ENCONTRADO" effect="size"
-					 rendered="#{aprovarBudgetAction.tipoAcao =='S'}" />
-						<p:inputTextarea id="inputAcao" value="#{aprovarBudgetAction.despesa.acao.nome}" required="true" rendered="#{aprovarBudgetAction.tipoAcao =='N'}" />
-					</p:panelGrid>
-					
-					<p:outputLabel value="Comentário:"></p:outputLabel>
-					<p:inputTextarea value="#{aprovarBudgetAction.despesa.comentario}" />
-					
-					<p:outputLabel value="* Valor(R$):"></p:outputLabel>
-					<pe:inputNumber  id="valor" value="#{aprovarBudgetAction.despesa.valor}" converter="javax.faces.Double" required="true"/>
-					<h:inputHidden value="#{aprovarBudgetAction.incAltComSucesso}" id="incAltSucesso" />
-				</p:panelGrid>
-				<p:panelGrid styleClass="painel-botoes" columns="1">				
-						<p:commandButton value="Incluir Despesa" action="#{aprovarBudgetAction.adicionarDespesa()}"  
-						 update=":formDespesa:panelDespesa,:form" rendered="#{aprovarBudgetAction.inclusao}" 
-						 onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"
-						 oncomplete="if(document.getElementById('formDespesa:incAltSucesso').value=='true'){PF('criarDespesa').hide();}"/>
-						<p:commandButton value="Alterar Despesa" action="#{aprovarBudgetAction.alterarDespesa()}"  
-						 update=":formDespesa:panelDespesa,:form" rendered="#{not aprovarBudgetAction.inclusao}"  
-						 oncomplete="if(document.getElementById('formDespesa:incAltSucesso').value=='true'){PF('criarDespesa').hide();}"
-						 onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"/>
-				</p:panelGrid>
-				</p:panel>
-			
-				</h:form>
-			</p:dialog>
+		
 			
 	</ui:define>
 </ui:composition>

@@ -17,7 +17,8 @@ import com.dupont.budget.dto.BudgetAreaDTO;
 import com.dupont.budget.dto.DespesaMesDTO;
 import com.dupont.budget.dto.DespesasAgrupadasDTO;
 import com.dupont.budget.model.Budget;
-import com.dupont.budget.model.BudgetEstipuladoAno;
+import com.dupont.budget.model.BudgetEstipuladoAnoArea;
+import com.dupont.budget.model.BudgetEstipuladoAnoCC;
 import com.dupont.budget.model.BudgetMes;
 import com.dupont.budget.model.Despesa;
 import com.dupont.budget.model.StatusBudget;
@@ -180,7 +181,8 @@ public class BudgetServiceBean extends GenericService implements BudgetService {
 
 		for(Despesa despesa : despesasNoDetalhe)
 		{
-			em.merge(despesa);
+			if(!despesa.isFirstLine())
+				em.merge(despesa);
 		}
 	}
 
@@ -227,13 +229,52 @@ public class BudgetServiceBean extends GenericService implements BudgetService {
 		return lista;
 	}
 
+	
+	
+
+	public void adicionarBudgetsSubmetidosCC(
+			List<BudgetEstipuladoAnoCC> budgets) throws Exception {
+		for(BudgetEstipuladoAnoCC budget : budgets)
+		{
+			BudgetEstipuladoAnoCC budgetAno = null;
+			try
+			{
+				budgetAno = obterValoresAprovadosESubmetidosCC(budget.getCentroCusto().getId(), budget.getAno());
+
+			}
+			catch(NoResultException nre)
+			{
+				logger.debug("Nao existe budget submetido deste ano");
+			}
+			if(budgetAno !=null)
+			{
+
+				budgetAno.setValorSubmetido(budget.getValorSubmetido());
+				budgetAno.setValorAprovado(budget.getValorAprovado());
+				em.merge(budgetAno);
+			}
+			else
+			{
+				em.persist(budget);
+			}
+		}
+	}
+
+	public BudgetEstipuladoAnoCC obterValoresAprovadosESubmetidosCC(Long centroCustoId, String ano) throws Exception
+	{
+
+		BudgetEstipuladoAnoCC budgetAno = em.createNamedQuery("BudgetEstipuladoAnoCC.findByAnoAndCC",BudgetEstipuladoAnoCC.class)
+				.setParameter("ano",ano)
+				.setParameter("centro_custo_id",centroCustoId).getSingleResult();
+		return budgetAno;
+	}
 
 	@Override
 	public void adicionarBudgetsSubmetidos(
-			List<BudgetEstipuladoAno> budgets) throws Exception {
-		for(BudgetEstipuladoAno budget : budgets)
+			List<BudgetEstipuladoAnoArea> budgets) throws Exception {
+		for(BudgetEstipuladoAnoArea budget : budgets)
 		{
-			BudgetEstipuladoAno budgetAno = null;
+			BudgetEstipuladoAnoArea budgetAno = null;
 			try
 			{
 				budgetAno = obterValoresAprovadosESubmetidos(budget.getArea().getId(), budget.getAno());
@@ -257,10 +298,10 @@ public class BudgetServiceBean extends GenericService implements BudgetService {
 		}
 	}
 
-	public BudgetEstipuladoAno obterValoresAprovadosESubmetidos(Long areaId, String ano) throws Exception
+	public BudgetEstipuladoAnoArea obterValoresAprovadosESubmetidos(Long areaId, String ano) throws Exception
 	{
 
-		BudgetEstipuladoAno budgetAno = em.createNamedQuery("BudgetEstipulado.findByAnoAndArea",BudgetEstipuladoAno.class)
+		BudgetEstipuladoAnoArea budgetAno = em.createNamedQuery("BudgetEstipulado.findByAnoAndArea",BudgetEstipuladoAnoArea.class)
 				.setParameter("ano",ano)
 				.setParameter("area_id",areaId).getSingleResult();
 		return budgetAno;

@@ -12,19 +12,19 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="budget_estipulado")
+@Table(name="budget_estipulado_cc")
 @NamedQueries({
-	@NamedQuery(name = "BudgetEstipulado.findByAnoAndArea", query = "select b from BudgetEstipuladoAno b where b.ano=:ano and b.area.id like :area_id")
+	@NamedQuery(name = "BudgetEstipuladoAnoCC.findByAnoAndCC", query = "select b from BudgetEstipuladoAnoCC b where b.ano=:ano and b.centroCusto.id like :centro_custo_id")
 	})
-public class BudgetEstipuladoAno {
+public class BudgetEstipuladoAnoCC {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@ManyToOne
-	@JoinColumn(name="area_id")
-	private Area area;
+	@JoinColumn(name="centro_custo_id")
+	private CentroCusto centroCusto;
 
 	private String ano;
 
@@ -40,14 +40,6 @@ public class BudgetEstipuladoAno {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public Area getArea() {
-		return area;
-	}
-
-	public void setArea(Area area) {
-		this.area = area;
 	}
 
 	public String getAno() {
@@ -74,7 +66,12 @@ public class BudgetEstipuladoAno {
 		this.valorAprovado = valorAprovado;
 	}
 
+	public CentroCusto getCentroCusto() {
+		return centroCusto;
+	}
 
-
+	public void setCentroCusto(CentroCusto centroCusto) {
+		this.centroCusto = centroCusto;
+	}
 
 }

@@ -6,7 +6,8 @@ import com.dupont.budget.dto.BudgetAreaDTO;
 import com.dupont.budget.dto.DespesaMesDTO;
 import com.dupont.budget.dto.DespesasAgrupadasDTO;
 import com.dupont.budget.model.Budget;
-import com.dupont.budget.model.BudgetEstipuladoAno;
+import com.dupont.budget.model.BudgetEstipuladoAnoArea;
+import com.dupont.budget.model.BudgetEstipuladoAnoCC;
 import com.dupont.budget.model.Despesa;
 import com.dupont.budget.report.model.ReportBudgetOrcadoUtilizadoDistribuicaoDetail;
 import com.dupont.budget.report.model.ReportBudgetOrcadoUtilizadoDistribuicaoMaster;
@@ -23,14 +24,16 @@ public interface BudgetService {
 	public void atualizarDespesas(List<Despesa> despesasNoDetalhe) throws Exception;
 	public void submeterBudget(String budgetId);
 	public List<BudgetAreaDTO> listarBudgetsAprovadosPorArea(String ano) throws Exception;
-	public void adicionarBudgetsSubmetidos(List<BudgetEstipuladoAno> budgets) throws Exception;
-	public BudgetEstipuladoAno obterValoresAprovadosESubmetidos(Long areaId, String ano) throws Exception;
+	public void adicionarBudgetsSubmetidos(List<BudgetEstipuladoAnoArea> budgets) throws Exception;
+	public BudgetEstipuladoAnoArea obterValoresAprovadosESubmetidos(Long areaId, String ano) throws Exception;
 	public List<Budget> obterBudgetsPorArea (Long areaId, String ano) throws Exception;
 	public List<DespesaMesDTO> obterDespesaNoDetalheBudgetAsDTO(Long budgetId) throws Exception ;
 	public void mensalisarBudget(List<DespesaMesDTO> despesas) throws Exception;
 	public void aprovarDespesasBudget(String budgetId);
 	public void encerrarBudget(Budget budget);
-	
+	public void adicionarBudgetsSubmetidosCC(
+			List<BudgetEstipuladoAnoCC> budgets) throws Exception ;
+	public BudgetEstipuladoAnoCC obterValoresAprovadosESubmetidosCC(Long centroCustoId, String ano) throws Exception;
 	/**
 	 * Retorna o relatório de budget orçado e utilizado: tipo de despesa / acao
 	 * @param ano Ano do BUDGET

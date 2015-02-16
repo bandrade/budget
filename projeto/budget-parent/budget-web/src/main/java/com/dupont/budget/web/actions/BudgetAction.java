@@ -12,6 +12,8 @@ import javax.enterprise.context.ConversationScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.primefaces.event.CellEditEvent;
+import org.primefaces.event.RowEditEvent;
 import org.slf4j.Logger;
 
 import com.dupont.budget.dto.CentroDeCustoDTO;
@@ -37,7 +39,7 @@ public class BudgetAction implements Serializable{
 	protected String ano;
 
 	@Inject
-	private Conversation conversation;
+	protected Conversation conversation;
 
 	@Inject
     protected BPMSProcessService bpmsProcesso;
@@ -118,6 +120,7 @@ public class BudgetAction implements Serializable{
 	public void adicionarDespesaPlanilha(TipoDespesa tipoDespesa)
 	{
 		Despesa _despesa = new Despesa();
+		_despesa.initLists();
 		_despesa.setTipoDespesa(tipoDespesa);
 		despesasNoDetalhe.add(_despesa);
 		
@@ -149,7 +152,7 @@ public class BudgetAction implements Serializable{
 	}
 
 
-	public boolean adicionarDespesa(Despesa despesa)
+	public boolean adicionarDespesa(Despesa despesa, boolean isConclusao)
 	{
 		try
 		{
@@ -166,9 +169,18 @@ public class BudgetAction implements Serializable{
 			validarDadosDespesa(despesa);
 			if(despesa.getAcao() !=null && budgetService.isDespesaExistente(despesa))
 			{
-				facesUtils.addErrorMessage("Nao é possível adicionar uma despesa com o mesmo tipo de despesa e ação.");
+				despesa.setPossuiErro(true);
+				facesUtils.addErrorMessage("Linha " +(despesa.getIndice())+ "- Nao é possível adicionar uma despesa com o mesmo tipo de despesa e ação.");
 				return false;
 			}
+			if( (despesa.getValor() ==null || despesa.getValor()==0d) && isConclusao)
+			{
+				despesa.setPossuiErro(true);
+				facesUtils.addErrorMessage("Linha " +(despesa.getIndice())+ "- Nao é possível adicionar uma despesa sem valor definido.");
+				budgetService.insertItemDespesa(despesa);
+				return false;
+			}
+			despesa.setPossuiErro(false);
 			budgetService.insertItemDespesa(despesa);
 			return true;
 		}
@@ -186,21 +198,24 @@ public class BudgetAction implements Serializable{
 	{
 		if(despesaDetalheSelecionada.getId() !=null)
 			domainService.delete(despesaDetalheSelecionada);
-		despesasNoDetalhe.remove(despesaDetalheSelecionada.getIndice());
-		calcularTotalBudget();
+		despesasNoDetalhe.remove(despesaDetalheSelecionada.getIndice().intValue());
 		facesUtils.addInfoMessage("Despesa removida com sucesso");
 	}
 
 
 	public String concluir()
 	{	
-		calcularTotalBudget();
+		
 		if(valorTotalDetalhe==null || valorTotalDetalhe<=0d)
 		{
 			facesUtils.addErrorMessage("Nao deve-se concluir a tarefa de Criar Budget sem adicionar nenhuma despesa com valor");
 			return null;
 		}
-		adicionarDespesas();
+		if(adicionarDespesas())
+		{
+			facesUtils.addErrorMessage("Existem despesas que não foram preenchidas corretamente. Favor regularizar.");
+			return null;
+		}
 		try {
 
 			bpmsTask.aprovarTarefa(facesUtils.getUserLogin(), idTarefa,params);
@@ -214,20 +229,25 @@ public class BudgetAction implements Serializable{
 		}
 	
 	}
-	public void adicionarDespesas()
+	public boolean adicionarDespesas()
 	{
 		possuiErro=false;
 		for(Despesa despesa : despesasNoDetalhe)
 		{
+			if(despesa.isFirstLine())
+				continue;
 			if(despesa.getId() !=null)
 			{
-				alterarDespesa(despesa);
+				if(!(alterarDespesa(despesa,true)))
+					possuiErro=true;
 			}
 			else
 			{
-				adicionarDespesa(despesa);
+				if(!(adicionarDespesa(despesa,true)))
+					possuiErro=true;
 			}
 		}
+		return possuiErro;
 	}
 
 	protected void validarDadosDespesa(Despesa despesa)
@@ -246,7 +266,6 @@ public class BudgetAction implements Serializable{
 		try
 		{
 			setDespesasNoDetalhe(budgetService.obterDespesaNoDetalhe(tipoDeDespesaId, budgetId));
-			calcularTotalBudget();
 		}
 		catch(Exception e)
 		{
@@ -262,7 +281,6 @@ public class BudgetAction implements Serializable{
 		{
 			setDespesasNoDetalhe(budgetService.obterDespesaNoDetalheBudget(budgetId));
 			trataPlanilha();
-			calcularTotalBudget();
 		}
 		catch(Exception e)
 		{
@@ -298,30 +316,49 @@ public class BudgetAction implements Serializable{
 		
 		setDespesasNoDetalhe(listaTratada);
 	}
-	public void calcularTotalBudget()
-	{
-		valorTotalDetalhe=0d;
-		for(Despesa despesa : despesasNoDetalhe)
-		{
-			if(despesa.getValor()!=null)
-				valorTotalDetalhe +=despesa.getValor();
-		}
 
-	}
-	protected void validarAcao(Despesa despesa)
-	{
-		Acao acao = domainService.findAcaoByForecastOrBudget(budget.getId(),null,despesa.getAcao().getNome());
-		if(acao !=null)
-			despesa.setAcao(acao);
+	protected void editarCelula(CellEditEvent cellEditEvent){
+		Despesa despesa=  despesasNoDetalhe.get(cellEditEvent.getRowIndex());
+		if(despesa.getAcaoString() !=null && !despesa.getAcaoString().trim().equals(""))
+		{
+			if(despesa.getAcao() ==null)
+				despesa.setAcao(new Acao(despesa.getAcaoString()));
+			else
+				despesa.getAcao().setNome(despesa.getAcaoString());
+		}
+		if(despesa.getId() !=null)
+		{
+			alterarDespesa(despesa,false);
+		}
 		else
 		{
-			despesa.getAcao().setId(null);
-			despesa.getAcao().setBudget(budget);;
-			domainService.insertAcao(despesa.getAcao());
+			
+			adicionarDespesa(despesa,false);
+		}
+		despesasNoDetalhe.set(cellEditEvent.getRowIndex(),despesa);
+	}
+	
+	protected void validarAcao(Despesa despesa)
+	{
+		if(despesa.getAcao()!=null && despesa.getAcao().getNome()!=null && !despesa.getAcao().getNome().trim().equals(""))
+		{
+			Acao acao = domainService.findAcaoByForecastOrBudget(budget.getId(),null,despesa.getAcao().getNome());
+			if(acao !=null)
+				despesa.setAcao(acao);
+			else
+			{
+				despesa.getAcao().setId(null);
+				despesa.getAcao().setBudget(budget);;
+				domainService.insertAcao(despesa.getAcao());
+			}
+		}
+		else
+		{
+			despesa.setAcao(null);
 		}
 	}
 
-	protected boolean alterarDespesa(Despesa despesa)
+	protected boolean alterarDespesa(Despesa despesa,boolean isConclusao)
 	{
 		try
 		{
@@ -333,13 +370,18 @@ public class BudgetAction implements Serializable{
 				if(!(despesaRetorno.getId().equals(despesa.getId())))
 				{
 					
-					facesUtils.addErrorMessage("Nao é possível adicionar uma despesa com o mesmo tipo de despesa e ação.");	
+					facesUtils.addErrorMessage("Linha " +(despesa.getIndice())+ "- Não é possível adicionar uma despesa com o mesmo tipo de despesa e ação.");	
 					return false;
 				}
 			}
+			if((despesa.getValor() ==null || despesa.getValor()==0d)&& isConclusao)
+			{
+				despesa.setPossuiErro(true);
+				facesUtils.addErrorMessage("Linha " +(despesa.getIndice())+ "- Não é possível adicionar uma despesa sem valor definido.");
+				budgetService.updateItemDespesa(despesa);
+				return false;
+			}
 			budgetService.updateItemDespesa(despesa);
-			calcularTotalBudget();
-			facesUtils.addInfoMessage("Despesa alterada com sucesso");
 		}
 		catch(Exception e)
 		{
@@ -381,6 +423,15 @@ public class BudgetAction implements Serializable{
 	}
 
 	public Double getValorTotalDetalhe() {
+		valorTotalDetalhe=0d;
+		if(despesasNoDetalhe !=null)
+		{
+			for(Despesa despesa : despesasNoDetalhe)
+			{
+				if(despesa.getValor()!=null)
+					valorTotalDetalhe +=despesa.getValor();
+			}
+		}
 		return valorTotalDetalhe;
 	}
 
@@ -394,6 +445,10 @@ public class BudgetAction implements Serializable{
 			for(int i=0 ; i<despesasNoDetalhe.size(); i++){
 				Despesa _despesa = despesasNoDetalhe.get(i);
 				_despesa.setIndice(i);
+				if(_despesa.getAcao() !=null && _despesa.getAcaoString()==null )
+				{
+					_despesa.setAcaoString(_despesa.getAcao().getNome());
+				}
 			}
 		}
 		return despesasNoDetalhe;

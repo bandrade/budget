@@ -49,12 +49,17 @@
 					editMode="cell" widgetVar="cellDespesa"
 					paginatorPosition="bottom"
 					rows="20" style="margin-left:-10px;overflow:wrap;"
+					id="tableDespesas"
 					>
 					<f:facet name="header">
        					Despesas
   						 </f:facet>
+  					 <p:ajax event="cellEdit" listener="#{criarBudgetAction.editarCelula}" update=":messages" />
 					<p:column colspan="9" rendered="#{detalheDespesa.firstLine}" style="background-color:#CE0909;color:#fff;">
 							<h:outputText value="#{detalheDespesa.tipoDespesa.nome}" />
+					</p:column>
+					<p:column rendered="#{not detalheDespesa.firstLine}" width="2%">
+							<h:outputText value="#{detalheDespesa.indice}" />
 					</p:column>
 					<p:column  width="12%" rendered="#{not detalheDespesa.firstLine}">
 						<f:facet name="header">
@@ -64,7 +69,7 @@
 						 <p:cellEditor>
 			               	<f:facet name="output"><h:outputText value="#{detalheDespesa.acao.nome}" /></f:facet>
             				<f:facet name="input">
-            					<p:inputTextarea value="#{detalheDespesa.acao.nome}" cols="20" rows="3"></p:inputTextarea>
+            					<p:inputTextarea value="#{detalheDespesa.acaoString}" cols="20" rows="3"></p:inputTextarea>
             				</f:facet>
 			             </p:cellEditor>
 					</p:column>
@@ -169,8 +174,6 @@
 									<f:setPropertyActionListener target="#{criarBudgetAction.despesaDetalheSelecionada}" value="#{detalheDespesa}"/>
 							</p:commandButton>
 					</p:column>
-					<p:column width="2%"  rendered="#{not detalheDespesa.firstLine}"> 
-					</p:column>
 					 <p:summaryRow >
 			            <p:column  style="text-align:left;background-color:#fff">
 			               	<p:commandButton icon="ui-icon-plus" action="#{criarBudgetAction.adicionarDespesaPlanilha(detalheDespesa.tipoDespesa)}" update=":form"/>
@@ -180,7 +183,7 @@
 				
 				</p:panelGrid>
 					<p:panelGrid columns="1" styleClass="painel-botoes">
-					<p:commandButton value="Concluir"  action="#{criarBudgetAction.concluir()}" onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()">
+					<p:commandButton value="Concluir"  action="#{criarBudgetAction.concluir()}" onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" >
 						<p:confirm header="Confirmação" message="Confirma a conclusão da Criação do Budget?" icon="ui-icon-alert"/> 
 					</p:commandButton>
 				</p:panelGrid>

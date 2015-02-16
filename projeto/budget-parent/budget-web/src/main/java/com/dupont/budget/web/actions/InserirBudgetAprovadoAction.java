@@ -11,7 +11,7 @@ import javax.inject.Named;
 
 import com.dupont.budget.dto.BudgetAreaDTO;
 import com.dupont.budget.model.Area;
-import com.dupont.budget.model.BudgetEstipuladoAno;
+import com.dupont.budget.model.BudgetEstipuladoAnoArea;
 
 @ConversationScoped
 @Named
@@ -60,10 +60,10 @@ public class InserirBudgetAprovadoAction extends AreaBudgetAction implements
 	}
 	public void adicionarBudgetsAprovados() throws Exception
 	{
-		List<BudgetEstipuladoAno> listaBudgetAno = new ArrayList<>();
+		List<BudgetEstipuladoAnoArea> listaBudgetAno = new ArrayList<>();
 		for(BudgetAreaDTO bDto : budgetsArea)
 		{
-			BudgetEstipuladoAno budget = new BudgetEstipuladoAno();
+			BudgetEstipuladoAnoArea budget = new BudgetEstipuladoAnoArea();
 			budget.setAno(ano);
 			Area area = new Area();
 			area.setId(bDto.getIdArea());

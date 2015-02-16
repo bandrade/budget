@@ -17,7 +17,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -61,6 +60,9 @@ public class Budget {
 
 	@Transient
 	private Double valorTotalProposto;
+	
+	@Transient
+	private Double valorAprovadoBudget;
 	
 	@Column(name = "data_criacao")
 	@Temporal(TemporalType.TIMESTAMP)
@@ -172,13 +174,33 @@ public class Budget {
 		this.acoes = acoes;
 	}
 
+	public Double getValorTotalDespesa()
+	{
+		
+		Double d = 0d;
+		for(Despesa despesa : despesas)
+		{
+			if(despesa.getAprovado())
+				d += despesa.getValor();
+		}
+		return d;
+	}
+	
 	public Double getValorTotalProposto() {
 		return valorTotalProposto;
 	}
-
+	
 	public void setValorTotalProposto(Double valorTotalProposto) {
 		this.valorTotalProposto = valorTotalProposto;
 	}
 
+	public Double getValorAprovadoBudget() {
+		return valorAprovadoBudget;
+	}
+
+	public void setValorAprovadoBudget(Double valorAprovadoBudget) {
+		this.valorAprovadoBudget = valorAprovadoBudget;
+	}
+	
 	
 }

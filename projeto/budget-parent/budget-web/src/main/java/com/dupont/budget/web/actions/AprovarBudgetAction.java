@@ -8,6 +8,7 @@ import javax.enterprise.context.ConversationScoped;
 import javax.inject.Named;
 
 import com.dupont.budget.model.Despesa;
+import com.dupont.budget.model.TipoDespesa;
 
 @ConversationScoped
 @Named
@@ -28,50 +29,31 @@ public class AprovarBudgetAction extends BudgetAction  implements Serializable{
 			logger.error("Erro ao obter tarefas do usuario.", e);
 		}
 	}
-	/*@Override
-	public boolean adicionarDespesa()
-	{
-		despesa.setAprovado(true);
-		if(super.adicionarDespesa())
-		{
-			try {
-				
-				budgetService.atualizarDespesas(despesasNoDetalhe);
-			} catch (Exception e) {
-				logger.error("Erro ao incluir a despesa",e);
-				facesUtils.addErrorMessage("Erro ao incluir a despesa");
-				return false;
-			}
-		}
-		obterDespesaNoDetalhe(budget.getId());
-		validarAprovacao();
-		return true;
-	}*/
-
+	
+	
+	@Override
+	public void adicionarDespesaPlanilha(TipoDespesa tipoDespesa) {
+		Despesa _despesa = new Despesa();
+		_despesa.setAprovado(true);
+		_despesa.initLists();
+		_despesa.setTipoDespesa(tipoDespesa);
+		despesasNoDetalhe.add(_despesa);
+		
+	}
 	public void validarAprovacao()
 	{
 		if(tipoAprovacao.equals("S"))
 		{
 			aprovarReprovarLista(true);
 		}
-		calcularTotalBudget();
 
-	}
-	@Override
-	public void calcularTotalBudget() {
-		valorTotalDetalhe = 0d;
-		for(Despesa despesa : despesasNoDetalhe)
-		{
-			valorTotalDetalhe+=despesa.getValor();
-
-		}
 	}
 
 	public Double getValorTotalAprovado() {
 		Double _valor = 0d;
 		for(Despesa despesa : despesasNoDetalhe)
 		{
-			if(despesa.getAprovado() !=null &&  despesa.getAprovado())
+			if(!despesa.isFirstLine() && despesa.getAprovado() !=null &&  despesa.getAprovado() && despesa.getValor()!=null)
 				_valor+=despesa.getValor();
 
 		}
@@ -83,7 +65,7 @@ public class AprovarBudgetAction extends BudgetAction  implements Serializable{
 	{
 		for(Despesa despesa : despesasNoDetalhe)
 		{
-			if(!despesa.getAprovado())
+			if(!despesa.isFirstLine() && !despesa.getAprovado())
 				return true;
 		}
 		return false;
@@ -92,33 +74,21 @@ public class AprovarBudgetAction extends BudgetAction  implements Serializable{
 	{
 		for(Despesa despesa : despesasNoDetalhe)
 		{
-			despesa.setAprovado(b);
+			if(!despesa.isFirstLine())
+				despesa.setAprovado(b);
 		}
 	}
-	
-	/*public boolean alterarDespesa(){
-		if(super.alterarDespesa())
-		{
-			try
-			{
-					budgetService.atualizarDespesas(despesasNoDetalhe);
-					obterDespesaNoDetalhe(budget.getId());
-					validarAprovacao();
-					return true;
-			}
-			
-			catch (Exception e) {
-				logger.error("Erro ao incluir a despesa",e);
-				facesUtils.addErrorMessage("Erro ao concluir a tarefa de Aprovacao de Budget");
-			}
-		}
-		return false;
-	}*/
+
 	public String concluir()
 	{
 		if(valorTotalDetalhe==null || valorTotalDetalhe == 0 )
 		{
 			facesUtils.addErrorMessage("Nao deve-se concluir a tarefa de Aprovar Budget sem aprovar nenhuma despesa");
+			return null;
+		}
+		if(adicionarDespesas())
+		{
+			facesUtils.addErrorMessage("Existem despesas que não foram preenchidas corretamente. Favor regularizar.");
 			return null;
 		}
 		try {

@@ -7,12 +7,16 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ConversationScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import com.dupont.budget.dto.BudgetAreaDTO;
 import com.dupont.budget.model.Area;
 import com.dupont.budget.model.Budget;
-import com.dupont.budget.model.BudgetEstipuladoAno;
+import com.dupont.budget.model.BudgetEstipuladoAnoArea;
+import com.dupont.budget.model.BudgetEstipuladoAnoCC;
+import com.dupont.budget.model.CentroCusto;
+import com.dupont.budget.service.centrodecusto.CentroDeCustoService;
 
 
 @ConversationScoped
@@ -21,6 +25,9 @@ public class AuditarBudgetAction extends AreaBudgetAction implements Serializabl
 
 	private List<Budget> budgets;
 	private BudgetAreaDTO budgetAreaSelecionado;
+	
+	@Inject
+	private CentroDeCustoService centroCustoService;
 
 	@PostConstruct
 	@Override
@@ -39,11 +46,11 @@ public class AuditarBudgetAction extends AreaBudgetAction implements Serializabl
 
 	public void adicionarBudgetsEstipulados() throws Exception
 	{
-		List<BudgetEstipuladoAno> listaBudgetAno = new ArrayList<>();
+		List<BudgetEstipuladoAnoArea> listaBudgetAno = new ArrayList<>();
 		for(int i =0 ; i<budgetsArea.size();i++)
 		{
 			BudgetAreaDTO bDto = budgetsArea.get(i);
-			BudgetEstipuladoAno budget = new BudgetEstipuladoAno();
+			BudgetEstipuladoAnoArea budget = new BudgetEstipuladoAnoArea();
 			budget.setAno(ano);
 			Area area = new Area();
 			area.setId(bDto.getIdArea());
@@ -55,11 +62,38 @@ public class AuditarBudgetAction extends AreaBudgetAction implements Serializabl
 		budgetService.adicionarBudgetsSubmetidos(listaBudgetAno);
 
 	}
+	
+	public void adicionarBudgetsCCEstipulados() throws Exception
+	{
+		List<BudgetEstipuladoAnoCC> listaBudgetEstipuladoCC = new ArrayList<>();
+		for(int i =0 ; i<budgetsArea.size();i++)
+		{
+			BudgetAreaDTO bDto = budgetsArea.get(i);
+			Area area = new Area();
+			area.setId(bDto.getIdArea());
+			List<CentroCusto> centrosDeCusto = centroCustoService.findByArea(area.getId());
+			for(CentroCusto centroCusto :centrosDeCusto)
+			{
+				BudgetEstipuladoAnoCC budgetEstipuladoCC = new BudgetEstipuladoAnoCC();
+				Budget budget = budgetService.findByAnoAndCentroDeCusto(ano, centroCusto.getId());
+				budgetEstipuladoCC.setAno(ano);
+				budgetEstipuladoCC.setCentroCusto(centroCusto);
+				budgetEstipuladoCC.setValorSubmetido(budget.getValorTotalDespesa());
+				budgetEstipuladoCC.setValorAprovado(null);
+				listaBudgetEstipuladoCC.add(budgetEstipuladoCC);
+				
+			}
+			
+		}
+		budgetService.adicionarBudgetsSubmetidosCC(listaBudgetEstipuladoCC);
+
+	}
 	public String concluir()
 	{
 		try {
 
 			adicionarBudgetsEstipulados();
+			adicionarBudgetsCCEstipulados();
 			bpmsTask.aprovarTarefa(facesUtils.getUserLogin(), idTarefa,new HashMap<String, Object>());
 			facesUtils.addInfoMessage("Tarefa concluida com sucesso");
 			return "minhasTarefas";

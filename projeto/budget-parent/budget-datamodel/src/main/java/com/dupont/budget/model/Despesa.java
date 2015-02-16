@@ -78,6 +78,9 @@ public class Despesa extends AbstractEntity<Long> {
 	private Double valorProposto;
 
 	private String comentario;
+	
+	@Transient
+	private String acaoString;
 
 	@OneToOne
 	@JoinColumn(name = "id")
@@ -88,6 +91,10 @@ public class Despesa extends AbstractEntity<Long> {
 	
 	@Transient
 	private boolean firstLine;
+	
+	@Transient 
+	private boolean possuiErro;
+	
 
 	public TipoDespesa getTipoDespesa() {
 		return tipoDespesa;
@@ -241,7 +248,9 @@ public class Despesa extends AbstractEntity<Long> {
 	public void setIndice(Integer indice) {
 		this.indice = indice;
 	}
+	
 
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -292,10 +301,22 @@ public class Despesa extends AbstractEntity<Long> {
 		return true;
 	}
 
-	
-	
-	
+	public boolean isPossuiErro() {
+		return possuiErro;
+	}
 
+	public void setPossuiErro(boolean possuiErro) {
+		this.possuiErro = possuiErro;
+	}
+
+	public String getAcaoString() {
+		return acaoString;
+	}
+
+	public void setAcaoString(String acaoString) {
+		this.acaoString = acaoString;
+	}
+	
 	
 }
 

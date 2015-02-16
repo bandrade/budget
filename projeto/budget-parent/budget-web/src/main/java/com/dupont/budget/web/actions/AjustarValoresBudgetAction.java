@@ -1,6 +1,7 @@
 package com.dupont.budget.web.actions;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -11,7 +12,8 @@ import javax.inject.Named;
 
 import com.dupont.budget.dto.AreaDTO;
 import com.dupont.budget.model.Budget;
-import com.dupont.budget.model.BudgetEstipuladoAno;
+import com.dupont.budget.model.BudgetEstipuladoAnoArea;
+import com.dupont.budget.model.BudgetEstipuladoAnoCC;
 import com.dupont.budget.model.Despesa;
 import com.dupont.budget.service.BudgetService;
 
@@ -29,7 +31,7 @@ public class AjustarValoresBudgetAction extends BudgetAction implements Serializ
 
 	private List<Budget> budgets;
 
-	private BudgetEstipuladoAno budgetEstipuladoAno;
+	private BudgetEstipuladoAnoArea budgetEstipuladoAno;
 
 	private Budget budgetSelecionado;
 
@@ -43,10 +45,11 @@ public class AjustarValoresBudgetAction extends BudgetAction implements Serializ
 	public void obterDadosBudget() {
 		try
 		{
-		   area = (AreaDTO)  bpmsTask.obterConteudoTarefa(idTarefa).get("areaAtual");
-		   ano = (String)bpmsProcesso.obterVariavelProcesso(idInstanciaProcesso, "anoBudget");
+		   area = (AreaDTO)  bpmsProcesso.obterVariavelProcesso(idInstanciaProcesso, "areaAtual");
+		   ano = (String)bpmsProcesso.obterVariavelProcesso(idInstanciaProcesso, "ano");
 		   budgetEstipuladoAno = budgetService.obterValoresAprovadosESubmetidos(area.getId(), ano);
-		   budgets = budgetService.obterBudgetsPorArea(area.getId(), ano);
+		   if(budgets==null)
+			   budgets = budgetService.obterBudgetsPorArea(area.getId(), ano);
 		}
 		catch(Exception e )
 		{
@@ -59,7 +62,6 @@ public class AjustarValoresBudgetAction extends BudgetAction implements Serializ
 	public void obterBudgetNoDetalhe(){
 		try {
 			despesasNoDetalhe = budgetService.obterDespesaAprovadasNoDetalheBudget(budgetSelecionado.getId());
-			super.calcularTotalBudget();
 		} catch (Exception e) {
 			facesUtils.addErrorMessage("Erro ao obter informações do budget");
 			logger.error("Erro ao obter informações do budget",e);
@@ -81,73 +83,42 @@ public class AjustarValoresBudgetAction extends BudgetAction implements Serializ
 		return valor;
 	}
 
-	/*@Override
-	public boolean adicionarDespesa() {
-		despesa.setAprovado(true);
-		possuiBudgetSalvo=true;
-		setBudget(budgetSelecionado);
-		despesa.setValorProposto(despesa.getValor());
-		if(super.adicionarDespesa())
-		{
-			obterBudgetNoDetalhe();
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}*/
-
 	public String concluir()
 	{
+		/*
 		if(!validarPreenchimentoDespesas())
 		{
 			facesUtils.addErrorMessage("Todas as despesas devem ser preenchidas por completo(Produto,Cultura,Acao,Distrito,Valor e Comentario)");
 			return null;
 		}
+		*/
 		if(!getValorTotalBudgetArea().equals(budgetEstipuladoAno.getValorAprovado()))
 		{
 			facesUtils.addErrorMessage("O valor do budget da Area deve ser igual ao valor aprovado");
 			return null;
 
 		}
-		return super.concluir();
-	}
-
-
-	private boolean validarPreenchimentoDespesas() {
-		for(Budget budget : budgets)
-		{
-			for(Despesa despesa : budget.getDespesas())
+		List<BudgetEstipuladoAnoCC> lista = new ArrayList<>();
+		try {
+			for(Budget budget: budgets)
 			{
-				if(!despesa.isPreeenchimentoCompleto())
-				{
-					return false;
-				}
+				
+				BudgetEstipuladoAnoCC  budgetEstipuladoCC= budgetService.obterValoresAprovadosESubmetidosCC(budget.getCentroCusto().getId(), ano);
+				budgetEstipuladoCC.setValorAprovado(budget.getValorAprovadoBudget());
+				lista.add(budgetEstipuladoCC);
 			}
+			budgetService.adicionarBudgetsSubmetidosCC(lista);
+		
+			bpmsTask.aprovarTarefa(facesUtils.getUserLogin(), idTarefa,params);
+			facesUtils.addInfoMessage("Tarefa concluida com sucesso");
+			conversation.end();
+		} catch (Exception e) {
+			facesUtils.addErrorMessage("Erro ao inserir o budget aprovado");
+			return null;
 		}
-		return true;
-
+		return "minhasTarefas";
 	}
-/*	@Override
-	protected boolean alterarDespesa() {
-		setBudget(budgetSelecionado);
-		if(super.alterarDespesa())
-		{
-			obterBudgetNoDetalhe();
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}*/
 
-	public void removerDespesa()
-	{
-		super.removerDespesa();
-		obterBudgetNoDetalhe();
-	}
 
 	public Double getValorTotalBudgetArea()
 	{
@@ -156,12 +127,13 @@ public class AjustarValoresBudgetAction extends BudgetAction implements Serializ
 		{
 			for(Budget budget : budgets)
 			{
-				valor+= budget.getValorTotalBudget();
+				if(budget.getValorAprovadoBudget() !=null)
+					valor+= budget.getValorAprovadoBudget();
 			}
 		}
 		return valor;
 	}
-
+	
 	public Double getValorTotalPropostoBudgetArea()
 	{
 		Double valor = 0d;
@@ -181,10 +153,10 @@ public class AjustarValoresBudgetAction extends BudgetAction implements Serializ
 	public void setArea(AreaDTO area) {
 		this.area = area;
 	}
-	public BudgetEstipuladoAno getBudgetEstipuladoAno() {
+	public BudgetEstipuladoAnoArea getBudgetEstipuladoAno() {
 		return budgetEstipuladoAno;
 	}
-	public void setBudgetEstipuladoAno(BudgetEstipuladoAno budgetEstipuladoAno) {
+	public void setBudgetEstipuladoAno(BudgetEstipuladoAnoArea budgetEstipuladoAno) {
 		this.budgetEstipuladoAno = budgetEstipuladoAno;
 	}
 	public List<Budget> getBudgets() {

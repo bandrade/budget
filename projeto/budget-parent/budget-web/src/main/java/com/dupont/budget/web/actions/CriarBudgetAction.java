@@ -51,6 +51,11 @@ public class CriarBudgetAction extends BudgetAction implements Serializable {
 	public String concluir() {
 		
 		params = new HashMap<String,Object>();
+		if(budget.getId()==null)
+		{
+			facesUtils.addErrorMessage("Deve-se adicionar pelo menos uma despesa.");
+			return null;
+		}
 		params.put("_budgetId",budget.getId().toString());
 		return super.concluir();
 	}
