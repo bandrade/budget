@@ -60,7 +60,7 @@
 	<navigation-rule>
 		<from-view-id>*</from-view-id>
 		<navigation-case>
-			<from-outcome>ajustarValoresCC</from-outcome>
+			<from-outcome>ajustarValoresArea</from-outcome>
 			<to-view-id>/pages/process/budget/ajustarValoresArea.xhtml</to-view-id>
 		</navigation-case>
 	</navigation-rule>
