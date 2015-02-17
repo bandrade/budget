@@ -1,12 +1,11 @@
 package com.dupont.budget.web.actions;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.ConversationScoped;
 import javax.inject.Named;
 
+import org.apache.deltaspike.core.api.scope.ViewAccessScoped;
 import org.primefaces.context.RequestContext;
 
-import com.dupont.budget.model.Acao;
 import com.dupont.budget.model.DespesaForecast;
 import com.dupont.budget.model.DespesaSolicitacaoPagamento;
 
@@ -17,7 +16,8 @@ import com.dupont.budget.model.DespesaSolicitacaoPagamento;
  * @since 2015
  *
  */
-@ConversationScoped @Named
+@ViewAccessScoped
+@Named
 public class IncluirDespesaRateioAction extends SolicitacaoPagamentoAction {
 
 	private static final long serialVersionUID = -3764720158261496009L;
@@ -34,20 +34,9 @@ public class IncluirDespesaRateioAction extends SolicitacaoPagamentoAction {
 	}
 	
 	public void closeCCDialog(){	
-		
-		if( getCheckAcao().equals("Criar Nova")){
-			Acao acao = new Acao(getNovaAcao());
-			
-			acao = domainService.create(acao);
-			
-			despesaSolicitacaoPagamento.setAcao(acao);
-		}
-		
 		RequestContext.getCurrentInstance().closeDialog(despesaSolicitacaoPagamento);
-		
-		conversation.end();
+		despesaSolicitacaoPagamento = new DespesaSolicitacaoPagamento();
 	}
-	
 
 	public DespesaForecast getDespesaForecast() {
 		return despesaForecast;
