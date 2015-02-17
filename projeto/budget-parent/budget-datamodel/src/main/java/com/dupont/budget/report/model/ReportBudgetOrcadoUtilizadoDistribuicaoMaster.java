@@ -44,6 +44,7 @@ public class ReportBudgetOrcadoUtilizadoDistribuicaoMaster extends ReportBudgetO
 	
 	public Double getPorcentagemTotalUtilizado() {
 		
-		return (getTotalUtilizado() * 100 ) / totalForecast ; 
+		
+		return (getTotalUtilizado()/totalForecast) * 100  ; 
 	}
 }

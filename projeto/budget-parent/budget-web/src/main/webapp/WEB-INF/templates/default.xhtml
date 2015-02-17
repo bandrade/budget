@@ -50,6 +50,7 @@
            </div>
         </section>
         <section class="menu">
+        <h:form>
             <div class="ui-grid ui-grid-responsive">
                 <div class="ui-grid-row">
                     <div class="ui-grid-col-12">
@@ -58,7 +59,7 @@
                                 <li><p:link  outcome="/pages/process/minhasTarefas.xhtml" value="Minhas tarefas"/>  </li>
                                 <li><a href="#">Despesa</a> 
                                     <ul>
-                                        <li> <p:link  outcome="/pages/process/pagamento/edit.xhtml" value="Solicitação de Pagamento"/>  </li>
+                                        <li> <p:commandLink  action="#{solicitacaoPagamentoAction.inicializarSolicitacao()}"  value="Solicitação de Pagamento" ajax="false"/>  </li>
                                     </ul>
                                 </li>
                                 <h:panelGroup rendered="#{request.isUserInRole('RELATORIO') || request.isUserInRole('ADMINISTRADOR')}">     
@@ -88,7 +89,7 @@
                                         <li> <p:link  outcome="/pages/adm/fornecedor/list.xhtml" value="Fornecedor"/> </li>
                                         <li> <p:link  outcome="/pages/adm/valorComprometido/list.xhtml" value="Valor Comprometido"/> </li>
                                         <li> <p:link  outcome="/pages/adm/nota/list.xhtml" value="Upload Relatório SAP"/> </li>
-                                        <li> <p:link  outcome="/pages/adm/pagamento/list.xhtml" value="Pagamento"/> </li>
+                                        <li> <p:commandLink  action="#{solicitacaoPagamentoAction.iniciarPagamentos()}" value="Pagamento" ajax="false"/> </li>
                                     </ul>                   
                                 </li>
                                 <li><a href="#">Planning</a>                        
@@ -98,12 +99,13 @@
                                     </ul>                   
                                 </li>
                                 </h:panelGroup>
-                                <li><h:form><p:commandLink value="Logout" action="#{usuarioAction.logout()}" ajax="false" /></h:form></li>               
+                                <li><p:commandLink value="Logout" action="#{usuarioAction.logout()}" ajax="false" /></li>               
                             </ul>
                         </nav>
                     </div>
                 </div>
            </div>
+          </h:form>
         </section>
         <section class="content">
             <div class="ui-grid ui-grid-responsive">

@@ -79,8 +79,8 @@
 						</p:column>
 						
 						<p:column>
-							<h:outputText value="#{a.porcentagemUtilizado}">
-								<f:convertNumber type="percent" />
+							<h:outputText value="#{a.porcentagemUtilizado}%">
+								<f:convertNumber type="number" minFractionDigits="0" maxFractionDigits="1"/>
 							</h:outputText>
 						</p:column>
 						
@@ -111,8 +111,8 @@
 			                    
 			                    <p:column>
 			                    	<f:facet name="footer">
-			                    		<h:outputText value="#{item.porcentagemTotalUtilizado}">
-			                    			<f:convertNumber type="percent" />
+			                    		<h:outputText value="#{item.porcentagemTotalUtilizado}%">
+			                    			<f:convertNumber type="number" minFractionDigits="0" maxFractionDigits="1"/>
 			                    		</h:outputText>
 			                    	</f:facet>
 			                    </p:column>
@@ -149,8 +149,8 @@
 				            
 				            <p:column style="text-align: left">
 								<f:facet name="footer">
-					                <h:outputText value="#{reportDistribuicaoAction.totalPercentagemAnoUtilizado}">
-					                    <f:convertNumber type="percent" />
+					                <h:outputText value="#{reportDistribuicaoAction.totalPercentagemAnoUtilizado}%">
+					                    <f:convertNumber type="number" minFractionDigits="0" maxFractionDigits="1"/>
 					                </h:outputText>
 					            </f:facet>
 				            </p:column>	

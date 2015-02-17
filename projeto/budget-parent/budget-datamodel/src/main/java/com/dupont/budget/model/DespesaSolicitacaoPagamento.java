@@ -58,6 +58,18 @@ public class DespesaSolicitacaoPagamento extends AbstractEntity<Long> {
 	
 	private Double valor;
 
+	public boolean isPreenchimentoCompleto()
+	{
+		if(centroCusto !=null && centroCusto.getId() !=null && acao !=null && acao.getId() !=null && valor !=null && valor !=0d)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
 	public CentroCusto getCentroCusto() {
 		return centroCusto;
 	}
@@ -138,92 +150,14 @@ public class DespesaSolicitacaoPagamento extends AbstractEntity<Long> {
 		this.valor = valor;
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + ((acao == null) ? 0 : acao.hashCode());
-		result = prime * result
-				+ ((centroCusto == null) ? 0 : centroCusto.hashCode());
-		result = prime * result + ((cliente == null) ? 0 : cliente.hashCode());
-		result = prime * result + ((cultura == null) ? 0 : cultura.hashCode());
-		result = prime * result
-				+ ((distrito == null) ? 0 : distrito.hashCode());
-		result = prime * result + ((produto == null) ? 0 : produto.hashCode());
-		result = prime
-				* result
-				+ ((solicitacaoPagamento == null) ? 0 : solicitacaoPagamento
-						.hashCode());
-		result = prime * result
-				+ ((tipoDespesa == null) ? 0 : tipoDespesa.hashCode());
-		result = prime * result + ((valor == null) ? 0 : valor.hashCode());
-		result = prime * result
-				+ ((vendedor == null) ? 0 : vendedor.hashCode());
-		return result;
+	public String getTipoSolicitacaoAsString()
+	{
+		if(solicitacaoPagamento !=null && solicitacaoPagamento.getStatus() !=null)
+			return this.solicitacaoPagamento.getStatus().toString();
+		else
+			return "";
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!super.equals(obj))
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		DespesaSolicitacaoPagamento other = (DespesaSolicitacaoPagamento) obj;
-		if (acao == null) {
-			if (other.acao != null)
-				return false;
-		} else if (!acao.equals(other.acao))
-			return false;
-		if (centroCusto == null) {
-			if (other.centroCusto != null)
-				return false;
-		} else if (!centroCusto.equals(other.centroCusto))
-			return false;
-		if (cliente == null) {
-			if (other.cliente != null)
-				return false;
-		} else if (!cliente.equals(other.cliente))
-			return false;
-		if (cultura == null) {
-			if (other.cultura != null)
-				return false;
-		} else if (!cultura.equals(other.cultura))
-			return false;
-		if (distrito == null) {
-			if (other.distrito != null)
-				return false;
-		} else if (!distrito.equals(other.distrito))
-			return false;
-		if (produto == null) {
-			if (other.produto != null)
-				return false;
-		} else if (!produto.equals(other.produto))
-			return false;
-		if (solicitacaoPagamento == null) {
-			if (other.solicitacaoPagamento != null)
-				return false;
-		} else if (!solicitacaoPagamento.equals(other.solicitacaoPagamento))
-			return false;
-		if (tipoDespesa == null) {
-			if (other.tipoDespesa != null)
-				return false;
-		} else if (!tipoDespesa.equals(other.tipoDespesa))
-			return false;
-		if (valor == null) {
-			if (other.valor != null)
-				return false;
-		} else if (!valor.equals(other.valor))
-			return false;
-		if (vendedor == null) {
-			if (other.vendedor != null)
-				return false;
-		} else if (!vendedor.equals(other.vendedor))
-			return false;
-		return true;
-	}
-	
 	
 
 

@@ -21,7 +21,7 @@ public class ReportBudgetOrcadoUtilizadoDistribuicaoDetail extends ReportBudgetO
 	
 	public Double getPorcentagemUtilizado() {
 		
-		return (getUtilizado() * 100 ) / forecast ; 
+		return (getUtilizado() / forecast ) * 100  ; 
 	}
 
 	public Double getForecast() {

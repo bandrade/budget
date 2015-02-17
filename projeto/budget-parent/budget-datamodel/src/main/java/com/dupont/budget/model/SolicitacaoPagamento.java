@@ -149,7 +149,13 @@ public class SolicitacaoPagamento extends AbstractEntity<Long> {
 		return this.valor.equals(valor);
 	}
 	
-
+	public String getTipoSolicitacaoPagamentoAsString()
+	{
+		if(status !=null)
+			return status.toString();
+		else
+			return "";
+	}
 	public SolicitacaoPagamento() {
 		this(null);
 	}

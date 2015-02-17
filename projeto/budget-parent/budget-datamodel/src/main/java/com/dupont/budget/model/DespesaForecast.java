@@ -94,6 +94,9 @@ public class DespesaForecast {
 	@Transient
 	private DespesaForecastMes despesaMensalisada;
 	
+	@Transient
+	private DespesaSolicitacaoPagamento despesaSolicitacaoPagamento;
+	
 
 	//bi-directional many-to-one association to DespesaForecastAno
 	@OneToMany(mappedBy="despesaForecast",fetch=FetchType.EAGER)
@@ -340,6 +343,15 @@ public class DespesaForecast {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+
+	public DespesaSolicitacaoPagamento getDespesaSolicitacaoPagamento() {
+		return despesaSolicitacaoPagamento;
+	}
+
+	public void setDespesaSolicitacaoPagamento(
+			DespesaSolicitacaoPagamento despesaSolicitacaoPagamento) {
+		this.despesaSolicitacaoPagamento = despesaSolicitacaoPagamento;
 	}
 	
 	

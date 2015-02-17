@@ -166,7 +166,6 @@
 						<p:selectOneMenu id="vendedoresSelectOneMenu" label="ERC/CCE" value="#{despesaSolicitacaoPagamento.vendedor}" converter="com.dupont.EntityConverter" 
 							rendered="#{!solicitacaoPagamentoAction.despesaForecastFlag}"
 							disabled="true">
-							<p:ajax listener="#{solicitacaoPagamentoAction.doSelectVendedor}" update="dadosCC"/>
 							<f:selectItem itemLabel="Selecione um vendedor" itemValue="#{null}" />
 							<f:selectItems value="#{solicitacaoPagamentoAction.vendedores}" var="item" itemLabel="#{item.nome}" itemValue="#{item}"/>
 						</p:selectOneMenu>
@@ -214,17 +213,32 @@
 									<f:convertNumber type="currency"/>
 								</h:outputText>
 							</p:column>							
-							
+							<p:column headerText="Incluir CC" rendered="#{solicitacaoPagamentoAction.solicitacaoPagamento.tipoSolicitacaoPagamentoAsString =='PENDENTE_VALIDACAO'}" style="text-align:center" >
+								<p:commandButton icon="ui-icon-extlink" actionListener="#{solicitacaoPagamentoAction.openCCDialog}" action="#{incluirDespesaRateioAction.doSelectCentroCusto()}">
+									<f:setPropertyActionListener target="#{incluirDespesaRateioAction.despesaSolicitacaoPagamento}" value="#{item}" />
+									<p:ajax event="dialogReturn" listener="#{solicitacaoPagamentoAction.alterarDespesa}" update=":form:tableRateio"/>
+								</p:commandButton>
+							</p:column>
+							<p:column headerText="Incluir Despesa Forecast" rendered="#{solicitacaoPagamentoAction.solicitacaoPagamento.tipoSolicitacaoPagamentoAsString =='PENDENTE_VALIDACAO'}" style="text-align:center" >
+								<p:commandButton icon="ui-icon-extlink" actionListener="#{solicitacaoPagamentoAction.openDespesaForecastDialog()}" action="#{incluirDespesaRateioAction.doSelectCentroCusto()}">
+									<f:setPropertyActionListener target="#{solicitacaoPagamentoAction.centroCustoDespesaForecast}" value="#{item.centroCusto}" />
+									<f:setPropertyActionListener target="#{despesaForecast.valor}" value="#{item.valor}" />
+									<f:setPropertyActionListener target="#{despesaForecast.despesaSolicitacaoPagamento}" value="#{item}" />
+									<f:setPropertyActionListener target="#{incluirDespesaRateioAction.despesaSolicitacaoPagamento}" value="#{item}" />
+									<p:ajax event="dialogReturn" listener="#{solicitacaoPagamentoAction.alterarDespesaForecast}" update=":form:tableRateio"/>
+								</p:commandButton>
+							</p:column>			
 						</p:dataTable>
 					
 					</h:panelGroup>
 					
 					<br/>
-					<p:commandButton value="Incluir CC" icon="ui-icon-extlink" actionListener="#{solicitacaoPagamentoAction.openCCDialog}" styleClass="button" immediate="true" rendered="#{solicitacaoPagamento.tipoSolicitacao == 'RATEIO'}">
+					<p:commandButton value="Incluir CC" icon="ui-icon-extlink" actionListener="#{solicitacaoPagamentoAction.openCCDialog}"
+						 styleClass="button" immediate="true" rendered="#{solicitacaoPagamento.tipoSolicitacao == 'RATEIO' and  !(solicitacaoPagamentoAction.solicitacaoPagamento.tipoSolicitacaoPagamentoAsString eq 'PENDENTE_VALIDACAO')}">
 						<p:ajax event="dialogReturn" listener="#{solicitacaoPagamentoAction.incluirDespesa}" update="tableRateio,dadosRateio,valorTotalNotaInput"/>						
 					</p:commandButton>
 					
-					<p:commandButton value="Incluir Despesa Forecast" icon="ui-icon-extlink" actionListener="#{solicitacaoPagamentoAction.openDespesaForecastDialog}" styleClass="button" immediate="true" rendered="#{solicitacaoPagamento.tipoSolicitacao == 'RATEIO'}">
+					<p:commandButton value="Incluir Despesa Forecast" icon="ui-icon-extlink" actionListener="#{solicitacaoPagamentoAction.openDespesaForecastDialog}" styleClass="button" immediate="true" rendered="#{solicitacaoPagamento.tipoSolicitacao == 'RATEIO' and  !(solicitacaoPagamentoAction.solicitacaoPagamento.tipoSolicitacaoPagamentoAsString eq 'PENDENTE_VALIDACAO')}">
 						<p:ajax event="dialogReturn" listener="#{solicitacaoPagamentoAction.incluirDespesaForecast}" update="tableRateio,valorTotalNotaInput,tipoSolicitacaoPanel"/>						
 					</p:commandButton>
 					<br/>

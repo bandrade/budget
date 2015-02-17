@@ -11,17 +11,15 @@
 	</h:head>
 	
 	<h:body >
-		<f:event listener="#{incluirDespesaRateioAction.initConversation}" type="preRenderView" />
 		<p:panel id="content">
 			<h:form>
 							
 				<p:messages id="messages" showDetail="true" showSummary="false" autoUpdate="true" closable="true" globalOnly="true"/>
 				<p:panelGrid columns="6" id="dadosCC" styleClass="layoutUnit main">
-							
 					<p:outputLabel value="Centro de custo:" for="centroCustosSelectOneMenu"/>
-					<p:selectOneMenu id="centroCustosSelectOneMenu" label="Centro de custo" value="#{incluirDespesaRateioAction.despesaSolicitacaoPagamento.centroCusto}" converter="com.dupont.EntityConverter" required="true">
-						<p:ajax listener="#{incluirDespesaRateioAction.doSelectCentroCusto}" update="dadosCC"/>
-						
+					<p:selectOneMenu id="centroCustosSelectOneMenu" label="Centro de custo" value="#{incluirDespesaRateioAction.despesaSolicitacaoPagamento.centroCusto}" converter="com.dupont.EntityConverter" required="true"
+					disabled="#{incluirDespesaRateioAction.despesaSolicitacaoPagamento.tipoSolicitacaoAsString =='PENDENTE_VALIDACAO'}">
+						<p:ajax listener="#{incluirDespesaRateioAction.doSelectCentroCusto}" update="dadosCC" />
 						<f:selectItem itemLabel="Selecione um centro de custo" itemValue="#{null}" />
 						<f:selectItems value="#{centroCustos}" var="item" itemLabel="#{item.codigo}" itemValue="#{item}" />
 					</p:selectOneMenu>
@@ -37,7 +35,6 @@
 						required="true"
 						disabled="#{empty incluirDespesaRateioAction.tiposDespesas}">>
 						<p:ajax listener="#{incluirDespesaRateioAction.doSelectTipoDespesa}" update="dadosCC"/>
-						<!-- <p:ajax update="contaContabilPanel" process="@this" /> -->
 						<f:selectItem itemLabel="Selecione um tipo de despesa" itemValue="#{null}" />
 						<f:selectItems value="#{incluirDespesaRateioAction.tiposDespesas}" var="item" itemLabel="#{item.nome}" itemValue="#{item}"/>
 					</p:selectOneMenu>
@@ -107,20 +104,16 @@
 					<p:message for="clientesSelectOneMenu" />
 					
 					<p:outputLabel value="Valor:" for="valorTotalNotaInput"/>						
-					<pe:inputNumber id="valorTotalNotaInput" value="#{incluirDespesaRateioAction.despesaSolicitacaoPagamento.valor}" label="Valor" required="true" decimalSeparator="," thousandSeparator="." decimalPlaces="2">
+					<pe:inputNumber id="valorTotalNotaInput" value="#{incluirDespesaRateioAction.despesaSolicitacaoPagamento.valor}" label="Valor" required="true" decimalSeparator="," thousandSeparator="." decimalPlaces="2"
+						disabled="#{incluirDespesaRateioAction.despesaSolicitacaoPagamento.tipoSolicitacaoAsString =='PENDENTE_VALIDACAO'}">
 					</pe:inputNumber>
 					<p:message for="valorTotalNotaInput" />
 					
-					
-					<h:outputText  value="" />
-					<h:outputText  value="" />
-					<h:outputText  value="" />
-					
-					
-					
 				</p:panelGrid>
-				
-				<p:commandButton value="Incluir"  icon="ui-icon-check" action="#{incluirDespesaRateioAction.closeCCDialog}" styleClass="button" update="dadosCC"/>
+				<p:commandButton value="Alterar"  icon="ui-icon-check" action="#{incluirDespesaRateioAction.closeCCDialog}" styleClass="button" update="dadosCC" 
+					rendered="#{incluirDespesaRateioAction.despesaSolicitacaoPagamento.tipoSolicitacaoAsString =='PENDENTE_VALIDACAO'}"/>
+				<p:commandButton value="Incluir"  icon="ui-icon-check" action="#{incluirDespesaRateioAction.closeCCDialog}" styleClass="button" update="dadosCC"
+				rendered="#{not incluirDespesaRateioAction.despesaSolicitacaoPagamento.tipoSolicitacaoAsString =='PENDENTE_VALIDACAO'}"/>
 			</h:form>
 		</p:panel>
 	</h:body>

@@ -342,7 +342,7 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
 											solicitacao.setValor(solicitacao.getValor()+ valor);
 											solicitacao.addDespesaSolicitacaoPagamento(_despesa);
 											service.update(solicitacao);
-											writeLine("SUCESSO.", bw, row);
+											writeLine("PENDENTE_VALIDACAO", bw, row);
 											continue;
 								}
 							}

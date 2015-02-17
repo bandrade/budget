@@ -356,29 +356,43 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 			Long nextId =getGeneratedId();
 			despesaForecast.setId(nextId);
 			DespesaForecastAno despesaForecastAno = null;
+			
+			ForecastMensalisado forecastMensalisado =obterForecastMensalidadeEmAndamento(despesaForecast.getForecast());
+			List<DespesaForecastAno> listaDespesasAno = new ArrayList<>();
+			
 			if(despesaForecast.getDespesaMensalisada() !=null && despesaForecast.getDespesaMensalisada().getId()!=null)
 			{
+				
 				DespesaForecastAnoPK despesaForecastAnoPK = new DespesaForecastAnoPK(despesaForecast.getId(),despesaForecast.getDespesaMensalisada().getId());
 				despesaForecastAno = new DespesaForecastAno(despesaForecastAnoPK,
 						(int)mes,despesaForecast,despesaForecast.getDespesaMensalisada());
+				listaDespesasAno.add(despesaForecastAno);
 			}
 			
 			else
 			{
-				DespesaForecastMes despesaForecastMes = new DespesaForecastMes();
-				if(despesaForecast.getDespesaMensalisada() !=null && despesaForecast.getDespesaMensalisada().possuiValorPreenchido() )
-					despesaForecastMes = despesaForecast.getDespesaMensalisada();
-				em.persist(despesaForecastMes);
-				DespesaForecastAnoPK despesaForecastAnoPK = new DespesaForecastAnoPK(despesaForecast.getId(),despesaForecastMes.getId());
-				despesaForecastAno = new DespesaForecastAno(despesaForecastAnoPK,
-						(int)mes,despesaForecast,despesaForecastMes);
+				for(long i =1 ; i<= forecastMensalisado.getPk().getMes(); i++ )
+				{
+					DespesaForecastMes despesaForecastMes = new DespesaForecastMes();
+					if(despesaForecast.getDespesaMensalisada() !=null && despesaForecast.getDespesaMensalisada().possuiValorPreenchido() )
+						despesaForecastMes = despesaForecast.getDespesaMensalisada();
+					em.persist(despesaForecastMes);
+					DespesaForecastAnoPK despesaForecastAnoPK = new DespesaForecastAnoPK(despesaForecast.getId(),despesaForecastMes.getId());
+					despesaForecastAno = new DespesaForecastAno(despesaForecastAnoPK,
+							(int)i,despesaForecast,despesaForecastMes);
+					listaDespesasAno.add(despesaForecastAno);
+					
+				}
 
 			}
 			
 			em.persist(despesaForecast);
-			despesaForecastAno.setDespesaForecast(despesaForecast);
-			em.persist(despesaForecastAno);
-			despesaForecast.getDespesaForecastMes().add(despesaForecastAno);
+			for(DespesaForecastAno _despesaForecastAno : listaDespesasAno)
+			{
+				_despesaForecastAno.setDespesaForecast(despesaForecast);
+				em.persist(_despesaForecastAno);
+				despesaForecast.getDespesaForecastMes().add(despesaForecastAno);
+			}
 			em.merge(despesaForecast);
 			tx.commit();
 		}

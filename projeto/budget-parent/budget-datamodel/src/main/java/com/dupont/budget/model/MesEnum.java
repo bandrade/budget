@@ -44,5 +44,9 @@ public enum MesEnum {
 			mesForecast= MesEnum.valueOf(mes.toUpperCase());
 		return mesForecast;
 	}
+	public String getAsString()
+	{
+		return toString();
+	}
 
 }
