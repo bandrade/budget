@@ -23,13 +23,69 @@
 					</p:selectOneMenu>
 					<p:outputLabel value="Prazo:"/>
 					<p:calendar value="#{processoAction.dataExpiracao}" required="true" locale="pt_BR"></p:calendar>
+					
+				</p:panelGrid>
+				<p:panelGrid columns="4" id="panelToleranciaPositiva">
+					<p:outputLabel value="Tolerância Positiva  :"/>
+					<p:selectOneMenu id="toleranciaPositiva" value="#{processoAction.toleranciaForecast.tipoToleranciaPositiva}" required="true">
+						<f:selectItem itemLabel="SELECIONE" itemValue="null" />
+						<f:selectItem itemLabel="Percentual" itemValue="P" />
+						<f:selectItem itemLabel="Valor" itemValue="V" />
+						<p:ajax update="panelToleranciaPositiva" 
+								listener="#{processoAction.limparValorToleranciaPositiva()}"
+								onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" process="@this"></p:ajax>
+					</p:selectOneMenu>
+					<p:outputLabel value="Valor R$:" rendered="#{processoAction.toleranciaForecast.tipoToleranciaPositiva eq 'V'}"/>
+					<pe:inputNumber  id="valorToleranciaPositivaValor"    converter="javax.faces.Double" required="true" 
+								rendered="#{processoAction.toleranciaForecast.tipoToleranciaPositiva eq 'V'}" 
+								value="#{processoAction.toleranciaForecast.valorToleranciaPositiva}" 
+								 >
+            		</pe:inputNumber>
+            		<p:outputLabel value="Percentual:" rendered="#{processoAction.toleranciaForecast.tipoToleranciaPositiva eq 'P'}"/>
+					 <pe:inputNumber 
+					 			converter="javax.faces.Double" 
+					 		    symbol=" %"
+					 			symbolPosition="s"  
+					 			minValue="0.00" maxValue="100.00"
+								rendered="#{processoAction.toleranciaForecast.tipoToleranciaPositiva eq 'P'}"
+								id="valorToleranciaPositivaPercentual" required="true" 
+								value="#{processoAction.toleranciaForecast.valorToleranciaPositiva}"
+								maxlength="3"/>
+            	</p:panelGrid>
+            	<p:panelGrid columns="4" id="panelToleranciaNegativa">
+					<p:outputLabel value="Tolerância Negativa:" />
+					<p:selectOneMenu id="toleranciaNegativa" value="#{processoAction.toleranciaForecast.tipoToleranciaNegativa}" required="true">
+						<f:selectItem itemLabel="SELECIONE" itemValue="null" />
+						<f:selectItem itemLabel="Percentual" itemValue="P" />
+						<f:selectItem itemLabel="Valor" itemValue="V" />
+						<p:ajax update="panelToleranciaNegativa" onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" 
+							listener="#{processoAction.limparValorToleranciaNegativa()}"
+							process="@this"> </p:ajax>
+					</p:selectOneMenu>
+					<p:outputLabel value="Valor R$:" rendered="#{processoAction.toleranciaForecast.tipoToleranciaNegativa eq 'V'}"/>
+					 <pe:inputNumber  id="valorToleranciaNegativaValor"    converter="javax.faces.Double" 
+					 	 rendered="#{processoAction.toleranciaForecast.tipoToleranciaNegativa eq 'V'}"
+					 	 required="true"
+					 	 minValue="-100000.00" maxValue="0.00"
+					 	 value="#{processoAction.toleranciaForecast.valorToleranciaNegativa}" >
+            		</pe:inputNumber>
+            		
+            		<p:outputLabel value="Percentual:" rendered="#{processoAction.toleranciaForecast.tipoToleranciaNegativa eq 'P'}"/>
+            		 <pe:inputNumber 
+            		 			converter="javax.faces.Double" 
+					 		    symbol=" %"
+					 			symbolPosition="s"  
+					 			minValue="-100.00" maxValue="0.00"
+								rendered="#{processoAction.toleranciaForecast.tipoToleranciaNegativa eq 'P'}"
+								id="valorToleranciaNegativaPercentual" required="true" 
+								value="#{processoAction.toleranciaForecast.valorToleranciaNegativa}"
+								maxlength="3"/>
+			 		</p:panelGrid>										
 					<p:commandButton
 						onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"
 						action="#{processoAction.iniciarProcessoForecast()}"
 						value="Iniciar Processo" update=":form"/>
 					
-				</p:panelGrid>
-				
 			</h:form>
 		</p:panel>
 	</ui:define>
