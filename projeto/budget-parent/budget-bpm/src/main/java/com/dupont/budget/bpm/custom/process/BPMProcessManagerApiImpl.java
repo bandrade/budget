@@ -53,10 +53,6 @@ public class BPMProcessManagerApiImpl implements BPMProcessManagerApi {
 
 	@PostConstruct
 	private void configure() {
-		// use toString to make sure CDI initializes the bean
-		// this makes sure that RuntimeManager is started asap,
-		// otherwise after server restart complete task won't move process
-		// forward
 		singletonManager.toString();
 		RuntimeEngine runtime = singletonManager.getRuntimeEngine(EmptyContext
 				.get());
@@ -95,7 +91,8 @@ public class BPMProcessManagerApiImpl implements BPMProcessManagerApi {
 		return processInstanceId;
 	}
 
-	public long startForecastProcess(CentroDeCustoDTO[] ceDtos, String ano, String mes,Date prazo,String email) throws Exception {
+	public long startForecastProcess(CentroDeCustoDTO[] ceDtos, String ano, String mes,Date prazo,String email,String tipoToleranciaNegativa, 
+			Double valorToleranciaNegativa,String tipoToleranciaPositiva,Double valorToleranciaPositiva) throws Exception {
 		RuntimeEngine runtime = singletonManager.getRuntimeEngine(EmptyContext
 				.get());
 
@@ -111,6 +108,10 @@ public class BPMProcessManagerApiImpl implements BPMProcessManagerApi {
 			params.put("anoForecast", ano);
 			params.put("prazo", prazo);
 			params.put("emails", email);
+			params.put("tipoToleranciaNegativa", tipoToleranciaNegativa);
+			params.put("valorToleranciaNegativa",valorToleranciaNegativa);
+			params.put("tipoToleranciaPositiva", tipoToleranciaPositiva);
+			params.put("valorToleranciaPositiva", valorToleranciaPositiva);
 			ProcessInstance processInstance = ksession.startProcess(
 			"com.dupont.bpm.atualizarforecast", params);
 			processInstanceId = processInstance.getId();

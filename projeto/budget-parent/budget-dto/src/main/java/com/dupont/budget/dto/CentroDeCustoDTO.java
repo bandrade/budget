@@ -57,4 +57,11 @@ public class CentroDeCustoDTO  implements Serializable{
 		this.id = id;
 	}
 	
+	@Override
+	public String toString() {
+		return "nome=" + nome + ", numero=" + numero + "]";
+	}
+	
+	
+	
 }

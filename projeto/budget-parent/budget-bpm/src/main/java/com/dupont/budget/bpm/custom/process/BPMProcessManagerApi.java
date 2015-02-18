@@ -15,8 +15,10 @@ public interface BPMProcessManagerApi {
 	public Object getProcessVariable(long processInstanceId, String variable)
 			throws BPMException;
 	public boolean isProcessAlreadyStarted(String ano) throws BPMException;
-	public long startForecastProcess(CentroDeCustoDTO[] ceDtos, String ano, String mes, Date prazo,String email) throws Exception;
+	public long startForecastProcess(CentroDeCustoDTO[] ceDtos, String ano, String mes, Date prazo,String email,
+			String tipoToleranciaNegativa, 
+			Double valorToleranciaNegativa,String tipoToleranciaPositiva,Double valorToleranciaPositiva) throws Exception;
 	public boolean isProcessForecastAlreadyStarted(String ano) throws BPMException;
-	public boolean isProcessInstanceRunning(long processInstanceId);
+	public boolean isProcessInstanceRunning(long processInstanceId); 
 	
 }

@@ -610,7 +610,7 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 	}
 
 	@Override
-	public void alterarForecastMensalisado(Long mes, String ano) throws Exception{
+	public void alterarForecastMensalisado(Long mes, String ano, long processInstanceId) throws Exception{
 		List<Forecast> forecasts = em.createNamedQuery("Forecast.findByAno", Forecast.class)
 				.setParameter("ano", ano)
 				.getResultList();
@@ -623,6 +623,7 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 					.setParameter("forecast_id", forecast.getId())
 					.setMaxResults(1)
 					.getSingleResult();
+			forecastMensalisado.setProcessInstanceId(processInstanceId);
 			forecastMensalisado.setStatusForecast(StatusForecastEnum.EM_ANDAMENTO);
 			em.merge(forecastMensalisado);
 		}

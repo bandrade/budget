@@ -1,21 +1,27 @@
 package com.dupont.budget.web.actions;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.inject.Model;
+import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.slf4j.Logger;
 
 import com.dupont.budget.model.MesEnum;
+import com.dupont.budget.model.ToleranciaForecast;
+import com.dupont.budget.service.DomainService;
 import com.dupont.budget.service.ForecastService;
 import com.dupont.budget.service.bpms.BPMSProcessService;
 import com.dupont.budget.web.util.FacesUtils;
 
-@Model
-public class ProcessoAction {
+@SessionScoped
+@Named
+public class ProcessoAction implements Serializable{
 	@Inject
     private BPMSProcessService bpms;
 
@@ -35,12 +41,27 @@ public class ProcessoAction {
 	
 	@Inject
 	private ForecastService forecastService;
+	
+	private ToleranciaForecast toleranciaForecast;
+	
+	@Inject
+	private DomainService domainService;
 
 	@PostConstruct
 	public void init()
 	{
 		calendar = Calendar.getInstance();  
 		ano = calendar.get(Calendar.YEAR)+"";
+		
+		List<ToleranciaForecast> lista = domainService.findAll(ToleranciaForecast.class);
+		if(lista !=null && lista.size()>0)
+		{
+			toleranciaForecast = lista.get(0);
+		}
+		else
+		{
+			toleranciaForecast = new ToleranciaForecast();
+		}
 	}
 
 	private boolean validarPrazoBudget()
@@ -59,6 +80,15 @@ public class ProcessoAction {
 		}
 		return isPrazoOk;
 		
+	}
+	
+	public void limparValorToleranciaPositiva()
+	{
+		this.toleranciaForecast.setValorToleranciaPositiva(null);
+	}
+	public void limparValorToleranciaNegativa()
+	{
+		this.toleranciaForecast.setValorToleranciaNegativa(null);
 	}
 	private boolean validarPrazoForecast() throws Exception
 	{
@@ -128,10 +158,18 @@ public class ProcessoAction {
 			}
 			else
 			{
-				bpms.iniciarProcessoForecast(ano, mes,dataExpiracao);
+				if(toleranciaForecast.getId() !=null)
+				{
+					domainService.update(toleranciaForecast);
+				}
+				else
+				{
+					domainService.create(toleranciaForecast);
+				}
+				long processInstanceId =bpms.iniciarProcessoForecast(ano, mes,dataExpiracao,toleranciaForecast);
 				
 				MesEnum mesForecast = MesEnum.obterMes(mes);
-				forecastService.alterarForecastMensalisado((Long)(mesForecast.getId()), ano);
+				forecastService.alterarForecastMensalisado((Long)(mesForecast.getId()), ano,processInstanceId);
 				facesUtils.addInfoMessage("Processo de Forecast iniciado com sucesso");
 			}
 		} catch (Exception e) {
@@ -169,6 +207,15 @@ public class ProcessoAction {
 		this.dataExpiracao = dataExpiracao;
 	}
 
+	public ToleranciaForecast getToleranciaForecast() {
+		return toleranciaForecast;
+	}
+
+	public void setToleranciaForecast(ToleranciaForecast toleranciaForecast) {
+		this.toleranciaForecast = toleranciaForecast;
+	}
+	
+	
 	
 
 }

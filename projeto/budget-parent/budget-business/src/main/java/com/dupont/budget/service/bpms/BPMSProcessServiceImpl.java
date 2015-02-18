@@ -14,6 +14,7 @@ import com.dupont.budget.dto.CentroDeCustoDTO;
 import com.dupont.budget.dto.SolicitacaoPagamentoDTO;
 import com.dupont.budget.model.Area;
 import com.dupont.budget.model.CentroCusto;
+import com.dupont.budget.model.ToleranciaForecast;
 import com.dupont.budget.service.DomainService;
 import com.dupont.budget.service.centrodecusto.CentroDeCustoService;
 
@@ -57,11 +58,13 @@ public class BPMSProcessServiceImpl implements BPMSProcessService{
 
 
 	@Override
-	public long iniciarProcessoForecast(String ano, String mes,Date prazo)
+	public long iniciarProcessoForecast(String ano, String mes,Date prazo,ToleranciaForecast toleranciaForecast)
 			throws Exception {
-		CentroDeCustoDTO [] ceDtos = ccService.obterCentrosDeCusto();
+		CentroDeCustoDTO [] ceDtos = ccService.obterCentrosDeCusto(); 
 		String emails = domainService.obterEmailsUsuarios();
-		return processApi.startForecastProcess(ceDtos, ano, mes,prazo,emails);
+		return processApi.startForecastProcess(ceDtos, ano, mes,prazo,emails,toleranciaForecast.getTipoToleranciaNegativa(),
+				Math.abs(toleranciaForecast.getValorToleranciaNegativa()), toleranciaForecast.getTipoToleranciaPositiva(),
+				toleranciaForecast.getValorToleranciaPositiva());
 	}
 
 	@Override

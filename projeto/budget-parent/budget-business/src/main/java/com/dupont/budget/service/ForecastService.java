@@ -31,7 +31,7 @@ public interface ForecastService {
 
 	boolean isForecastMensalisado(Long mes, String ano);
 
-	void alterarForecastMensalisado(Long mes, String ano) throws Exception;
+	void alterarForecastMensalisado(Long mes, String ano, long processInstanceId) throws Exception;
 
 	Forecast findForecastByCCAndAno(String ano, Long centroCustoId);
 	
@@ -41,6 +41,6 @@ public interface ForecastService {
 	
 	public List<DetalheValoresComprometidosDTO> obterDetalheValoresComprometidosNotas(DespesaForecast despesaForecast, int mes);
 	
-	public List<DetalheValoresComprometidosDTO> obterDetalheValoresComprometidos(DespesaForecast despesa, int mes);
+	public List<DetalheValoresComprometidosDTO> obterDetalheValoresComprometidos(DespesaForecast despesa, int mes); 
 
 }
