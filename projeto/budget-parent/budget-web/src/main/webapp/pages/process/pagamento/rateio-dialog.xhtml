@@ -110,10 +110,10 @@
 					<p:message for="valorTotalNotaInput" />
 					
 				</p:panelGrid>
-				<p:commandButton value="Alterar"  icon="ui-icon-check" action="#{incluirDespesaRateioAction.closeCCDialog}" styleClass="button" update="dadosCC" 
-					rendered="#{incluirDespesaRateioAction.despesaSolicitacaoPagamento.tipoSolicitacaoAsString =='PENDENTE_VALIDACAO'}"/>
+				<p:commandButton value="Concluir"  icon="ui-icon-check" action="#{incluirDespesaRateioAction.closeCCDialog}" styleClass="button" update="dadosCC" 
+					rendered="#{incluirDespesaRateioAction.despesaSolicitacaoPagamento.tipoSolicitacaoAsString eq 'PENDENTE_VALIDACAO'}"/>
 				<p:commandButton value="Incluir"  icon="ui-icon-check" action="#{incluirDespesaRateioAction.closeCCDialog}" styleClass="button" update="dadosCC"
-				rendered="#{not incluirDespesaRateioAction.despesaSolicitacaoPagamento.tipoSolicitacaoAsString =='PENDENTE_VALIDACAO'}"/>
+				rendered="#{!(incluirDespesaRateioAction.despesaSolicitacaoPagamento.tipoSolicitacaoAsString eq 'PENDENTE_VALIDACAO')}"/>
 			</h:form>
 		</p:panel>
 	</h:body>
