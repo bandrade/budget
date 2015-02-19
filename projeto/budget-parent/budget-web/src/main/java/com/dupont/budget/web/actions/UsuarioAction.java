@@ -148,50 +148,7 @@ public class UsuarioAction extends GenericAction<Usuario> {
 		}
 		if (!mustCreate()) {
 			entidade.setPapeis(service.findById(entidade).getPapeis());
-			/*
-			for (PapelUsuario p : service.findById(entidade).getPapeis()) {
-				if (!papelList.getTarget().contains(p.getPapel())) {
-					if (p.getCentroCusto() != null) {
-						facesUtils.addErrorMessage(String.format("Usuário associado a um centro de custo, não é possível fazer a remoção do perfil %s.", p.getPapel().getNome()));
-						return null;
-					}
-
-					if (p.getArea() != null) {
-						facesUtils.addErrorMessage(String.format("Usuário é lider de uma área, não é possível fazer a remoção do perfil %s.", p.getPapel().getNome()));
-						return null;
-					}
-				}
-			}*/
 		}
-		/*
-		List<PapelUsuario> references = service.listPapelReferences(papelList.getTarget());
-		if (!references.isEmpty()) {
-			for (PapelUsuario p: references) {
-				if (p.getCentroCusto() != null) {
-					facesUtils.addErrorMessage(String.format("Papel %s só pode ser associado no cadastro do Centro de custo.", p.getPapel().getNome()));
-					papelList.getTarget().remove(p.getPapel());
-					papelList.getSource().add(p.getPapel());
-					return null;
-				}
-
-				if (p.getArea() != null) {
-					facesUtils.addErrorMessage(String.format("Papel %s só pode ser associado no cadastro da Área.", p.getPapel().getNome()));
-					papelList.getTarget().remove(p.getPapel());
-					papelList.getSource().add(p.getPapel());
-					return null;
-				}
-			}
-		}
-	
-		if (papelList.getTarget().isEmpty()) {
-			entidade.getPapeis().clear();
-		} else {
-			for (Papel p: papelList.getTarget()) {
-				
-				entidade.getPapeis().add(new PapelUsuario(p, entidade));
-			}
-		}
-		 */
 		 
 		entidade.getPerfis().clear();
 
