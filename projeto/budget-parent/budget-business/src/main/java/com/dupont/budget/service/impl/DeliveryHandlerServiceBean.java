@@ -324,6 +324,7 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
 											}
 											continue;
 									}
+								solicitacao.setDataPagamentoRealizado(c.getTime());
 								solicitacao.setStatus(StatusPagamento.PAGO);
 								service.update(solicitacao);
 								writeLine("SUCESSO", bw, row);

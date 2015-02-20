@@ -52,28 +52,40 @@
 				<p:column headerText="N. Nota Fiscal" sortBy="#{item.numeroNotaFiscal}" >
 					#{item.numeroNotaFiscal}
 				</p:column>
-                   <p:column headerText="Fornecedor" sortBy="#{item.fornecedor.nome}" >
+                   <p:column headerText="Fornecedor" sortBy="#{item.fornecedor.nome}" width="15%">
                        #{item.fornecedor.nome}
                    </p:column>
-                   <p:column headerText="Valor(R$)" sortBy="#{item.valor}" >
-                       #{item.valor}
+                   <p:column headerText="Valor(R$)" sortBy="#{item.valor}" style="text-align:center" >
+                      <h:outputText value="#{item.valor}" ><f:convertNumber type="currency"/></h:outputText>
                    </p:column>
-                   <p:column headerText="Tipo" sortBy="#{item.tipoSolicitacao}" >
+                   <p:column headerText="Tipo" sortBy="#{item.tipoSolicitacao}" width="5%" >
                        #{item.tipoSolicitacao}
                    </p:column>
-                   <p:column headerText="Status" sortBy="#{item.status}" >
+                   <p:column headerText="Status" sortBy="#{item.status}" width="12%" style="text-align:center">
                        #{item.status}
                    </p:column>
-					<p:column headerText="Data de Criação" sortBy="#{item.criacao}" >
+                   <p:column headerText="PER" sortBy="#{item.dataPagamentoRealizado}" width="5%" style="text-align:center" >
+                       <h:outputText value="#{item.dataPagamentoRealizado}" >
+                       		<f:convertDateTime pattern="MM" />
+                       </h:outputText>
+                   </p:column>
+					<p:column headerText="Data de Criação" sortBy="#{item.criacao}" width="10%" style="text-align:center" >
                        <h:outputText value="#{item.criacao}" >
                        		<f:convertDateTime pattern="dd/MM/yyyy" />
                        </h:outputText>
                    </p:column>
+					<p:column headerText="Centros de Custo" width="20%" style="text-align:center">
+			        <p:dataList value="#{item.despesas}" rendered="#{not empty solicitacaoPagamentoAction.list}" var="_despesa" type="definition">
+					      #{_despesa.centroCusto.codigo} - <h:outputText value="#{_despesa.valor}">	<f:convertNumber type="currency"/></h:outputText> 
+    					</p:dataList>
+                   </p:column>
+                   
+  
 				 	<p:column headerText="Criado por:" >
                        <h:outputText rendered="#{not empty item.usuarioCriador}" value="#{item.usuarioCriador.nome}"/>
                    </p:column>
-				<p:column headerText="Ações" width="10%">
-					<p:commandButton icon="ui-icon-pencil" action="#{solicitacaoPagamentoAction.edit(item)}"   update="solicitacaoPagamentos"  ajax="false"/>
+				<p:column headerText="Ações" width="8%"  style="text-align:center">
+					<p:commandButton icon="ui-icon-pencil" action="#{solicitacaoPagamentoAction.edit(item)}"   update="solicitacaoPagamentos"  ajax="false" disabled="#{item.status eq 'PAGO'}"/>
 					<p:commandButton icon="ui-icon-trash"  action="#{solicitacaoPagamentoAction.delete(item)}" update="solicitacaoPagamentos" >
 						<p:confirm header="Confirmação" message="Deseja realmente remover o dado?" icon="ui-icon-alert" />
 					</p:commandButton>

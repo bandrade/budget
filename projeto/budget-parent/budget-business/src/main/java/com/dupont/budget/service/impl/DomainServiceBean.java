@@ -185,7 +185,7 @@ public class DomainServiceBean extends GenericService implements DomainService {
 			}
 			query.setParameter(n, e.getValue() instanceof String ? "%".concat(e.getValue().toString().toLowerCase()).concat("%") : e.getValue());
 		}
-		
+		q.append("order by o.dataPagamentoRealizado" );
 		try {
 			return query.getResultList();
 		} catch (NoResultException e) {

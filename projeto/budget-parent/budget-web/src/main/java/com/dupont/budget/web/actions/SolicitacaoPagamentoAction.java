@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.Conversation;
-import javax.enterprise.context.RequestScoped;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.Produces;
 import javax.faces.context.FacesContext;
@@ -71,9 +69,6 @@ public class SolicitacaoPagamentoAction implements Serializable {
 	
 	@Inject
 	private SolicitacaoPagamentoService solicitacaoPagamentoService;
-	
-	@Inject
-	protected Conversation conversation;
 	
 	@Inject
 	protected DomainService domainService;
@@ -139,6 +134,7 @@ public class SolicitacaoPagamentoAction implements Serializable {
 		acoes				= new ArrayList<Acao>();
 		clientes			= new ArrayList<Cliente>();
 		despesasForecast = new ArrayList<DespesaForecast>();
+		despesaForecastFlag = false;
 	}
 	
 	public String inicializarSolicitacao()
@@ -210,13 +206,7 @@ public class SolicitacaoPagamentoAction implements Serializable {
 		list = domainService.listSolicitacaoByFiltro(solicitacaoPagamento.getNumeroNotaFiscal(), solicitacaoPagamento.getTipoSolicitacao(),solicitacaoPagamento.getStatus(), solicitacaoPagamento.getFornecedor().getNome(),dataDe,dataAte);
 	}
 	
-	/* Inicia o escopo de conversação */
-	public void initConversation(){
-		if (!FacesContext.getCurrentInstance().isPostback() && conversation.isTransient()) {
-			conversation.begin();
-		}
-
-	}
+	
 	public void limparCombos()
 	{
 		produtos = new ArrayList<>();
@@ -331,7 +321,6 @@ public class SolicitacaoPagamentoAction implements Serializable {
 			}			
 		}
 		
-		conversation.end();
 		init();
 		facesUtils.addInfoMessage("Solicitação de pagamento enviada para processamento.");
 		FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
@@ -361,6 +350,18 @@ public class SolicitacaoPagamentoAction implements Serializable {
 		if( solicitacaoPagamento.getTipoSolicitacao() == TipoSolicitacao.CC )
 			despesaSolicitacaoPagamento.setValor(solicitacaoPagamento.getValor());
 		
+		// Caso se optou por cadastrar despesa do forecast
+		if( despesaForecastFlag ) {
+			try {
+				for (DespesaForecast df : despesasForecast) {
+					df.setValor(0d);
+					forecastService.incluirDespesaForecast(df,(Calendar.getInstance().get(Calendar.MONTH)+1));					
+				}
+			} catch (Exception e) {
+				facesUtils.addErrorMessage(e.getMessage());
+				return null;
+			}			
+		}
 		solicitacaoPagamentoService.updateSolicitacaoPagamento(solicitacaoPagamento);
 		facesUtils.addInfoMessage("Solicitação de pagamento atualizada e reenviada para processamento.");
 		FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
@@ -531,6 +532,11 @@ public class SolicitacaoPagamentoAction implements Serializable {
 		}				
 	}
 	
+	public String voltar()
+	{
+		return "/pages/adm/pagamento/list.xhtml";
+	}
+	
 	public String iniciarPagamentos()
 	{
 		init();
@@ -539,6 +545,7 @@ public class SolicitacaoPagamentoAction implements Serializable {
 		list = null;
 		return "/pages/adm/pagamento/list.xhtml";
 	}
+	
 	/* Ao incluir a DESPESA de forecast, a despesa de solicitação de pagamento fica identica a ela. */
 	public void incluirDespesaForecast(SelectEvent event){
 		Map<String, Object> objects = (Map<String, Object>) event.getObject();

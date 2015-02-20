@@ -8,7 +8,6 @@
                 
 	<ui:define name="content">
 	
-		<f:event listener="#{solicitacaoPagamentoAction.initConversation}" type="preRenderView" />
 
 		<p:panel id="content">
 		
@@ -18,7 +17,8 @@
 			
 				<p:panelGrid id="tipoSolicitacaoPanel" columns="4">
 					<p:outputLabel value="Tipo de Solicitação:"/>
-					<p:selectOneRadio id="tipoSolicitacaoSelectOneRadio" value="#{solicitacaoPagamento.tipoSolicitacao}" disabled="#{solicitacaoPagamentoAction.despesaForecastFlag}" >
+					<p:selectOneRadio id="tipoSolicitacaoSelectOneRadio" 
+					 value="#{solicitacaoPagamento.tipoSolicitacao}" disabled="#{solicitacaoPagamentoAction.despesaForecastFlag or solicitacaoPagamentoAction.solicitacaoPagamento.tipoSolicitacaoPagamentoAsString eq 'PENDENTE_VALIDACAO'}" >
 						<p:ajax update="dadosPanel, valorTotalNotaInput1" oncomplete="PF('valorTotalNotaInputVar').value='';"/>
 						<f:selectItem itemValue="CC" itemLabel="CC" />
 						<f:selectItem itemValue="RATEIO" itemLabel="Rateio"/>
@@ -31,6 +31,7 @@
 				<p:panelGrid columns="6" id="painelNotas">
 					<p:outputLabel value="Fornecedor:" for="fornecedoresSelectOneMenu"  />
 					<p:autoComplete id="fornecedoresSelectOneMenu" 
+								disabled="#{solicitacaoPagamentoAction.solicitacaoPagamento.tipoSolicitacaoPagamentoAsString eq 'PENDENTE_VALIDACAO'}"
 								dropdown="true" value="#{solicitacaoPagamento.fornecedor}" 
 								completeMethod="#{autocompleteAction.autoCompleteFornecedor}" 
 					 			scrollHeight="300"
@@ -44,7 +45,7 @@
 					<p:message for="fornecedoresSelectOneMenu" />
 					
 					<p:outputLabel value="Nr. do Documento: " for="notaFiscalInput"/>
-					<p:inputText id="notaFiscalInput" value="#{solicitacaoPagamento.numeroNotaFiscal}" label="Nr. Nota Fiscal" required="true">
+					<p:inputText id="notaFiscalInput" value="#{solicitacaoPagamento.numeroNotaFiscal}" label="Nr. Nota Fiscal" required="true"  disabled="#{solicitacaoPagamentoAction.solicitacaoPagamento.tipoSolicitacaoPagamentoAsString eq 'PENDENTE_VALIDACAO'}">
 						<f:convertNumber />
 					</p:inputText>
 					<p:message for="notaFiscalInput" />
@@ -52,12 +53,12 @@
 					<p:outputLabel value="Valor Total da Nota:" for="valorTotalNotaInput"/>					
 					<h:panelGroup id="valorTotalNotaInput1">	
 					<pe:inputNumber id="valorTotalNotaInput" value="#{solicitacaoPagamento.valor}" label="Valor Total da Nota" required="true" 
-									decimalSeparator="," thousandSeparator="." decimalPlaces="2" disabled="#{solicitacaoPagamento.tipoSolicitacao == 'RATEIO' or solicitacaoPagamentoAction.despesaForecastFlag}" widgetVar="valorTotalNotaInputVar"/>
+									decimalSeparator="," thousandSeparator="." decimalPlaces="2" disabled="#{solicitacaoPagamento.tipoSolicitacao == 'RATEIO' or solicitacaoPagamentoAction.despesaForecastFlag or solicitacaoPagamentoAction.solicitacaoPagamento.tipoSolicitacaoPagamentoAsString eq 'PENDENTE_VALIDACAO'}" widgetVar="valorTotalNotaInputVar"/>
 					</h:panelGroup>
 					<p:message for="valorTotalNotaInput"  />
 					
 					<p:outputLabel value="Data de Pgto.:" for="dataPagamentoInput"/>
-					<p:calendar id="dataPagamentoInput" value="#{solicitacaoPagamento.dataPagamento}" label="Data de Pgto." required="true" />
+					<p:calendar id="dataPagamentoInput" value="#{solicitacaoPagamento.dataPagamento}" label="Data de Pgto." required="true" disabled="#{solicitacaoPagamentoAction.solicitacaoPagamento.tipoSolicitacaoPagamentoAsString eq 'PENDENTE_VALIDACAO'}"/>
 					<p:message for="dataPagamentoInput" />
 				</p:panelGrid>
 				
@@ -67,7 +68,11 @@
 					<br />
 					
 					<p:panelGrid id="incluirDespesaPanel" columns="1" styleClass="painel-botoes" rendered="#{solicitacaoPagamento.tipoSolicitacao == 'CC'}" >
+						
 						<p:commandButton value="Incluir Despesa Forecast" icon="ui-icon-extlink" actionListener="#{solicitacaoPagamentoAction.openDespesaForecastDialog}" rendered="#{!solicitacaoPagamentoAction.despesaForecastFlag}" styleClass="button" immediate="true">
+							<f:setPropertyActionListener target="#{solicitacaoPagamentoAction.centroCustoDespesaForecast}" value="#{despesaSolicitacaoPagamento.centroCusto}" />
+							<f:setPropertyActionListener target="#{despesaForecast.valor}" value="#{despesaSolicitacaoPagamento.valor}"/>
+							<f:setPropertyActionListener target="#{despesaForecast.despesaSolicitacaoPagamento}" value="#{despesaSolicitacaoPagamento}"/>
 							<p:ajax event="dialogReturn" listener="#{solicitacaoPagamentoAction.incluirDespesaForecast}" update="tipoSolicitacaoPanel,incluirDespesaPanel,dadosCC,dadosRateio,painelNotas"/>						
 						</p:commandButton>
 					</p:panelGrid>
@@ -78,6 +83,7 @@
 					
 						<p:outputLabel value="Centro de custo:" for="centroCustosSelectOneMenu"/>
 						<p:autoComplete id="centroCustosSelectOneMenu" 
+								disabled="#{solicitacaoPagamentoAction.solicitacaoPagamento.tipoSolicitacaoPagamentoAsString eq 'PENDENTE_VALIDACAO'}"
 								onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"
 								dropdown="true" value="#{despesaSolicitacaoPagamento.centroCusto}" 
 								completeMethod="#{autocompleteAction.autoCompleteCentroCusto}" 
@@ -130,7 +136,6 @@
 						<p:outputLabel value="Produto:" for="produtosSelectOneMenu"/>
 						<p:selectOneMenu id="produtosSelectOneMenu" value="#{despesaSolicitacaoPagamento.produto}" label="Produto" converter="com.dupont.EntityConverter" required="true" rendered="#{!solicitacaoPagamentoAction.despesaForecastFlag}"
 							disabled="true">
-							<p:ajax listener="#{solicitacaoPagamentoAction.doSelectProduto}" update="dadosCC" process="@this"/>
 							<f:selectItem itemLabel="Selecione um produto" itemValue="#{null}" />
 							<f:selectItems value="#{solicitacaoPagamentoAction.produtos}" var="item" itemLabel="#{item.nome}"/>
 						</p:selectOneMenu>
@@ -237,16 +242,20 @@
 						 styleClass="button" immediate="true" rendered="#{solicitacaoPagamento.tipoSolicitacao == 'RATEIO' and  !(solicitacaoPagamentoAction.solicitacaoPagamento.tipoSolicitacaoPagamentoAsString eq 'PENDENTE_VALIDACAO')}">
 						<p:ajax event="dialogReturn" listener="#{solicitacaoPagamentoAction.incluirDespesa}" update="tableRateio,dadosRateio,valorTotalNotaInput"/>						
 					</p:commandButton>
-					
-					<p:commandButton value="Incluir Despesa Forecast" icon="ui-icon-extlink" actionListener="#{solicitacaoPagamentoAction.openDespesaForecastDialog}" styleClass="button" immediate="true" rendered="#{solicitacaoPagamento.tipoSolicitacao == 'RATEIO' and  !(solicitacaoPagamentoAction.solicitacaoPagamento.tipoSolicitacaoPagamentoAsString eq 'PENDENTE_VALIDACAO')}">
+			
+					<p:commandButton value="Incluir Despesa Forecast" icon="ui-icon-extlink" actionListener="#{solicitacaoPagamentoAction.openDespesaForecastDialog}" styleClass="button" rendered="#{solicitacaoPagamento.tipoSolicitacao == 'RATEIO' and  !(solicitacaoPagamentoAction.solicitacaoPagamento.tipoSolicitacaoPagamentoAsString eq 'PENDENTE_VALIDACAO')}">
 						<p:ajax event="dialogReturn" listener="#{solicitacaoPagamentoAction.incluirDespesaForecast}" update="tableRateio,valorTotalNotaInput,tipoSolicitacaoPanel"/>						
 					</p:commandButton>
 					<br/>
 				</h:panelGroup>
 				<br/>
+
+				<p:commandButton  action="#{solicitacaoPagamentoAction.voltar()}" styleClass="button" value="Voltar" ajax="false" rendered="#{request.isUserInRole('ADMINISTRADOR')}"/>
 				<p:commandButton id="saveBtn" value="Concluir" icon="ui-icon-check" action="#{solicitacaoPagamentoAction.save}" styleClass="button" ajax="false" rendered="#{solicitacaoPagamento.id == null}"
-								onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"/>
+								onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"
+								/>
 				<p:commandButton id="updateBtn" value="Concluir" icon="ui-icon-check" action="#{solicitacaoPagamentoAction.update}" styleClass="button" ajax="false" rendered="#{solicitacaoPagamento.id  != null}"
+					disabled="#{solicitacaoPagamentoAction.solicitacaoPagamento.tipoSolicitacaoPagamentoAsString eq 'ENVIADO_SAP' || solicitacaoPagamentoAction.solicitacaoPagamento.tipoSolicitacaoPagamentoAsString eq 'COMPROMETIDO'}"
 					onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"/>
 				
 				<p:blockUI block=":content" trigger="saveBtn" />

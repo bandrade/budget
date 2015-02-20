@@ -247,12 +247,12 @@
 						<p:ajax listener="#{aprovarForecastAction.tipoAprovacaoAlterada()}" update=":form" oncomplete="onDatatableResize();" ></p:ajax>
 				</p:selectOneRadio>
 				<p:panelGrid rendered="#{aprovarForecastAction.aprovacao eq 'N' }" id="panelTolerancia" columns="2">
-					<h:outputText value="Valor Tolerância(R$):" />
+					<h:outputText value="Valor Aprovado(R$):" />
 					<pe:inputNumber  id="valorAprovado"  value="#{aprovarForecastAction.valorAprovacao}" converter="javax.faces.Double" required="true"/>
 				</p:panelGrid>
 				</p:panel>
 				<p:panelGrid columns="1" styleClass="painel-botoes">
-					<p:commandButton value="Concluir"  action="#{aprovarForecastAction.concluir()}" onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" ajax="false" update=":form">
+					<p:commandButton value="Concluir"  action="#{aprovarForecastAction.concluir()}" onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" >
 						<p:confirm header="Confirmação" message="Confirma a conclusão da Aprovação do Forecast?" icon="ui-icon-alert"/>
 					</p:commandButton>
 				</p:panelGrid>
