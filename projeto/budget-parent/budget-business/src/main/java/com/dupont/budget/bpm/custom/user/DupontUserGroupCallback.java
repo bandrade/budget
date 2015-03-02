@@ -77,17 +77,23 @@ public class DupontUserGroupCallback implements UserGroupCallback {
     	if(userId.equals("Administrator") )
     		return null;
     	List<String> userGroups = userGroupCallbackCacheManager.getGroupsFromCache(userId);
+    	logger.info("***************************************************************************************************");
+    	logger.info("GRUPOS USUARIO " + userId);
     	if(userGroups == null)
     	{
 
-    		List<String> groups = new ArrayList<String>();
+    		userGroups = new ArrayList<String>();
     		Usuario u = domainService.getUsuarioByLogin(userId);
     		for(PapelUsuario papel : u.getPapeis())
     		{
-    			groups.add(papel.getPapel().getNome());
+    			userGroups.add(papel.getPapel().getNome());
     		}
 
-    		userGroupCallbackCacheManager.setGroupsOnCache(userId, groups);
+    		userGroupCallbackCacheManager.setGroupsOnCache(userId, userGroups);
+    	}
+    	for(String users : userGroups ){
+    		logger.info(users);
+
     	}
         return userGroups;
     }

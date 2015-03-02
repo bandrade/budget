@@ -145,7 +145,7 @@ public class BudgetAction implements Serializable{
 		}
 		catch(Exception e)
 		{
-			facesUtils.addErrorMessage("Erro ao efetuar a criação do budget");
+			//facesUtils.addErrorMessage("Erro ao efetuar a criação do budget");
 			logger.error("Erro ao efetuar a criação do budget", e);
 		}
 
@@ -186,7 +186,7 @@ public class BudgetAction implements Serializable{
 		}
 		catch(Exception e)
 		{
-			facesUtils.addErrorMessage("Erro ao adicionar a despesa");
+			//facesUtils.addErrorMessage("Erro ao adicionar a despesa");
 			logger.error("Erro ao adicionar a despesa", e);
 			return false;
 		}

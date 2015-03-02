@@ -1,17 +1,18 @@
 package com.dupont.budget.web.actions;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 import javax.annotation.security.RolesAllowed;
-import javax.enterprise.inject.Model;
 import javax.enterprise.inject.Produces;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.deltaspike.core.api.scope.ViewAccessScoped;
 import org.jboss.crypto.CryptoUtil;
 import org.primefaces.model.DualListModel;
 import org.slf4j.Logger;
@@ -46,9 +47,10 @@ import com.dupont.budget.web.util.FacesUtils;
  * @since 2014
  *
  */
-@Model
+@ViewAccessScoped
+@Named
 @RolesAllowed(value = "ADMINISTRADOR")
-public class UsuarioAction extends GenericAction<Usuario> {
+public class UsuarioAction extends GenericAction<Usuario> implements Serializable {
 
 	/*   Para criar a senha HASH do password, utilizar o seguinte código.
 	 *

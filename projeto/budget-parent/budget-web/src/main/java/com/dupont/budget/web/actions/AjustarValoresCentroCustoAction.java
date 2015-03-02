@@ -1,26 +1,16 @@
 package com.dupont.budget.web.actions;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
-import javax.enterprise.context.Conversation;
 import javax.enterprise.context.ConversationScoped;
-import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.slf4j.Logger;
-
 import com.dupont.budget.dto.CentroDeCustoDTO;
-import com.dupont.budget.model.Budget;
 import com.dupont.budget.model.BudgetEstipuladoAnoCC;
 import com.dupont.budget.model.Despesa;
 import com.dupont.budget.model.TipoDespesa;
-import com.dupont.budget.service.BudgetService;
-import com.dupont.budget.service.bpms.BPMSProcessService;
-import com.dupont.budget.service.bpms.BPMSTaskService;
-import com.dupont.budget.web.util.FacesUtils;
 
 
 /**
@@ -32,8 +22,8 @@ import com.dupont.budget.web.util.FacesUtils;
 public class AjustarValoresCentroCustoAction extends BudgetAction implements Serializable{
 
 	private BudgetEstipuladoAnoCC budgetEstipuladoAnoCC;
-	
-	
+
+
 	public void obterDadosBudget() throws Exception{
 		if(conversation.isTransient())
 			conversation.begin();
@@ -45,9 +35,9 @@ public class AjustarValoresCentroCustoAction extends BudgetAction implements Ser
 		possuiBudgetSalvo = budget !=null;
 		if(despesasNoDetalhe == null)
 			obterDespesaNoDetalhe(budget.getId());
-		
+
 	}
-	
+
 	@Override
 	public void adicionarDespesaPlanilha(TipoDespesa tipoDespesa) {
 		Despesa _despesa = new Despesa();
@@ -55,9 +45,9 @@ public class AjustarValoresCentroCustoAction extends BudgetAction implements Ser
 		_despesa.initLists();
 		_despesa.setTipoDespesa(tipoDespesa);
 		despesasNoDetalhe.add(_despesa);
-		
+
 	}
-	
+
 	public Double calcularTotalValorProposto()
 	{
 		Double valor =0d;
@@ -65,7 +55,7 @@ public class AjustarValoresCentroCustoAction extends BudgetAction implements Ser
 		{
 			for(Despesa despesa: despesasNoDetalhe)
 			{
-				if(!despesa.isFirstLine() && despesa.getAprovado())
+				if( despesa!=null &&  !(despesa.isFirstLine()) && despesa.getAprovado())
 				{
 					Double valorProposto = despesa.getValorProposto()==null ? despesa.getValor(): despesa.getValorProposto();
 					despesa.setValorProposto(valorProposto);
@@ -93,23 +83,49 @@ public class AjustarValoresCentroCustoAction extends BudgetAction implements Ser
 		return valor;
 	}
 
+
+	public boolean adicionarDespesas()
+	{
+		possuiErro=false;
+		for(Despesa despesa : despesasNoDetalhe)
+		{
+			despesa.setAprovado(true);
+			if(despesa.isFirstLine())
+				continue;
+			if(despesa.getId() !=null)
+			{
+				if(!(alterarDespesa(despesa,true)))
+					possuiErro=true;
+			}
+			else
+			{
+				if(!(adicionarDespesa(despesa,true)))
+					possuiErro=true;
+			}
+		}
+		return possuiErro;
+	}
+
 	public String concluir()
 	{
-		
-		if(!validarPreenchimentoDespesas())
-		{
-			return null;
-		}
-		if(!calcularTotalValorSubmetido().equals(budgetEstipuladoAnoCC.getValorAprovado()))
-		{
-			facesUtils.addErrorMessage("O valor do budget do Centro de Custo deve ser igual ao valor aprovado");
-			return null;
-
-		}
-		
 		try {
+			adicionarDespesas();
+
+			if(!validarPreenchimentoDespesas())
+			{
+				return null;
+			}
+			if(!calcularTotalValorSubmetido().equals(budgetEstipuladoAnoCC.getValorAprovado()))
+			{
+				facesUtils.addErrorMessage("O valor do budget do Centro de Custo deve ser igual ao valor aprovado");
+				return null;
+
+			}
+			params = new HashMap<>();
+			params.put("papel_cc", centroDeCusto.getPapelResponsavel());
 			bpmsTask.aprovarTarefa(facesUtils.getUserLogin(), idTarefa,params);
 			facesUtils.addInfoMessage("Tarefa concluída com sucesso");
+
 		} catch (Exception e) {
 			facesUtils.addInfoMessage("Erro o concluir a tarefa");
 			logger.error("Erro o concluir a tarefa: ", e);
@@ -117,7 +133,7 @@ public class AjustarValoresCentroCustoAction extends BudgetAction implements Ser
 		conversation.end();
 		return "minhasTarefas";
 	}
-	
+
 	private boolean validarPreenchimentoDespesas() {
 		boolean bool= true;
 		for(Despesa despesa : despesasNoDetalhe)
@@ -139,7 +155,7 @@ public class AjustarValoresCentroCustoAction extends BudgetAction implements Ser
 	public void setBudgetEstipuladoAnoCC(BudgetEstipuladoAnoCC budgetEstipuladoAnoCC) {
 		this.budgetEstipuladoAnoCC = budgetEstipuladoAnoCC;
 	}
-	
-	
-	
+
+
+
 }

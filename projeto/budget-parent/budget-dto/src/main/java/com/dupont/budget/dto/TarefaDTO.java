@@ -4,6 +4,10 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * @author bandrade
+ *
+ */
 public class TarefaDTO  implements Serializable{
 	private static final long serialVersionUID = -6225511321669739605L;
 
@@ -40,6 +44,14 @@ public class TarefaDTO  implements Serializable{
 	private Date prazo;
 
 	private List<String> potentialOwners;
+
+	private String nomeUsuario;
+
+	private String login;
+
+	private String nomeCentroCusto;
+
+	private String codigoCentroCusto;
 
 
 	public long getId() {
@@ -182,5 +194,40 @@ public class TarefaDTO  implements Serializable{
 		this.prazo = prazo;
 	}
 
-	
+	public String getNomeUsuario() {
+		return nomeUsuario;
+	}
+
+	public void setNomeUsuario(String nomeUsuario) {
+		this.nomeUsuario = nomeUsuario;
+	}
+
+	public String getLogin() {
+		return login;
+	}
+
+	public void setLogin(String login) {
+		this.login = login;
+	}
+
+	public String getNomeCentroCusto() {
+		return nomeCentroCusto;
+	}
+
+	public void setNomeCentroCusto(String nomeCentroCusto) {
+		this.nomeCentroCusto = nomeCentroCusto;
+	}
+
+	public String getCodigoCentroCusto() {
+		return codigoCentroCusto;
+	}
+
+	public void setCodigoCentroCusto(String codigoCentroCusto) {
+		this.codigoCentroCusto = codigoCentroCusto;
+	}
+
+
+
+
+
 }

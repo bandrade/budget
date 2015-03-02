@@ -13,5 +13,8 @@ public interface BPMTaskManagerApi {
 	void aproveTask(String actorId, long taskId, Map<String,Object> content) throws Exception ;
 	Task getTask(long taskId)  throws BPMException;
 	Map<String,Object> getTaskContent(long taskId) throws BPMException;
-	
+	public List<TaskSummary> retrieveTaskListAdm() throws BPMException ;
+	public List<TaskSummary> retrieveTaskListAdmCompletas() throws BPMException ;
+
+
 }

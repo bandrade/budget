@@ -77,7 +77,16 @@ public class CentroCustoAction extends GenericAction<CentroCusto> {
 		} else {
 			CentroCusto tmp = service.findById(entidade);
 			List<PapelUsuario> list = tmp.getResponsaveis();
-
+			if(list==null || list.size()<=0)
+			{
+				PapelUsuario user = new PapelUsuario(new Papel(createNomePapel(entidade, 1)), responsavel, entidade, 1);
+				service.create(user);
+				list.add(user);
+				PapelUsuario gerente = new PapelUsuario(new Papel(createNomePapel(entidade, 2)), gestor, entidade, 2);
+				service.create(gerente);
+				list.add(gerente);
+			}
+			
 			for (Iterator<PapelUsuario> i = list.iterator(); i.hasNext();) {
 				PapelUsuario o = i.next();
 				userCallBackCache.removeGroupsFromCache(o.getUsuario().getLogin());
@@ -109,7 +118,8 @@ public class CentroCustoAction extends GenericAction<CentroCusto> {
 	@Override
 	public String edit(CentroCusto t) {
 		this.setEntidade(t);
-
+		responsavel= null;
+		gestor= null;
 		CentroCusto cc = service.findById(t);
 
 		for (PapelUsuario pu: cc.getResponsaveis()) {

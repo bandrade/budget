@@ -33,6 +33,7 @@ import org.kie.api.KieServices;
 import org.kie.api.builder.ReleaseId;
 import org.kie.api.runtime.manager.RuntimeEnvironment;
 import org.kie.api.runtime.manager.RuntimeEnvironmentBuilder;
+import org.kie.api.task.UserGroupCallback;
 import org.kie.internal.runtime.manager.cdi.qualifier.PerProcessInstance;
 import org.kie.internal.runtime.manager.cdi.qualifier.PerRequest;
 import org.kie.internal.runtime.manager.cdi.qualifier.Singleton;
@@ -64,7 +65,8 @@ public class DupontApplicationScopedProducer {
     @PerRequest
     public RuntimeEnvironment produceEnvironment(EntityManagerFactory emf) {
     	KieServices kieServices = KieServices.Factory.get();
-    	ReleaseId releaseId = kieServices.newReleaseId( "com.dupont.budget", "budget-bpm-repo", "1.0.16" );
+
+    	ReleaseId releaseId = kieServices.newReleaseId( "com.dupont.budget", "budget-bpm-repo", "1.0.19" );
     	String deploymentId = releaseId.toString();
     	AbstractAuditLogger auditLogger =AuditLoggerFactory.newJPAInstance();
     	ServicesAwareAuditEventBuilder auditEventBuilder = new ServicesAwareAuditEventBuilder();
@@ -84,6 +86,5 @@ public class DupontApplicationScopedProducer {
         // default implementation will load userinfo.properties file on the classpath
         return new DefaultUserInfo(true);
     }
-
 
 }

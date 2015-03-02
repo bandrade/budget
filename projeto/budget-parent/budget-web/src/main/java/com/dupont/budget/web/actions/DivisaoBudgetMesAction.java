@@ -117,6 +117,8 @@ public class DivisaoBudgetMesAction implements Serializable{
 
 	public String concluir()
 	{
+		try {
+		budgetService.mensalisarBudget(despesas);
 		boolean possuiErro = false ;
 		if(!calcularValorColuna("TOT").equals(getValorTotalDetalhe()))
 		{
@@ -128,7 +130,9 @@ public class DivisaoBudgetMesAction implements Serializable{
 			for(DespesaMesDTO despesa : despesas)
 			{
 				Double valorTotalMensalisado = calcularValorMensalisado(despesa);
-				if(!despesa.getValor().equals(valorTotalMensalisado))
+				logger.info("Valor despesa" + despesa.getValor() +"- Valor Mensalisado: " + valorTotalMensalisado);
+
+				if(!(Double.compare(despesa.getValor(), Math.floor(valorTotalMensalisado))==0))
 				{
 					facesUtils.addErrorMessage("O valor total do budget mensalisado da despesa " +despesa.getTipoDespesa()+ ""
 							+ " deve ser igual ao valor total aprovado "+facesUtils.formatarDinheiro(despesa.getValor())+ " . O valor total mensalidado foi "
@@ -141,19 +145,20 @@ public class DivisaoBudgetMesAction implements Serializable{
 
 		if(!possuiErro)
 		{
-			try {
-				budgetService.mensalisarBudget(despesas);
+
+
 				HashMap<String, Object> param =  new HashMap<>();
 				param.put("_budgetId", String.valueOf(budget.getId()));
 				bpmsTask.aprovarTarefa(facesUtils.getUserLogin(), idTarefa,param);
 				facesUtils.addInfoMessage("Tarefa concluida com sucesso");
 				conversation.end();
 				return "minhasTarefas";
-			} catch (Exception e) {
 
-				facesUtils.addErrorMessage("Erro ao concluir a tarefa");
-				logger.error("Erro ao concluir a tarefa",e);
 			}
+		} catch (Exception e) {
+
+			facesUtils.addErrorMessage("Erro ao concluir a tarefa");
+			logger.error("Erro ao concluir a tarefa",e);
 		}
 		return null;
 	}

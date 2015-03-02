@@ -64,10 +64,10 @@
 					<p:column colspan="10" rendered="#{detalheDespesa.firstLine}" style="background-color:#CE0909;color:#fff;">
 							<h:outputText value="#{detalheDespesa.tipoDespesa.nome}" />
 					</p:column>
-					<p:column rendered="#{not detalheDespesa.firstLine}" width="2%"  style="text-align:center;">
+					<p:column rendered="#{not detalheDespesa.firstLine}" width="4%"  style="text-align:center;">
 							<h:outputText value="#{detalheDespesa.indice}" />
 					</p:column>
-					<p:column  width="12%" rendered="#{not detalheDespesa.firstLine}">
+					<p:column  width="11%" rendered="#{not detalheDespesa.firstLine}">
 						<f:facet name="header">
 							<h:outputText value="Ação" />
 						</f:facet>
@@ -75,7 +75,7 @@
 						 <p:cellEditor>
 			               	<f:facet name="output"><h:outputText value="#{detalheDespesa.acao.nome}" /></f:facet>
             				<f:facet name="input">
-            					<p:inputTextarea value="#{detalheDespesa.acaoString}" cols="20" rows="3"></p:inputTextarea>
+            					<p:inputTextarea value="#{detalheDespesa.acaoString}" cols="18" rows="3" maxlength="45"></p:inputTextarea>
             				</f:facet>
 			             </p:cellEditor>
 					</p:column>
@@ -112,7 +112,7 @@
 					 		</f:facet>
 					 	</p:cellEditor>
 					</p:column>
-					<p:column width="8%" rendered="#{not detalheDespesa.firstLine}">
+					<p:column width="9%" rendered="#{not detalheDespesa.firstLine}">
 						<f:facet name="header">
 							<h:outputText value="Distrito" />
 						</f:facet>
@@ -128,7 +128,7 @@
 					 		</f:facet>
 					 	</p:cellEditor>
 					</p:column>
-					<p:column rendered="#{not detalheDespesa.firstLine}" width="15%">
+					<p:column rendered="#{not detalheDespesa.firstLine}" width="14%">
 						<f:facet name="header" >
 							<h:outputText value="ERC" />
 						</f:facet>
@@ -144,7 +144,7 @@
 					 	</p:cellEditor>
 					</p:column>
 					
-					<p:column  width="12%" rendered="#{not detalheDespesa.firstLine}">
+					<p:column  width="11%" rendered="#{not detalheDespesa.firstLine}">
 						<f:facet name="header">
 							<h:outputText value="Comentário" />
 						</f:facet>
@@ -152,7 +152,7 @@
 						 <p:cellEditor>
 			               	<f:facet name="output"><h:outputText value="#{detalheDespesa.comentario}" /></f:facet>
             				<f:facet name="input">
-            					<p:inputTextarea value="#{detalheDespesa.comentario}" cols="20" rows="3" ></p:inputTextarea>
+            					<p:inputTextarea value="#{detalheDespesa.comentario}" cols="18" rows="3" ></p:inputTextarea>
             				</f:facet>
             			</p:cellEditor>
 					</p:column>
@@ -174,13 +174,13 @@
             				</f:facet>
             			</p:cellEditor>
 					</p:column> 
-					<p:column width="3%" rendered="#{not detalheDespesa.firstLine}">
+					<p:column width="4%" rendered="#{not detalheDespesa.firstLine}">
 							<p:commandButton icon="ui-icon-trash" action="#{aprovarBudgetAction.removerDespesa()}" update=":form">
 									<p:confirm header="Confirmação" message="Deseja realmente remover a despesa?" icon="ui-icon-alert"/>
 									<f:setPropertyActionListener target="#{aprovarBudgetAction.despesaDetalheSelecionada}" value="#{detalheDespesa}"/>
 							</p:commandButton>
 					</p:column>
-					<p:column style="text-align:center" width="8%" headerText="Aprovado?" footerText="Total Aprovado:#{facesUtils.formatarDinheiro(aprovarBudgetAction.valorTotalAprovado)}">
+					<p:column rendered="#{not detalheDespesa.firstLine}" style="text-align:center" width="7%" headerText="Aprovado?" footerText="Total Aprovado:#{facesUtils.formatarDinheiro(aprovarBudgetAction.valorTotalAprovado)}">
 						<p:selectBooleanCheckbox value="#{detalheDespesa.aprovado}" disabled="#{aprovarBudgetAction.tipoAprovacao eq 'S'}">
 							<p:ajax event="change" update=":form"></p:ajax>
 						</p:selectBooleanCheckbox>

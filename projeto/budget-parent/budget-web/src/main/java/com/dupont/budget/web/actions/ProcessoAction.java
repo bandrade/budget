@@ -215,7 +215,10 @@ public class ProcessoAction implements Serializable{
 		this.toleranciaForecast = toleranciaForecast;
 	}
 	
-	
+	public void doWorkAround()
+	{
+		
+	}
 	
 
 }

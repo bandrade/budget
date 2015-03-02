@@ -9,9 +9,12 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.slf4j.Logger;
+
 import com.dupont.budget.dto.CentroDeCustoDTO;
 import com.dupont.budget.dto.ColaboradorDTO;
 import com.dupont.budget.dto.PapelDTO;
+import com.dupont.budget.model.Area;
 import com.dupont.budget.model.CentroCusto;
 import com.dupont.budget.model.Papel;
 import com.dupont.budget.model.PapelUsuario;
@@ -22,6 +25,9 @@ import com.dupont.budget.service.GenericService;
 public class CentroDeCustoServiceImpl extends GenericService implements CentroDeCustoService{
 	@Inject
 	private DomainService domainService;
+
+	@Inject
+	private Logger logger;
 
 	@Override
 	@GET
@@ -47,25 +53,19 @@ public class CentroDeCustoServiceImpl extends GenericService implements CentroDe
 								papel.getUsuario().getLogin(),papel.getUsuario().getEmail());
 
 				p.setColaborador(colaborador);
-				papeisDTO.add(p);
+				if(p.getNomePapel().startsWith("GESTOR") || p.getNomePapel().startsWith("RESPONSAVEL"))
+				{
+					papeisDTO.add(p);
+					logger.info("Centro de custo: " +cc.getNome() + " Codigo:" +cc.getCodigo() + " Papel:" +p.getNomePapel());
+				}
 			}
 			ccDto.setPapeis(papeisDTO);
-
-			Papel papelLider = cc.getArea().getLider().getPapel();
-			Usuario usuario = cc.getArea().getLider().getUsuario();
-			PapelDTO pDto = new PapelDTO();
-			pDto.setNomePapel(papelLider.getNome());
-			ColaboradorDTO colaborador = new ColaboradorDTO(usuario.getNome(),
-					usuario.getLogin(),usuario.getEmail());
-
-			pDto.setColaborador(colaborador);
-			ccDto.getPapeis().add(pDto);
 			centrosDeCusto.add(ccDto);
 		}
 
 		return centrosDeCusto.toArray(new CentroDeCustoDTO[centrosDeCusto.size()]);
 	}
-	
+
 	public CentroDeCustoDTO parseCentroCusto(CentroCusto cc){
 		CentroDeCustoDTO ccDto = new CentroDeCustoDTO();
 		ccDto.setNome(cc.getNome());
@@ -96,7 +96,7 @@ public class CentroDeCustoServiceImpl extends GenericService implements CentroDe
 
 		pDto.setColaborador(colaborador);
 		ccDto.getPapeis().add(pDto);
-		
+
 		return ccDto;
 	}
 
@@ -104,6 +104,13 @@ public class CentroDeCustoServiceImpl extends GenericService implements CentroDe
 	public List<CentroCusto> findByArea(Long areaId) throws Exception{
 
 		return em.createNamedQuery("CentroCusto.findByArea",CentroCusto.class).setParameter("area_id",areaId).getResultList();
+	}
+
+
+
+	public Area findAreaByCC(Long ccId) {
+
+		return em.createNamedQuery("CentroCusto.findAreaByCC",Area.class).setParameter("id",ccId).getSingleResult();
 	}
 
 }

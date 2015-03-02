@@ -3,14 +3,14 @@ package com.dupont.budget.dto;
 import java.io.Serializable;
 
 public class PapelDTO implements Serializable{
-	
+
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 4012214329468320261L;
 	private String nomePapel;
 	private ColaboradorDTO colaborador;
-	
+
 	public PapelDTO(){}
 	public PapelDTO(String nomePapel, ColaboradorDTO colaborador) {
 		super();
@@ -34,7 +34,7 @@ public class PapelDTO implements Serializable{
 		return "PapelDTO [nomePapel=" + nomePapel + ", colaborador="
 				+ colaborador + "]";
 	}
-	
-	
-	
+
+
+
 }

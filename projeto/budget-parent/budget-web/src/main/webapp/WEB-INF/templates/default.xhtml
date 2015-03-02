@@ -89,6 +89,7 @@
                                         <li> <p:link  outcome="/pages/adm/fornecedor/list.xhtml" value="Fornecedor"/> </li>
                                         <li> <p:link  outcome="/pages/adm/valorComprometido/list.xhtml" value="Valor Comprometido"/> </li>
                                         <li> <p:link  outcome="/pages/adm/nota/list.xhtml" value="Upload Relatório SAP"/> </li>
+                                        
                                         <li> <p:commandLink  action="#{solicitacaoPagamentoAction.iniciarPagamentos()}" value="Pagamento" ajax="false"/> </li>
                                     </ul>                   
                                 </li>
@@ -96,6 +97,8 @@
                                     <ul>
                                         <li> <p:link  outcome="/pages/adm/planning/iniciarProcessoBudget.xhtml" value="Iniciar Processo Budget"/> </li>
                                         <li> <p:link  outcome="/pages/adm/planning/iniciarProcessoForecast.xhtml" value="Iniciar Processo Forecast"/> </li>
+                                        <li> <p:link  outcome="/pages/adm/status/status.xhtml" value="Status Processos em Andamento"/> </li>
+                                        <li> <p:link  outcome="/pages/adm/status/statusCompletos.xhtml" value="Status Processos Completados"/> </li>
                                     </ul>                   
                                 </li>
                                 </h:panelGroup>

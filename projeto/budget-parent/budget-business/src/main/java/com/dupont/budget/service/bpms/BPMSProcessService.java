@@ -14,6 +14,6 @@ public interface BPMSProcessService {
 	boolean existeProcessoAtivo(String ano) throws Exception;
 	boolean existeProcessoForecastAtivo(String ano) throws Exception;
 	public void abortarProcesso(long processId);
-	public boolean isProcessoEmExecucao(long processInstanceId); 
+	public boolean isProcessoEmExecucao(long processInstanceId);
 
 }

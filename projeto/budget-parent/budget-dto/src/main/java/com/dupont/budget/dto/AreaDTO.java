@@ -8,6 +8,8 @@ public class AreaDTO implements Serializable {
 	private static final long serialVersionUID = 4140788853802341849L;
 	private Long id;
 	private String nome;
+	private String nomePapelLider;
+	private String nomePapelLancamento;
 	private String regex="[^a-zA-Z0-9 -]";
 	private List<CentroDeCustoDTO> centrosDeCusto;
 	public Long getId() {
@@ -23,14 +25,14 @@ public class AreaDTO implements Serializable {
 		this.nome = nome;
 	}
 	public String getNomePapel() {
-		return "LIDER_"+nome.replaceAll(regex, "").toUpperCase();
+		return nomePapelLider;
 	}
 
 	public String getNomePapelLancamentoNotas()
 	{
-		return "NOTAS_"+nome.replaceAll(regex, "").toUpperCase();
+		return nomePapelLancamento;
 	}
-	
+
 	public List<CentroDeCustoDTO> getCentrosDeCusto() {
 		if(centrosDeCusto == null)
 			centrosDeCusto = new ArrayList<CentroDeCustoDTO>();
@@ -39,6 +41,22 @@ public class AreaDTO implements Serializable {
 	public void setCentrosDeCusto(List<CentroDeCustoDTO> centrosDeCusto) {
 		this.centrosDeCusto = centrosDeCusto;
 	}
-	
-	
+	@Override
+	public String toString() {
+		return "AreaDTO [nome=" + nome + " lider=" + getNomePapel() +"]";
+	}
+	public String getNomePapelLider() {
+		return nomePapelLider;
+	}
+	public void setNomePapelLider(String nomePapelLider) {
+		this.nomePapelLider = nomePapelLider;
+	}
+	public String getNomePapelLancamento() {
+		return nomePapelLancamento;
+	}
+	public void setNomePapelLancamento(String nomePapelLancamento) {
+		this.nomePapelLancamento = nomePapelLancamento;
+	}
+
+
 }

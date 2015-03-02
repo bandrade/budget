@@ -78,6 +78,7 @@ public class BPMProcessManagerApiImpl implements BPMProcessManagerApi {
 			params.put("url",System.getProperty("com.dupont.budget.url"));
 			params.put("centrosDeCustoArray", ceDtos);
 			params.put("areasArray", areas);
+			params.put("pularCriacao", true);
 			params.put("anoBudget", ano);
 			params.put("prazo", prazo);
 			params.put("emails", email);
@@ -91,7 +92,7 @@ public class BPMProcessManagerApiImpl implements BPMProcessManagerApi {
 		return processInstanceId;
 	}
 
-	public long startForecastProcess(CentroDeCustoDTO[] ceDtos, String ano, String mes,Date prazo,String email,String tipoToleranciaNegativa, 
+	public long startForecastProcess(CentroDeCustoDTO[] ceDtos, String ano, String mes,Date prazo,String email,String tipoToleranciaNegativa,
 			Double valorToleranciaNegativa,String tipoToleranciaPositiva,Double valorToleranciaPositiva) throws Exception {
 		RuntimeEngine runtime = singletonManager.getRuntimeEngine(EmptyContext
 				.get());
@@ -199,6 +200,8 @@ public class BPMProcessManagerApiImpl implements BPMProcessManagerApi {
 			KieSession ksession = runtime.getKieSession();
 			WorkflowProcessInstance process = ((WorkflowProcessInstance) ksession
 					.getProcessInstance(processInstanceId));
+			if(process == null)
+				return null;
 			return process.getVariable(variable);
 		} catch (Exception e) {
 			throw new BPMException(e);
@@ -219,9 +222,10 @@ public class BPMProcessManagerApiImpl implements BPMProcessManagerApi {
 		}
 		catch(Exception e )
 		{
-			
+
 			return false;
 		}
 	}
+
 
 }

@@ -15,6 +15,7 @@ import javax.persistence.Query;
 import org.apache.commons.lang3.StringUtils;
 
 import com.dupont.budget.model.Acao;
+import com.dupont.budget.model.Area;
 import com.dupont.budget.model.CentroCusto;
 import com.dupont.budget.model.NamedAbstractEntity;
 import com.dupont.budget.model.Papel;
@@ -324,5 +325,4 @@ public class DomainServiceBean extends GenericService implements DomainService {
 		
 		return null;
 	}
-		
 }

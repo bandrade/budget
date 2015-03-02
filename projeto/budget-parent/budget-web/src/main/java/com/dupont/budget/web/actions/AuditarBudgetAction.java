@@ -25,7 +25,7 @@ public class AuditarBudgetAction extends AreaBudgetAction implements Serializabl
 
 	private List<Budget> budgets;
 	private BudgetAreaDTO budgetAreaSelecionado;
-	
+
 	@Inject
 	private CentroDeCustoService centroCustoService;
 
@@ -38,6 +38,7 @@ public class AuditarBudgetAction extends AreaBudgetAction implements Serializabl
 	public void obterBudgetsArea(){
 		try {
 			setBudgets(budgetService.obterBudgetsPorArea(budgetAreaSelecionado.getIdArea(), ano));
+			calcularValorTotalBudget();
 		} catch (Exception e) {
 			logger.error("Erro ao obter budgets da area",e);
 			facesUtils.addErrorMessage("Erro ao obter budgets da area");
@@ -56,13 +57,13 @@ public class AuditarBudgetAction extends AreaBudgetAction implements Serializabl
 			area.setId(bDto.getIdArea());
 			budget.setArea(area);
 			budget.setValorSubmetido(bDto.getValorTotalBudget());
-			budget.setValorAprovado(null);
+			budget.setValorAprovado(bDto.getValorTotalAprovadoBudget());
 			listaBudgetAno.add(budget);
 		}
 		budgetService.adicionarBudgetsSubmetidos(listaBudgetAno);
 
 	}
-	
+
 	public void adicionarBudgetsCCEstipulados() throws Exception
 	{
 		List<BudgetEstipuladoAnoCC> listaBudgetEstipuladoCC = new ArrayList<>();
@@ -74,16 +75,19 @@ public class AuditarBudgetAction extends AreaBudgetAction implements Serializabl
 			List<CentroCusto> centrosDeCusto = centroCustoService.findByArea(area.getId());
 			for(CentroCusto centroCusto :centrosDeCusto)
 			{
+
+				BudgetEstipuladoAnoCC b = budgetService.obterValoresAprovadosESubmetidosCC(centroCusto.getId(), ano);
 				BudgetEstipuladoAnoCC budgetEstipuladoCC = new BudgetEstipuladoAnoCC();
 				Budget budget = budgetService.findByAnoAndCentroDeCusto(ano, centroCusto.getId());
 				budgetEstipuladoCC.setAno(ano);
 				budgetEstipuladoCC.setCentroCusto(centroCusto);
 				budgetEstipuladoCC.setValorSubmetido(budget.getValorTotalDespesa());
-				budgetEstipuladoCC.setValorAprovado(null);
+				if(b !=null)
+					budgetEstipuladoCC.setValorAprovado(b.getValorAprovado());
 				listaBudgetEstipuladoCC.add(budgetEstipuladoCC);
-				
+
 			}
-			
+
 		}
 		budgetService.adicionarBudgetsSubmetidosCC(listaBudgetEstipuladoCC);
 

@@ -13,5 +13,7 @@ public interface BPMSTaskService {
 	void aprovarTarefa(String user, Long taskId,Map<String, Object> params) throws Exception;
 	TarefaDTO obterTarefaPorId(Long id) throws BPMException;
 	Map<String,Object> obterConteudoTarefa(long taskId) throws BPMException;
+	public List<TarefaDTO> obterTarefasAdm() throws Exception;
+	public List<TarefaDTO> obterTarefasAdmCompletas() throws Exception;
 
 }

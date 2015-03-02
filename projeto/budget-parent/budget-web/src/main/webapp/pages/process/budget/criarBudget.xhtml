@@ -58,7 +58,7 @@
 					<p:column colspan="9" rendered="#{detalheDespesa.firstLine}" style="background-color:#CE0909;color:#fff;">
 							<h:outputText value="#{detalheDespesa.tipoDespesa.nome}" />
 					</p:column>
-					<p:column rendered="#{not detalheDespesa.firstLine}" width="2%" style="text-align:center;">
+					<p:column rendered="#{not detalheDespesa.firstLine}" width="4%" style="text-align:center;">
 							<h:outputText value="#{detalheDespesa.indice}" />
 					</p:column>
 					<p:column  width="12%" rendered="#{not detalheDespesa.firstLine}">
@@ -168,7 +168,7 @@
             				</f:facet>
             			</p:cellEditor>
 					</p:column> 
-					<p:column width="3%" rendered="#{not detalheDespesa.firstLine}">
+					<p:column width="4%" rendered="#{not detalheDespesa.firstLine}">
 							<p:commandButton icon="ui-icon-trash" action="#{criarBudgetAction.removerDespesa()}" update=":form">
 									<p:confirm header="Confirmação" message="Deseja realmente remover a despesa?" icon="ui-icon-alert"/>
 									<f:setPropertyActionListener target="#{criarBudgetAction.despesaDetalheSelecionada}" value="#{detalheDespesa}"/>

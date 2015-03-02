@@ -36,6 +36,7 @@ public class BudgetServiceBean extends GenericService implements BudgetService {
 
 	@Inject
 	private Logger logger;
+
 	@Override
 	public List<DespesasAgrupadasDTO> obterDespesaAgrupadas(Long budgetId) throws Exception{
 
@@ -88,6 +89,21 @@ public class BudgetServiceBean extends GenericService implements BudgetService {
 			despesaMes.setDistrito(despesa.getDistrito() !=null ? despesa.getDistrito().getNome() : "");
 			despesaMes.setValor(despesa.getValor());
 			despesaMes.setComentario(despesa.getComentario());
+			if(despesa.getDespesaMensalisada() !=null)
+			{
+				despesaMes.setJaneiro(despesa.getDespesaMensalisada().getJaneiro());
+				despesaMes.setFevereiro(despesa.getDespesaMensalisada().getFevereiro());
+				despesaMes.setMarco(despesa.getDespesaMensalisada().getMarco());
+				despesaMes.setAbril(despesa.getDespesaMensalisada().getAbril());
+				despesaMes.setMaio(despesa.getDespesaMensalisada().getMaio());
+				despesaMes.setJunho(despesa.getDespesaMensalisada().getJunho());
+				despesaMes.setJulho(despesa.getDespesaMensalisada().getJulho());
+				despesaMes.setAgosto(despesa.getDespesaMensalisada().getAgosto());
+				despesaMes.setSetembro(despesa.getDespesaMensalisada().getSetembro());
+				despesaMes.setOutubro(despesa.getDespesaMensalisada().getOutubro());
+				despesaMes.setNovembro(despesa.getDespesaMensalisada().getNovembro());
+				despesaMes.setDezembro(despesa.getDespesaMensalisada().getDezembro());
+			}
 			despesasMes.add(despesaMes);
 		}
 
@@ -202,8 +218,10 @@ public class BudgetServiceBean extends GenericService implements BudgetService {
 
 	@Override
 	public List<BudgetAreaDTO> listarBudgetsAprovadosPorArea(String ano) throws Exception{
+
+
 		StringBuilder query = new StringBuilder()
-			.append(	" select area.id, area.nome, sum(despesa.valor),'OK' from budget")
+			.append(	" select area.id, area.nome, sum(despesa.valor),'OK',centro_custo.id as 'cc' from budget")
 			.append(	" inner join despesa on despesa.budget_id = budget.id")
 			.append(	" inner join centro_custo on centro_custo.id = budget.centro_custo_id")
 			.append(	" inner join area on centro_custo.area_id = area.id")
@@ -222,6 +240,9 @@ public class BudgetServiceBean extends GenericService implements BudgetService {
 			budget.setNomeArea(String.valueOf(object[1]));
 			budget.setValorTotalBudget(Double.valueOf(String.valueOf(object[2])));
 			budget.setStatus(String.valueOf(object[3]));
+			BudgetEstipuladoAnoArea budgetAno = obterValoresAprovadosESubmetidos(Long.valueOf(object[0].toString()), ano);
+			if(budgetAno!=null)
+				budget.setValorTotalAprovadoBudget(budgetAno.getValorAprovado());
 			lista.add(budget);
 
 		}
@@ -229,8 +250,8 @@ public class BudgetServiceBean extends GenericService implements BudgetService {
 		return lista;
 	}
 
-	
-	
+
+
 
 	public void adicionarBudgetsSubmetidosCC(
 			List<BudgetEstipuladoAnoCC> budgets) throws Exception {
@@ -246,6 +267,7 @@ public class BudgetServiceBean extends GenericService implements BudgetService {
 			{
 				logger.debug("Nao existe budget submetido deste ano");
 			}
+			logger.info("budgets aprovados por cc ok");
 			if(budgetAno !=null)
 			{
 
@@ -263,10 +285,17 @@ public class BudgetServiceBean extends GenericService implements BudgetService {
 	public BudgetEstipuladoAnoCC obterValoresAprovadosESubmetidosCC(Long centroCustoId, String ano) throws Exception
 	{
 
-		BudgetEstipuladoAnoCC budgetAno = em.createNamedQuery("BudgetEstipuladoAnoCC.findByAnoAndCC",BudgetEstipuladoAnoCC.class)
-				.setParameter("ano",ano)
-				.setParameter("centro_custo_id",centroCustoId).getSingleResult();
-		return budgetAno;
+		try
+		{
+			BudgetEstipuladoAnoCC budgetAno = em.createNamedQuery("BudgetEstipuladoAnoCC.findByAnoAndCC",BudgetEstipuladoAnoCC.class)
+					.setParameter("ano",ano)
+					.setParameter("centro_custo_id",centroCustoId).getSingleResult();
+			return budgetAno;
+		}
+		catch(NoResultException e)
+		{
+			return null;
+		}
 	}
 
 	@Override
@@ -274,6 +303,7 @@ public class BudgetServiceBean extends GenericService implements BudgetService {
 			List<BudgetEstipuladoAnoArea> budgets) throws Exception {
 		for(BudgetEstipuladoAnoArea budget : budgets)
 		{
+			logger.info("budgets aprovados por area");
 			BudgetEstipuladoAnoArea budgetAno = null;
 			try
 			{
@@ -284,6 +314,8 @@ public class BudgetServiceBean extends GenericService implements BudgetService {
 			{
 				logger.debug("Nao existe budget submetido deste ano");
 			}
+
+			logger.info("budgets aprovados por area ok");
 			if(budgetAno !=null)
 			{
 
@@ -300,11 +332,18 @@ public class BudgetServiceBean extends GenericService implements BudgetService {
 
 	public BudgetEstipuladoAnoArea obterValoresAprovadosESubmetidos(Long areaId, String ano) throws Exception
 	{
+		try
+		{
+			BudgetEstipuladoAnoArea budgetAno = em.createNamedQuery("BudgetEstipulado.findByAnoAndArea",BudgetEstipuladoAnoArea.class)
+					.setParameter("ano",ano)
+					.setParameter("area_id",areaId).getSingleResult();
+			return budgetAno;
+		}
+		catch(NoResultException e)
+		{
+			return null;
+		}
 
-		BudgetEstipuladoAnoArea budgetAno = em.createNamedQuery("BudgetEstipulado.findByAnoAndArea",BudgetEstipuladoAnoArea.class)
-				.setParameter("ano",ano)
-				.setParameter("area_id",areaId).getSingleResult();
-		return budgetAno;
 	}
 
 	public List<Budget> obterBudgetsPorArea (Long areaId, String ano) throws Exception
@@ -320,6 +359,9 @@ public class BudgetServiceBean extends GenericService implements BudgetService {
 			budget.setValorTotalProposto(em.createNamedQuery("Despesa.obterSomaValorPropostoDespesa",Double.class)
 					.setParameter("budgetId",budget.getId()).getSingleResult());
 
+			BudgetEstipuladoAnoCC budgetEstipulado = obterValoresAprovadosESubmetidosCC(budget.getCentroCusto().getId(),budget.getAno());
+			budget.setValorAprovadoBudget(budgetEstipulado.getValorAprovado());
+
 		}
 		return budgets;
 	}
@@ -334,224 +376,224 @@ public class BudgetServiceBean extends GenericService implements BudgetService {
 
 	}
 
-	
+
 	@Override
 	public List<ReportBudgetOrcadoUtilizadoMaster> getBudgetOrcadoUtilizadoTipoDespesaAcaoReport(String ano, Long centroCustoId) {
-		
+
 		Budget budget = findByAnoAndCentroDeCusto(ano, centroCustoId);
-		
+
 		if( budget == null )
 			return null;
-		
+
 		List<Object[]> budgetQueryResult   = em.createNamedQuery("Report.Budget.Orcado.TipoDespesa_Acao", Object[].class)
 									           .setParameter("budgetId", budget.getId())
 									           .getResultList();
-		
+
 		List<Object[]> utilizadoQueryResult = em.createNamedQuery("Report.SolicPag.Utilizado.TipoDespesa_Acao", Object[].class)
 									           .setParameter("ano", new Integer(ano))
 									           .setParameter("centroCustoId", centroCustoId)
 									           .getResultList();
-		
+
 		return createBudgetOrcadoUtilizadoReport(budgetQueryResult, utilizadoQueryResult);
 	}
-	
+
 
 	@Override
 	public List<ReportBudgetOrcadoUtilizadoDistribuicaoMaster> getBudgetOrcadoUtilizadoTipoDespesaAcaoDistribuicaoReport(String ano, Long centroCustoId) {
-		
+
 		// São os mesmos dados desse relatório, mas será enriquecido.
 		List<ReportBudgetOrcadoUtilizadoMaster> oldReport = getBudgetOrcadoUtilizadoTipoDespesaAcaoReport(ano,centroCustoId);
-				
+
 		if( oldReport == null )
 			return null;
-		
+
 		// Cria um cache apra recuperar os valores a seguir e trocar os objetos para uma versao extendida
 		List<ReportBudgetOrcadoUtilizadoDistribuicaoMaster> newReport = new ArrayList<ReportBudgetOrcadoUtilizadoDistribuicaoMaster>();
 		Map<String, ReportBudgetOrcadoUtilizadoDistribuicaoMaster> cacheMap = new HashMap<String, ReportBudgetOrcadoUtilizadoDistribuicaoMaster>();
-		
+
 		for (ReportBudgetOrcadoUtilizadoMaster item : oldReport) {
-			
+
 			// Troca a lista de detalhes
 			List<ReportBudgetOrcadoUtilizadoDetail> newDetails = new ArrayList<ReportBudgetOrcadoUtilizadoDetail>();
 			List<ReportBudgetOrcadoUtilizadoDetail> oldDetails = item.getDetails();
-			
+
 			for (int i = 0; i < oldDetails.size(); i++) {
-				
-				ReportBudgetOrcadoUtilizadoDetail oldDetail = oldDetails.get(i); 
-				ReportBudgetOrcadoUtilizadoDistribuicaoDetail newDetail 
+
+				ReportBudgetOrcadoUtilizadoDetail oldDetail = oldDetails.get(i);
+				ReportBudgetOrcadoUtilizadoDistribuicaoDetail newDetail
 									= new ReportBudgetOrcadoUtilizadoDistribuicaoDetail(oldDetail.getDetail(), oldDetail.getOrcado(), oldDetail.getUtilizado(), 0.0);
-				
+
 				newDetails.add(newDetail);
 			}
-		
+
 			// Troca o objeto mater
-			ReportBudgetOrcadoUtilizadoDistribuicaoMaster newMaster = new ReportBudgetOrcadoUtilizadoDistribuicaoMaster(item.getMaster(), item.getTotalOrcado(), item.getTotalUtilizado(), 0.0);			
-			newMaster.setDetails(newDetails);			
+			ReportBudgetOrcadoUtilizadoDistribuicaoMaster newMaster = new ReportBudgetOrcadoUtilizadoDistribuicaoMaster(item.getMaster(), item.getTotalOrcado(), item.getTotalUtilizado(), 0.0);
+			newMaster.setDetails(newDetails);
 			newReport.add(newMaster);
 			cacheMap.put(item.getMaster(), newMaster);
 		}
-		
+
 		// Busca novos dados do relatorio
 		Budget budget = findByAnoAndCentroDeCusto(ano, centroCustoId);
-		
+
 		List<Object[]> forecastQueryResult   = em.createNamedQuery("Report.Forecast.TipoDespesa_Acao", Object[].class)
 									           .setParameter("budgetId", budget.getId())
 									           .getResultList();
-		
+
 		for (Object[] line : forecastQueryResult) {
-			
+
 			String master    = (String) line[0];
 			String detail    = (String) line[1];
 			Double forecast  = (Double) line[2];
-			
+
 			ReportBudgetOrcadoUtilizadoDistribuicaoMaster item = cacheMap.get(master);
-			
+
 			if( item == null ){
 				continue;
 			}
-			
+
 			ReportBudgetOrcadoUtilizadoDistribuicaoDetail _detail = (ReportBudgetOrcadoUtilizadoDistribuicaoDetail) item.getDetail(detail);
-			
+
 			if( _detail == null)
 				continue;
-			
+
 			// Adicona o valor utilizado total da despesa
 			item.setTotalForecast(item.getTotalForecast() + forecast);;
 			_detail.setForecast(forecast);
 		}
-		
-		
+
+
 		return newReport;
 	}
-	
+
 	@Override
 	public List<ReportBudgetOrcadoUtilizadoMaster> getBudgetOrcadoUtilizadoCentroCustoCulturaReport(String ano, Long centroCustoId) {
-				
+
 		List<Long> budgetsIds = new ArrayList<Long>();
-		
+
 		if( centroCustoId != null ) {
 			Budget budget = findByAnoAndCentroDeCusto(ano, centroCustoId);
-			
+
 			if( budget != null )
 				budgetsIds.add(budget.getId());
 		} else {
 			List<Budget> budgets = findBudgetsByAno(ano);
-			
+
 			if( !budgets.isEmpty() ) {
 				for (Budget budget : budgets) {
 					budgetsIds.add(budget.getId());
 				}
 			}
 		}
-		
+
 		// Caso não possua budgets retornar nulo
 		if( budgetsIds.isEmpty() )
 			return null;
-		
+
 		List<Object[]> budgetQueryResult   = em.createNamedQuery("Report.Budget.Orcado.CentroCusto_Cultura", Object[].class)
 									           .setParameter("budgetsIds", budgetsIds)
 									           .getResultList();
-		
+
 		List<Object[]> utilizadoQueryResult = em.createNamedQuery("Report.SolicPag.Utilizado.CentroCusto_Cultura", Object[].class)
 											   .setParameter("ano", new Integer(ano))
 											   .setParameter("centroCustoId", centroCustoId)
 									           .getResultList();
-		
+
 		return createBudgetOrcadoUtilizadoReport(budgetQueryResult, utilizadoQueryResult);
 	}
-	
+
 	@Override
 	public List<ReportBudgetOrcadoUtilizadoMaster> getBudgetOrcadoUtilizadoProdutoAcaoReport( String ano, Long centroCustoId) {
-		
+
 		Budget budget = findByAnoAndCentroDeCusto(ano, centroCustoId);
-		
+
 		if( budget == null )
 			return null;
-		
+
 		List<Object[]> budgetQueryResult   = em.createNamedQuery("Report.Budget.Orcado.Produto_Acao", Object[].class)
 									           .setParameter("budgetId", budget.getId())
 									           .getResultList();
-		
+
 		List<Object[]> utilizadoQueryResult = em.createNamedQuery("Report.SolicPag.Utilizado.Produto_Acao", Object[].class)
 											   .setParameter("ano", new Integer(ano))
 											   .setParameter("centroCustoId", centroCustoId)
 									           .getResultList();
-		
+
 		return createBudgetOrcadoUtilizadoReport(budgetQueryResult, utilizadoQueryResult);
 	}
 
 
 	protected List<ReportBudgetOrcadoUtilizadoMaster> createBudgetOrcadoUtilizadoReport( List<Object[]> budgetQueryResult, List<Object[]> utilizadoQueryResult) {
-		
-		List<ReportBudgetOrcadoUtilizadoMaster> result          = new ArrayList<ReportBudgetOrcadoUtilizadoMaster>();		
+
+		List<ReportBudgetOrcadoUtilizadoMaster> result          = new ArrayList<ReportBudgetOrcadoUtilizadoMaster>();
 		Map<String, ReportBudgetOrcadoUtilizadoMaster> cacheMap = new HashMap<String, ReportBudgetOrcadoUtilizadoMaster>();
-		
+
 		// Carrega os dados do BUDGET: ORÇADO
 		for ( Object[] line : budgetQueryResult ) {
-			
+
 			String master = (String) line[0];
 			String detail = (String) line[1];
 			Double orcado = (Double) line[2];
-			
+
 			ReportBudgetOrcadoUtilizadoMaster item = cacheMap.get(master);
-			
+
 			if( item == null ) {
 				item = new ReportBudgetOrcadoUtilizadoMaster(master, 0.0, 0.0);
 				result.add(item);
 			}
-			
+
 			ReportBudgetOrcadoUtilizadoDetail acaoReport = new ReportBudgetOrcadoUtilizadoDetail(detail, orcado, 0.0);
-			
-			item.addDetail(acaoReport);			
-			
-			
+
+			item.addDetail(acaoReport);
+
+
 			cacheMap.put(master, item);
 		}
-		
+
 		// Carrega os dados UTILIZADO
 		for ( Object[] line : utilizadoQueryResult ) {
-			
+
 			String master    = (String) line[0];
 			String detail    = (String) line[1];
 			Double utilizado = (Double) line[2];
-			
+
 			ReportBudgetOrcadoUtilizadoMaster item = cacheMap.get(master);
-			
+
 			if( item == null ){
 				// Lançar erro
 				continue;
 			}
-			
+
 			ReportBudgetOrcadoUtilizadoDetail _detail = item.getDetail(detail);
-			
+
 			if( _detail == null)
 				continue;
-			
+
 			// Adicona o valor utilizado total da despesa
 			item.setTotalUtilizado(item.getTotalUtilizado() + utilizado);
 			_detail.setUtilizado(utilizado);
 		}
-		
+
 		return result;
 	}
 
 	@Override
 	public List<String> getBudgetsAnos() {
-		
+
 		List<String> result = em.createQuery("select distinct b.ano from Budget b", String.class)
 								.getResultList();
-				
+
 		return result;
 	}
 
 
 	@Override
 	public List<Budget> findBudgetsByAno(String ano) {
-		
+
 		List<Budget> result = em.createNamedQuery("Budget.findByAno", Budget.class)
 								.setParameter("ano", ano)
 								.getResultList();
-		
+
 		return result;
 	}
 
@@ -565,7 +607,7 @@ public class BudgetServiceBean extends GenericService implements BudgetService {
 
 	public boolean isDespesaExistente(Despesa despesa)
 	{
-	
+
 		return obterDespesaPorTipoEAcao(despesa)!=null;
 	}
 
@@ -589,8 +631,8 @@ public class BudgetServiceBean extends GenericService implements BudgetService {
 		return despesaRetorno;
 	}
 
-	
 
 
-	
+
+
 }

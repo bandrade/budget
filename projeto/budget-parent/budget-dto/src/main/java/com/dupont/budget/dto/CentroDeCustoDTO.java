@@ -5,9 +5,9 @@ import java.util.List;
 
 
 public class CentroDeCustoDTO  implements Serializable{
-	
+
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 4288095550251406045L;
 	private Long  id;
@@ -15,7 +15,7 @@ public class CentroDeCustoDTO  implements Serializable{
 	private String numero;
 	private String area;
 	private List<PapelDTO> papeis;
-	
+
 	public CentroDeCustoDTO(){}
 	public CentroDeCustoDTO(Long id ,String nome, String numero,String area,List<PapelDTO> papeis) {
 		super();
@@ -25,7 +25,7 @@ public class CentroDeCustoDTO  implements Serializable{
 		this.area = area;
 		this.papeis = papeis;
 	}
-	
+
 	public String getNome() {
 		return nome;
 	}
@@ -56,12 +56,23 @@ public class CentroDeCustoDTO  implements Serializable{
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "nome=" + nome + ", numero=" + numero + "]";
 	}
-	
-	
-	
+
+	public String getPapelResponsavel()
+	{
+		if(papeis!=null)
+		{
+			for(PapelDTO papel : papeis)
+			{
+				if(papel.getNomePapel().startsWith("RESPONSAVEL"))
+					return papel.getNomePapel();
+			}
+		}
+		return null;
+	}
+
 }

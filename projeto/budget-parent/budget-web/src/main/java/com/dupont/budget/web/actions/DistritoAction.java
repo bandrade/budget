@@ -1,9 +1,12 @@
 package com.dupont.budget.web.actions;
 
+import java.io.Serializable;
 import java.util.List;
 
-import javax.enterprise.inject.Model;
 import javax.inject.Inject;
+import javax.inject.Named;
+
+import org.apache.deltaspike.core.api.scope.ViewAccessScoped;
 
 import com.dupont.budget.model.Distrito;
 import com.dupont.budget.service.DomainService;
@@ -14,8 +17,9 @@ import com.dupont.budget.service.DomainService;
  * @since 2014
  *
  */
-@Model
-public class DistritoAction {
+@ViewAccessScoped
+@Named
+public class DistritoAction implements Serializable{
 
 	@Inject
 	private DomainService service;

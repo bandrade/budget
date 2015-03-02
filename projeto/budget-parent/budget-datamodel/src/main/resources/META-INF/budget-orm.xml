@@ -1,130 +1,130 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<entity-mappings 
+<entity-mappings
   version="2.0"
   xmlns="http://java.sun.com/xml/ns/persistence/orm"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm orm_2_0.xsd">
-    
+
       <named-query name="Report.Budget.Orcado.TipoDespesa_Acao">
-          <query>				
-				select 
+          <query>
+				select
 					db.tipoDespesa.nome, db.acao.nome, sum(db.valor)
-				from 
+				from
 					Budget b
 				left join
-					b.despesas db					
-				where 
+					b.despesas db
+				where
 					b.id = :budgetId
 				group by
-					db.tipoDespesa, db.acao			
+					db.tipoDespesa, db.acao
           </query>
       </named-query>
-      
+
       <named-query name="Report.Forecast.TipoDespesa_Acao">
-          <query>				
-				select 
+          <query>
+				select
 					df.tipoDespesa.nome, df.acao.nome, sum(df.valor)
-				from 
+				from
 					Forecast f
 				inner join
 					f.budget b
 				left join
-					f.despesas df					
-				where 
+					f.despesas df
+				where
 					b.id = :budgetId
 				group by
-					df.tipoDespesa, df.acao			
+					df.tipoDespesa, df.acao
           </query>
       </named-query>
-      
+
       <named-query name="Report.SolicPag.Utilizado.TipoDespesa_Acao">
-          <query>				
-				select 
+          <query>
+				select
 					dsp.tipoDespesa.nome, dsp.acao.nome, sum(dsp.valor)
-				from 
+				from
 					SolicitacaoPagamento sp
 				left join
-					sp.despesas dsp					
-				where 
+					sp.despesas dsp
+				where
 					YEAR(sp.criacao)       = :ano
-					and dsp.centroCusto.id = :centroCustoId 
+					and dsp.centroCusto.id = :centroCustoId
 				group by
-					dsp.tipoDespesa, dsp.acao			
+					dsp.tipoDespesa, dsp.acao
           </query>
       </named-query>
-      
+
        <named-query name="Report.Budget.Orcado.CentroCusto_Cultura">
-          <query>				
-				select 
+          <query>
+				select
 					b.centroCusto.nome, db.cultura.nome, sum(db.valor)
-				from 
+				from
 					Budget b
 				left join
-					b.despesas db					
-				where 
+					b.despesas db
+				where
 					b.id in :budgetsIds
 				group by
-					b.centroCusto, db.cultura			
+					b.centroCusto, db.cultura
           </query>
       </named-query>
-      
+
       <named-query name="Report.SolicPag.Utilizado.CentroCusto_Cultura">
-          <query>				
-				select 
+          <query>
+				select
 					cc.nome, cul.nome, sum(dsp.valor)
-				from 
+				from
 					SolicitacaoPagamento sp
 				left join
-					sp.despesas dsp					
+					sp.despesas dsp
 				inner join
-					dsp.centroCusto cc				
-				inner join 
-					dsp.cultura cul				
-				where 
+					dsp.centroCusto cc
+				inner join
+					dsp.cultura cul
+				where
 					YEAR(sp.criacao)       = :ano
-					and ( :centroCustoId is null or dsp.centroCusto.id = :centroCustoId)  
+					and ( :centroCustoId is null or dsp.centroCusto.id = :centroCustoId)
 				group by
-					dsp.centroCusto, dsp.cultura			
+					dsp.centroCusto, dsp.cultura
           </query>
       </named-query>
-      
+
       <named-query name="Report.Budget.Orcado.Produto_Acao">
-          <query>				
-				select 
+          <query>
+				select
 					db.produto.nome, db.acao.nome, sum(db.valor)
-				from 
+				from
 					Budget b
 				left join
-					b.despesas db					
-				where 
+					b.despesas db
+				where
 					b.id = :budgetId
 				group by
-					db.produto, db.acao			
+					db.produto, db.acao
           </query>
       </named-query>
-      
+
       <named-query name="Report.SolicPag.Utilizado.Produto_Acao">
-          <query>				
-				select 
+          <query>
+				select
 					dsp.produto.nome, dsp.acao.nome, sum(dsp.valor)
-				from 
+				from
 					SolicitacaoPagamento sp
 				left join
-					sp.despesas dsp						
-				where 
+					sp.despesas dsp
+				where
 					YEAR(sp.criacao)       = :ano
-					and dsp.centroCusto.id = :centroCustoId 
+					and dsp.centroCusto.id = :centroCustoId
 				group by
-					dsp.produto, dsp.acao			
+					dsp.produto, dsp.acao
           </query>
       </named-query>
      <named-native-query name="Colaborador.ObterResponsaveisCentroCusto">
      	<query>
      		select
      			 distinct usuario.id,usuario.login, usuario.email,usuario.nome
-			from 
+			from
 				usuario
-            inner join 
+            inner join
             	papel_usuario
             on
 				papel_usuario.usuario_id=usuario.id
@@ -135,8 +135,8 @@
      <named-native-query name="CentroCusto.ObterResponsabilidadeUsuario">
      	<query>
      	select
-     		 centro_custo.id,centro_custo.nome,centro_custo.codigo 
-     	from 
+     		 centro_custo.id,centro_custo.nome,centro_custo.codigo
+     	from
      		usuario
 			inner join papel_usuario
 	        on
@@ -158,20 +158,20 @@
      	from solicitacao_pagamento solicitacao
      		inner join
      	 		despesa_solicitacao_pagamento despesa_solicitacao
-     	  	on 
+     	  	on
 				solicitacao.id = despesa_solicitacao.solicitacao_pagamento_id
-			inner join 
+			inner join
 				despesa_forecast
 		    on
 					despesa_solicitacao.acao_id = despesa_forecast.acao_id
 				and
 					despesa_solicitacao.tipo_despesa_id = despesa_forecast.tipo_despesa_id
-				
+
 			 WHERE
 			 	solicitacao.data_pagamento_realizado is not null
 			 and
 				MONTH (solicitacao.data_pagamento_realizado) in(:meses) and YEAR(solicitacao.data_pagamento_realizado)=:ano
-			 and 
+			 and
 				solicitacao.status='PAGO'
 			 and
 				despesa_solicitacao.centro_custo_id=:centro_custo_id
@@ -179,19 +179,19 @@
 		    		despesa_solicitacao.acao_id = :acao_id
 		     and
 		    		despesa_solicitacao.tipo_despesa_id = :tipo_despesa_id
-     	 
+
      	</query>
      </named-native-query>
       <named-native-query name="SolicitacaoPagamento.ObterSomaValorComprometido">
      	<query>
-     	select 
+     	select
      		sum(despesa_solicitacao.valor)
      	 from solicitacao_pagamento solicitacao
 		 inner join
 			despesa_solicitacao_pagamento despesa_solicitacao
-		 on 
+		 on
 			solicitacao.id = despesa_solicitacao.solicitacao_pagamento_id
-		 inner join 
+		 inner join
 			despesa_forecast
 	     on
 				despesa_solicitacao.acao_id = despesa_forecast.acao_id
@@ -203,7 +203,7 @@
 				on acao.id = despesa_solicitacao.acao_id
 		 WHERE
 			MONTH (solicitacao.data_criacao)=:mes_anterior and YEAR(solicitacao.data_criacao)=:ano
-		 and 
+		 and
 			(solicitacao.status='COMPROMETIDO'  or solicitacao.status='ENVIADO_SAP' or solicitacao.status='PENDENTE_VALIDACAO')
 		 and
 			despesa_solicitacao.centro_custo_id=:centro_custo_id
@@ -213,17 +213,17 @@
 	    		despesa_solicitacao.tipo_despesa_id = :tipo_despesa_id
      	</query>
      </named-native-query>
-     
+
       <named-native-query name="SolicitacaoPagamento.ObterSomaValorComprometidoMesesAnteriores">
      	<query>
-     	select 
+     	select
      		sum(despesa_solicitacao.valor)
      	 from solicitacao_pagamento solicitacao
 		 inner join
 			despesa_solicitacao_pagamento despesa_solicitacao
-		 on 
+		 on
 			solicitacao.id = despesa_solicitacao.solicitacao_pagamento_id
-		 inner join 
+		 inner join
 			despesa_forecast
 	     on
 				despesa_solicitacao.acao_id = despesa_forecast.acao_id
@@ -235,7 +235,7 @@
 				on acao.id = despesa_solicitacao.acao_id
 		 WHERE
 			MONTH (solicitacao.data_criacao) in (:meses_anteriores) and YEAR(solicitacao.data_criacao)=:ano
-		 and 
+		 and
 			(solicitacao.status='COMPROMETIDO'  or solicitacao.status='ENVIADO_SAP' or solicitacao.status='PENDENTE_VALIDACAO')
 		 and
 				despesa_solicitacao.centro_custo_id=:centro_custo_id
@@ -247,14 +247,14 @@
      </named-native-query>
   	   <named-native-query name="SolicitacaoPagamento.ObterDetalheValorComprometido">
      	<query>
-     	select 
+     	select
      		  distinct despesa_solicitacao.valor,solicitacao.num_nota_fiscal,fornecedor.nome
      	 from solicitacao_pagamento solicitacao
 		 inner join
 			despesa_solicitacao_pagamento despesa_solicitacao
-		 on 
+		 on
 			solicitacao.id = despesa_solicitacao.solicitacao_pagamento_id
-		 inner join 
+		 inner join
 			despesa_forecast
 	     on
 				despesa_solicitacao.acao_id = despesa_forecast.acao_id
@@ -267,7 +267,7 @@
 				on acao.id = despesa_solicitacao.acao_id
 		 WHERE
 			MONTH (solicitacao.data_criacao)=:mes_anterior and YEAR(solicitacao.data_criacao)=:ano
-		 and 
+		 and
 			(solicitacao.status='COMPROMETIDO'  or solicitacao.status='ENVIADO_SAP' or solicitacao.status='PENDENTE_VALIDACAO')
 		 and
 			despesa_solicitacao.centro_custo_id=:centro_custo_id
@@ -277,17 +277,17 @@
 	    		despesa_solicitacao.tipo_despesa_id = :tipo_despesa_id
      	</query>
      </named-native-query>
-     
+
      <named-native-query name="SolicitacaoPagamento.ObterDetalheValorComprometidoMesesAnteriores">
      	<query>
-     	select 
+     	select
      		  distinct despesa_solicitacao.valor,solicitacao.num_nota_fiscal,fornecedor.nome
      	 from solicitacao_pagamento solicitacao
 		 inner join
 			despesa_solicitacao_pagamento despesa_solicitacao
-		 on 
+		 on
 			solicitacao.id = despesa_solicitacao.solicitacao_pagamento_id
-		 inner join 
+		 inner join
 			despesa_forecast
 	     on
 				despesa_solicitacao.acao_id = despesa_forecast.acao_id
@@ -300,7 +300,7 @@
 				on acao.id = despesa_solicitacao.acao_id
 		 WHERE
 			MONTH (solicitacao.data_pagamento) in (:mes_anterior) and YEAR(solicitacao.data_pagamento)=:ano
-		 and 
+		 and
 			(solicitacao.status='COMPROMETIDO'  or solicitacao.status='ENVIADO_SAP' or solicitacao.status='PENDENTE_VALIDACAO')
 		 and
 			despesa_solicitacao.centro_custo_id=:centro_custo_id
@@ -311,64 +311,77 @@
      	</query>
      </named-native-query>
   	    <named-native-query name="SolicitacaoPagamento.ObterNotasOutrosUsuarios">
-     	<query> 
-   	
-		    select 
+     	<query>
+
+		    select
 				solicitacao.num_nota_fiscal, solicitacao.data_criacao,
 		        fornecedor.nome as 'fornecedor', usuario.nome as 'usuario',
 		        tipo_despesa.nome as 'tipo_despesa', acao.nome as 'acao',
 		        despesa_solicitacao.valor
-		        
-			from 
+
+			from
 				solicitacao_pagamento solicitacao
 				inner join
 		     	 		despesa_solicitacao_pagamento despesa_solicitacao
-				on 
+				on
 						solicitacao.id = despesa_solicitacao.solicitacao_pagamento_id
-				inner join 
+				inner join
 						centro_custo
 				on
 						centro_custo.id = despesa_solicitacao.centro_custo_id
 		        inner join
-		     	 		fornecedor 
-				on 
+		     	 		fornecedor
+				on
 						solicitacao.fornecedor_id = fornecedor.id
 		        inner join
-		     	 		usuario 
-				on 
-						usuario.id = solicitacao.usuario_id   
+		     	 		usuario
+				on
+						usuario.id = solicitacao.usuario_id
 				inner join
-		     	 		tipo_despesa 
-				on 
-						tipo_despesa.id = despesa_solicitacao.tipo_despesa_id   
-				
+		     	 		tipo_despesa
+				on
+						tipo_despesa.id = despesa_solicitacao.tipo_despesa_id
+
 		        inner join
-		     	 		acao 
-				on 
-						acao.id = despesa_solicitacao.acao_id    
-		        where	
+		     	 		acao
+				on
+						acao.id = despesa_solicitacao.acao_id
+		        where
 						solicitacao.usuario_id not in
-						( 
-							select 
-								usuario_id 
+						(
+							select
+								usuario_id
 							from
 								usuario
-							inner join 
+							inner join
 								papel_usuario
 							on
-								papel_usuario.usuario_id=usuario.id 
+								papel_usuario.usuario_id=usuario.id
 							where
 								papel_usuario.centro_custo_id=:centro_custo_id
-								
+
 						)
 				and
 						centro_custo.id=:centro_custo_id
-				and 	
+				and
 						 (solicitacao.data_criacao BETWEEN :data_7_dias_atras AND :data_hoje)
-					
-				order by 
+
+				order by
 						solicitacao.data_criacao
 				</query>
 			</named-native-query>
-		     
+			 <named-native-query name="Usuario.findUsuarioByPapel">
+			     	<query>
+						select  usuario.login , usuario.nome as 'nome_user', centro_custo.nome as 'nome_cc', centro_custo.codigo from usuario
+								inner join
+									papel_usuario
+										on papel_usuario.usuario_id = usuario.id
+								inner join centro_custo
+										on centro_custo.id = papel_usuario.centro_custo_id
+								inner join papel
+										on papel.id = papel_usuario.papel_id
+								where papel.nome like :nome_papel
+					</query>
+			</named-native-query>
+
 </entity-mappings>

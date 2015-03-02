@@ -67,7 +67,7 @@ public class AjustarValoresBudgetAction extends BudgetAction implements Serializ
 			logger.error("Erro ao obter informações do budget",e);
 		}
 	}
-	
+
 	public Double calcularTotalValorProposto()
 	{
 		Double valor =0d;
@@ -92,23 +92,26 @@ public class AjustarValoresBudgetAction extends BudgetAction implements Serializ
 			return null;
 		}
 		*/
-		if(!getValorTotalBudgetArea().equals(budgetEstipuladoAno.getValorAprovado()))
-		{
-			facesUtils.addErrorMessage("O valor do budget da Area deve ser igual ao valor aprovado");
-			return null;
-
-		}
-		List<BudgetEstipuladoAnoCC> lista = new ArrayList<>();
 		try {
+			List<BudgetEstipuladoAnoCC> lista = new ArrayList<>();
+
 			for(Budget budget: budgets)
 			{
-				
+
 				BudgetEstipuladoAnoCC  budgetEstipuladoCC= budgetService.obterValoresAprovadosESubmetidosCC(budget.getCentroCusto().getId(), ano);
 				budgetEstipuladoCC.setValorAprovado(budget.getValorAprovadoBudget());
 				lista.add(budgetEstipuladoCC);
 			}
+
+			if(!getValorTotalBudgetArea().equals(budgetEstipuladoAno.getValorAprovado()))
+			{
+				facesUtils.addErrorMessage("O valor do budget da Area deve ser igual ao valor aprovado");
+				return null;
+
+			}
+
 			budgetService.adicionarBudgetsSubmetidosCC(lista);
-		
+
 			bpmsTask.aprovarTarefa(facesUtils.getUserLogin(), idTarefa,params);
 			facesUtils.addInfoMessage("Tarefa concluida com sucesso");
 			conversation.end();
@@ -133,7 +136,7 @@ public class AjustarValoresBudgetAction extends BudgetAction implements Serializ
 		}
 		return valor;
 	}
-	
+
 	public Double getValorTotalPropostoBudgetArea()
 	{
 		Double valor = 0d;
@@ -141,14 +144,15 @@ public class AjustarValoresBudgetAction extends BudgetAction implements Serializ
 		{
 			for(Budget budget : budgets)
 			{
-				valor+= budget.getValorTotalProposto();
+				if(budget.getValorTotalProposto() !=null)
+					valor+= budget.getValorTotalProposto();
 			}
 		}
 		return valor;
 	}
 
 	public AreaDTO getArea() {
-		return area; 
+		return area;
 	}
 	public void setArea(AreaDTO area) {
 		this.area = area;

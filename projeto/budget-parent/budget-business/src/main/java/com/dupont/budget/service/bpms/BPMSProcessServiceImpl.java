@@ -7,6 +7,8 @@ import java.util.List;
 import javax.enterprise.inject.Model;
 import javax.inject.Inject;
 
+import org.slf4j.Logger;
+
 import com.dupont.budget.bpm.custom.exception.BPMException;
 import com.dupont.budget.bpm.custom.process.BPMProcessManagerApi;
 import com.dupont.budget.dto.AreaDTO;
@@ -14,6 +16,7 @@ import com.dupont.budget.dto.CentroDeCustoDTO;
 import com.dupont.budget.dto.SolicitacaoPagamentoDTO;
 import com.dupont.budget.model.Area;
 import com.dupont.budget.model.CentroCusto;
+import com.dupont.budget.model.PapelUsuario;
 import com.dupont.budget.model.ToleranciaForecast;
 import com.dupont.budget.service.DomainService;
 import com.dupont.budget.service.centrodecusto.CentroDeCustoService;
@@ -29,20 +32,35 @@ public class BPMSProcessServiceImpl implements BPMSProcessService{
 	@Inject
 	private DomainService domainService;
 
+	@Inject
+	private Logger logger;
+
 	public long iniciarProcessoBudget(String ano,Date prazo) throws Exception {
 		CentroDeCustoDTO [] ceDtos = ccService.obterCentrosDeCusto();
 		List<AreaDTO> areasListDto =  new ArrayList<>();
 		List<Area> areas = domainService.findAll(Area.class);
 
-
 		for(Area area : areas)
 		{
+
 			List<CentroCusto> centrosDeCusto = ccService.findByArea(area.getId());
 			if(centrosDeCusto !=null && centrosDeCusto.size() >0)
 			{
 				AreaDTO areaDto =  new AreaDTO();
 				areaDto.setId(area.getId());
 				areaDto.setNome(area.getNome());
+				for(PapelUsuario papel : area.getPapeis())
+				{
+					if(papel.getPapel().getNome().startsWith("NOTAS_"))
+					{
+						areaDto.setNomePapelLancamento(papel.getPapel().getNome());
+					}
+					else if(papel.getPapel().getNome().startsWith("LIDER_"))
+					{
+						areaDto.setNomePapelLider(papel.getPapel().getNome());
+					}
+				}
+				logger.info("Area : " +area.getNome()+ " Papel :" +areaDto.getNomePapel() );
 				for(CentroCusto centroCusto : centrosDeCusto)
 				{
 					areaDto.getCentrosDeCusto().add(ccService.parseCentroCusto(centroCusto));
@@ -50,7 +68,7 @@ public class BPMSProcessServiceImpl implements BPMSProcessService{
 				areasListDto.add(areaDto);
 			}
 		}
-		
+
 		AreaDTO [] areaArray = areasListDto.toArray(new AreaDTO[areasListDto.size()]);
 		String emails = domainService.obterEmailsUsuarios();
 		return processApi.startBudgetProcess(ceDtos,areaArray,ano,prazo,emails);
@@ -60,7 +78,7 @@ public class BPMSProcessServiceImpl implements BPMSProcessService{
 	@Override
 	public long iniciarProcessoForecast(String ano, String mes,Date prazo,ToleranciaForecast toleranciaForecast)
 			throws Exception {
-		CentroDeCustoDTO [] ceDtos = ccService.obterCentrosDeCusto(); 
+		CentroDeCustoDTO [] ceDtos = ccService.obterCentrosDeCusto();
 		String emails = domainService.obterEmailsUsuarios();
 		return processApi.startForecastProcess(ceDtos, ano, mes,prazo,emails,toleranciaForecast.getTipoToleranciaNegativa(),
 				Math.abs(toleranciaForecast.getValorToleranciaNegativa()), toleranciaForecast.getTipoToleranciaPositiva(),
@@ -102,9 +120,6 @@ public class BPMSProcessServiceImpl implements BPMSProcessService{
 	public boolean isProcessoEmExecucao(long processInstanceId) {
 		return processApi.isProcessInstanceRunning(processInstanceId);
 	}
-	
-
-
 
 
 }

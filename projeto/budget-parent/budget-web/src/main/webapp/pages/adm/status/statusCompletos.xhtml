@@ -1,0 +1,49 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/templates/default.xhtml">
+
+	<ui:param name="pageTitle" value="Human Tasks" />
+
+	<ui:define name="content">
+	    <p:panel id="content">
+			<h:form id="form">
+	            <h3>Status</h3>
+				
+			
+			<p:dataTable id="statusCompletas" var="_item" value="#{statusAction.tarefasCompletadas}" emptyMessage="Nenhum registro encontrado."
+					paginator="true"
+					paginatorPosition="bottom"
+					rows="20">
+					<f:facet name="header">
+							Status Processsos Completos
+					</f:facet>
+					<p:column headerText="Codigo" >
+						#{_item.id}
+					</p:column>
+					<p:column headerText="Tarefa" >
+						#{_item.name}
+					</p:column>
+				
+					<p:column headerText="Usuario" >
+						#{_item.nomeUsuario}
+					</p:column>
+					<p:column headerText="Login" >
+						#{item.login}
+					</p:column>
+					<p:column headerText="Nome CC" >
+						#{_item.nomeCentroCusto}
+					</p:column>
+					
+					<p:column headerText="Codigo CC" >
+						#{_item.codigoCentroCusto}
+					</p:column>
+					
+			</p:dataTable>
+				
+			</h:form>
+		</p:panel>
+	</ui:define>
+</ui:composition>
