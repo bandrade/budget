@@ -132,7 +132,7 @@ public class AjustarValoresCentroCustoAction extends BudgetAction implements Ser
 
 		} catch (Exception e) {
 			facesUtils.addInfoMessage("Erro o concluir a tarefa");
-			logger.error("Erro o concluir a tarefa: ", e);
+			logger.error("Erro o concluir a tarefa:  ", e);
 		}
 		conversation.end();
 		return "minhasTarefas";
