@@ -114,7 +114,8 @@ public class AjustarValoresBudgetAction extends BudgetAction implements Serializ
 			}
 			budgetService.adicionarBudgetsSubmetidosCC(lista);
 
-			if(!(getValorTotalBudgetArea().setScale(2,BigDecimal.ROUND_HALF_UP).equals(budgetEstipuladoAno.getValorAprovado().setScale(2,BigDecimal.ROUND_HALF_UP))))
+			logger.info("Valor budget: " +getValorTotalBudgetArea().setScale(2,BigDecimal.ROUND_HALF_UP) + " Valor Aprovado: " + budgetEstipuladoAno.getValorAprovado().setScale(2,BigDecimal.ROUND_HALF_UP));
+			if(!((getValorTotalBudgetArea().setScale(2,BigDecimal.ROUND_HALF_UP).compareTo(budgetEstipuladoAno.getValorAprovado().setScale(2,BigDecimal.ROUND_HALF_UP)))==0))
 			{
 				facesUtils.addErrorMessage("O valor do budget da Area deve ser igual ao valor aprovado");
 				return null;
