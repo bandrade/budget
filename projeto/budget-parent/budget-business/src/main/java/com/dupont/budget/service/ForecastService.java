@@ -1,5 +1,6 @@
 package com.dupont.budget.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.dupont.budget.dto.DetalheValoresComprometidosDTO;
@@ -18,7 +19,7 @@ public interface ForecastService {
 
 	List<DespesaForecast> obterDespesasForecast(String mes, String ano,
 			Long idCentroCusto) throws Exception;
-	
+
 	DespesaForecast obterDespesaForecast(Forecast forecast,
 			TipoDespesa tipoDespesa, Acao acao) throws Exception;
 
@@ -27,20 +28,20 @@ public interface ForecastService {
 	void atualizarDespesaForecast(DespesaForecast despesaForecast)
 			throws Exception;
 
-	Double obterValoresComprometidosNotas(DespesaForecast despesaForecast,int mes);
+	BigDecimal obterValoresComprometidosNotas(DespesaForecast despesaForecast,int mes);
 
 	boolean isForecastMensalisado(Long mes, String ano);
 
 	void alterarForecastMensalisado(Long mes, String ano, long processInstanceId) throws Exception;
 
 	Forecast findForecastByCCAndAno(String ano, Long centroCustoId);
-	
+
 	public boolean isDespesaExistente(DespesaForecast despesa);
-	
+
 	public DespesaForecast obterDespesaPorTipoEAcao(DespesaForecast despesa);
-	
+
 	public List<DetalheValoresComprometidosDTO> obterDetalheValoresComprometidosNotas(DespesaForecast despesaForecast, int mes);
-	
-	public List<DetalheValoresComprometidosDTO> obterDetalheValoresComprometidos(DespesaForecast despesa, int mes); 
+
+	public List<DetalheValoresComprometidosDTO> obterDetalheValoresComprometidos(DespesaForecast despesa, int mes);
 
 }

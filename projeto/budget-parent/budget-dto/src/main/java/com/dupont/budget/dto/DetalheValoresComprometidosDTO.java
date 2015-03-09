@@ -1,12 +1,14 @@
 package com.dupont.budget.dto;
 
+import java.math.BigDecimal;
+
 public class DetalheValoresComprometidosDTO {
 	private String notaFiscal;
 	private String acao;
-	private Double valor;
+	private BigDecimal valor;
 	private String tipoDespesa;
 	private String fornecedor;
-	
+
 	public String getNotaFiscal() {
 		return notaFiscal;
 	}
@@ -19,10 +21,10 @@ public class DetalheValoresComprometidosDTO {
 	public void setAcao(String acao) {
 		this.acao = acao;
 	}
-	public Double getValor() {
+	public BigDecimal getValor() {
 		return valor;
 	}
-	public void setValor(Double valor) {
+	public void setValor(BigDecimal valor) {
 		this.valor = valor;
 	}
 	public String getTipoDespesa() {
@@ -37,7 +39,7 @@ public class DetalheValoresComprometidosDTO {
 	public void setFornecedor(String fornecedor) {
 		this.fornecedor = fornecedor;
 	}
-	
-	
+
+
 
 }

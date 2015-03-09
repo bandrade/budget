@@ -1,8 +1,8 @@
 package com.dupont.budget.model;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -47,7 +47,7 @@ public class SolicitacaoPagamento extends AbstractEntity<Long> {
 	public static final String FIND_BY_NUMERO_NOTA = "SolicitacaoPagamento.findByNumeroNota";
 	public static final String FIND_BY_NUMERO_NOTA_FORNECEDOR = "SolicitacaoPagamento.findByNumeroNotaFornecedor";
 
-	private Double valor;
+	private BigDecimal valor;
 
 	@Column(name="num_nota_fiscal")
 	private String numeroNotaFiscal;
@@ -82,7 +82,7 @@ public class SolicitacaoPagamento extends AbstractEntity<Long> {
 
 	@OneToMany(mappedBy = "solicitacaoPagamento", cascade = CascadeType.ALL, fetch=FetchType.EAGER, orphanRemoval= true)
 	private Set<DespesaSolicitacaoPagamento> despesas;
-	
+
 	@Transient
 	private Set<DespesaSolicitacaoPagamento> despesasContabilizadas;
 
@@ -95,8 +95,8 @@ public class SolicitacaoPagamento extends AbstractEntity<Long> {
 	private OrigemSolicitacao origem;
 
 	@Transient
-	private Set<org.apache.poi.ss.usermodel.Row> rows; 
-	
+	private Set<org.apache.poi.ss.usermodel.Row> rows;
+
 	public void addDespesasContabilizada(DespesaSolicitacaoPagamento despesaSolicitacaoPagamento) {
 		if(this.despesasContabilizadas == null)
 			this.despesasContabilizadas = new HashSet<DespesaSolicitacaoPagamento>();
@@ -111,7 +111,7 @@ public class SolicitacaoPagamento extends AbstractEntity<Long> {
 
 		this.rows.add(row);
 	}
-	
+
 	public void addDespesaSolicitacaoPagamento(DespesaSolicitacaoPagamento despesaSolicitacaoPagamento) {
 		if(this.despesas == null)
 			this.despesas = new HashSet<DespesaSolicitacaoPagamento>();
@@ -127,7 +127,7 @@ public class SolicitacaoPagamento extends AbstractEntity<Long> {
 		this.despesas.remove(despesaSolicitacaoPagamento);
 		//despesaSolicitacaoPagamento.setSolicitacaoPagamento(null);
 	}
-	
+
 	public DespesaSolicitacaoPagamento getDespesaByCC(CentroCusto centroCusto)
 	{
 		for(DespesaSolicitacaoPagamento despesaSolicitacaoPagamento: despesas)
@@ -141,14 +141,14 @@ public class SolicitacaoPagamento extends AbstractEntity<Long> {
 	}
 	public boolean isDespesaTotalmenteContabilizada()
 	{
-		Double valor=0d;
+		BigDecimal valor=new BigDecimal(0d);
 		for(DespesaSolicitacaoPagamento desp: despesasContabilizadas)
 		{
-			valor+=desp.getValor();
+			valor=valor.add(desp.getValor());
 		}
 		return this.valor.equals(valor);
 	}
-	
+
 	public String getTipoSolicitacaoPagamentoAsString()
 	{
 		if(status !=null)
@@ -164,11 +164,11 @@ public class SolicitacaoPagamento extends AbstractEntity<Long> {
 		this.status = status;
 	}
 
-	public Double getValor() {
+	public BigDecimal getValor() {
 		return valor;
 	}
 
-	public void setValor(Double valor) {
+	public void setValor(BigDecimal valor) {
 		this.valor = valor;
 	}
 
@@ -282,5 +282,5 @@ public class SolicitacaoPagamento extends AbstractEntity<Long> {
 		this.rows = rows;
 	}
 
-	
+
 }

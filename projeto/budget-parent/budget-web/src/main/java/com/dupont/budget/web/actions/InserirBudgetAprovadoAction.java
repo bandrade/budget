@@ -1,6 +1,7 @@
 package com.dupont.budget.web.actions;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +19,7 @@ import com.dupont.budget.model.BudgetEstipuladoAnoArea;
 public class InserirBudgetAprovadoAction extends AreaBudgetAction implements
 		Serializable {
 
-	private Double valorTotalAprovadoBudget;
+	private BigDecimal valorTotalAprovadoBudget;
 
 	@PostConstruct
 	@Override
@@ -60,7 +61,7 @@ public class InserirBudgetAprovadoAction extends AreaBudgetAction implements
 			area.setId(bDto.getIdArea());
 			budget.setArea(area);
 			budget.setValorSubmetido(bDto.getValorTotalBudget());
-			budget.setValorAprovado(bDto.getValorTotalAprovadoBudget()==null? 0d:bDto.getValorTotalAprovadoBudget());
+			budget.setValorAprovado(bDto.getValorTotalAprovadoBudget()==null? new BigDecimal(0d):bDto.getValorTotalAprovadoBudget());
 			listaBudgetAno.add(budget);
 		}
 		budgetService.adicionarBudgetsSubmetidos(listaBudgetAno);
@@ -70,19 +71,19 @@ public class InserirBudgetAprovadoAction extends AreaBudgetAction implements
 	public void calcularValorTotalBudgetAprovado()
 	{
 
-		valorTotalAprovadoBudget= 0d;
+		valorTotalAprovadoBudget= new BigDecimal(0d);
 		for(BudgetAreaDTO budgetArea : budgetsArea)
 		{
 			if(budgetArea.getValorTotalAprovadoBudget()!=null)
-				valorTotalAprovadoBudget+=budgetArea.getValorTotalAprovadoBudget();
+				valorTotalAprovadoBudget= valorTotalAprovadoBudget.add(budgetArea.getValorTotalAprovadoBudget());
 		}
 	}
 
-	public Double getValorTotalAprovadoBudget() {
+	public BigDecimal getValorTotalAprovadoBudget() {
 		return valorTotalAprovadoBudget;
 	}
 
-	public void setValorTotalAprovadoBudget(Double valorTotalAprovadoBudget) {
+	public void setValorTotalAprovadoBudget(BigDecimal valorTotalAprovadoBudget) {
 		this.valorTotalAprovadoBudget = valorTotalAprovadoBudget;
 	}
 

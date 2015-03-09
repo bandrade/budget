@@ -78,7 +78,7 @@ public class BPMProcessManagerApiImpl implements BPMProcessManagerApi {
 			params.put("url",System.getProperty("com.dupont.budget.url"));
 			params.put("centrosDeCustoArray", ceDtos);
 			params.put("areasArray", areas);
-			params.put("pularCriacao", true);
+			params.put("pularCriacao", false);
 			params.put("anoBudget", ano);
 			params.put("prazo", prazo);
 			params.put("emails", email);
@@ -224,6 +224,25 @@ public class BPMProcessManagerApiImpl implements BPMProcessManagerApi {
 		{
 
 			return false;
+		}
+	}
+
+	@Override
+	public String getProcessName(long processInstanceId) {
+		RuntimeEngine runtime = singletonManager
+				.getRuntimeEngine(EmptyContext.get());
+		KieSession ksession = runtime.getKieSession();
+		try
+		{
+			WorkflowProcessInstance process = ((WorkflowProcessInstance) ksession
+				.getProcessInstance(processInstanceId));
+
+			return process.getProcessName();
+		}
+		catch(Exception e )
+		{
+
+			return null;
 		}
 	}
 

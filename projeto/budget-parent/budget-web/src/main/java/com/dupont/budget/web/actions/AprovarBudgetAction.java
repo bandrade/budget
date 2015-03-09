@@ -1,6 +1,7 @@
 package com.dupont.budget.web.actions;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.HashMap;
 
 import javax.annotation.PostConstruct;
@@ -29,8 +30,8 @@ public class AprovarBudgetAction extends BudgetAction  implements Serializable{
 			logger.error("Erro ao obter tarefas do usuario.", e);
 		}
 	}
-	
-	
+
+
 	@Override
 	public void adicionarDespesaPlanilha(TipoDespesa tipoDespesa) {
 		Despesa _despesa = new Despesa();
@@ -38,7 +39,7 @@ public class AprovarBudgetAction extends BudgetAction  implements Serializable{
 		_despesa.initLists();
 		_despesa.setTipoDespesa(tipoDespesa);
 		despesasNoDetalhe.add(_despesa);
-		
+
 	}
 	public void validarAprovacao()
 	{
@@ -49,12 +50,12 @@ public class AprovarBudgetAction extends BudgetAction  implements Serializable{
 
 	}
 
-	public Double getValorTotalAprovado() {
-		Double _valor = 0d;
+	public BigDecimal getValorTotalAprovado() {
+		BigDecimal _valor = new BigDecimal(0d);
 		for(Despesa despesa : despesasNoDetalhe)
 		{
 			if(!despesa.isFirstLine() && despesa.getAprovado() !=null &&  despesa.getAprovado() && despesa.getValor()!=null)
-				_valor+=despesa.getValor();
+				_valor = _valor.add(despesa.getValor());
 
 		}
 		return _valor;
@@ -81,7 +82,7 @@ public class AprovarBudgetAction extends BudgetAction  implements Serializable{
 
 	public String concluir()
 	{
-		if(valorTotalDetalhe==null || valorTotalDetalhe == 0 )
+		if(valorTotalDetalhe==null || valorTotalDetalhe.doubleValue() == 0d )
 		{
 			facesUtils.addErrorMessage("Nao deve-se concluir a tarefa de Aprovar Budget sem aprovar nenhuma despesa");
 			return null;
@@ -102,7 +103,7 @@ public class AprovarBudgetAction extends BudgetAction  implements Serializable{
 			return null;
 		}
 	}
-	
+
 	public String getTipoAprovacao() {
 		return tipoAprovacao;
 	}

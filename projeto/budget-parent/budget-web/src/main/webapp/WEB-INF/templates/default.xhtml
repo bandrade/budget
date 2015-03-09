@@ -14,7 +14,7 @@
         <ui:insert name="head"></ui:insert> 
     </h:head>
     
-    <h:body>
+    <h:body >
         <section class="top">
             <div class="ui-grid ui-grid-responsive">
                 <div class="ui-grid-row">
@@ -31,7 +31,7 @@
                                 <div class="ui-grid-col-12"><h:graphicImage library="images" name="logo.png" height="30" /></div>
                             </div>
                             <div class="ui-grid-row">
-                               <div class="ui-grid-col-12"><h2>Gestão Orçamentária</h2></div>
+                               <div class="ui-grid-col-12"><h2>#{msg['nomeapp']}</h2></div>
                             </div>
                         </div>
                     </div>
@@ -81,6 +81,7 @@
                                         <li> <p:link  outcome="/pages/adm/area/list.xhtml" value="Área"/> </li>
                                         <li> <p:link  outcome="/pages/adm/cultura/list.xhtml" value="Cultura"/> </li>
                                         <li> <p:link  outcome="/pages/adm/colaborador/list.xhtml" value="Colaborador"/> </li>
+                                        <li> <p:link  outcome="/pages/adm/distrito/list.xhtml" value="Distrito"/> </li>
                                         <li> <p:link  outcome="/pages/adm/produto/list.xhtml" value="Produto"/> </li>
                                         <li> <p:link  outcome="/pages/adm/tipoDespesa/list.xhtml" value="Tipo de Despesa"/> </li>
                                         <li> <p:link  outcome="/pages/adm/cliente/list.xhtml" value="Cliente"/> </li>
@@ -97,8 +98,9 @@
                                     <ul>
                                         <li> <p:link  outcome="/pages/adm/planning/iniciarProcessoBudget.xhtml" value="Iniciar Processo Budget"/> </li>
                                         <li> <p:link  outcome="/pages/adm/planning/iniciarProcessoForecast.xhtml" value="Iniciar Processo Forecast"/> </li>
-                                        <li> <p:link  outcome="/pages/adm/status/status.xhtml" value="Status Processos em Andamento"/> </li>
-                                        <li> <p:link  outcome="/pages/adm/status/statusCompletos.xhtml" value="Status Processos Completados"/> </li>
+                                        <li> <p:commandLink   action="#{statusBudgetAction.inicializarTela('/pages/adm/status/statusBudget.xhtml')}" value="Budget - Processos em Andamento" ajax="false"/> </li>
+                                        <li> <p:commandLink   action="#{statusForecastAction.inicializarTela('/pages/adm/status/statusForecast.xhtml')}" value="Forecast - Processos em Andamento" ajax="false"/> </li>
+                                        <li> <p:commandLink   action="#{statusSolicitacaoPagamentoAction.inicializarTela('/pages/adm/status/statusSolicitacaoPagamento.xhtml')}" value="Coversheet - Processos em Andamento" ajax="false"/> </li>
                                     </ul>                   
                                 </li>
                                 </h:panelGroup>
@@ -147,7 +149,27 @@
                 .fadeIn(3000)
                 .end()
                 .appendTo('#slideshow');
-            },  3000); 
+            },  3000);
+
+            function disableEnterKey(e)
+            {
+                 var key;
+
+                 if(window.event)
+                      key = window.event.keyCode;     //IE
+                 else
+                      key = e.which;     //firefox
+
+                 if(key == 13)
+                 {
+                      return false;
+                 }
+                 else
+            	 {
+                      return true;
+            	 }
+            }
+                 	             
         </script>
     </h:body>
 </html>

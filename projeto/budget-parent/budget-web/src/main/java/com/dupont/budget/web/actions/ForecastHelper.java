@@ -1,49 +1,50 @@
 package com.dupont.budget.web.actions;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.dupont.budget.model.DespesaForecast;
 import com.dupont.budget.model.MesEnum;
 
 public class ForecastHelper {
-	public Double calcularValorMensalisado(String mes,DespesaForecast despesa)
+	public BigDecimal calcularValorMensalisado(String mes,DespesaForecast despesa)
 	{
 
-		Double valor = 0d;
+		BigDecimal valor = new BigDecimal(0d);
 		if(despesa!=null)
 		{
 			if(exibirColuna(MesEnum.JANEIRO.toString(), mes))
-				valor+= getDouble(despesa.getDespesaMensalisada().getJaneiro());
+				valor =valor.add(getBigDecimal(despesa.getDespesaMensalisada().getJaneiro()));
 			if(exibirColuna(MesEnum.FEVEREIRO.toString(), mes))
-				valor+= getDouble(despesa.getDespesaMensalisada().getFevereiro());
+				valor =valor.add(getBigDecimal(despesa.getDespesaMensalisada().getFevereiro()));
 			if(exibirColuna(MesEnum.MARCO.toString(), mes))
-				valor+= getDouble(despesa.getDespesaMensalisada().getMarco());
+				valor =valor.add(getBigDecimal(despesa.getDespesaMensalisada().getMarco()));
 			if(exibirColuna(MesEnum.ABRIL.toString(), mes))
-				valor+= getDouble(despesa.getDespesaMensalisada().getAbril());
+				valor =valor.add(getBigDecimal(despesa.getDespesaMensalisada().getAbril()));
 			if(exibirColuna(MesEnum.MAIO.toString(), mes))
-				valor+= getDouble(despesa.getDespesaMensalisada().getMaio());
+				valor =valor.add(getBigDecimal(despesa.getDespesaMensalisada().getMaio()));
 			if(exibirColuna(MesEnum.JUNHO.toString(), mes))
-				valor+= getDouble(despesa.getDespesaMensalisada().getJunho());
+				valor =valor.add(getBigDecimal(despesa.getDespesaMensalisada().getJunho()));
 			if(exibirColuna(MesEnum.JULHO.toString(), mes))
-				valor+= getDouble(despesa.getDespesaMensalisada().getJulho());
+				valor =valor.add(getBigDecimal(despesa.getDespesaMensalisada().getJulho()));
 			if(exibirColuna(MesEnum.AGOSTO.toString(), mes))
-				valor+= getDouble(despesa.getDespesaMensalisada().getAgosto());
-			if(exibirColuna(MesEnum.SETEMBRO.toString(), mes))	
-				valor+= getDouble(despesa.getDespesaMensalisada().getSetembro());
-			if(exibirColuna(MesEnum.OUTUBRO.toString(), mes))	
-				valor+= getDouble(despesa.getDespesaMensalisada().getOutubro());
+				valor =valor.add(getBigDecimal(despesa.getDespesaMensalisada().getAgosto()));
+			if(exibirColuna(MesEnum.SETEMBRO.toString(), mes))
+				valor= valor.add(getBigDecimal(despesa.getDespesaMensalisada().getSetembro()));
+			if(exibirColuna(MesEnum.OUTUBRO.toString(), mes))
+				valor =valor.add(getBigDecimal(despesa.getDespesaMensalisada().getOutubro()));
 			if(exibirColuna(MesEnum.NOVEMBRO.toString(), mes))
-				valor+= getDouble(despesa.getDespesaMensalisada().getNovembro());
+				valor= valor.add(getBigDecimal(despesa.getDespesaMensalisada().getNovembro()));
 			if(exibirColuna(MesEnum.DEZEMBRO.toString(), mes))
-				valor+= getDouble(despesa.getDespesaMensalisada().getDezembro());
+				valor= valor.add(getBigDecimal(despesa.getDespesaMensalisada().getDezembro()));
 		}
 		return valor;
 	}
 
-	public Double calcularValorColuna(String month,List<DespesaForecast> despesasNoDetalhe)
+	public BigDecimal calcularValorColuna(String month,List<DespesaForecast> despesasNoDetalhe)
 	{
 		MesEnum mesEnum = MesEnum.valueOf(month);
-		Double valor = 0d;
+		BigDecimal valor = new BigDecimal(0d);
 		if(despesasNoDetalhe == null)
 			return null;
 
@@ -52,53 +53,53 @@ public class ForecastHelper {
 			switch(mesEnum)
 			{
 				case JANEIRO:
-					valor+=getDouble(despesa.getDespesaMensalisada().getJaneiro());
+					valor = valor.add(getBigDecimal(despesa.getDespesaMensalisada().getJaneiro()));
 					break;
 				case FEVEREIRO:
-					valor+=getDouble(despesa.getDespesaMensalisada().getFevereiro());
+					valor = valor.add(getBigDecimal(despesa.getDespesaMensalisada().getFevereiro()));
 					break;
 
 				case MARCO:
-					valor+=getDouble(despesa.getDespesaMensalisada().getMarco());
+					valor =valor.add(getBigDecimal(despesa.getDespesaMensalisada().getMarco()));
 					break;
 
 				case ABRIL:
-					valor+=getDouble(despesa.getDespesaMensalisada().getAbril());
+					valor =valor.add(getBigDecimal(despesa.getDespesaMensalisada().getAbril()));
 					break;
 
 				case MAIO:
-					valor+=getDouble(despesa.getDespesaMensalisada().getMaio());
+					valor =valor.add(getBigDecimal(despesa.getDespesaMensalisada().getMaio()));
 					break;
 
 				case JUNHO:
-					valor+=getDouble(despesa.getDespesaMensalisada().getJunho());
+					valor =valor.add(getBigDecimal(despesa.getDespesaMensalisada().getJunho()));
 					break;
 
 				case JULHO:
-					valor+=getDouble(despesa.getDespesaMensalisada().getJulho());
+					valor =valor.add(getBigDecimal(despesa.getDespesaMensalisada().getJulho()));
 					break;
 
 				case AGOSTO:
-					valor+=getDouble(despesa.getDespesaMensalisada().getAgosto());
+					valor =valor.add(getBigDecimal(despesa.getDespesaMensalisada().getAgosto()));
 					break;
 
 				case SETEMBRO:
-					valor+=getDouble(despesa.getDespesaMensalisada().getSetembro());
+					valor =valor.add(getBigDecimal(despesa.getDespesaMensalisada().getSetembro()));
 					break;
 
 				case OUTUBRO:
-					valor+=getDouble(despesa.getDespesaMensalisada().getOutubro());
+					valor =valor.add(getBigDecimal(despesa.getDespesaMensalisada().getOutubro()));
 					break;
 
 				case NOVEMBRO:
-					valor+=getDouble(despesa.getDespesaMensalisada().getNovembro());
+					valor= valor.add(getBigDecimal(despesa.getDespesaMensalisada().getNovembro()));
 					break;
 
 				case DEZEMBRO:
-					valor+=getDouble(despesa.getDespesaMensalisada().getDezembro());
+					valor =valor.add(getBigDecimal(despesa.getDespesaMensalisada().getDezembro()));
 					break;
 
-			
+
 
 			}
 		}
@@ -123,11 +124,17 @@ public class ForecastHelper {
 
 
 	}
-	
+
 	public Double getDouble(Double d)
 	{
 		return d !=null? d:0d ;
 	}
+
+	public BigDecimal getBigDecimal(BigDecimal d)
+	{
+		return d !=null? d: new BigDecimal(0d) ;
+	}
+
 
 
 

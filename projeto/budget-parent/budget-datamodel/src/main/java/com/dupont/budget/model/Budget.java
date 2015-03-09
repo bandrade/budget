@@ -1,5 +1,6 @@
 package com.dupont.budget.model;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -56,14 +57,14 @@ public class Budget {
 
 	private String ano;
 	@Transient
-	private Double valorTotalBudget;
+	private BigDecimal valorTotalBudget;
 
 	@Transient
-	private Double valorTotalProposto;
-	
+	private BigDecimal valorTotalProposto;
+
 	@Transient
-	private Double valorAprovadoBudget;
-	
+	private BigDecimal valorAprovadoBudget;
+
 	@Column(name = "data_criacao")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date cricao;
@@ -78,12 +79,12 @@ public class Budget {
 
 	@Enumerated(EnumType.STRING)
 	private StatusBudget status;
-	
+
 	//bi-directional many-to-one association to Acao
 	@OneToMany(mappedBy="budget")
 	private List<Acao> acoes;
-	
-	
+
+
 
 
 	public Long getId() {
@@ -158,11 +159,11 @@ public class Budget {
 		this.status = status;
 	}
 
-	public Double getValorTotalBudget() {
+	public BigDecimal getValorTotalBudget() {
 		return valorTotalBudget;
 	}
 
-	public void setValorTotalBudget(Double valorTotalBudget) {
+	public void setValorTotalBudget(BigDecimal valorTotalBudget) {
 		this.valorTotalBudget = valorTotalBudget;
 	}
 
@@ -174,33 +175,33 @@ public class Budget {
 		this.acoes = acoes;
 	}
 
-	public Double getValorTotalDespesa()
+	public BigDecimal getValorTotalDespesa()
 	{
-		
-		Double d = 0d;
+
+		BigDecimal d = new BigDecimal(0d);
 		for(Despesa despesa : despesas)
 		{
 			if(despesa.getAprovado())
-				d += despesa.getValor();
+				d =d.add(despesa.getValor());
 		}
 		return d;
 	}
-	
-	public Double getValorTotalProposto() {
+
+	public BigDecimal getValorTotalProposto() {
 		return valorTotalProposto;
 	}
-	
-	public void setValorTotalProposto(Double valorTotalProposto) {
+
+	public void setValorTotalProposto(BigDecimal valorTotalProposto) {
 		this.valorTotalProposto = valorTotalProposto;
 	}
 
-	public Double getValorAprovadoBudget() {
+	public BigDecimal getValorAprovadoBudget() {
 		return valorAprovadoBudget;
 	}
 
-	public void setValorAprovadoBudget(Double valorAprovadoBudget) {
+	public void setValorAprovadoBudget(BigDecimal valorAprovadoBudget) {
 		this.valorAprovadoBudget = valorAprovadoBudget;
 	}
-	
-	
+
+
 }

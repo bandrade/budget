@@ -1,5 +1,7 @@
 package com.dupont.budget.dto;
 
+import java.math.BigDecimal;
+
 /**
  * @author bandrade
  *
@@ -8,8 +10,8 @@ public class BudgetAreaDTO {
 
 	private Long idArea;
 	private String nomeArea;
-	private Double valorTotalBudget;
-	private Double valorTotalAprovadoBudget;
+	private BigDecimal valorTotalBudget;
+	private BigDecimal valorTotalAprovadoBudget;
 	private String status;
 
 	public Long getIdArea() {
@@ -24,10 +26,10 @@ public class BudgetAreaDTO {
 	public void setNomeArea(String nomeArea) {
 		this.nomeArea = nomeArea;
 	}
-	public Double getValorTotalBudget() {
+	public BigDecimal getValorTotalBudget() {
 		return valorTotalBudget;
 	}
-	public void setValorTotalBudget(Double valorTotalBudget) {
+	public void setValorTotalBudget(BigDecimal valorTotalBudget) {
 		this.valorTotalBudget = valorTotalBudget;
 	}
 	public String getStatus() {
@@ -36,10 +38,10 @@ public class BudgetAreaDTO {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	public Double getValorTotalAprovadoBudget() {
+	public BigDecimal getValorTotalAprovadoBudget() {
 		return valorTotalAprovadoBudget;
 	}
-	public void setValorTotalAprovadoBudget(Double valorTotalAprovadoBudget) {
+	public void setValorTotalAprovadoBudget(BigDecimal valorTotalAprovadoBudget) {
 		this.valorTotalAprovadoBudget = valorTotalAprovadoBudget;
 	}
 

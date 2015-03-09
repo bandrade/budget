@@ -1,6 +1,7 @@
 package com.dupont.budget.web.actions;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,10 +44,10 @@ public class ForecastAction implements Serializable {
 
 	@Inject
 	protected ForecastService forecastService;
-	
+
 	@Inject
 	protected DomainService domainService;
-	
+
 	protected Long idInstanciaProcesso;
 	protected Long idTarefa;
 
@@ -76,16 +77,16 @@ public class ForecastAction implements Serializable {
 	protected static final String ACAO_EXISTENTE="S";
 	protected static final String ACAO_NAO_EXISTENTE="S";
 
-	protected Double valorTotalDetalhe;
+	protected BigDecimal valorTotalDetalhe;
 
 	protected ForecastHelper helper;
 
 	protected Map<String, Object> params ;
-	
+
 	protected Forecast forecast;
-	
+
 	protected DespesaForecast despesaSelecionada;
-	
+
 	protected List<DetalheValoresComprometidosDTO> detalheValorComprometido;
 
 
@@ -111,7 +112,7 @@ public class ForecastAction implements Serializable {
 			  despesasNoDetalhe =  forecastService.obterDespesasForecast(mes, ano, centroDeCusto.getId());
 		  if(forecast == null)
 			  setForecast(forecastService.findForecastByCCAndAno(ano, centroDeCusto.getId()));
-		  
+
 
 		}
 	    catch(Exception e )
@@ -122,7 +123,7 @@ public class ForecastAction implements Serializable {
 		}
 
 	}
-	
+
 	public void obterDetalheValorComprometido(String mesDetalhe)
 	{
 		MesEnum mesEnum = MesEnum.obterMes(mesDetalhe);
@@ -162,11 +163,11 @@ public class ForecastAction implements Serializable {
 			despesa.setForecast(despesasNoDetalhe.get(0).getForecast());
 		}
 		despesa.setValor(helper.calcularValorMensalisado(mes,despesa));
-		if(despesa.getValor() ==null || despesa.getValor()<=0d)
+		if(despesa.getValor() ==null || despesa.getValor().compareTo(new BigDecimal(0d))<0)
 		{
 			facesUtils.addErrorMessage("O valor da despesa deve ser maior que zero.");
 			return false;
-		
+
 		}
 		validarAcao();
 		if(despesa.getAcao() !=null && forecastService.isDespesaExistente(despesa))
@@ -189,7 +190,7 @@ public class ForecastAction implements Serializable {
 		}
 		return true;
 	}
-	
+
 	protected void validarAcao()
 	{
 		if(tipoAcao.equals(ACAO_EXISTENTE))
@@ -231,7 +232,7 @@ public class ForecastAction implements Serializable {
 		calcularTotalBudget();
 	}
 
-	public Double calcularValorColuna(String mounth)
+	public BigDecimal calcularValorColuna(String mounth)
 	{
 		return helper.calcularValorColuna(mounth,despesasNoDetalhe);
 	}
@@ -243,56 +244,56 @@ public class ForecastAction implements Serializable {
 	}
 
 
-	public Double calcularValorMensalisado()
+	public BigDecimal calcularValorMensalisado()
 	{
 		return helper.calcularValorMensalisado(mes,despesa);
 	}
-	public Double calcularValorMensalisado(DespesaForecast despesaForecast)
+	public BigDecimal calcularValorMensalisado(DespesaForecast despesaForecast)
 	{
 		return helper.calcularValorMensalisado(mes,despesaForecast);
 	}
-	public Double calcularTotalBudget()
+	public BigDecimal calcularTotalBudget()
 	{
-		Double valor = 0d;
+		BigDecimal valor = new BigDecimal(0d);
 		if (despesasNoDetalhe != null)
 		for(DespesaForecast despesa : despesasNoDetalhe)
 		{
-			valor += despesa.getDespesaBudget() !=null ? despesa.getDespesaBudget().getValor() : 0d;
+			valor = valor.add( despesa.getDespesaBudget() !=null ? despesa.getDespesaBudget().getValor() : new BigDecimal(0d));
 		}
 		return valor;
 	}
 
 
-	public Double calcularTotalAno()
+	public BigDecimal calcularTotalAno()
 	{
-		Double valor = 0d;
+		BigDecimal valor = new BigDecimal(0d);
 		if (despesasNoDetalhe != null)
 		for(DespesaForecast despesa : despesasNoDetalhe)
 		{
-			valor += helper.calcularValorMensalisado(mes, despesa);
-			valor += helper.getDouble(despesa.getYtd()) ;
+			valor =valor.add(helper.calcularValorMensalisado(mes, despesa));
+			valor =valor.add(helper.getBigDecimal(despesa.getYtd())) ;
 		}
 		return valor;
 	}
 
-	public Double calcularTotalYTD()
+	public BigDecimal calcularTotalYTD()
 	{
-		Double valor = 0d;
+		BigDecimal valor = new BigDecimal(0d);
 		if (despesasNoDetalhe != null)
 		for(DespesaForecast despesa : despesasNoDetalhe)
 		{
-			valor += helper.getDouble(despesa.getYtd());
+			valor = valor.add(helper.getBigDecimal(despesa.getYtd()));
 		}
 		return valor;
 	}
 
-	public Double calcularTotalPLM()
+	public BigDecimal calcularTotalPLM()
 	{
-		Double valor = 0d;
+		BigDecimal valor = new BigDecimal(0d);
 		if (despesasNoDetalhe != null)
 		for(DespesaForecast despesa : despesasNoDetalhe)
 		{
-			valor += helper.getDouble(despesa.getPlm());
+			valor = valor.add(helper.getBigDecimal(despesa.getPlm()));
 		}
 		return valor;
 	}
@@ -300,21 +301,21 @@ public class ForecastAction implements Serializable {
 
 	public void calcularTotalForecast()
 	{
-		valorTotalDetalhe=0d;
+		valorTotalDetalhe=new BigDecimal(0d);
 		if (despesasNoDetalhe != null)
 		for(DespesaForecast despesa : despesasNoDetalhe)
 		{
-			valorTotalDetalhe +=despesa.getValor();
+			valorTotalDetalhe = valorTotalDetalhe.add(despesa.getValor());
 		}
 	}
-	
-	
+
+
 	public List<Acao> obterAcoesPorBudget()
 	{
 		Long budgetId = forecast !=null && forecast.getBudget() !=null ? forecast.getBudget().getId() : null;
 		Long forecastId = forecast !=null ? forecast.getId() : null;
-		
-		return domainService.findAcaoByForecastOrBudget(budgetId,forecastId); 
+
+		return domainService.findAcaoByForecastOrBudget(budgetId,forecastId);
 	}
 
 	public List<Acao> autocompleteAcao(String input)
@@ -322,7 +323,7 @@ public class ForecastAction implements Serializable {
 
 		return facesUtils.autoComplete(obterAcoesPorBudget(),input);
 	}
-	
+
 
 
 	public Long getIdInstanciaProcesso() {
@@ -380,10 +381,10 @@ public class ForecastAction implements Serializable {
 		this.despesaDetalheSelecionada = despesaDetalheSelecionada;
 	}
 
-	public Double getValorTotalDetalhe() {
+	public BigDecimal getValorTotalDetalhe() {
 		return valorTotalDetalhe;
 	}
-	public void setValorTotalDetalhe(Double valorTotalDetalhe) {
+	public void setValorTotalDetalhe(BigDecimal valorTotalDetalhe) {
 		this.valorTotalDetalhe = valorTotalDetalhe;
 	}
 	public ForecastHelper getHelper() {
@@ -430,5 +431,5 @@ public class ForecastAction implements Serializable {
 		this.detalheValorComprometido = detalheValorComprometido;
 	}
 
-	
+
 }

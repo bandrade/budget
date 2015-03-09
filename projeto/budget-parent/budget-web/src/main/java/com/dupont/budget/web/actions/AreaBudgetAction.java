@@ -1,5 +1,6 @@
 package com.dupont.budget.web.actions;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 
@@ -42,7 +43,7 @@ public class AreaBudgetAction {
 
 	protected List<BudgetAreaDTO> budgetsArea ;
 
-	protected Double valorTotalBudget;
+	protected BigDecimal valorTotalBudget;
 
 	@PostConstruct
 	public void init()
@@ -69,10 +70,10 @@ public class AreaBudgetAction {
 	public void calcularValorTotalBudget()
 	{
 
-		valorTotalBudget= 0d;
+		valorTotalBudget= new BigDecimal(0d);
 		for(BudgetAreaDTO budgetArea : budgetsArea)
 		{
-			valorTotalBudget+=budgetArea.getValorTotalBudget();
+			valorTotalBudget =valorTotalBudget.add(budgetArea.getValorTotalBudget());
 		}
 	}
 
@@ -123,11 +124,11 @@ public class AreaBudgetAction {
 		this.budgetsArea = budgetsArea;
 	}
 
-	public Double getValorTotalBudget() {
+	public BigDecimal getValorTotalBudget() {
 		return valorTotalBudget;
 	}
 
-	public void setValorTotalBudget(Double valorTotalBudget) {
+	public void setValorTotalBudget(BigDecimal valorTotalBudget) {
 		this.valorTotalBudget = valorTotalBudget;
 	}
 

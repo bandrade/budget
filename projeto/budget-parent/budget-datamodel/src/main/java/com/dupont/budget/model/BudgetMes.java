@@ -1,12 +1,15 @@
 package com.dupont.budget.model;
 
+import java.math.BigDecimal;
+import java.text.Bidi;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
  * Divisao do valor do Budget por mes.
- * 
+ *
  * @author <a href="asouza@redhat.com">Ângelo Galvão</a>
  * @since 2014
  *
@@ -14,33 +17,33 @@ import javax.persistence.Table;
 @Entity
 @Table(name="budget_mes")
 public class BudgetMes {
-	
+
 	@Id
 	private Long id;
 
-	private Double janeiro;
-	
-	private Double fevereiro;
-	
-	private Double marco;
-	
-	private Double abril;
-	
-	private Double maio;
-	
-	private Double junho;
-	
-	private Double julho;
-	
-	private Double agosto;
-	
-	private Double setembro;
-	
-	private Double outubro;
-	
-	private Double novembro;
-	
-	private Double dezembro;
+	private BigDecimal janeiro;
+
+	private BigDecimal fevereiro;
+
+	private BigDecimal marco;
+
+	private BigDecimal abril;
+
+	private BigDecimal maio;
+
+	private BigDecimal junho;
+
+	private BigDecimal julho;
+
+	private BigDecimal agosto;
+
+	private BigDecimal setembro;
+
+	private BigDecimal outubro;
+
+	private BigDecimal novembro;
+
+	private BigDecimal dezembro;
 
 	public Long getId() {
 		return id;
@@ -50,100 +53,101 @@ public class BudgetMes {
 		this.id = id;
 	}
 
-	public Double getJaneiro() {
+	public BigDecimal getJaneiro() {
 		return janeiro;
 	}
 
-	public void setJaneiro(Double janeiro) {
+	public void setJaneiro(BigDecimal janeiro) {
 		this.janeiro = janeiro;
 	}
 
-	public Double getFevereiro() {
+	public BigDecimal getFevereiro() {
 		return fevereiro;
 	}
 
-	public void setFevereiro(Double fevereiro) {
+	public void setFevereiro(BigDecimal fevereiro) {
 		this.fevereiro = fevereiro;
 	}
 
-	public Double getMarco() {
+	public BigDecimal getMarco() {
 		return marco;
 	}
 
-	public void setMarco(Double marco) {
+	public void setMarco(BigDecimal marco) {
 		this.marco = marco;
 	}
 
-	public Double getAbril() {
+	public BigDecimal getAbril() {
 		return abril;
 	}
 
-	public void setAbril(Double abril) {
+	public void setAbril(BigDecimal abril) {
 		this.abril = abril;
 	}
 
-	public Double getMaio() {
+	public BigDecimal getMaio() {
 		return maio;
 	}
 
-	public void setMaio(Double maio) {
+	public void setMaio(BigDecimal maio) {
 		this.maio = maio;
 	}
 
-	public Double getJunho() {
+	public BigDecimal getJunho() {
 		return junho;
 	}
 
-	public void setJunho(Double junho) {
+	public void setJunho(BigDecimal junho) {
 		this.junho = junho;
 	}
 
-	public Double getJulho() {
+	public BigDecimal getJulho() {
 		return julho;
 	}
 
-	public void setJulho(Double julho) {
+	public void setJulho(BigDecimal julho) {
 		this.julho = julho;
 	}
 
-	public Double getAgosto() {
+	public BigDecimal getAgosto() {
 		return agosto;
 	}
 
-	public void setAgosto(Double agosto) {
+	public void setAgosto(BigDecimal agosto) {
 		this.agosto = agosto;
 	}
 
-	public Double getSetembro() {
+	public BigDecimal getSetembro() {
 		return setembro;
 	}
 
-	public void setSetembro(Double setembro) {
+	public void setSetembro(BigDecimal setembro) {
 		this.setembro = setembro;
 	}
 
-	public Double getOutubro() {
+	public BigDecimal getOutubro() {
 		return outubro;
 	}
 
-	public void setOutubro(Double outubro) {
+	public void setOutubro(BigDecimal outubro) {
 		this.outubro = outubro;
 	}
 
-	public Double getNovembro() {
+	public BigDecimal getNovembro() {
 		return novembro;
 	}
 
-	public void setNovembro(Double novembro) {
+	public void setNovembro(BigDecimal novembro) {
 		this.novembro = novembro;
 	}
 
-	public Double getDezembro() {
+	public BigDecimal getDezembro() {
 		return dezembro;
 	}
 
-	public void setDezembro(Double dezembro) {
+	public void setDezembro(BigDecimal dezembro) {
 		this.dezembro = dezembro;
 	}
-	
+
+
 }

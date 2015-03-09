@@ -1,12 +1,13 @@
 package com.dupont.budget.report.model;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * MASTER do relatorio de budget orçado x utilizado. 
- * 
+ * MASTER do relatorio de budget orçado x utilizado.
+ *
  * @author <a href="mailto:asouza@redhat.com">Ângelo Galvão</a>
  * @since 2015
  *
@@ -16,14 +17,14 @@ public class ReportBudgetOrcadoUtilizadoMaster implements Serializable {
 	private static final long serialVersionUID = 928997715561629397L;
 
 	private String master;
-	
-	private Double totalOrcado;
-	
-	private Double totalUtilizado;
-	
+
+	private BigDecimal totalOrcado;
+
+	private BigDecimal totalUtilizado;
+
 	private List<ReportBudgetOrcadoUtilizadoDetail> details;
-	
-	public ReportBudgetOrcadoUtilizadoMaster(String master, Double totalOrcado, Double totalUtilizado) {
+
+	public ReportBudgetOrcadoUtilizadoMaster(String master, BigDecimal totalOrcado, BigDecimal totalUtilizado) {
 		this.master         = master;
 		this.totalOrcado    = totalOrcado;
 		this.totalUtilizado = totalUtilizado;
@@ -32,42 +33,42 @@ public class ReportBudgetOrcadoUtilizadoMaster implements Serializable {
 	public void addDetail(ReportBudgetOrcadoUtilizadoDetail detail) {
 		if( details == null )
 			details = new ArrayList<ReportBudgetOrcadoUtilizadoDetail>();
-		
+
 		details.add(detail);
-		
-		this.totalOrcado += detail.getOrcado();
+
+		this.totalOrcado = totalOrcado.add(detail.getOrcado());
 	}
-	
+
 	public ReportBudgetOrcadoUtilizadoDetail getDetail(String detailName){
 		if( details == null )
 			return null;
-		
+
 		ReportBudgetOrcadoUtilizadoDetail result = null;
-		
+
 		for (ReportBudgetOrcadoUtilizadoDetail detail : details) {
-			
+
 			if( detail.getDetail().equals(detailName) ) {
 				result = detail;
 				break;
 			}
 		}
-		
+
 		return result;
 	}
-	
-	public Double getTotalOrcado() {
+
+	public BigDecimal getTotalOrcado() {
 		return totalOrcado;
 	}
 
-	public void setTotalOrcado(Double totalOrcado) {
+	public void setTotalOrcado(BigDecimal totalOrcado) {
 		this.totalOrcado = totalOrcado;
 	}
 
-	public Double getTotalUtilizado() {
-		return totalUtilizado;
+	public BigDecimal getTotalUtilizado() {
+		return totalUtilizado.setScale(2,BigDecimal.ROUND_HALF_UP);
 	}
 
-	public void setTotalUtilizado(Double totalUtilizado) {
+	public void setTotalUtilizado(BigDecimal totalUtilizado) {
 		this.totalUtilizado = totalUtilizado;
 	}
 
@@ -87,5 +88,5 @@ public class ReportBudgetOrcadoUtilizadoMaster implements Serializable {
 		this.details = details;
 	}
 
-	
+
 }

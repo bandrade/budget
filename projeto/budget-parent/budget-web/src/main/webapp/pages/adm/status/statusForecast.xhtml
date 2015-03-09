@@ -1,0 +1,84 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/templates/default.xhtml">
+
+	<ui:param name="pageTitle" value="Human Tasks" />
+
+	<ui:define name="content">
+	    <p:panel id="content">
+			<h:form id="form">
+	       	<h3>Forecast - Tarefas em andamento</h3>
+			
+			<p:panelGrid columns="2">
+            <h:outputLabel for="areaList" value="Área:" />
+            <p:selectOneMenu label="Área" id="areaList" value="#{statusForecastAction.areaSelecionada}" converter="com.dupont.EntityConverter">
+                <f:selectItem itemLabel="Selecione..." itemValue="" />
+                <f:selectItems value="#{areaList}" itemValue="#{i}" itemLabel="#{i.nome}" var="i" />
+                <p:ajax  listener="#{statusForecastAction.doSelectCentroDeCusto()}" update=":form"/>
+            </p:selectOneMenu>
+			<p:outputLabel value="Centro de custo:" for="centroCustosSelectOneMenu"/>
+			<p:autoComplete id="centroCustosSelectOneMenu" 
+					onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"
+					dropdown="true" value="#{statusForecastAction.centroCustoSelecionado}" 
+					completeMethod="#{statusForecastAction.autoCompleteCentroCusto}" 
+		 			scrollHeight="300"
+					converter="com.dupont.EntityConverter"
+		 			var="_centroCusto" itemLabel="#{_centroCusto.codigo}" itemValue="#{_centroCusto}"
+		 			emptyMessage="NAO ENCONTRADO" effect="size" 
+		 			disabled="#{empty statusForecastAction.areaSelecionada}"
+		 			>
+		 	</p:autoComplete>
+		 	<p:commandButton id="updateBtn" value="Pesquisar" icon="ui-icon-check" action="#{statusForecastAction.pesquisar}" styleClass="button" 
+					onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"
+					update=":form"/>
+		 	</p:panelGrid>
+			<p:dataTable id="statusPendentes" var="item" value="#{statusForecastAction.tarefas}" emptyMessage="Não existem tarefas pendentes para este Centro de Custo/Área."
+					paginator="true"
+					paginatorPosition="bottom"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+					rows="20"
+					style="overflow:wrap;"
+					>
+					<f:facet name="header">
+							Forecast - Tarefas em andamento
+					</f:facet>
+					<f:facet name="{Exporters}" >
+							 <h:commandLink id="excel" value="Exportar para Excel" >
+				        		<p:dataExporter type="xls" target="statusPendentes" fileName="status_forecast"  />
+				    		</h:commandLink>
+					</f:facet>
+					<p:column  headerText="Codigo" width="5%">
+						<h:outputText value="#{item.id}"/>
+					</p:column>
+					<p:column headerText="Tarefa" sortBy="#{item.name}" >
+						<h:outputText value="#{item.name}"/>		
+					</p:column>
+				
+					<p:column headerText="Usuario"  sortBy="#{item.nomeUsuario}">
+						<h:outputText value="#{item.nomeUsuario}"/>
+					</p:column>
+					
+				 	<p:column headerText="Login"  sortBy="#{item.login}">
+						<h:outputText value="#{item.login}"/>
+					</p:column>
+					
+					<p:column headerText="Area" sortBy="#{item.nomeArea}">
+						<h:outputText value="#{item.nomeArea}"/>
+					</p:column>
+					
+					<p:column headerText="Nome CC" sortBy="#{item.nomeCentroCusto}">
+						<h:outputText value="#{item.nomeCentroCusto}"/>
+					</p:column>
+					
+					<p:column headerText="Codigo CC" sortBy="#{item.codigoCentroCusto}">
+						<h:outputText value="#{item.codigoCentroCusto}"/>
+					</p:column>
+					
+			</p:dataTable>
+			</h:form>
+		</p:panel>
+	</ui:define>
+</ui:composition>

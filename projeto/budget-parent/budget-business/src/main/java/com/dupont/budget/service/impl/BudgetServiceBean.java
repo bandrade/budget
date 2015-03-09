@@ -1,5 +1,6 @@
 package com.dupont.budget.service.impl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -238,7 +239,7 @@ public class BudgetServiceBean extends GenericService implements BudgetService {
 			BudgetAreaDTO budget = new BudgetAreaDTO();
 			budget.setIdArea(Long.valueOf(String.valueOf(object[0])));
 			budget.setNomeArea(String.valueOf(object[1]));
-			budget.setValorTotalBudget(Double.valueOf(String.valueOf(object[2])));
+			budget.setValorTotalBudget(new BigDecimal(String.valueOf(object[2])));
 			budget.setStatus(String.valueOf(object[3]));
 			BudgetEstipuladoAnoArea budgetAno = obterValoresAprovadosESubmetidos(Long.valueOf(object[0].toString()), ano);
 			if(budgetAno!=null)
@@ -354,9 +355,9 @@ public class BudgetServiceBean extends GenericService implements BudgetService {
 				.setParameter("area_id",areaId).getResultList();
 		for(Budget budget : budgets )
 		{
-			budget.setValorTotalBudget(em.createNamedQuery("Despesa.obterSomaDespesa",Double.class)
+			budget.setValorTotalBudget(em.createNamedQuery("Despesa.obterSomaDespesa",BigDecimal.class)
 			.setParameter("budgetId",budget.getId()).getSingleResult());
-			budget.setValorTotalProposto(em.createNamedQuery("Despesa.obterSomaValorPropostoDespesa",Double.class)
+			budget.setValorTotalProposto(em.createNamedQuery("Despesa.obterSomaValorPropostoDespesa",BigDecimal.class)
 					.setParameter("budgetId",budget.getId()).getSingleResult());
 
 			BudgetEstipuladoAnoCC budgetEstipulado = obterValoresAprovadosESubmetidosCC(budget.getCentroCusto().getId(),budget.getAno());
@@ -421,13 +422,13 @@ public class BudgetServiceBean extends GenericService implements BudgetService {
 
 				ReportBudgetOrcadoUtilizadoDetail oldDetail = oldDetails.get(i);
 				ReportBudgetOrcadoUtilizadoDistribuicaoDetail newDetail
-									= new ReportBudgetOrcadoUtilizadoDistribuicaoDetail(oldDetail.getDetail(), oldDetail.getOrcado(), oldDetail.getUtilizado(), 0.0);
+									= new ReportBudgetOrcadoUtilizadoDistribuicaoDetail(oldDetail.getDetail(), oldDetail.getOrcado(), oldDetail.getUtilizado(), new BigDecimal(0d));
 
 				newDetails.add(newDetail);
 			}
 
 			// Troca o objeto mater
-			ReportBudgetOrcadoUtilizadoDistribuicaoMaster newMaster = new ReportBudgetOrcadoUtilizadoDistribuicaoMaster(item.getMaster(), item.getTotalOrcado(), item.getTotalUtilizado(), 0.0);
+			ReportBudgetOrcadoUtilizadoDistribuicaoMaster newMaster = new ReportBudgetOrcadoUtilizadoDistribuicaoMaster(item.getMaster(), item.getTotalOrcado(), item.getTotalUtilizado(), new BigDecimal(0d));
 			newMaster.setDetails(newDetails);
 			newReport.add(newMaster);
 			cacheMap.put(item.getMaster(), newMaster);
@@ -444,7 +445,7 @@ public class BudgetServiceBean extends GenericService implements BudgetService {
 
 			String master    = (String) line[0];
 			String detail    = (String) line[1];
-			Double forecast  = (Double) line[2];
+			BigDecimal forecast  = (BigDecimal) line[2];
 
 			ReportBudgetOrcadoUtilizadoDistribuicaoMaster item = cacheMap.get(master);
 
@@ -458,7 +459,7 @@ public class BudgetServiceBean extends GenericService implements BudgetService {
 				continue;
 
 			// Adicona o valor utilizado total da despesa
-			item.setTotalForecast(item.getTotalForecast() + forecast);;
+			item.setTotalForecast(item.getTotalForecast().add(forecast));
 			_detail.setForecast(forecast);
 		}
 
@@ -533,16 +534,16 @@ public class BudgetServiceBean extends GenericService implements BudgetService {
 
 			String master = (String) line[0];
 			String detail = (String) line[1];
-			Double orcado = (Double) line[2];
+			BigDecimal orcado = (BigDecimal) line[2];
 
 			ReportBudgetOrcadoUtilizadoMaster item = cacheMap.get(master);
 
 			if( item == null ) {
-				item = new ReportBudgetOrcadoUtilizadoMaster(master, 0.0, 0.0);
+				item = new ReportBudgetOrcadoUtilizadoMaster(master, new BigDecimal(0d), new BigDecimal(0d));
 				result.add(item);
 			}
 
-			ReportBudgetOrcadoUtilizadoDetail acaoReport = new ReportBudgetOrcadoUtilizadoDetail(detail, orcado, 0.0);
+			ReportBudgetOrcadoUtilizadoDetail acaoReport = new ReportBudgetOrcadoUtilizadoDetail(detail, orcado, new BigDecimal(0d));
 
 			item.addDetail(acaoReport);
 
@@ -555,7 +556,7 @@ public class BudgetServiceBean extends GenericService implements BudgetService {
 
 			String master    = (String) line[0];
 			String detail    = (String) line[1];
-			Double utilizado = (Double) line[2];
+			BigDecimal utilizado = (BigDecimal) line[2];
 
 			ReportBudgetOrcadoUtilizadoMaster item = cacheMap.get(master);
 
@@ -570,7 +571,7 @@ public class BudgetServiceBean extends GenericService implements BudgetService {
 				continue;
 
 			// Adicona o valor utilizado total da despesa
-			item.setTotalUtilizado(item.getTotalUtilizado() + utilizado);
+			item.setTotalUtilizado(item.getTotalUtilizado().add( utilizado));
 			_detail.setUtilizado(utilizado);
 		}
 

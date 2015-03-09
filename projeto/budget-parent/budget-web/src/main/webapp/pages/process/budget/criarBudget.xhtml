@@ -183,6 +183,8 @@
 				
 				</p:panelGrid>
 					<p:panelGrid columns="1" styleClass="painel-botoes">
+					<p:commandButton  id="salvar" action="#{criarBudgetAction.adicionarDespesas()}" update=":form,:messages" style=" visibility: hidden;"></p:commandButton>
+					<p:defaultCommand target="salvar" />
 					<p:commandButton value="Concluir"  action="#{criarBudgetAction.concluir()}" onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" >
 						<p:confirm header="Confirmação" message="Confirma a conclusão da Criação do Budget?" icon="ui-icon-alert"/> 
 					</p:commandButton>

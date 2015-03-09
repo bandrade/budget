@@ -1,6 +1,7 @@
 package com.dupont.budget.web.actions;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,35 +49,35 @@ public class AjustarValoresCentroCustoAction extends BudgetAction implements Ser
 
 	}
 
-	public Double calcularTotalValorProposto()
+	public BigDecimal calcularTotalValorProposto()
 	{
-		Double valor =0d;
+		BigDecimal valor =new BigDecimal(0d);
 		if(despesasNoDetalhe!=null)
 		{
 			for(Despesa despesa: despesasNoDetalhe)
 			{
-				if( despesa!=null &&  !(despesa.isFirstLine()) && despesa.getAprovado())
+				if( despesa!=null &&  !(despesa.isFirstLine()) && despesa.getAprovado()!=null && despesa.getAprovado())
 				{
-					Double valorProposto = despesa.getValorProposto()==null ? despesa.getValor(): despesa.getValorProposto();
+					BigDecimal valorProposto = despesa.getValorProposto()==null ? despesa.getValor(): despesa.getValorProposto();
 					despesa.setValorProposto(valorProposto);
 					if(valorProposto!=null)
-						valor+=valorProposto;
+						valor=valor.add(valorProposto);
 				}
 			}
 		}
 		return valor;
 	}
 
-	public Double calcularTotalValorSubmetido()
+	public BigDecimal calcularTotalValorSubmetido()
 	{
-		Double valor =0d;
+		BigDecimal valor =new BigDecimal(0d);
 		if(despesasNoDetalhe!=null)
 		{
 			for(Despesa despesa: despesasNoDetalhe)
 			{
 				if(!despesa.isFirstLine() && despesa.getAprovado() && despesa.getValor()!=null)
 				{
-					valor+=despesa.getValor();
+					valor =valor.add(despesa.getValor());
 				}
 			}
 		}
@@ -109,13 +110,15 @@ public class AjustarValoresCentroCustoAction extends BudgetAction implements Ser
 	public String concluir()
 	{
 		try {
-			adicionarDespesas();
-
+			if(adicionarDespesas())
+			{
+				return null;
+			}
 			if(!validarPreenchimentoDespesas())
 			{
 				return null;
 			}
-			if(!calcularTotalValorSubmetido().equals(budgetEstipuladoAnoCC.getValorAprovado()))
+			if(!(calcularTotalValorSubmetido().equals(budgetEstipuladoAnoCC.getValorAprovado())))
 			{
 				facesUtils.addErrorMessage("O valor do budget do Centro de Custo deve ser igual ao valor aprovado");
 				return null;

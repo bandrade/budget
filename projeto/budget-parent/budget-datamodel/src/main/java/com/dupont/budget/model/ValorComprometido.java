@@ -1,5 +1,7 @@
 package com.dupont.budget.model;
 
+import java.math.BigDecimal;
+
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -34,13 +36,13 @@ public class ValorComprometido extends AbstractEntity<Long> {
 	private Acao acao;
 
 	private Integer mes;
-	
+
 	private Integer ano;
 
-	private Double valor;
+	private BigDecimal valor;
 
 	private Boolean ativo;
-	
+
 	public CentroCusto getCentroCusto() {
 		return centroCusto;
 	}
@@ -73,11 +75,11 @@ public class ValorComprometido extends AbstractEntity<Long> {
 		this.acao = acao;
 	}
 
-	public Double getValor() {
+	public BigDecimal getValor() {
 		return valor;
 	}
 
-	public void setValor(Double valor) {
+	public void setValor(BigDecimal valor) {
 		this.valor = valor;
 	}
 

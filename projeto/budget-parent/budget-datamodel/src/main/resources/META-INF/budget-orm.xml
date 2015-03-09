@@ -370,14 +370,29 @@
 						solicitacao.data_criacao
 				</query>
 			</named-native-query>
-			 <named-native-query name="Usuario.findUsuarioByPapel">
+			 <named-native-query name="Usuario.findUsuarioByPapelCC">
 			     	<query>
-						select  usuario.login , usuario.nome as 'nome_user', centro_custo.nome as 'nome_cc', centro_custo.codigo from usuario
+						select  usuario.login , usuario.nome as 'nome_user', centro_custo.nome as 'nome_cc', centro_custo.codigo, area.nome as 'area_nome' from usuario
 								inner join
 									papel_usuario
 										on papel_usuario.usuario_id = usuario.id
 								inner join centro_custo
 										on centro_custo.id = papel_usuario.centro_custo_id
+								inner join papel
+										on papel.id = papel_usuario.papel_id
+								left join area
+										on area.id = centro_custo.area_id
+								where papel.nome like :nome_papel
+					</query>
+			</named-native-query>
+			<named-native-query name="Usuario.findUsuarioByPapelArea">
+			     	<query>
+						select  usuario.login , usuario.nome as 'nome_user', area.nome as 'nome_cc' from usuario
+								inner join
+									papel_usuario
+										on papel_usuario.usuario_id = usuario.id
+								inner join area
+										on area.id = papel_usuario.area_id
 								inner join papel
 										on papel.id = papel_usuario.papel_id
 								where papel.nome like :nome_papel

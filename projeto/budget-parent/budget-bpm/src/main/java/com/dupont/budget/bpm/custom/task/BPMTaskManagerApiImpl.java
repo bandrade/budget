@@ -21,14 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
 import javax.ejb.Stateless;
-import javax.ejb.TransactionManagement;
-import javax.ejb.TransactionManagementType;
-import javax.faces.bean.ApplicationScoped;
 import javax.inject.Inject;
-import javax.inject.Named;
-import javax.transaction.UserTransaction;
 
 import org.kie.api.task.TaskService;
 import org.kie.api.task.model.Status;
@@ -37,11 +31,16 @@ import org.kie.api.task.model.TaskSummary;
 import org.kie.internal.task.api.InternalTaskService;
 
 import com.dupont.budget.bpm.custom.exception.BPMException;
+import com.dupont.budget.bpm.custom.process.BPMProcessManagerApi;
+import com.dupont.budget.dto.ProcessType;
 
 @Stateless
 public class BPMTaskManagerApiImpl implements BPMTaskManagerApi, Serializable {
 	@Inject
 	TaskService taskService;
+
+	@Inject
+	BPMProcessManagerApi processManagerApi;
 
 	public List<TaskSummary> retrieveTaskList(String actorId,List<String> grupos)
 			throws BPMException {
@@ -53,6 +52,27 @@ public class BPMTaskManagerApiImpl implements BPMTaskManagerApi, Serializable {
 		}
 
 	}
+
+	public List<TaskSummary> retrieveTaskListFromGroups(List<String> groups,ProcessType type)
+			throws BPMException {
+		List<TaskSummary> tasksReady = new ArrayList<>();
+		try {
+			List<TaskSummary> tasks = taskService.getTasksAssignedAsPotentialOwner(null, groups, "en-UK", 0,2000);
+			for(TaskSummary task : tasks)
+			{
+
+				String processName = processManagerApi.getProcessName(task.getProcessInstanceId());
+
+				if(type.getProcessNames().contains(processName) && (task.getStatus().equals(Status.Ready) || task.getStatus().equals(Status.Created)))
+					tasksReady.add(task);
+			}
+			return tasksReady;
+		} catch (Exception e) {
+			throw new BPMException("Erro ao obter a tarefas", e);
+		}
+
+	}
+
 	public List<TaskSummary> retrieveTaskListAdm()
 			throws BPMException {
 		List<TaskSummary> tasksReady = new ArrayList<>();

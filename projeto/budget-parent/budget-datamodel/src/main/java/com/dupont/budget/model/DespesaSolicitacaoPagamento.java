@@ -1,5 +1,7 @@
 package com.dupont.budget.model;
 
+import java.math.BigDecimal;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -55,12 +57,12 @@ public class DespesaSolicitacaoPagamento extends AbstractEntity<Long> {
 	@ManyToOne(cascade=CascadeType.PERSIST)
 	@JoinColumn(name = "solicitacao_pagamento_id")
 	private SolicitacaoPagamento solicitacaoPagamento;
-	
-	private Double valor;
+
+	private BigDecimal valor;
 
 	public boolean isPreenchimentoCompleto()
 	{
-		if(centroCusto !=null && centroCusto.getId() !=null && acao !=null && acao.getId() !=null && valor !=null && valor !=0d)
+		if(centroCusto !=null && centroCusto.getId() !=null && acao !=null && acao.getId() !=null && valor !=null && valor.doubleValue() !=0d)
 		{
 			return true;
 		}
@@ -69,7 +71,7 @@ public class DespesaSolicitacaoPagamento extends AbstractEntity<Long> {
 			return false;
 		}
 	}
-	
+
 	public CentroCusto getCentroCusto() {
 		return centroCusto;
 	}
@@ -142,11 +144,11 @@ public class DespesaSolicitacaoPagamento extends AbstractEntity<Long> {
 		this.solicitacaoPagamento = solicitacaoPagamento;
 	}
 
-	public Double getValor() {
+	public BigDecimal getValor() {
 		return valor;
 	}
 
-	public void setValor(Double valor) {
+	public void setValor(BigDecimal valor) {
 		this.valor = valor;
 	}
 
@@ -158,7 +160,7 @@ public class DespesaSolicitacaoPagamento extends AbstractEntity<Long> {
 			return "";
 	}
 
-	
+
 
 
 

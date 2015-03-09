@@ -5,20 +5,21 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import javax.ejb.Asynchronous;
 import javax.ejb.Stateless;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
+import javax.persistence.NonUniqueResultException;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -55,10 +56,10 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
 
 	@Inject
 	private DomainService service;
-	
+
 	@Inject
 	private ForecastService forecastService;
-	
+
 	@Inject
 	private BudgetService budgetService;
 
@@ -87,7 +88,7 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
     @Override
     @Asynchronous
     public void onFornecedorUpload(@Observes @Uploaded(Fornecedor.class) UploadEvent event) {
-	
+
     	logger.debug("Evento de cadastro de fornecedores sendo processado pelo serviço.");
 
 		File file = new File(event.getPath());
@@ -166,7 +167,7 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
 								acaoRow,
 								mesRow);
 						if (valor != null) {
-							valor.setValor(valorRow);
+							valor.setValor(new BigDecimal(valorRow));
 							service.update(valor);
 						} else {
 							valor = new ValorComprometido();
@@ -181,13 +182,13 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
 							}
 							TipoDespesa tipoDespesa = tiposDespesa.get(0);
 							valor.setTipoDespesa(tipoDespesa);
-							
+
 							Budget budget = budgetService.findByAnoAndCentroDeCusto(ano+"", centroCusto.getId());
 							boolean possuiBudget = budget !=null;
 							Forecast forecast = forecastService.findForecastByCCAndAno(ano+"", centroCusto.getId());
 							if(forecast ==null)
 								continue;
-							
+
 							Acao acao = service.findAcaoByForecastOrBudget(possuiBudget? budget.getId():null ,forecast.getId(),acaoRow.toLowerCase()) ;
 							if (acao == null) {
 								acao = new Acao(acaoRow);
@@ -209,14 +210,14 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
 								despesaForecast.setAcao(acao);
 								despesaForecast.setAtivo(true);
 								despesaForecast.setTipoDespesa(tipoDespesa);
-								despesaForecast.setValor(0D);
+								despesaForecast.setValor(new BigDecimal(0D));
 								forecastService.incluirDespesaForecast(despesaForecast,mes);
-								
+
 							}
 							valor.setAcao(acao);
 							valor.setAtivo(true);
 							valor.setMes(Integer.valueOf(mesRow+""));
-							valor.setValor(valorRow);
+							valor.setValor(new BigDecimal(valorRow));
 							valor.setAno(ano);
 							service.create(valor);
 						}
@@ -235,7 +236,7 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
     @Asynchronous
 	public void onSolicitacaoPagamentoUpload(@Observes @Uploaded(SolicitacaoPagamento.class) UploadEvent event) {
     	logger.debug("Evento de atualização de solicitações de pagamento sendo processado pelo serviço.");
-    	
+
 		File file = new File(event.getPath());
 		Sheet sheet = loadFileSheet(file);
 		Calendar c = Calendar.getInstance();
@@ -249,14 +250,15 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
 				while (rowIterator.hasNext()) {
 					Row row = rowIterator.next();
 					try {
+						logger.info("Leitura da linha : " +row.getRowNum()  + " Quantidade de celulas: "+ row.getPhysicalNumberOfCells() + " " );
 						row.getCell(0).setCellType(Cell.CELL_TYPE_STRING);
 						Integer per = Integer.valueOf(row.getCell(0).getStringCellValue());
-						
-						
+
+
 						c.setTime(new Date());
 						c.set(Calendar.DAY_OF_MONTH, 1);
 						c.set(Calendar.MONTH, per-1);
-						
+
 						String numeroNota = null;
 						row.getCell(7).setCellType(Cell.CELL_TYPE_STRING);
 						numeroNota= row.getCell(7).getStringCellValue();
@@ -265,48 +267,64 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
 							continue;
 						}
 
+
 						List<Fornecedor> list = service.findByName(new Fornecedor(row.getCell(6).getStringCellValue()));
 						if (list.isEmpty() || list.size() > 1) {
 							writeLine("Fornecedor não encontrado", bw, row);
 							continue;
-						}	
+						}
 						Fornecedor fornecedor = list.get(0);
-						
-						CentroCusto centroCusto = service.findCentroCustoByCodigo(row.getCell(8).getStringCellValue());
-						if (centroCusto == null) {
-							writeLine("Centro de custo não encontrado", bw, row);
+
+						CentroCusto centroCusto = null;
+
+						try
+						{
+
+							centroCusto = service.findCentroCustoByCodigo(row.getCell(8).getStringCellValue());
+							if (centroCusto == null) {
+								writeLine("Centro de custo não encontrado", bw, row);
+								continue;
+							}
+						}
+						catch (NonUniqueResultException e) {
+							writeLine("Centro de custo duplicado", bw, row);
 							continue;
 						}
 
-						Double valor = row.getCell(16).getNumericCellValue();
-						
+						Double _valor = row.getCell(16).getNumericCellValue();
+						BigDecimal valor =  new BigDecimal(_valor);
 						solicitacao = service.findSolicitacaoByNumeroNotaEFornecedor(row.getCell(7).getStringCellValue(),list.get(0).getId());
-						
+
 						if (solicitacao == null) {
+							if(valor.setScale(2, RoundingMode.HALF_UP).compareTo(new BigDecimal(0.0d).setScale(2, RoundingMode.HALF_UP))<0)
+							{
+								writeLine("NÃO É POSSÍVEL CRIAR UMA RECLASSIFICAÇÃO PARA UMA NOTA NÃO EXISTENTE", bw, row);
+								continue;
+							}
 							criarCoverSheet(fornecedor,numeroNota,valor,centroCusto,c.getTime());
 							writeLine("PENDENTE_VALIDACAO", bw, row);
 							continue;
-						} 
-						else if(solicitacao.getStatus().equals(StatusPagamento.PAGO) && valor >=0d)
+						}
+						else if(solicitacao.getStatus().equals(StatusPagamento.PAGO) && valor.compareTo(new BigDecimal(0d)) >=0)
 							continue;
 						else {
 								DespesaSolicitacaoPagamento d =  solicitacao.getDespesaByCC(centroCusto);
 								if(d !=null)
 								{
 									//tratamento de reclassificacao
-								    if (valor<0d) {
+								    if (valor.compareTo(new BigDecimal(0d)) <0) {
 										tratarReClassificacao(solicitacao,d,valor,bw,row);
 										continue;
 									}
 									else if (!(d.getValor().equals(valor))) {
 										writeLine("Valor divergente entre Cover Sheet e Relatório SAP", bw, row);
 										continue ;
-									} 
+									}
 									//tratamento de rateio
 									else  if(solicitacao.getTipoSolicitacao().equals(TipoSolicitacao.RATEIO))
 									{
 											int index = rateiosPendentes.indexOf(solicitacao);
-											
+
 											if(index >=0)
 											{
 												solicitacao = rateiosPendentes.get(index);
@@ -320,7 +338,7 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
 												solicitacao.setDataPagamentoRealizado(c.getTime());
 												solicitacao.addDespesasContabilizada(d);
 												solicitacao.addRow(row);
-												rateiosPendentes.add(solicitacao);	
+												rateiosPendentes.add(solicitacao);
 											}
 											continue;
 									}
@@ -340,16 +358,21 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
 											service.create(_despesa);
 											solicitacao.getDespesas().add(_despesa);
 											solicitacao.setTipoSolicitacao(TipoSolicitacao.RATEIO);
-											solicitacao.setValor(solicitacao.getValor()+ valor);
+											solicitacao.setValor(solicitacao.getValor().add(valor));
 											solicitacao.addDespesaSolicitacaoPagamento(_despesa);
 											service.update(solicitacao);
 											writeLine("PENDENTE_VALIDACAO", bw, row);
 											continue;
 								}
 							}
-							
+
 					} catch (Exception e) {
 						if(row.getCell(7)!=null && row.getCell(8) !=null && row.getCell(6)!=null && row.getCell(16)!=null)
+
+							row.getCell(7).setCellType(Cell.CELL_TYPE_STRING);
+							row.getCell(8).setCellType(Cell.CELL_TYPE_STRING);
+							row.getCell(6).setCellType(Cell.CELL_TYPE_STRING);
+							row.getCell(16).setCellType(Cell.CELL_TYPE_STRING);
 							bw.write(String.format("%s;%s;%s;%s;Erro durante a leitura\n", row.getCell(7).getStringCellValue(),
 									row.getCell(8).getStringCellValue(), row.getCell(6).getStringCellValue(), row.getCell(16).getStringCellValue().replace(",", ".")));
 					}
@@ -382,22 +405,22 @@ public class DeliveryHandlerServiceBean implements DeliveryHandlerService {
 			e.printStackTrace();
 		}
     }
-    
-    private void tratarReClassificacao(SolicitacaoPagamento solicitacao, DespesaSolicitacaoPagamento d,Double valor,BufferedWriter bw,Row row) throws IOException
+
+    private void tratarReClassificacao(SolicitacaoPagamento solicitacao, DespesaSolicitacaoPagamento d,BigDecimal valor,BufferedWriter bw,Row row) throws IOException
     {
-    	if(d.getValor() - valor <0d)
+    	if(d.getValor().subtract(valor).compareTo(new BigDecimal(0d)) <0)
 		{
 			writeLine("Valor de reclassificação é maior que o valor do cover sheet", bw, row);
 		}
 		else
 		{
-			solicitacao.setValor( solicitacao.getValor() - valor);
+			solicitacao.setValor( solicitacao.getValor().subtract(valor));
 			service.update(solicitacao);
 			writeLine("SUCESSO", bw, row);
 		}
     }
-    
-    private void criarCoverSheet(Fornecedor fornecedor,String numeroNota,Double valor,CentroCusto centroCusto, Date dataPagamentoRealizado)
+
+    private void criarCoverSheet(Fornecedor fornecedor,String numeroNota,BigDecimal valor,CentroCusto centroCusto, Date dataPagamentoRealizado)
     {
     	SolicitacaoPagamento o = new SolicitacaoPagamento(StatusPagamento.PENDENTE_VALIDACAO);
 		o.setFornecedor(fornecedor);

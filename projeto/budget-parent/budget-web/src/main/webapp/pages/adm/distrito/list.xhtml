@@ -1,0 +1,53 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/templates/default.xhtml">
+                
+	<ui:define name="content">
+	    <h3>Pesquisa de distritos</h3>
+		<h:form id="form" prependId="false">
+		
+			<h:panelGrid columns="3" border="0">
+			
+				<p:outputLabel value="Nome:" for="nomeInput"/>
+				<p:inputText id="nomeInput" value="#{distrito.nome}"/>
+				<p:message for="nomeInput"/>
+				
+				<p:commandButton value="Pesquisar" icon="ui-icon-search"   styleClass="button" action="#{distritoAction.find}" update="distritos"/>
+				<p:commandButton value="Novo"      icon="ui-icon-document" styleClass="button" action="#{distritoAction.newPage}"   />
+			</h:panelGrid>
+			
+			<p:separator />
+			
+			<p:dataTable id="distritos" var="item" value="#{distritoAction.list}" emptyMessage="Nenhum registro encontrado."
+					paginator="true"
+					paginatorPosition="bottom"
+					rows="10">
+				<f:facet name="header">
+					distrito
+				</f:facet>
+				<p:column headerText="Nome" sortBy="#{item.nome}" >
+					#{item.nome}
+				</p:column> 
+				
+				<p:column headerText="Ações" style="width:10%" >
+					
+					<p:commandButton icon="ui-icon-pencil" action="#{distritoAction.edit(item)}"   update="distritos" />
+					<p:commandButton icon="ui-icon-trash"  action="#{distritoAction.delete(item)}" update="distritos" >
+						<p:confirm header="Confirmação" message="Deseja realmente remover o dado?" icon="ui-icon-alert" />
+					</p:commandButton>
+					
+				</p:column>
+			
+			</p:dataTable>
+			
+			<p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+		        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+		        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no"  icon="ui-icon-close" />
+		    </p:confirmDialog>
+		</h:form>
+	</ui:define>
+	
+</ui:composition>

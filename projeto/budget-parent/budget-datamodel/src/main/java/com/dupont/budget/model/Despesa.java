@@ -1,5 +1,7 @@
 package com.dupont.budget.model;
 
+import java.math.BigDecimal;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -72,13 +74,13 @@ public class Despesa extends AbstractEntity<Long> {
 	@Column(name="aprovacao")
 	private Boolean aprovado;
 
-	private Double valor;
-	
-	@Column(name="valor_proposto")	
-	private Double valorProposto;
+	private BigDecimal valor;
+
+	@Column(name="valor_proposto")
+	private BigDecimal valorProposto;
 
 	private String comentario;
-	
+
 	@Transient
 	private String acaoString;
 
@@ -88,13 +90,13 @@ public class Despesa extends AbstractEntity<Long> {
 
 	@Transient
 	private Integer indice;
-	
+
 	@Transient
 	private boolean firstLine;
-	
-	@Transient 
+
+	@Transient
 	private boolean possuiErro;
-	
+
 
 	public TipoDespesa getTipoDespesa() {
 		return tipoDespesa;
@@ -152,11 +154,11 @@ public class Despesa extends AbstractEntity<Long> {
 		this.distrito = distrito;
 	}
 
-	public Double getValor() {
+	public BigDecimal getValor() {
 		return valor;
 	}
 
-	public void setValor(Double valor) {
+	public void setValor(BigDecimal valor) {
 		this.valor = valor;
 	}
 
@@ -224,11 +226,11 @@ public class Despesa extends AbstractEntity<Long> {
 			setValor(null);
 	}
 
-	public Double getValorProposto() {
+	public BigDecimal getValorProposto() {
 		return valorProposto;
 	}
 
-	public void setValorProposto(Double valorProposto) {
+	public void setValorProposto(BigDecimal valorProposto) {
 		this.valorProposto = valorProposto;
 	}
 
@@ -239,8 +241,8 @@ public class Despesa extends AbstractEntity<Long> {
 	public void setFirstLine(boolean firstLine) {
 		this.firstLine = firstLine;
 	}
-	
-	
+
+
 	public Integer getIndice() {
 		return indice;
 	}
@@ -248,9 +250,9 @@ public class Despesa extends AbstractEntity<Long> {
 	public void setIndice(Integer indice) {
 		this.indice = indice;
 	}
-	
 
-	
+
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -297,7 +299,7 @@ public class Despesa extends AbstractEntity<Long> {
 		}
 		else if (!firstLine==other.isFirstLine())
 			return false;
-		
+
 		return true;
 	}
 
@@ -316,7 +318,7 @@ public class Despesa extends AbstractEntity<Long> {
 	public void setAcaoString(String acaoString) {
 		this.acaoString = acaoString;
 	}
-	
-	
+
+
 }
 

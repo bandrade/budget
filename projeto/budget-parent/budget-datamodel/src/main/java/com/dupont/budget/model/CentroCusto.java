@@ -25,16 +25,16 @@ import javax.persistence.Table;
 @Entity
 @Table(name="centro_custo")
 @NamedQueries({
-	@NamedQuery(name="CentroCusto.findAll"   , query="select c from CentroCusto c"),
+	@NamedQuery(name="CentroCusto.findAll"   , query="select c from CentroCusto c order by c.codigo"),
 	@NamedQuery(name="CentroCusto.findByArea"   , query="select c from CentroCusto c where c.area.id=:area_id"),
 	@NamedQuery(name="CentroCusto.findAreaByCC"   , query="select c.area from CentroCusto c where c.id=:id"),
-	
+
 	@NamedQuery(name = CentroCusto.FIND_BY_CODIGO, query="select c from CentroCusto c where lower(c.codigo) like lower(:codigo)")
 })
 public class CentroCusto extends NamedAbstractEntity<Long> {
 
 	private static final long serialVersionUID = 763183827982065682L;
-	
+
 	public static final String FIND_BY_CODIGO = "CentroCusto.findByCodigo";
 
 	private String codigo;

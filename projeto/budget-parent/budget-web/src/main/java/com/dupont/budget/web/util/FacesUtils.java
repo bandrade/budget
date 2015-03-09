@@ -1,6 +1,7 @@
 package com.dupont.budget.web.util;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -47,7 +48,7 @@ public class FacesUtils implements Serializable{
 	public void addInfoMessage(String message){
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Informação", message));
 	}
-	
+
 	/**
 	 * Adiciona uma mensagem de aviso no contexto JSF.
 	 * @param message mensagem a ser adicionada
@@ -55,7 +56,7 @@ public class FacesUtils implements Serializable{
 	public void addWarnMessage(String message){
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Aviso", message));
 	}
-	
+
 	public String removeSpecialCharacters(String word)
 	{
 		return word.replaceAll(regex, "");
@@ -96,7 +97,7 @@ public class FacesUtils implements Serializable{
 		}
 		return result;
 	}
-	
+
 
 	public <T extends NamedAbstractEntity<Long>> T validarCamposDespesa(T entidade)
 	{
@@ -121,10 +122,15 @@ public class FacesUtils implements Serializable{
 		Locale locale = new Locale("pt", "BR");
 		return NumberFormat.getCurrencyInstance(locale).format(value);
 	}
+
+	public String formatarDinheiro(BigDecimal value){
+		Locale locale = new Locale("pt", "BR");
+		return NumberFormat.getCurrencyInstance(locale).format(value);
+	}
 	public boolean isDateAfterOrEqualToday(Date to){
 		DateTimeZone BRAZIL = DateTimeZone.forID("America/Sao_Paulo");
 		return Days.daysBetween(new DateTime(BRAZIL),new DateTime(to,BRAZIL)).getDays()>=0;
 	}
-	
-	
+
+
 }

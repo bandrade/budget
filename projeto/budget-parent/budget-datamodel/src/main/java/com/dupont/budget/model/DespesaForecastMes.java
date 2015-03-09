@@ -1,6 +1,7 @@
 package com.dupont.budget.model;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -30,87 +31,87 @@ public class DespesaForecastMes implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long  id;
 
-	private Double janeiro;
+	private BigDecimal janeiro;
 
-	private Double fevereiro;
+	private BigDecimal fevereiro;
 
-	private Double marco;
+	private BigDecimal marco;
 
-	private Double abril;
+	private BigDecimal abril;
 
-	private Double maio;
+	private BigDecimal maio;
 
-	private Double junho;
+	private BigDecimal junho;
 
-	private Double julho;
+	private BigDecimal julho;
 
 	@Column(name="agosto")
-	private Double agosto;
+	private BigDecimal agosto;
 
-	private Double setembro;
-	
+	private BigDecimal setembro;
+
 	@Column(name="outubro")
-	private Double outubro;
+	private BigDecimal outubro;
 
-	private Double novembro;
+	private BigDecimal novembro;
 
-	private Double dezembro;
+	private BigDecimal dezembro;
 
-
-	@Transient
-	private Double despesaJaneiro;
 
 	@Transient
-	private Double despesaFevereiro;
+	private BigDecimal despesaJaneiro;
 
 	@Transient
-	private Double despesaMarco;
+	private BigDecimal despesaFevereiro;
 
 	@Transient
-	private Double despesaAbril;
+	private BigDecimal despesaMarco;
 
 	@Transient
-	private Double despesaMaio;
+	private BigDecimal despesaAbril;
 
 	@Transient
-	private Double despesaJunho;
+	private BigDecimal despesaMaio;
 
 	@Transient
-	private Double despesaJulho;
+	private BigDecimal despesaJunho;
 
 	@Transient
-	private Double despesaAgosto;
+	private BigDecimal despesaJulho;
 
 	@Transient
-	private Double despesaSetembro;
+	private BigDecimal despesaAgosto;
 
 	@Transient
-	private Double despesaOutubro;
+	private BigDecimal despesaSetembro;
 
 	@Transient
-	private Double despesaNovembro;
+	private BigDecimal despesaOutubro;
 
 	@Transient
-	private Double despesaDezembro;
-	
+	private BigDecimal despesaNovembro;
+
+	@Transient
+	private BigDecimal despesaDezembro;
+
 	//bi-directional many-to-one association to DespesaForecastAno
 	@OneToMany(mappedBy="despesaForecastMes")
 	private List<DespesaForecastAno> despesaForecastAnos;
 
 	public Boolean isValorComprometidoMaiorQueForecast()
 	{
-		if( despesaJaneiro !=null && janeiro!=null && despesaJaneiro > janeiro ||
-			despesaFevereiro !=null && fevereiro!=null && despesaFevereiro> fevereiro ||
-			despesaMarco !=null &&   marco!=null && despesaMarco> marco ||
-			despesaAbril !=null && abril!=null && despesaAbril> abril ||
-			despesaMaio !=null && maio!=null && despesaMaio > maio ||
-			despesaJunho !=null && junho!=null && despesaJunho> junho ||
-			despesaJulho !=null && julho!=null && despesaJulho> julho ||
-			despesaAgosto !=null && agosto!=null && despesaAgosto> agosto ||
-			despesaSetembro !=null && setembro!=null && despesaSetembro> setembro ||
-			despesaOutubro !=null && outubro!=null && despesaOutubro> outubro ||
-			despesaNovembro !=null && novembro!=null && despesaNovembro> novembro ||
-			despesaDezembro !=null && dezembro!=null && despesaDezembro> dezembro
+		if( despesaJaneiro !=null && janeiro!=null && despesaJaneiro.compareTo(janeiro) > 0 ||
+			despesaFevereiro !=null && fevereiro!=null && despesaFevereiro.compareTo(fevereiro) > 0  ||
+			despesaMarco !=null &&   marco!=null && despesaMarco.compareTo(marco) > 0  ||
+			despesaAbril !=null && abril!=null && despesaAbril.compareTo(abril) > 0  ||
+			despesaMaio !=null && maio!=null && despesaMaio.compareTo(maio) > 0  ||
+			despesaJunho !=null && junho!=null && despesaJunho.compareTo(junho) > 0 ||
+			despesaJulho !=null && julho!=null && despesaJulho.compareTo(julho) > 0 ||
+			despesaAgosto !=null && agosto!=null && despesaAgosto.compareTo(agosto) > 0  ||
+			despesaSetembro !=null && setembro!=null && despesaSetembro.compareTo(setembro) > 0 ||
+			despesaOutubro !=null && outubro!=null && despesaOutubro.compareTo(outubro) > 0 ||
+			despesaNovembro !=null && novembro!=null && despesaNovembro.compareTo(novembro) > 0  ||
+			despesaDezembro !=null && dezembro!=null && despesaDezembro.compareTo(dezembro) > 0
 		)
 		{
 			return true;
@@ -118,17 +119,17 @@ public class DespesaForecastMes implements Serializable {
 		return false;
 
 	}
-	
+
 	public boolean possuiValorPreenchido()
 	{
-		 	 return 	 
-		 			janeiro !=null 	|| 
+		 	 return
+		 			janeiro !=null 	||
 					fevereiro !=null ||
 					marco !=null 	||
 					abril !=null 	||
 					maio !=null 		||
 					junho !=null 	||
-					julho !=null		|| 
+					julho !=null		||
 					agosto !=null 	||
 					setembro !=null 	||
 					outubro !=null 	||
@@ -137,10 +138,10 @@ public class DespesaForecastMes implements Serializable {
 	}
 
 	public DespesaForecastMes(){}
-	public DespesaForecastMes( Double janeiro, Double fevereiro,
-			Double marco, Double abril, Double maio, Double junho,
-			Double julho, Double agosto, Double setembro, Double outubro,
-			Double novembro, Double dezembro) {
+	public DespesaForecastMes( BigDecimal janeiro, BigDecimal fevereiro,
+			BigDecimal marco, BigDecimal abril, BigDecimal maio, BigDecimal junho,
+			BigDecimal julho, BigDecimal agosto, BigDecimal setembro, BigDecimal outubro,
+			BigDecimal novembro, BigDecimal dezembro) {
 		this.janeiro = janeiro;
 		this.fevereiro = fevereiro;
 		this.marco = marco;
@@ -159,7 +160,7 @@ public class DespesaForecastMes implements Serializable {
 		DespesaForecastMes forecastMes = new DespesaForecastMes(despesaMensalisada.getJaneiro(), despesaMensalisada.getFevereiro(),
 				despesaMensalisada.getMarco(), despesaMensalisada.getAbril(), despesaMensalisada.getMaio(), despesaMensalisada.getJunho(),
 				despesaMensalisada.getJulho(),
-				despesaMensalisada.getAgosto(), despesaMensalisada.getSetembro(), despesaMensalisada.getOutubro(), despesaMensalisada.getNovembro(), 
+				despesaMensalisada.getAgosto(), despesaMensalisada.getSetembro(), despesaMensalisada.getOutubro(), despesaMensalisada.getNovembro(),
 				despesaMensalisada.getDezembro());
 		return forecastMes;
 	}
@@ -176,219 +177,219 @@ public class DespesaForecastMes implements Serializable {
 
 
 
-	public Double getJaneiro() {
+	public BigDecimal getJaneiro() {
 		return janeiro;
 	}
 
-	public void setJaneiro(Double janeiro) {
+	public void setJaneiro(BigDecimal janeiro) {
 		this.janeiro = janeiro;
 	}
 
-	public Double getFevereiro() {
+	public BigDecimal getFevereiro() {
 		return fevereiro;
 	}
 
-	public void setFevereiro(Double fevereiro) {
+	public void setFevereiro(BigDecimal fevereiro) {
 		this.fevereiro = fevereiro;
 	}
 
-	public Double getMarco() {
+	public BigDecimal getMarco() {
 		return marco;
 	}
 
-	public void setMarco(Double marco) {
+	public void setMarco(BigDecimal marco) {
 		this.marco = marco;
 	}
 
-	public Double getAbril() {
+	public BigDecimal getAbril() {
 		return abril;
 	}
 
-	public void setAbril(Double abril) {
+	public void setAbril(BigDecimal abril) {
 		this.abril = abril;
 	}
 
-	public Double getMaio() {
+	public BigDecimal getMaio() {
 		return maio;
 	}
 
-	public void setMaio(Double maio) {
+	public void setMaio(BigDecimal maio) {
 		this.maio = maio;
 	}
 
-	public Double getJunho() {
+	public BigDecimal getJunho() {
 		return junho;
 	}
 
-	public void setJunho(Double junho) {
+	public void setJunho(BigDecimal junho) {
 		this.junho = junho;
 	}
 
-	public Double getJulho() {
+	public BigDecimal getJulho() {
 		return julho;
 	}
 
-	public void setJulho(Double julho) {
+	public void setJulho(BigDecimal julho) {
 		this.julho = julho;
 	}
 
-	public Double getAgosto() {
+	public BigDecimal getAgosto() {
 		return agosto;
 	}
 
-	public void setAgosto(Double agosto) {
+	public void setAgosto(BigDecimal agosto) {
 		this.agosto = agosto;
 	}
 
-	public Double getSetembro() {
+	public BigDecimal getSetembro() {
 		return setembro;
 	}
 
-	public void setSetembro(Double setembro) {
+	public void setSetembro(BigDecimal setembro) {
 		this.setembro = setembro;
 	}
 
-	public Double getOutubro() {
+	public BigDecimal getOutubro() {
 		return outubro;
 	}
 
-	public void setOutubro(Double outubro) {
+	public void setOutubro(BigDecimal outubro) {
 		this.outubro = outubro;
 	}
 
-	public Double getNovembro() {
+	public BigDecimal getNovembro() {
 		return novembro;
 	}
 
-	public void setNovembro(Double novembro) {
+	public void setNovembro(BigDecimal novembro) {
 		this.novembro = novembro;
 	}
 
-	public Double getDezembro() {
+	public BigDecimal getDezembro() {
 		return dezembro;
 	}
 
-	public void setDezembro(Double dezembro) {
+	public void setDezembro(BigDecimal dezembro) {
 		this.dezembro = dezembro;
 	}
 
 
-	public Double getDespesaJaneiro() {
+	public BigDecimal getDespesaJaneiro() {
 		return despesaJaneiro;
 	}
 
 
-	public void setDespesaJaneiro(Double despesaJaneiro) {
+	public void setDespesaJaneiro(BigDecimal despesaJaneiro) {
 		this.despesaJaneiro = despesaJaneiro;
 	}
 
 
-	public Double getDespesaFevereiro() {
+	public BigDecimal getDespesaFevereiro() {
 		return despesaFevereiro;
 	}
 
 
-	public void setDespesaFevereiro(Double despesaFevereiro) {
+	public void setDespesaFevereiro(BigDecimal despesaFevereiro) {
 		this.despesaFevereiro = despesaFevereiro;
 	}
 
 
-	public Double getDespesaMarco() {
+	public BigDecimal getDespesaMarco() {
 		return despesaMarco;
 	}
 
 
-	public void setDespesaMarco(Double despesaMarco) {
+	public void setDespesaMarco(BigDecimal despesaMarco) {
 		this.despesaMarco = despesaMarco;
 	}
 
 
-	public Double getDespesaAbril() {
+	public BigDecimal getDespesaAbril() {
 		return despesaAbril;
 	}
 
 
-	public void setDespesaAbril(Double despesaAbril) {
+	public void setDespesaAbril(BigDecimal despesaAbril) {
 		this.despesaAbril = despesaAbril;
 	}
 
 
-	public Double getDespesaMaio() {
+	public BigDecimal getDespesaMaio() {
 		return despesaMaio;
 	}
 
 
-	public void setDespesaMaio(Double despesaMaio) {
+	public void setDespesaMaio(BigDecimal despesaMaio) {
 		this.despesaMaio = despesaMaio;
 	}
 
 
-	public Double getDespesaJunho() {
+	public BigDecimal getDespesaJunho() {
 		return despesaJunho;
 	}
 
 
-	public void setDespesaJunho(Double despesaJunho) {
+	public void setDespesaJunho(BigDecimal despesaJunho) {
 		this.despesaJunho = despesaJunho;
 	}
 
 
-	public Double getDespesaJulho() {
+	public BigDecimal getDespesaJulho() {
 		return despesaJulho;
 	}
 
 
-	public void setDespesaJulho(Double despesaJulho) {
+	public void setDespesaJulho(BigDecimal despesaJulho) {
 		this.despesaJulho = despesaJulho;
 	}
 
 
-	public Double getDespesaAgosto() {
+	public BigDecimal getDespesaAgosto() {
 		return despesaAgosto;
 	}
 
 
-	public void setDespesaAgosto(Double despesaAgosto) {
+	public void setDespesaAgosto(BigDecimal despesaAgosto) {
 		this.despesaAgosto = despesaAgosto;
 	}
 
 
-	public Double getDespesaSetembro() {
+	public BigDecimal getDespesaSetembro() {
 		return despesaSetembro;
 	}
 
 
-	public void setDespesaSetembro(Double despesaSetembro) {
+	public void setDespesaSetembro(BigDecimal despesaSetembro) {
 		this.despesaSetembro = despesaSetembro;
 	}
 
 
-	public Double getDespesaOutubro() {
+	public BigDecimal getDespesaOutubro() {
 		return despesaOutubro;
 	}
 
 
-	public void setDespesaOutubro(Double despesaOutubro) {
+	public void setDespesaOutubro(BigDecimal despesaOutubro) {
 		this.despesaOutubro = despesaOutubro;
 	}
 
 
-	public Double getDespesaNovembro() {
+	public BigDecimal getDespesaNovembro() {
 		return despesaNovembro;
 	}
 
 
-	public void setDespesaNovembro(Double despesaNovembro) {
+	public void setDespesaNovembro(BigDecimal despesaNovembro) {
 		this.despesaNovembro = despesaNovembro;
 	}
 
 
-	public Double getDespesaDezembro() {
+	public BigDecimal getDespesaDezembro() {
 		return despesaDezembro;
 	}
 
 
-	public void setDespesaDezembro(Double despesaDezembro) {
+	public void setDespesaDezembro(BigDecimal despesaDezembro) {
 		this.despesaDezembro = despesaDezembro;
 	}
 
@@ -408,7 +409,7 @@ public class DespesaForecastMes implements Serializable {
 		this.despesaForecastAnos = despesaForecastAnos;
 	}
 
-	
+
 
 
 

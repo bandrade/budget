@@ -1,6 +1,7 @@
 package com.dupont.budget.web.actions;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -13,7 +14,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.primefaces.event.CellEditEvent;
-import org.primefaces.event.RowEditEvent;
 import org.slf4j.Logger;
 
 import com.dupont.budget.dto.CentroDeCustoDTO;
@@ -49,7 +49,7 @@ public class BudgetAction implements Serializable{
 
 	@Inject
 	protected BudgetService budgetService;
-	
+
 	@Inject
 	protected DomainService domainService;
 
@@ -62,18 +62,18 @@ public class BudgetAction implements Serializable{
 	@Inject
 	protected FacesUtils facesUtils;
 
-	protected Double valorTotalDetalhe;
+	protected BigDecimal valorTotalDetalhe;
 
 	protected Map<String, Object> params ;
 
 	protected List<Despesa> despesasNoDetalhe;
 
 	protected boolean possuiBudgetSalvo;
-	
+
 	protected TipoDespesa tipoDespesa;
-	
+
 	protected List<TipoDespesa> tiposDespesasSelecionadas;
-	
+
 	protected boolean possuiErro;
 
 	public void obterDadosBudget() throws Exception{
@@ -88,9 +88,9 @@ public class BudgetAction implements Serializable{
 				setDespesasNoDetalhe(new ArrayList<Despesa>());
 				setTiposDespesasSelecionadas(new ArrayList<TipoDespesa>());
 			}
-		   
+
 	}
-	
+
 	public List<TipoDespesa> autocompleteTipoDespesa(String input)
 	{
 		List<TipoDespesa> tiposDespesa = domainService.findAll(TipoDespesa.class);
@@ -101,7 +101,7 @@ public class BudgetAction implements Serializable{
 				tiposDespesa.remove(tipoDespesa);
 			}
 		}
-		
+
 		return facesUtils.autoComplete(tiposDespesa, input) ;
 	}
 	public void incluirTipoDespesa()
@@ -123,9 +123,9 @@ public class BudgetAction implements Serializable{
 		_despesa.initLists();
 		_despesa.setTipoDespesa(tipoDespesa);
 		despesasNoDetalhe.add(_despesa);
-		
+
 	}
-	
+
 
 	public void criarBudget()
 	{
@@ -146,6 +146,7 @@ public class BudgetAction implements Serializable{
 		catch(Exception e)
 		{
 			//facesUtils.addErrorMessage("Erro ao efetuar a criação do budget");
+			e.printStackTrace();
 			logger.error("Erro ao efetuar a criação do budget", e);
 		}
 
@@ -156,7 +157,7 @@ public class BudgetAction implements Serializable{
 	{
 		try
 		{
-			
+
 			if(!possuiBudgetSalvo)
 			{
 				criarBudget();
@@ -173,7 +174,7 @@ public class BudgetAction implements Serializable{
 				facesUtils.addErrorMessage("Linha " +(despesa.getIndice())+ "- Nao é possível adicionar uma despesa com o mesmo tipo de despesa e ação.");
 				return false;
 			}
-			if( (despesa.getValor() ==null || despesa.getValor()==0d) && isConclusao)
+			if( (despesa.getValor() ==null || despesa.getValor().doubleValue()==0d) && isConclusao)
 			{
 				despesa.setPossuiErro(true);
 				facesUtils.addErrorMessage("Linha " +(despesa.getIndice())+ "- Nao é possível adicionar uma despesa sem valor definido.");
@@ -187,10 +188,11 @@ public class BudgetAction implements Serializable{
 		catch(Exception e)
 		{
 			//facesUtils.addErrorMessage("Erro ao adicionar a despesa");
+			e.printStackTrace();
 			logger.error("Erro ao adicionar a despesa", e);
 			return false;
 		}
-		
+
 	}
 
 
@@ -204,9 +206,9 @@ public class BudgetAction implements Serializable{
 
 
 	public String concluir()
-	{	
-		
-		if(valorTotalDetalhe==null || valorTotalDetalhe<=0d)
+	{
+
+		if(valorTotalDetalhe==null || valorTotalDetalhe.doubleValue()<=0d)
 		{
 			facesUtils.addErrorMessage("Nao deve-se concluir a tarefa de Criar Budget sem adicionar nenhuma despesa com valor");
 			return null;
@@ -227,7 +229,7 @@ public class BudgetAction implements Serializable{
 			logger.error("Erro ao adicionar a despesa", e);
 			return null;
 		}
-	
+
 	}
 	public boolean adicionarDespesas()
 	{
@@ -294,7 +296,7 @@ public class BudgetAction implements Serializable{
 		List<Despesa> listaTratada = new ArrayList<>();
 		TipoDespesa tipoDespesa = null;
 		tiposDespesasSelecionadas = new ArrayList<>();
-	
+
 		for(int c = 0 ; c<despesasNoDetalhe.size();c++)
 		{
 			Despesa desp = despesasNoDetalhe.get(c);
@@ -313,7 +315,7 @@ public class BudgetAction implements Serializable{
 				listaTratada.add(desp);
 			}
 		}
-		
+
 		setDespesasNoDetalhe(listaTratada);
 	}
 
@@ -332,12 +334,12 @@ public class BudgetAction implements Serializable{
 		}
 		else
 		{
-			
+
 			adicionarDespesa(despesa,false);
 		}
 		despesasNoDetalhe.set(cellEditEvent.getRowIndex(),despesa);
 	}
-	
+
 	protected void validarAcao(Despesa despesa)
 	{
 		if(despesa.getAcao()!=null && despesa.getAcao().getNome()!=null && !despesa.getAcao().getNome().trim().equals(""))
@@ -362,19 +364,19 @@ public class BudgetAction implements Serializable{
 	{
 		try
 		{
-			
+
 			validarDadosDespesa(despesa);
 			if(despesa.getAcao() !=null && budgetService.isDespesaExistente(despesa))
 			{
 				Despesa despesaRetorno = budgetService.obterDespesaPorTipoEAcao(despesa);
 				if(!(despesaRetorno.getId().equals(despesa.getId())))
 				{
-					
-					facesUtils.addErrorMessage("Linha " +(despesa.getIndice())+ "- Não é possível adicionar uma despesa com o mesmo tipo de despesa e ação.");	
+
+					facesUtils.addErrorMessage("Linha " +(despesa.getIndice())+ "- Não é possível adicionar uma despesa com o mesmo tipo de despesa e ação.");
 					return false;
 				}
 			}
-			if((despesa.getValor() ==null || despesa.getValor()==0d)&& isConclusao)
+			if((despesa.getValor() ==null )&& isConclusao)
 			{
 				despesa.setPossuiErro(true);
 				facesUtils.addErrorMessage("Linha " +(despesa.getIndice())+ "- Não é possível adicionar uma despesa sem valor definido.");
@@ -391,13 +393,13 @@ public class BudgetAction implements Serializable{
 		}
 		return true;
 	}
-	
-	
+
+
 	public List<Acao> obterAcoesPorBudget()
 	{
 		return domainService.findAcaoByBudget(budget.getId());
 	}
-	
+
 	public CentroDeCustoDTO getCentroDeCusto() {
 		return centroDeCusto;
 	}
@@ -422,20 +424,20 @@ public class BudgetAction implements Serializable{
 		this.ano = ano;
 	}
 
-	public Double getValorTotalDetalhe() {
-		valorTotalDetalhe=0d;
+	public BigDecimal getValorTotalDetalhe() {
+		valorTotalDetalhe=new BigDecimal(0d);
 		if(despesasNoDetalhe !=null)
 		{
 			for(Despesa despesa : despesasNoDetalhe)
 			{
 				if(despesa.getValor()!=null)
-					valorTotalDetalhe +=despesa.getValor();
+					valorTotalDetalhe =valorTotalDetalhe.add(despesa.getValor());
 			}
 		}
 		return valorTotalDetalhe;
 	}
 
-	public void setValorTotalDetalhe(Double valorTotalDetalhe) {
+	public void setValorTotalDetalhe(BigDecimal valorTotalDetalhe) {
 		this.valorTotalDetalhe = valorTotalDetalhe;
 	}
 
@@ -506,6 +508,6 @@ public class BudgetAction implements Serializable{
 	public void setPossuiErro(boolean possuiErro) {
 		this.possuiErro = possuiErro;
 	}
-	
-	
+
+
 }

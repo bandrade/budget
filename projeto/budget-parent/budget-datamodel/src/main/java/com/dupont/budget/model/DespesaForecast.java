@@ -1,5 +1,7 @@
 package com.dupont.budget.model;
 
+import java.math.BigDecimal;
+import java.text.Bidi;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,22 +26,22 @@ import javax.persistence.Transient;
 @Entity
 @Table(name="despesa_forecast")
 @NamedQueries({
-	@NamedQuery(name="DespesaForecast.findByForecastTipoDespesaAndAcao", 
+	@NamedQuery(name="DespesaForecast.findByForecastTipoDespesaAndAcao",
 			query="select d from DespesaForecast d where d.forecast.id=:forecastId and d.tipoDespesa.id=:tipoDespesaId and d.acao.id=:acaoId"),
 	@NamedQuery(name="DespesaForecast.obterDespesaPorTipoEAcao", query="select c from DespesaForecast c where c.forecast.id = :forecastId and c.tipoDespesa.id=:tipoDespesaId and c.acao.id=:acaoId"),
 	@NamedQuery(name="DespesaForecast.obterDespesaTipoDespesa", query="select distinct c.tipoDespesa from DespesaForecast c where c.forecast.id = :forecastId and c.ativo=true "),
 	@NamedQuery(name="DespesaForecast.obterAcoesDespesaPorTipoDespesa", query="select distinct c.acao from DespesaForecast c where c.forecast.id = :forecastId and c.ativo=true and c.tipoDespesa.id=:tipoDespesaId")
-	
+
 })
 public class DespesaForecast {
 
 	private static final long serialVersionUID = -4344680928557842077L;
 
 	public DespesaForecast(){}
-	
+
 	@Id
 	private Long id;
-	
+
 	@ManyToOne
 	@JoinColumn(name="tipo_despesa_id")
 	private TipoDespesa tipoDespesa;
@@ -74,13 +76,13 @@ public class DespesaForecast {
 
 	private Boolean ativo;
 
-	private Double valor;
-	private Double plm;
+	private BigDecimal valor;
+	private BigDecimal plm;
 
-	private Double ytd;
+	private BigDecimal ytd;
 
 	@Transient
-	private Double valorComprometido;
+	private BigDecimal valorComprometido;
 
 	@ManyToOne
 	@JoinColumn(name="despesa_budget_id")
@@ -90,18 +92,18 @@ public class DespesaForecast {
 
 	@Transient
 	private boolean alterada;
-	
+
 	@Transient
 	private DespesaForecastMes despesaMensalisada;
-	
+
 	@Transient
 	private DespesaSolicitacaoPagamento despesaSolicitacaoPagamento;
-	
+
 
 	//bi-directional many-to-one association to DespesaForecastAno
 	@OneToMany(mappedBy="despesaForecast",fetch=FetchType.EAGER)
 	private Set<DespesaForecastAno> despesaForecastMes;
-	
+
 
 	public TipoDespesa getTipoDespesa() {
 		return tipoDespesa;
@@ -159,11 +161,11 @@ public class DespesaForecast {
 		this.distrito = distrito;
 	}
 
-	public Double getValor() {
+	public BigDecimal getValor() {
 		return valor;
 	}
 
-	public void setValor(Double valor) {
+	public void setValor(BigDecimal valor) {
 		this.valor = valor;
 	}
 
@@ -233,7 +235,7 @@ public class DespesaForecast {
 
 	public DespesaForecast(TipoDespesa tipoDespesa, Cliente cliente,
 			Acao acao, Vendedor vendedor, Produto produto, Cultura cultura,
-			Distrito distrito, Boolean ativo, Double valor,
+			Distrito distrito, Boolean ativo, BigDecimal valor,
 			String comentario) {
 		this.tipoDespesa = tipoDespesa;
 		this.cliente = cliente;
@@ -252,7 +254,7 @@ public class DespesaForecast {
 				despesaForecast.getVendedor(),despesaForecast.getProduto(),despesaForecast.getCultura(),despesaForecast.getDistrito(),true,
 				despesaForecast.getValor(),
 				despesaForecast.getComentario());
-		
+
 		this.setDespesaBudget(despesaForecast.getDespesaBudget());
 		this.setForecast(despesaForecast.getForecast());
 		DespesaForecastMes despesaForecastMes =  DespesaForecastMes.createFromDespesaMes(despesaForecast.getDespesaMensalisada());
@@ -267,27 +269,27 @@ public class DespesaForecast {
 		return despesaForecast;
 	}
 
-	public Double getPlm() {
+	public BigDecimal getPlm() {
 		return plm;
 	}
 
-	public void setPlm(Double plm) {
+	public void setPlm(BigDecimal plm) {
 		this.plm = plm;
 	}
 
-	public Double getYtd() {
+	public BigDecimal getYtd() {
 		return ytd;
 	}
 
-	public void setYtd(Double ytd) {
+	public void setYtd(BigDecimal ytd) {
 		this.ytd = ytd;
 	}
 
-	public Double getValorComprometido() {
+	public BigDecimal getValorComprometido() {
 		return valorComprometido;
 	}
 
-	public void setValorComprometido(Double valorComprometido) {
+	public void setValorComprometido(BigDecimal valorComprometido) {
 		this.valorComprometido = valorComprometido;
 	}
 
@@ -316,7 +318,7 @@ public class DespesaForecast {
 	}
 
 	public void setDespesaMensalisada(DespesaForecastMes despesaMensalisada) {
-		
+
 		this.despesaMensalisada = despesaMensalisada;
 	}
 
@@ -353,10 +355,10 @@ public class DespesaForecast {
 			DespesaSolicitacaoPagamento despesaSolicitacaoPagamento) {
 		this.despesaSolicitacaoPagamento = despesaSolicitacaoPagamento;
 	}
-	
-	
-	
-	
-	
+
+
+
+
+
 }
 

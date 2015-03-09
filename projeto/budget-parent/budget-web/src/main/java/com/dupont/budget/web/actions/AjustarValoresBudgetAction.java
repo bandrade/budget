@@ -1,6 +1,7 @@
 package com.dupont.budget.web.actions;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,30 +69,39 @@ public class AjustarValoresBudgetAction extends BudgetAction implements Serializ
 		}
 	}
 
-	public Double calcularTotalValorProposto()
+	public BigDecimal calcularTotalValorProposto()
 	{
-		Double valor =0d;
+		BigDecimal valor =new BigDecimal(0d);
 		if(despesasNoDetalhe!=null)
 		{
 			for(Despesa despesa: despesasNoDetalhe)
 			{
-				Double valorProposto = despesa.getValorProposto()==null ? despesa.getValor(): despesa.getValorProposto();
+				BigDecimal valorProposto = despesa.getValorProposto()==null ? new BigDecimal(0d): despesa.getValorProposto();
 				despesa.setValorProposto(valorProposto);
-				valor+=valorProposto;
+				valor=valor.add(valorProposto);
 			}
 		}
 		return valor;
 	}
 
+
+	private boolean validarPreenchimentoDespesas() {
+		for(Budget budget : budgets)
+		{
+			for(Despesa despesa : budget.getDespesas())
+			{
+				if( despesa!=null && !(despesa.isFirstLine()) && !(despesa.isPreeenchimentoCompleto()))
+				{
+					return false;
+				}
+			}
+		}
+		return true;
+
+	}
+
 	public String concluir()
 	{
-		/*
-		if(!validarPreenchimentoDespesas())
-		{
-			facesUtils.addErrorMessage("Todas as despesas devem ser preenchidas por completo(Produto,Cultura,Acao,Distrito,Valor e Comentario)");
-			return null;
-		}
-		*/
 		try {
 			List<BudgetEstipuladoAnoCC> lista = new ArrayList<>();
 
@@ -102,15 +112,14 @@ public class AjustarValoresBudgetAction extends BudgetAction implements Serializ
 				budgetEstipuladoCC.setValorAprovado(budget.getValorAprovadoBudget());
 				lista.add(budgetEstipuladoCC);
 			}
+			budgetService.adicionarBudgetsSubmetidosCC(lista);
 
-			if(!getValorTotalBudgetArea().equals(budgetEstipuladoAno.getValorAprovado()))
+			if(!(getValorTotalBudgetArea().setScale(2,BigDecimal.ROUND_HALF_UP).equals(budgetEstipuladoAno.getValorAprovado().setScale(2,BigDecimal.ROUND_HALF_UP))))
 			{
 				facesUtils.addErrorMessage("O valor do budget da Area deve ser igual ao valor aprovado");
 				return null;
 
 			}
-
-			budgetService.adicionarBudgetsSubmetidosCC(lista);
 
 			bpmsTask.aprovarTarefa(facesUtils.getUserLogin(), idTarefa,params);
 			facesUtils.addInfoMessage("Tarefa concluida com sucesso");
@@ -123,29 +132,29 @@ public class AjustarValoresBudgetAction extends BudgetAction implements Serializ
 	}
 
 
-	public Double getValorTotalBudgetArea()
+	public BigDecimal getValorTotalBudgetArea()
 	{
-		Double valor = 0d;
+		BigDecimal valor = new BigDecimal(0d);
 		if(budgets !=null)
 		{
 			for(Budget budget : budgets)
 			{
 				if(budget.getValorAprovadoBudget() !=null)
-					valor+= budget.getValorAprovadoBudget();
+					valor = valor.add(budget.getValorAprovadoBudget());
 			}
 		}
 		return valor;
 	}
 
-	public Double getValorTotalPropostoBudgetArea()
+	public BigDecimal getValorTotalPropostoBudgetArea()
 	{
-		Double valor = 0d;
+		BigDecimal valor = new BigDecimal(0d);
 		if(budgets !=null)
 		{
 			for(Budget budget : budgets)
 			{
 				if(budget.getValorTotalProposto() !=null)
-					valor+= budget.getValorTotalProposto();
+					valor = valor.add(budget.getValorTotalProposto());
 			}
 		}
 		return valor;

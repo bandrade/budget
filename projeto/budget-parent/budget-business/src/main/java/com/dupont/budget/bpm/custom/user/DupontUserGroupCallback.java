@@ -74,7 +74,7 @@ public class DupontUserGroupCallback implements UserGroupCallback {
 
     public List<String> getGroupsForUser(String userId,
                                          List<String> groupIds, List<String> allExistingGroupIds) {
-    	if(userId.equals("Administrator") )
+    	if(userId==null || userId.equals("Administrator") )
     		return null;
     	List<String> userGroups = userGroupCallbackCacheManager.getGroupsFromCache(userId);
     	logger.info("***************************************************************************************************");

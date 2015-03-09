@@ -15,7 +15,7 @@
 
 	<ui:define name="content">
 		<h:form id="form"> 
-			<p:panel id="content">
+			<p:panel id="content" >
 				<h3>Ajustar o Budget aprovado por Centro de Custo</h3>
 				<p:panel>
 					<p:panelGrid columns="2">
@@ -42,7 +42,6 @@
 						style="margin-left:20px"/>
 				</p:panelGrid>
 				<p:panelGrid id="panelDetalhe" columns="1">
-				
 				
 				<p:dataTable 
 					emptyMessage="Não existem despesas cadastradas" 
@@ -124,7 +123,7 @@
 									 size="10"
 									 scrollHeight="300"
 									 converter="com.dupont.EntityConverter"
-									 var="distrito" itemLabel="#{distrito.nome}" itemValue="#{distrito}" emptyMessage="NAO ENCONTRADO" effect="size"/>
+									 var="_distrito" itemLabel="#{_distrito.nome}" itemValue="#{_distrito}" emptyMessage="NAO ENCONTRADO" effect="size"/>
 					 		</f:facet>
 					 	</p:cellEditor>
 					</p:column>
@@ -177,8 +176,8 @@
 								</h:outputText>
 							</f:facet>
             				<f:facet name="input">
-            					<pe:inputNumber  id="valor"  value="#{detalheDespesa.valor}"  converter="javax.faces.Double" required="true">
-										<p:ajax  update=":form" process="@this"></p:ajax>
+            					<pe:inputNumber  i="valor"  value="#{detalheDespesa.valor}"  converter="javax.faces.Double" required="true"  >
+									<p:ajax update=":form" process="@this" event="change"></p:ajax>
             					</pe:inputNumber>
             				</f:facet>
             			</p:cellEditor>
@@ -197,6 +196,9 @@
 				</p:dataTable>
 				
 				</p:panelGrid>
+					<p:commandButton  id="salvar" action="#{ajustarValoresCentroCustoAction.adicionarDespesas()}" update=":form,:messages" style=" visibility: hidden;"></p:commandButton>
+					<p:defaultCommand target="salvar" />
+					
 					<p:panelGrid columns="1" styleClass="painel-botoes">
 					<p:commandButton value="Concluir"  action="#{ajustarValoresCentroCustoAction.concluir()}" onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" >
 						<p:confirm header="Confirmação" message="Confirma a conclusão da Ajuste do Budget por CC?" icon="ui-icon-alert"/> 

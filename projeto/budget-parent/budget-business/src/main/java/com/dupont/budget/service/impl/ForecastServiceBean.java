@@ -1,5 +1,6 @@
 package com.dupont.budget.service.impl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -148,7 +149,7 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 				DespesaForecastAno despesaForecastAno = new DespesaForecastAno(new DespesaForecastAnoPK(despesaForecast.getId(),despesaForecastMes.getId()),mesSeguinte,despesaForecast,despesaForecastMes);
 				em.persist(despesaForecastAno);
 				despesaForecast.getDespesaForecastMes().add(despesaForecastAno);
-				Double ytd =obterYtd(despesaForecast,forecastMensalidado.getPk().getMes());
+				BigDecimal ytd =obterYtd(despesaForecast,forecastMensalidado.getPk().getMes());
 				despesaForecast.setPlm(obterPLM(despesaForecast.getDespesaMensalisada(), Integer.valueOf(forecastMensalidado.getPk().getMes()+""),ytd));
 				em.merge(despesaForecast);
 
@@ -166,9 +167,9 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 		}
 
 	}
-	public Double obterPLM(DespesaForecastMes despesaForecastMes,Integer mes,Double ytd)
+	public BigDecimal obterPLM(DespesaForecastMes despesaForecastMes,Integer mes,BigDecimal ytd)
 	{
-		Double[]  valores = new Double[]{despesaForecastMes.getJaneiro(),
+		BigDecimal[]  valores = new BigDecimal[]{despesaForecastMes.getJaneiro(),
 									 despesaForecastMes.getFevereiro(),
 									 despesaForecastMes.getMarco(),
 									 despesaForecastMes.getAbril(),
@@ -182,12 +183,12 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 									 despesaForecastMes.getDezembro()
 					};
 
-		Double valor= 0d;
+		BigDecimal valor= new BigDecimal(0d);
 		for(int i=(mes-1); i<12;i++)
 		{
-			valor += valores[i] !=null ? valores[i] : 0d;
+			valor =valor.add(valores[i] !=null ? valores[i] : new BigDecimal(0d));
 		}
-		return valor +ytd;
+		return valor.add(ytd);
 	}
 
 	public ForecastMensalisado obterForecastMensalidadeEmAndamento(Forecast forecast)
@@ -244,14 +245,14 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 			//obtendo valor total de notas que foram criadas no cover sheet e estao comprometidas
 			//obtendo valor total de notas que estao pendentes de validacao no SAP
 
-			Double valorD=+ obterValoresComprometidosNotas(despesa,(int)_mes);
-			valorD+= valorComprometido !=null ? valorComprometido.getValor() : 0D;
+			BigDecimal valorD= obterValoresComprometidosNotas(despesa,(int)_mes);
+			valorD.add(valorComprometido !=null ? valorComprometido.getValor() : new BigDecimal(0D));
 			if(_mes == mesEnum.getId())
 			{
-				valorD+= obterValoresComprometidosNotasAnteriores(despesa,(int)_mes);
+				valorD= valorD.add(obterValoresComprometidosNotasAnteriores(despesa,(int)_mes));
 			}
 
-			if(valorD !=null && valorD !=0D)
+			if(valorD !=null && valorD.doubleValue() !=0D)
 			{
 				switch (MesEnum.values()[(int)_mes-1]) {
 				case JANEIRO:
@@ -259,27 +260,27 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 					if( despesa.getDespesaMensalisada().getDespesaJaneiro()==null)
 						despesa.getDespesaMensalisada().setDespesaJaneiro(valorD);
 					else
-						despesa.getDespesaMensalisada().setDespesaJaneiro(valorD+despesa.getDespesaMensalisada().getDespesaJaneiro());
+						despesa.getDespesaMensalisada().setDespesaJaneiro(valorD.add(despesa.getDespesaMensalisada().getDespesaJaneiro()));
 					break;
 				case FEVEREIRO:
 					if( despesa.getDespesaMensalisada().getDespesaFevereiro()==null)
 						despesa.getDespesaMensalisada().setDespesaFevereiro(valorD);
 					else
-						despesa.getDespesaMensalisada().setDespesaFevereiro(valorD+despesa.getDespesaMensalisada().getDespesaFevereiro());
+						despesa.getDespesaMensalisada().setDespesaFevereiro(valorD.add(despesa.getDespesaMensalisada().getDespesaFevereiro()));
 					break;
 
 				case MARCO:
 					if( despesa.getDespesaMensalisada().getDespesaMarco()==null)
 						despesa.getDespesaMensalisada().setDespesaMarco(valorD);
 					else
-						despesa.getDespesaMensalisada().setDespesaMarco(valorD+despesa.getDespesaMensalisada().getDespesaMarco());
+						despesa.getDespesaMensalisada().setDespesaMarco(valorD.add(despesa.getDespesaMensalisada().getDespesaMarco()));
 					break;
 
 				case ABRIL:
 					if( despesa.getDespesaMensalisada().getDespesaAbril()==null)
 						despesa.getDespesaMensalisada().setDespesaAbril(valorD);
 					else
-						despesa.getDespesaMensalisada().setDespesaAbril(valorD+despesa.getDespesaMensalisada().getDespesaAbril());
+						despesa.getDespesaMensalisada().setDespesaAbril(valorD.add(despesa.getDespesaMensalisada().getDespesaAbril()));
 
 					break;
 
@@ -287,7 +288,7 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 					if(despesa.getDespesaMensalisada().getDespesaMaio()==null)
 						despesa.getDespesaMensalisada().setDespesaMaio(valorD);
 					else
-						despesa.getDespesaMensalisada().setDespesaMaio(valorD+despesa.getDespesaMensalisada().getDespesaAbril());
+						despesa.getDespesaMensalisada().setDespesaMaio(valorD.add(despesa.getDespesaMensalisada().getDespesaAbril()));
 
 					break;
 
@@ -295,7 +296,7 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 					if(despesa.getDespesaMensalisada().getDespesaJunho()==null)
 						despesa.getDespesaMensalisada().setDespesaJunho(valorD);
 					else
-						despesa.getDespesaMensalisada().setDespesaJunho(valorD+despesa.getDespesaMensalisada().getDespesaJunho());
+						despesa.getDespesaMensalisada().setDespesaJunho(valorD.add(despesa.getDespesaMensalisada().getDespesaJunho()));
 
 					break;
 
@@ -303,7 +304,7 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 					if(despesa.getDespesaMensalisada().getDespesaJulho() ==null)
 						despesa.getDespesaMensalisada().setDespesaJulho(valorD);
 					else
-						despesa.getDespesaMensalisada().setDespesaJulho(valorD+despesa.getDespesaMensalisada().getDespesaJulho());
+						despesa.getDespesaMensalisada().setDespesaJulho(valorD.add(despesa.getDespesaMensalisada().getDespesaJulho()));
 
 					break;
 
@@ -311,35 +312,35 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 					if(despesa.getDespesaMensalisada().getDespesaAgosto()==null)
 						despesa.getDespesaMensalisada().setDespesaAgosto(valorD);
 					else
-						despesa.getDespesaMensalisada().setDespesaAgosto(valorD+despesa.getDespesaMensalisada().getDespesaAgosto());
+						despesa.getDespesaMensalisada().setDespesaAgosto(valorD.add(despesa.getDespesaMensalisada().getDespesaAgosto()));
 					break;
 
 				case SETEMBRO:
 					if(despesa.getDespesaMensalisada().getDespesaSetembro() ==null)
 						despesa.getDespesaMensalisada().setDespesaSetembro(valorD);
 					else
-						despesa.getDespesaMensalisada().setDespesaSetembro(valorD+despesa.getDespesaMensalisada().getDespesaSetembro());
+						despesa.getDespesaMensalisada().setDespesaSetembro(valorD.add(despesa.getDespesaMensalisada().getDespesaSetembro()));
 					break;
 
 				case OUTUBRO:
 					if(despesa.getDespesaMensalisada().getDespesaOutubro()==null)
 						despesa.getDespesaMensalisada().setDespesaOutubro(valorD);
 					else
-						despesa.getDespesaMensalisada().setDespesaOutubro(valorD+despesa.getDespesaMensalisada().getDespesaOutubro());
+						despesa.getDespesaMensalisada().setDespesaOutubro(valorD.add(despesa.getDespesaMensalisada().getDespesaOutubro()));
 					break;
 
 				case NOVEMBRO:
 					if(despesa.getDespesaMensalisada().getDespesaNovembro()==null)
 						despesa.getDespesaMensalisada().setDespesaNovembro(valorD);
 					else
-						despesa.getDespesaMensalisada().setDespesaNovembro(valorD+despesa.getDespesaMensalisada().getDespesaNovembro());
+						despesa.getDespesaMensalisada().setDespesaNovembro(valorD.add(despesa.getDespesaMensalisada().getDespesaNovembro()));
 					break;
 
 				case DEZEMBRO:
 					if(despesa.getDespesaMensalisada().getDespesaDezembro()==null)
 						despesa.getDespesaMensalisada().setDespesaDezembro(valorD);
 					else
-						despesa.getDespesaMensalisada().setDespesaDezembro(valorD+despesa.getDespesaMensalisada().getDespesaDezembro());
+						despesa.getDespesaMensalisada().setDespesaDezembro(valorD.add(despesa.getDespesaMensalisada().getDespesaDezembro()));
 					break;
 
 				}
@@ -424,9 +425,9 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 
 	}
 
-	public Double obterYtd(DespesaForecast despesaForecast,Long mes)
+	public BigDecimal obterYtd(DespesaForecast despesaForecast,Long mes)
 	{
-		Double valorComprometido = 0D;
+		BigDecimal valorComprometido = new BigDecimal(0D);
 		Long mes_id = (long)mes;
 		List<Integer> listaMeses = new ArrayList<>();
 		for(long _mes = 1; _mes<=mes_id ;_mes++)
@@ -442,7 +443,7 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 			    .setParameter("acao_id", despesaForecast.getAcao().getId())
 				.setParameter("tipo_despesa_id", despesaForecast.getTipoDespesa().getId()).getSingleResult();
 			if(result !=null)
-				valorComprometido = Double.valueOf(result.toString());
+				valorComprometido = new BigDecimal(result.toString());
 		}
 		catch(NoResultException e)
 		{
@@ -452,9 +453,9 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 	}
 
 
-	public Double obterValoresComprometidosNotas(DespesaForecast despesaForecast, int mes)
+	public BigDecimal obterValoresComprometidosNotas(DespesaForecast despesaForecast, int mes)
 	{
-		Double valorComprometido = 0D;
+		BigDecimal valorComprometido = new BigDecimal(0d);
 		try
 		{
 			Object result = em.createNamedQuery("SolicitacaoPagamento.ObterSomaValorComprometido")
@@ -464,7 +465,7 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 			    .setParameter("acao_id", despesaForecast.getAcao().getId())
 				.setParameter("tipo_despesa_id", despesaForecast.getTipoDespesa().getId()).getSingleResult();
 			if(result !=null)
-				valorComprometido = Double.valueOf(result.toString());
+				valorComprometido = new BigDecimal (result.toString());
 		}
 		catch(NoResultException e)
 		{
@@ -472,10 +473,12 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 		return valorComprometido;
 	}
 
-	private Double obterValoresComprometidosNotasAnteriores(DespesaForecast despesaForecast, int mes)
+	private BigDecimal obterValoresComprometidosNotasAnteriores(DespesaForecast despesaForecast, int mes)
 	{
+
+
 		if(mes == MesEnum.JANEIRO.getId())
-			return 0D;
+			return new BigDecimal(0D);
 
 		List<Integer> listaMeses = new ArrayList<>();
 		Long mes_id = (long)mes;
@@ -483,7 +486,7 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 		{
 			listaMeses.add(Integer.valueOf(_mes+""));
 		}
-		Double valorComprometido = 0D;
+		BigDecimal valorComprometido = new BigDecimal(0D);
 		try
 		{
 			Object result = em.createNamedQuery("SolicitacaoPagamento.ObterSomaValorComprometidoMesesAnteriores")
@@ -493,7 +496,7 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 			    .setParameter("acao_id", despesaForecast.getAcao().getId())
 				.setParameter("tipo_despesa_id", despesaForecast.getTipoDespesa().getId()).getSingleResult();
 			if(result !=null)
-				valorComprometido = Double.valueOf(result.toString());
+				valorComprometido = new BigDecimal(result.toString());
 		}
 		catch(NoResultException e)
 		{
@@ -535,7 +538,7 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 				for(Object[] object : result)
 				{
 					DetalheValoresComprometidosDTO detalhe =  new DetalheValoresComprometidosDTO();
-					detalhe.setValor(Double.valueOf(object[0]+""));
+					detalhe.setValor(new BigDecimal(object[0]+""));
 					detalhe.setNotaFiscal(String.valueOf(object[1]));
 					detalhe.setFornecedor(String.valueOf(object[2]));
 					detalheList.add(detalhe);
@@ -577,7 +580,7 @@ public class ForecastServiceBean extends GenericService implements ForecastServi
 				for(Object[] object : result)
 				{
 					DetalheValoresComprometidosDTO detalhe =  new DetalheValoresComprometidosDTO();
-					detalhe.setValor(Double.valueOf(object[0]+""));
+					detalhe.setValor(new BigDecimal(object[0]+""));
 					detalhe.setNotaFiscal(String.valueOf(object[1]));
 					detalhe.setFornecedor(String.valueOf(object[2]));
 					detalheList.add(detalhe);

@@ -15,6 +15,7 @@ import com.dupont.budget.model.Produto;
 import com.dupont.budget.model.TipoDespesa;
 import com.dupont.budget.model.Vendedor;
 import com.dupont.budget.service.DomainService;
+import com.dupont.budget.service.centrodecusto.CentroDeCustoService;
 import com.dupont.budget.web.util.FacesUtils;
 
 @Model
@@ -22,13 +23,13 @@ public class AutocompleteAction {
 
 	@Inject
 	private DomainService domainService;
-	
+
 	@Inject
 	private FacesUtils facesUtils;
 
 	@Inject
 	private DistritoAction distritoAction;
-	
+
 	@Inject
 	private ClienteAction clienteAction;
 
@@ -43,12 +44,15 @@ public class AutocompleteAction {
 
 	@Inject
 	private TipoDespesaAction tipoDespesaAction;
-	
+
 	@Inject
 	private CentroCustoAction centroCustoAction;
-	
+
 	@Inject
 	private AcaoAction acaoAction;
+
+	@Inject
+	private CentroDeCustoService centroDeCustoService;
 
 
 	public List<Distrito> autocompleteDistrito(String input)
@@ -96,14 +100,14 @@ public class AutocompleteAction {
 
 	public List<CentroCusto> autoCompleteCentroCusto(String input)
 	{
-		return facesUtils.autoCompleteCC(centroCustoAction.getList(),input);
+		return facesUtils.autoCompleteCC(centroDeCustoService.obterCCList(),input);
 	}
-	
+
 	public List<Fornecedor> autoCompleteFornecedor(String input)
 	{
 		Fornecedor f = new Fornecedor();
 		f.setNome(input);
 		return domainService.findByNamePaging(f);
 	}
-	
+
 }

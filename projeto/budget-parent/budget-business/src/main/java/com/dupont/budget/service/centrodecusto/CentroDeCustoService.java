@@ -11,5 +11,6 @@ public interface CentroDeCustoService {
 	List<CentroCusto> findByArea(Long areaId) throws Exception;
 	public CentroDeCustoDTO parseCentroCusto(CentroCusto cc);
 	public Area findAreaByCC(Long ccId) throws Exception;
+	public List<CentroCusto> obterCCList();
 
 }

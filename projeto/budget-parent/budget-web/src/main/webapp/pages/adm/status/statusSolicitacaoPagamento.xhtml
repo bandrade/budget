@@ -1,0 +1,105 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/templates/default.xhtml">
+
+	<ui:param name="pageTitle" value="Human Tasks" />
+
+	<ui:define name="content">
+	    <p:panel id="content">
+			<h:form id="form">
+	       	<h3>Solicitação de Pagamento - Tarefas em andamento</h3>
+			
+			<p:panelGrid columns="2">
+            <h:outputLabel for="areaList" value="Área:" />
+            <p:selectOneMenu label="Área" id="areaList" value="#{statusSolicitacaoPagamentoAction.areaSelecionada}" converter="com.dupont.EntityConverter">
+                <f:selectItem itemLabel="Selecione..." itemValue="" />
+                <f:selectItems value="#{areaList}" itemValue="#{i}" itemLabel="#{i.nome}" var="i" />
+                <p:ajax  listener="#{statusSolicitacaoPagamentoAction.doSelectCentroDeCusto()}" update=":form"/>
+            </p:selectOneMenu>
+			<p:outputLabel value="Centro de custo:" for="centroCustosSelectOneMenu"/>
+			<p:autoComplete id="centroCustosSelectOneMenu" 
+					onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"
+					dropdown="true" value="#{statusSolicitacaoPagamentoAction.centroCustoSelecionado}" 
+					completeMethod="#{statusSolicitacaoPagamentoAction.autoCompleteCentroCusto}" 
+		 			scrollHeight="300"
+					converter="com.dupont.EntityConverter"
+		 			var="_centroCusto" itemLabel="#{_centroCusto.codigo}" itemValue="#{_centroCusto}"
+		 			emptyMessage="NAO ENCONTRADO" effect="size" 
+		 			disabled="#{empty statusSolicitacaoPagamentoAction.areaSelecionada}"
+		 			>
+		 	</p:autoComplete>
+		 	</p:panelGrid>
+		 	<h:panelGrid columns="4" border="0">
+			   		<p:outputLabel value="De:*"/>
+					<p:calendar id="dataDe" value="#{statusSolicitacaoPagamentoAction.de}" locale="pt_BR" ></p:calendar>
+					<p:outputLabel value="Até:*"/>
+					<p:calendar id="dataAte" value="#{statusSolicitacaoPagamentoAction.ate}" locale="pt_BR" ></p:calendar>
+					
+			</h:panelGrid>
+		 	<p:commandButton id="updateBtn" value="Pesquisar" icon="ui-icon-check" action="#{statusSolicitacaoPagamentoAction.pesquisar}" styleClass="button" 
+					onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"
+					update=":form"/>
+		 	
+			<p:dataTable id="statusPendentes" var="item" value="#{statusSolicitacaoPagamentoAction.tarefas}" emptyMessage="Não existem tarefas pendentes para este Centro de Custo/Área."
+					paginator="true"
+					paginatorPosition="bottom"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+					rows="20"
+					style="overflow:wrap;"
+					>
+					<f:facet name="header">
+							Solicitação de Pagamento - Tarefas em andamento
+					</f:facet>
+					<f:facet name="{Exporters}" >
+							 <h:commandLink id="excel" value="Exportar para Excel" >
+				        		<p:dataExporter type="xls" target="statusPendentes" fileName="status_coversheet"  />
+				    		</h:commandLink>
+					</f:facet>
+					<p:column  headerText="Codigo" width="5%" >
+						<h:outputText value="#{item.id}"/>
+					</p:column>
+					<p:column headerText="Tarefa" sortBy="#{item.name}" >
+						<h:outputText value="#{item.name}"/>		
+					</p:column>
+					<p:column headerText="N.Nota"  sortBy="#{item.numeroNota}">
+						<h:outputText value="#{item.numeroNota}"/>
+					</p:column>
+
+					<p:column headerText="Fornecedor"  sortBy="#{item.nomeFornecedor}">
+						<h:outputText value="#{item.nomeFornecedor}"/>
+					</p:column>
+				
+					<p:column headerText="Resp. CC"  sortBy="#{item.nomeUsuario}">
+						<h:outputText value="#{item.nomeUsuario}"/>
+					</p:column>
+				 	<p:column headerText="Login Resp."  sortBy="#{item.login}">
+						<h:outputText value="#{item.login}"/>
+					</p:column>
+					<p:column headerText="Lançado por"  sortBy="#{item.nomeSolicitante}">
+						<h:outputText value="#{item.nomeSolicitante}"/>
+					</p:column>
+					
+					<p:column headerText="Resp. Lançamento"  sortBy="#{item.nomeResponsavelNota}">
+						<h:outputText value="#{item.nomeResponsavelNota}"/>
+					</p:column>
+						
+					<p:column headerText="Area" sortBy="#{item.nomeArea}">
+						<h:outputText value="#{item.nomeArea}"/>
+					</p:column>
+					
+					<p:column headerText="Nome CC" sortBy="#{item.nomeCentroCusto}">
+						<h:outputText value="#{item.nomeCentroCusto}"/>
+					</p:column>
+					
+					<p:column headerText="Codigo CC" sortBy="#{item.codigoCentroCusto}">
+						<h:outputText value="#{item.codigoCentroCusto}"/>
+					</p:column>
+					
+			</p:dataTable>
+			</h:form>
+		</p:panel>
+	</ui:define>
+</ui:composition>

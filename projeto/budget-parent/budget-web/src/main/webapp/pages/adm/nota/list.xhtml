@@ -19,9 +19,10 @@
 			<p:separator />
 			
 			<p:dataTable id="cargaRelatorios" var="item" value="#{cargaRelatorioAction.list}" emptyMessage="Nenhum registro encontrado."
+					style="overflow:wrap;"
 					paginator="true"
 					paginatorPosition="bottom"
-					rows="10">
+					rows="20">
 				<f:facet name="header">
 					Resultado Carga Planilha SAP
 				</f:facet>

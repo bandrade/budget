@@ -1,5 +1,7 @@
 package com.dupont.budget.model;
 
+import java.math.BigDecimal;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -29,10 +31,10 @@ public class BudgetEstipuladoAnoCC {
 	private String ano;
 
 	@Column(name="valor_submetido")
-	private Double valorSubmetido;
+	private BigDecimal valorSubmetido;
 
 	@Column(name="valor_aprovado")
-	private Double valorAprovado;
+	private BigDecimal valorAprovado;
 
 	public Long getId() {
 		return id;
@@ -50,19 +52,19 @@ public class BudgetEstipuladoAnoCC {
 		this.ano = ano;
 	}
 
-	public Double getValorSubmetido() {
+	public BigDecimal getValorSubmetido() {
 		return valorSubmetido;
 	}
 
-	public void setValorSubmetido(Double valorSubmetido) {
+	public void setValorSubmetido(BigDecimal valorSubmetido) {
 		this.valorSubmetido = valorSubmetido;
 	}
 
-	public Double getValorAprovado() {
+	public BigDecimal getValorAprovado() {
 		return valorAprovado;
 	}
 
-	public void setValorAprovado(Double valorAprovado) {
+	public void setValorAprovado(BigDecimal valorAprovado) {
 		this.valorAprovado = valorAprovado;
 	}
 

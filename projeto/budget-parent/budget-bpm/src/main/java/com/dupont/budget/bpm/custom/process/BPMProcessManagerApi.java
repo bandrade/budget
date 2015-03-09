@@ -20,5 +20,5 @@ public interface BPMProcessManagerApi {
 			Double valorToleranciaNegativa,String tipoToleranciaPositiva,Double valorToleranciaPositiva) throws Exception;
 	public boolean isProcessForecastAlreadyStarted(String ano) throws BPMException;
 	public boolean isProcessInstanceRunning(long processInstanceId);
-
+	public String getProcessName(long processInstanceId);
 }

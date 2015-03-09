@@ -106,6 +106,10 @@ public class CentroDeCustoServiceImpl extends GenericService implements CentroDe
 		return em.createNamedQuery("CentroCusto.findByArea",CentroCusto.class).setParameter("area_id",areaId).getResultList();
 	}
 
+	public List<CentroCusto> obterCCList()
+	{
+		return em.createNamedQuery("CentroCusto.findAll",CentroCusto.class).getResultList();
+	}
 
 
 	public Area findAreaByCC(Long ccId) {

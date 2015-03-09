@@ -1,6 +1,7 @@
 package com.dupont.budget.web.actions;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,7 +51,7 @@ public class DivisaoBudgetMesAction implements Serializable{
 
 	private List<DespesaMesDTO> despesas;
 
-	private Double valorTotalDetalhe;
+	private BigDecimal valorTotalDetalhe;
 
 
 	@PostConstruct
@@ -88,30 +89,43 @@ public class DivisaoBudgetMesAction implements Serializable{
 		}
 
 	}
-	public Double calcularValorMensalisado(DespesaMesDTO despesa)
+	public BigDecimal calcularValorMensalisado(DespesaMesDTO despesa)
 	{
-		Double valor = 0d;
-		valor+= despesa.getJaneiro() !=null ? despesa.getJaneiro() :0d;
-		valor+= despesa.getFevereiro() !=null ? despesa.getFevereiro() : 0d;
-		valor+=despesa.getMarco() !=null ? despesa.getMarco():0d ;
-		valor+=despesa.getAbril() !=null ? despesa.getAbril() :0d;
-		valor+=despesa.getMaio() !=null ? despesa.getMaio() : 0d;
-		valor+=despesa.getJunho() !=null ? despesa.getJunho() :0d ;
-		valor+=despesa.getJulho() !=null ? despesa.getJulho() : 0d;
-		valor+=despesa.getAgosto()  !=null ? despesa.getAgosto() : 0d;
-		valor+=despesa.getSetembro() !=null ? despesa.getSetembro() : 0d;
-		valor+=despesa.getOutubro() !=null ? despesa.getOutubro() : 0d;
-		valor+=despesa.getNovembro() !=null ? despesa.getNovembro() :0d;
-		valor+=despesa.getDezembro() !=null ? despesa.getDezembro() : 0d;
+		BigDecimal valor = new BigDecimal(0d);
+		if(despesa.getJaneiro()!=null)
+			valor =valor.add(despesa.getJaneiro());
+		if(despesa.getFevereiro()!=null)
+			valor =valor.add(despesa.getFevereiro());
+		if(despesa.getMarco()!=null)
+			valor =valor.add(despesa.getMarco());
+		if(despesa.getAbril()!=null)
+			valor =valor.add(despesa.getAbril());
+		if(despesa.getMaio()!=null)
+			valor =valor.add(despesa.getMaio());
+		if(despesa.getJunho()!=null)
+			valor =valor.add(despesa.getJunho());
+		if(despesa.getJulho()!=null)
+			valor =valor.add(despesa.getJulho());
+		if(despesa.getAgosto()!=null)
+			valor =valor.add(despesa.getAgosto());
+		if(despesa.getSetembro()!=null)
+			valor =valor.add(despesa.getSetembro());
+		if(despesa.getOutubro()!=null)
+			valor =valor.add(despesa.getOutubro());
+		if(despesa.getNovembro()!=null)
+			valor =valor.add(despesa.getNovembro());
+		if(despesa.getDezembro()!=null)
+			valor =valor.add(despesa.getDezembro());
 
 		return valor;
 	}
 	public void calcularValorTotalDetalhe()
 	{
-		valorTotalDetalhe = 0d;
+		valorTotalDetalhe = new BigDecimal(0d);
 		for(DespesaMesDTO despesa : despesas)
 		{
-			valorTotalDetalhe += despesa.getValor();
+			if(despesa !=null && despesa.getValor() !=null)
+				valorTotalDetalhe =valorTotalDetalhe.add(despesa.getValor()) ;
 		}
 	}
 
@@ -120,7 +134,7 @@ public class DivisaoBudgetMesAction implements Serializable{
 		try {
 		budgetService.mensalisarBudget(despesas);
 		boolean possuiErro = false ;
-		if(!calcularValorColuna("TOT").equals(getValorTotalDetalhe()))
+		if(!calcularValorColuna("TOT").setScale(2,BigDecimal.ROUND_HALF_UP).equals(getValorTotalDetalhe().setScale(2,BigDecimal.ROUND_HALF_UP)))
 		{
 			facesUtils.addErrorMessage("O valor total do budget mensalisado deve ser igual ao valor total aprovado");
 			possuiErro = true;
@@ -129,10 +143,11 @@ public class DivisaoBudgetMesAction implements Serializable{
 		{
 			for(DespesaMesDTO despesa : despesas)
 			{
-				Double valorTotalMensalisado = calcularValorMensalisado(despesa);
+
+				BigDecimal valorTotalMensalisado = calcularValorMensalisado(despesa);
 				logger.info("Valor despesa" + despesa.getValor() +"- Valor Mensalisado: " + valorTotalMensalisado);
 
-				if(!(Double.compare(despesa.getValor(), Math.floor(valorTotalMensalisado))==0))
+				if(!(despesa.getValor().setScale(2,BigDecimal.ROUND_HALF_UP).equals(valorTotalMensalisado.setScale(2,BigDecimal.ROUND_HALF_UP))))
 				{
 					facesUtils.addErrorMessage("O valor total do budget mensalisado da despesa " +despesa.getTipoDespesa()+ ""
 							+ " deve ser igual ao valor total aprovado "+facesUtils.formatarDinheiro(despesa.getValor())+ " . O valor total mensalidado foi "
@@ -145,8 +160,6 @@ public class DivisaoBudgetMesAction implements Serializable{
 
 		if(!possuiErro)
 		{
-
-
 				HashMap<String, Object> param =  new HashMap<>();
 				param.put("_budgetId", String.valueOf(budget.getId()));
 				bpmsTask.aprovarTarefa(facesUtils.getUserLogin(), idTarefa,param);
@@ -163,9 +176,9 @@ public class DivisaoBudgetMesAction implements Serializable{
 		return null;
 	}
 
-	public Double calcularValorColuna(String mes)
+	public BigDecimal calcularValorColuna(String mes)
 	{
-		Double valor = 0d;
+		BigDecimal valor = new BigDecimal(0d);
 		if(despesas == null)
 			return null;
 
@@ -174,54 +187,66 @@ public class DivisaoBudgetMesAction implements Serializable{
 			switch(mes)
 			{
 				case "JAN":
-					valor+=despesa.getJaneiro() !=null ? despesa.getJaneiro() :0d;
+					if(despesa.getJaneiro() !=null)
+						valor= valor.add(despesa.getJaneiro());
 					break;
 				case "FEV":
-					valor+=despesa.getFevereiro() !=null ? despesa.getFevereiro() : 0d;
+					if(despesa.getFevereiro() !=null)
+						valor= valor.add(despesa.getFevereiro());
 					break;
 
 				case "MAR":
-					valor+=despesa.getMarco() !=null ? despesa.getMarco():0d ;
+					if(despesa.getMarco()!=null)
+						valor= valor.add(despesa.getMarco());
 					break;
 
 				case "ABR":
-					valor+=despesa.getAbril() !=null ? despesa.getAbril() :0d;
+					if(despesa.getAbril() !=null)
+						valor= valor.add(despesa.getAbril());
 					break;
 
 				case "MAI":
-					valor+=despesa.getMaio() !=null ? despesa.getMaio() : 0d;
+					if(despesa.getMaio() !=null)
+						valor= valor.add(despesa.getMaio());
 					break;
 
 				case "JUN":
-					valor+=despesa.getJunho() !=null ? despesa.getJunho() :0d ;
+					if(despesa.getJunho() !=null)
+						valor= valor.add(despesa.getJunho());
 					break;
 
 				case "JUL":
-					valor+=despesa.getJulho() !=null ? despesa.getJulho() : 0d;
+					if(despesa.getJulho() !=null)
+						valor= valor.add(despesa.getJulho());
 					break;
 
 				case "AGO":
-					valor+=despesa.getAgosto()  !=null ? despesa.getAgosto() : 0d;
+					if(despesa.getAgosto() !=null)
+						valor= valor.add(despesa.getAgosto());
 					break;
 
 				case "SET":
-					valor+=despesa.getSetembro() !=null ? despesa.getSetembro() : 0d;
+					if(despesa.getSetembro() !=null)
+						valor= valor.add(despesa.getSetembro());
 					break;
 
 				case "OUT":
-					valor+=despesa.getOutubro() !=null ? despesa.getOutubro() : 0d;
+					if(despesa.getOutubro() !=null)
+						valor= valor.add(despesa.getOutubro());
 					break;
 
 				case "NOV":
-					valor+=despesa.getNovembro() !=null ? despesa.getNovembro() :0d;
+					if(despesa.getNovembro() !=null)
+						valor= valor.add(despesa.getNovembro());
 					break;
 
 				case "DEZ":
-					valor+=despesa.getDezembro() !=null ? despesa.getDezembro() : 0d;
+					if(despesa.getDezembro() !=null)
+						valor= valor.add(despesa.getDezembro());
 					break;
 
 				default:
-					valor+=calcularValorMensalisado(despesa);
+					valor =valor.add(calcularValorMensalisado(despesa));
 					break;
 
 			}
@@ -270,13 +295,15 @@ public class DivisaoBudgetMesAction implements Serializable{
 		this.idTarefa = idTarefa;
 	}
 
-	public Double getValorTotalDetalhe() {
+	public BigDecimal getValorTotalDetalhe() {
 		return valorTotalDetalhe;
 	}
 
-	public void setValorTotalDetalhe(Double valorTotalDetalhe) {
+	public void setValorTotalDetalhe(BigDecimal valorTotalDetalhe) {
 		this.valorTotalDetalhe = valorTotalDetalhe;
 	}
+
+
 
 
 }

@@ -53,6 +53,16 @@ public class TarefaDTO  implements Serializable{
 
 	private String codigoCentroCusto;
 
+	private String nomeArea;
+
+	private String numeroNota;
+
+	private String nomeFornecedor;
+
+	private String nomeSolicitante;
+
+	private String nomeResponsavelNota;
+
 
 	public long getId() {
 		return id;
@@ -225,6 +235,47 @@ public class TarefaDTO  implements Serializable{
 	public void setCodigoCentroCusto(String codigoCentroCusto) {
 		this.codigoCentroCusto = codigoCentroCusto;
 	}
+
+	public String getNomeArea() {
+		return nomeArea;
+	}
+
+	public void setNomeArea(String nomeArea) {
+		this.nomeArea = nomeArea;
+	}
+
+	public String getNumeroNota() {
+		return numeroNota;
+	}
+
+	public void setNumeroNota(String numeroNota) {
+		this.numeroNota = numeroNota;
+	}
+
+	public String getNomeFornecedor() {
+		return nomeFornecedor;
+	}
+
+	public void setNomeFornecedor(String nomeFornecedor) {
+		this.nomeFornecedor = nomeFornecedor;
+	}
+
+	public String getNomeSolicitante() {
+		return nomeSolicitante;
+	}
+
+	public void setNomeSolicitante(String nomeSolicitante) {
+		this.nomeSolicitante = nomeSolicitante;
+	}
+
+	public String getNomeResponsavelNota() {
+		return nomeResponsavelNota;
+	}
+
+	public void setNomeResponsavelNota(String nomeResponsavelNota) {
+		this.nomeResponsavelNota = nomeResponsavelNota;
+	}
+
 
 
 

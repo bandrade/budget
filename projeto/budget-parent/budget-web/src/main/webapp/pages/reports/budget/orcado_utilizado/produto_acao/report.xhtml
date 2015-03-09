@@ -24,12 +24,18 @@
 					</p:selectOneMenu> 
 					<p:message for="anoSelectOneMenu" />
 					
-					<p:outputLabel value="Centro de custo:" for="ccSelectOneMenu"/>
-					<p:selectOneMenu id="ccSelectOneMenu" value="#{reportBudgetOrcadoUtilizadoProdutoAcaoAction.centroCusto}" required="true" converter="com.dupont.EntityConverter">
-						<f:selectItem itemLabel="Selecone um centro de custo..." itemValue="#{null}" />
-						<f:selectItems value="#{centroCustos}" var="item" itemValue="#{item}" itemLabel="#{item.codigo}"/>
-					</p:selectOneMenu> 
-					<p:message for="ccSelectOneMenu" />
+					<p:outputLabel value="Centro de custo:" for="centroCustosSelectOneMenu"/>
+					<p:autoComplete id="centroCustosSelectOneMenu" 
+								dropdown="true" 
+								completeMethod="#{autocompleteAction.autoCompleteCentroCusto}" 
+					 			scrollHeight="300"
+					 			value="#{reportBudgetOrcadoUtilizadoProdutoAcaoAction.centroCusto}"
+								converter="com.dupont.EntityConverter"
+					 			var="_centroCusto" itemLabel="#{_centroCusto.codigo}" itemValue="#{_centroCusto}"
+					 			emptyMessage="NAO ENCONTRADO" effect="size" 
+					 			required="true"
+					 			/>
+						<p:message for="centroCustosSelectOneMenu" />
 				</p:panelGrid>
 			
 				<p:commandButton id="doReportBtn" value="Executar Relatório" icon="ui-icon-check" action="#{reportBudgetOrcadoUtilizadoProdutoAcaoAction.doReport}" styleClass="button" ajax="false"/>

@@ -34,25 +34,25 @@ public class ProcessoAction implements Serializable{
 	private FacesUtils facesUtils;
 
 	private String mes;
-	
+
 	private Date dataExpiracao;
 
 	private Calendar calendar;
-	
+
 	@Inject
 	private ForecastService forecastService;
-	
+
 	private ToleranciaForecast toleranciaForecast;
-	
+
 	@Inject
 	private DomainService domainService;
 
 	@PostConstruct
 	public void init()
 	{
-		calendar = Calendar.getInstance();  
+		calendar = Calendar.getInstance();
 		ano = calendar.get(Calendar.YEAR)+"";
-		
+
 		List<ToleranciaForecast> lista = domainService.findAll(ToleranciaForecast.class);
 		if(lista !=null && lista.size()>0)
 		{
@@ -72,16 +72,16 @@ public class ProcessoAction implements Serializable{
 			facesUtils.addErrorMessage("O prazo deve ser uma data futura");
 			isPrazoOk=false;
 		}
-		
+
 		if(dataExpiracao.before(new Date()))
 		{
 			facesUtils.addErrorMessage("O prazo deve ser uma data futura");
 			isPrazoOk=false;
 		}
 		return isPrazoOk;
-		
+
 	}
-	
+
 	public void limparValorToleranciaPositiva()
 	{
 		this.toleranciaForecast.setValorToleranciaPositiva(null);
@@ -104,7 +104,7 @@ public class ProcessoAction implements Serializable{
 			facesUtils.addErrorMessage("O prazo deve ser uma data futura");
 			return false;
 		}
-				
+
 		MesEnum mesPrazo = MesEnum.values()[calendar.get(Calendar.MONTH)];
 		MesEnum mesForecast = MesEnum.obterMes(mes);
 		if(mesForecast.getId()>mesPrazo.getId())
@@ -117,11 +117,11 @@ public class ProcessoAction implements Serializable{
 			facesUtils.addErrorMessage("Ja existe um processo de processo completo/em andamento para o mes de "+mes);
 			return false;
 		}
-		
+
 		return true;
 	}
 
-	
+
 	public void iniciarProcessoBudget()
 	{
 		if(!validarPrazoBudget())
@@ -129,7 +129,7 @@ public class ProcessoAction implements Serializable{
 			return;
 		}
 		try {
-			
+
 			if(bpms.existeProcessoAtivo(ano))
 			{
 				facesUtils.addErrorMessage("Ja existe um processo de budget para o ano vigente");
@@ -146,12 +146,12 @@ public class ProcessoAction implements Serializable{
 	}
 	public void iniciarProcessoForecast()
 	{
-	
+
 		try {
 			if(!validarPrazoForecast())
 			{
 				return;
-			}	
+			}
 			if(bpms.existeProcessoForecastAtivo(ano))
 			{
 				facesUtils.addErrorMessage("Ja existe um processo de forecast ativo");
@@ -167,7 +167,7 @@ public class ProcessoAction implements Serializable{
 					domainService.create(toleranciaForecast);
 				}
 				long processInstanceId =bpms.iniciarProcessoForecast(ano, mes,dataExpiracao,toleranciaForecast);
-				
+
 				MesEnum mesForecast = MesEnum.obterMes(mes);
 				forecastService.alterarForecastMensalisado((Long)(mesForecast.getId()), ano,processInstanceId);
 				facesUtils.addInfoMessage("Processo de Forecast iniciado com sucesso");
@@ -214,11 +214,6 @@ public class ProcessoAction implements Serializable{
 	public void setToleranciaForecast(ToleranciaForecast toleranciaForecast) {
 		this.toleranciaForecast = toleranciaForecast;
 	}
-	
-	public void doWorkAround()
-	{
-		
-	}
-	
+
 
 }
