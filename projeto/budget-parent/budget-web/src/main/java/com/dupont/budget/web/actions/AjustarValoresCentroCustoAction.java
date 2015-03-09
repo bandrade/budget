@@ -2,6 +2,7 @@ package com.dupont.budget.web.actions;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -118,7 +119,7 @@ public class AjustarValoresCentroCustoAction extends BudgetAction implements Ser
 			{
 				return null;
 			}
-			if(!(calcularTotalValorSubmetido().equals(budgetEstipuladoAnoCC.getValorAprovado())))
+			if(!(calcularTotalValorSubmetido().setScale(2, RoundingMode.HALF_UP).compareTo(budgetEstipuladoAnoCC.getValorAprovado().setScale(2, RoundingMode.HALF_UP))==0))
 			{
 				facesUtils.addErrorMessage("O valor do budget do Centro de Custo deve ser igual ao valor aprovado");
 				return null;

@@ -147,7 +147,7 @@ public class DivisaoBudgetMesAction implements Serializable{
 				BigDecimal valorTotalMensalisado = calcularValorMensalisado(despesa);
 				logger.info("Valor despesa" + despesa.getValor() +"- Valor Mensalisado: " + valorTotalMensalisado);
 
-				if(!(despesa.getValor().setScale(2,BigDecimal.ROUND_HALF_UP).equals(valorTotalMensalisado.setScale(2,BigDecimal.ROUND_HALF_UP))))
+				if(!(despesa.getValor().setScale(2,BigDecimal.ROUND_HALF_UP).compareTo(valorTotalMensalisado.setScale(2,BigDecimal.ROUND_HALF_UP))==0))
 				{
 					facesUtils.addErrorMessage("O valor total do budget mensalisado da despesa " +despesa.getTipoDespesa()+ ""
 							+ " deve ser igual ao valor total aprovado "+facesUtils.formatarDinheiro(despesa.getValor())+ " . O valor total mensalidado foi "
